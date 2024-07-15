@@ -4,49 +4,30 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegisterRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     *
-     * @return bool
-     */
     public function authorize()
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
     public function rules()
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'phone_number' => 'required|string|max:15|unique:users',
-            'password' => 'required|string|min:8|confirmed',
+            'username' => 'required|string',
+            'password' => 'required|string|min:8',
         ];
     }
 
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
     public function messages()
     {
         return [
-            'name.required' => 'Name is required',
-            'email.required' => 'Email is required',
-            'email.email' => 'Email must be a valid email address',
-            'email.unique' => 'Email has already been taken',
-            'phone_number.required' => 'Phone number is required',
-            'phone_number.unique' => 'Phone number has already been taken',
-            'password.required' => 'Password is required',
-            'password.confirmed' => 'Password confirmation does not match',
+            'username.required' => 'The username is required.',
+            'username.string' => 'The username must be a string.',
+            'password.required' => 'The password is required.',
+            'password.string' => 'The password must be a string.',
+            'password.min' => 'The password must be at least 8 characters.',
         ];
     }
 }
+

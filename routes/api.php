@@ -21,7 +21,7 @@ Route::group([
     Route::post('register', [App\Http\Controllers\Api\AuthController::class, 'register']);
     Route::post('verify', [App\Http\Controllers\Api\AuthController::class, 'verify']);
     Route::post('/resend-otp', [App\Http\Controllers\Api\AuthController::class,'resendOtp']);
-    // Route::post('login', [App\Http\Controllers\Api\AuthController::class, 'login']);
+    Route::post('login', [App\Http\Controllers\Api\AuthController::class, 'login']);
     // Route::post('logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
     // Route::post('me', [App\Http\Controllers\Api\AuthController::class, 'me']);
 });

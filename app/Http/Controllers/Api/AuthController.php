@@ -9,7 +9,9 @@ use App\Events\UserRegistered;
 use Illuminate\Support\Carbon;
 use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\LoginRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResendOtpRequest;
@@ -137,5 +139,30 @@ class AuthController extends Controller
             DB::rollBack();
             return ResponseHelper::error('Failed to resend OTP', 500);
         }
+    }
+
+    public function login(LoginRequest $request)
+    {
+        $credentials = $request->only('username', 'password');
+
+        // Coba untuk menemukan user berdasarkan email atau nomor telepon
+        $user = User::where(function($query) use ($credentials) {
+            $query->where('email', $credentials['username'])
+                  ->orWhere('phone_number', $credentials['username']);
+        })->first();
+
+        if (!$user || !Auth::attempt(['email' => $user->email, 'password' => $credentials['password']])) {
+            return ResponseHelper::error('Incorrect username or password', 401);
+        }
+
+        // Buat token JWT untuk user
+        $token = auth('api')->login($user);
+
+        return ResponseHelper::success([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60
+        ], 'Login successful');
+
     }
 }
