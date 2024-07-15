@@ -210,4 +210,42 @@ class AuthController extends Controller
             'expires_in' => auth('api')->factory()->getTTL() * 60
         ], 'Login successful');
     }
+
+    /**
+     * Get the authenticated user's details.
+     *
+     * This method retrieves the authenticated user's details
+     * and returns them in the response.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function me()
+    {
+        // Get the authenticated user
+        $user = auth('api')->user();
+
+        // Return success response with user details
+        return ResponseHelper::success($user, 'User details retrieved successfully', 200);
+    }
+
+    /**
+     * Log the user out (invalidate the token).
+     *
+     * This method invalidates the JWT token, effectively logging the user out.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout()
+    {
+        try {
+            // Invalidate the token
+            auth('api')->logout();
+
+            // Return success response
+            return ResponseHelper::success(null, 'Successfully logged out', 200);
+        } catch (\Exception $e) {
+            // Return error response if logout fails
+            return ResponseHelper::error('Failed to log out', 500);
+        }
+    }
 }
