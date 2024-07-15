@@ -21,13 +21,6 @@ class SendOtpEmailListener implements ShouldQueue
      */
     public function handle(UserRegistered $event)
     {
-        // Simpan OTP ke database
-        Otp::create([
-            'user_id' => $event->user->id,
-            'code' => $event->otp,
-            'is_used' => false,
-        ]);
-
         // Kirim email OTP
         Mail::to($event->user->email)->send(new OtpMail($event->otp));
     }
