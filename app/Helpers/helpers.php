@@ -1,6 +1,14 @@
 <?php
 
 if (!function_exists('generateOtp')) {
+    /**
+     * Generate a six-digit OTP (One Time Password).
+     *
+     * This function generates a random six-digit number
+     * which can be used as an OTP for user verification.
+     *
+     * @return int A six-digit OTP.
+     */
     function generateOtp()
     {
         return rand(100000, 999999);
