@@ -18,6 +18,7 @@ class FarmFactory extends Factory
         return [
             'name' => $this->faker->company,
             'registration_date' => Carbon::now(),
+            'qurban_partner' => true
         ];
     }
 

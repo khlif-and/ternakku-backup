@@ -18,10 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call(LivestockTypeSeeder::class);
         $this->call(LivestockSexSeeder::class);
         $this->call(LivestockGroupSeeder::class);
+        $this->call(UserSeeder::class);
 
         Farm::factory()
             ->count(3)
-            ->has(FarmDetail::factory()->count(2), 'detail')
+            ->has(FarmDetail::factory()->count(1), 'detail')
             ->create();
     }
 }

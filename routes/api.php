@@ -16,15 +16,27 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'middleware' => 'api',
-    'prefix' => 'auth'
 ], function () {
-    Route::post('register', [App\Http\Controllers\Api\AuthController::class, 'register']);
-    Route::post('verify', [App\Http\Controllers\Api\AuthController::class, 'verify']);
-    Route::post('/resend-otp', [App\Http\Controllers\Api\AuthController::class,'resendOtp']);
-    Route::post('login', [App\Http\Controllers\Api\AuthController::class, 'login']);
 
-    Route::middleware('auth:api')->group(function() {
-        Route::get('/me', [App\Http\Controllers\Api\AuthController::class, 'me']);
-        Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
+    Route::group([
+        'prefix' => 'auth'
+    ], function () {
+        Route::post('register', [App\Http\Controllers\Api\AuthController::class, 'register']);
+        Route::post('verify', [App\Http\Controllers\Api\AuthController::class, 'verify']);
+        Route::post('/resend-otp', [App\Http\Controllers\Api\AuthController::class,'resendOtp']);
+        Route::post('login', [App\Http\Controllers\Api\AuthController::class, 'login']);
+
+        Route::middleware(['auth:api', 'email.verified'])->group(function() {
+            Route::get('/me', [App\Http\Controllers\Api\AuthController::class, 'me']);
+            Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
+        });
     });
+
+    Route::group([
+        'prefix' => 'qurban',
+        'middleware' => ['auth:api', 'email.verified'],
+    ], function () {
+        Route::get('partner', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'index']);
+    });
+
 });
