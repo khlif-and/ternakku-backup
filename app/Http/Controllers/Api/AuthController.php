@@ -57,7 +57,7 @@ class AuthController extends Controller
             ]);
 
             // Trigger the UserRegistered event to send the OTP email
-            event(new UserRegistered($user, $otp));
+            // event(new UserRegistered($user, $otp));
 
             // Commit the transaction
             DB::commit();
@@ -93,20 +93,25 @@ class AuthController extends Controller
             return ResponseHelper::error('User not found', 404);
         }
 
-        // Find the OTP that matches the user ID and code, and is not used
-        $otp = Otp::where('user_id', $user->id)
-                ->where('code', $validatedData['otp'])
-                ->where('is_used', false)
-                ->first();
+        // Check if the environment is development and OTP is '123456'
+        if (config('app.env') == 'development' && $validatedData['otp'] == '123456') {
+            // Do nothing as the OTP is whitelisted in development environment
+        }else{
+            // Find the OTP that matches the user ID and code, and is not used
+            $otp = Otp::where('user_id', $user->id)
+                    ->where('code', $validatedData['otp'])
+                    ->where('is_used', false)
+                    ->first();
 
-        // Return error if OTP is invalid
-        if (!$otp) {
-            return ResponseHelper::error('Invalid OTP', 400);
+            // Return error if OTP is invalid
+            if (!$otp) {
+                return ResponseHelper::error('Invalid OTP', 400);
+            }
+
+            // Mark the OTP as used
+            $otp->is_used = true;
+            $otp->save();
         }
-
-        // Mark the OTP as used
-        $otp->is_used = true;
-        $otp->save();
 
         // Update the user's email_verified_at column
         $user->email_verified_at = Carbon::now();
@@ -161,7 +166,7 @@ class AuthController extends Controller
             ]);
 
             // Trigger the UserRegistered event to resend the OTP email
-            event(new UserRegistered($user, $otp));
+            // event(new UserRegistered($user, $otp));
 
             // Commit the transaction
             DB::commit();
