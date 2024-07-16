@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->date('registration_date');
+            $table->boolean('qurban_partner')->default(false);
             $table->timestamps();
         });
     }

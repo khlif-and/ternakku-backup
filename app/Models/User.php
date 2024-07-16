@@ -65,8 +65,13 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function findForPassport($username) {
-        return $this->orWhere('email', $username)->orWhere('phone_number', $username)->first();
+    /**
+     * Check if the user has a verified email.
+     *
+     * @return bool
+     */
+    public function hasVerifiedEmail()
+    {
+        return !is_null($this->email_verified_at);
     }
-
 }
