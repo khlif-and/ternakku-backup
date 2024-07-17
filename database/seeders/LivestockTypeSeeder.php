@@ -14,10 +14,10 @@ class LivestockTypeSeeder extends Seeder
     public function run(): void
     {
         DB::table('livestock_types')->insert([
-            ['name' => 'Sapi'],
-            ['name' => 'Kerbau'],
-            ['name' => 'Domba'],
-            ['name' => 'Kambing'],
+            ['name' => 'sapi'],
+            ['name' => 'kerbau'],
+            ['name' => 'domba'],
+            ['name' => 'kambing'],
         ]);
     }
 }
