@@ -8,4 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class LivestockType extends Model
 {
     use HasFactory;
+
+    public function breeds()
+    {
+        return $this->hasMany(LivestockBreed::class);
+    }
 }
