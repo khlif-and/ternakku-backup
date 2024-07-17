@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             LivestockTypeSeeder::class,
             LivestockSexSeeder::class,
             LivestockGroupSeeder::class,
+            LivestockStatusSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
         ]);

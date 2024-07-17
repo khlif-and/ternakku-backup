@@ -14,8 +14,10 @@ return new class extends Migration
         Schema::create('farms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('owner_id');
             $table->date('registration_date');
             $table->boolean('qurban_partner')->default(false);
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
