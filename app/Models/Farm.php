@@ -14,4 +14,13 @@ class Farm extends Model
         return $this->hasOne(FarmDetail::class);
     }
 
+    public function pens()
+    {
+        return $this->hasMany(Pen::class);
+    }
+
+    public function livestockBreeds()
+    {
+        return $this->hasMany(LivestockBreed::class);
+    }
 }
