@@ -13,7 +13,7 @@ class Farm extends Model
         'name', 'registration_date', 'qurban_partner', 'owner_id'
     ];
 
-    public function detail()
+    public function farmDetail()
     {
         return $this->hasOne(FarmDetail::class);
     }

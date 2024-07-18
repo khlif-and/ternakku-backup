@@ -17,7 +17,7 @@ class PartnerController extends Controller
         // Build the query
         $query = Farm::where('qurban_partner', true)
                     ->with([
-                        'detail',
+                        'farmDetail',
                         'detail.province',
                         'detail.regency',
                         'detail.district',

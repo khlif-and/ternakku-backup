@@ -20,7 +20,7 @@ class LivestockReceptionH extends Model
         'transaction_number',
         'transaction_date',
         'supplier_id',
-        'note'
+        'notes'
     ];
 
     public static function boot()

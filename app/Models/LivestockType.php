@@ -12,7 +12,7 @@ class LivestockType extends Model
 
     protected $fillable = ['name'];
 
-    public function breeds()
+    public function livestockBreeds()
     {
         return $this->hasMany(LivestockBreed::class);
     }

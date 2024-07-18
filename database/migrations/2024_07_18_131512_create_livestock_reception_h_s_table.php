@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('transaction_number');
             $table->date('transaction_date');
             $table->unsignedBigInteger('supplier_id');
-            $table->string('note')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
 
             // Foreign key constraints

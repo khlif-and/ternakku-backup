@@ -16,10 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('livestock_reception_h_id');
             $table->string('eartag_number');
             $table->string('rfid_number')->nullable();
-            $table->unsignedBigInteger('type_id');
-            $table->unsignedBigInteger('group_id');
-            $table->unsignedBigInteger('breed_id');
-            $table->unsignedBigInteger('sex_id');
+            $table->unsignedBigInteger('livestock_type_id');
+            $table->unsignedBigInteger('livestock_group_id');
+            $table->unsignedBigInteger('livestock_breed_id');
+            $table->unsignedBigInteger('livestock_sex_id');
             $table->unsignedBigInteger('pen_id');
             $table->integer('age_years');
             $table->integer('age_months');
@@ -27,15 +27,15 @@ return new class extends Migration
             $table->decimal('price_per_kg', 8, 2);
             $table->decimal('price_per_head', 10, 2);
             $table->string('photo')->nullable();
-            $table->string('note')->nullable();
+            $table->string('notes')->nullable();
             $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('livestock_reception_h_id')->references('id')->on('livestock_reception_h')->onDelete('cascade');
-            $table->foreign('type_id')->references('id')->on('livestock_types')->onDelete('cascade');
-            $table->foreign('group_id')->references('id')->on('livestock_groups')->onDelete('cascade');
-            $table->foreign('breed_id')->references('id')->on('livestock_breeds')->onDelete('cascade');
-            $table->foreign('sex_id')->references('id')->on('livestock_sexes')->onDelete('cascade');
+            $table->foreign('livestock_type_id')->references('id')->on('livestock_types')->onDelete('cascade');
+            $table->foreign('livestock_group_id')->references('id')->on('livestock_groups')->onDelete('cascade');
+            $table->foreign('livestock_breed_id')->references('id')->on('livestock_breeds')->onDelete('cascade');
+            $table->foreign('livestock_sex_id')->references('id')->on('livestock_sexes')->onDelete('cascade');
             $table->foreign('pen_id')->references('id')->on('pens')->onDelete('cascade');
         });
     }
