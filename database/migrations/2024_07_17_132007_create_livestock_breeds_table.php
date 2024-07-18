@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreign('farm_id')->references('id')->on('farms')->onDelete('cascade');
             $table->foreign('livestock_type_id')->references('id')->on('livestock_types')->onDelete('cascade');
+            $table->unique(['farm_id', 'livestock_type_id' , 'name']);
             $table->timestamps();
 
         });
