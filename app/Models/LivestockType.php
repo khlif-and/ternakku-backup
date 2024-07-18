@@ -2,15 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Enums\LivestockTypeEnum;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LivestockType extends Model
 {
     use HasFactory;
 
-    public function breeds()
+    protected $fillable = ['name'];
+
+    public function livestockBreeds()
     {
         return $this->hasMany(LivestockBreed::class);
+    }
+
+    public static function getLivestockTypeId(LivestockTypeEnum $enum)
+    {
+        return self::where('name', $enum->value)->first()->id;
     }
 }

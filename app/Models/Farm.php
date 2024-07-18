@@ -9,7 +9,11 @@ class Farm extends Model
 {
     use HasFactory;
 
-    public function detail()
+    protected $fillable = [
+        'name', 'registration_date', 'qurban_partner', 'owner_id'
+    ];
+
+    public function farmDetail()
     {
         return $this->hasOne(FarmDetail::class);
     }
@@ -22,5 +26,10 @@ class Farm extends Model
     public function livestockBreeds()
     {
         return $this->hasMany(LivestockBreed::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
     }
 }

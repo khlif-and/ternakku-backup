@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('farms', function (Blueprint $table) {
+        Schema::create('livestocks', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->unsignedBigInteger('owner_id');
-            $table->date('registration_date');
-            $table->boolean('qurban_partner')->default(false);
-            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('livestock_reception_d_id');
+            $table->boolean('is_qurban')->default(false);
             $table->timestamps();
+
+            // Foreign key constraints
+            $table->foreign('livestock_reception_d_id')->references('id')->on('livestock_reception_d')->onDelete('cascade');
         });
     }
 
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('farms');
+        Schema::dropIfExists('livestocks');
     }
 };

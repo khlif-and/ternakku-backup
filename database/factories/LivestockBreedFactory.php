@@ -14,7 +14,7 @@ class LivestockBreedFactory extends Factory
     {
         return [
             'farm_id' => Farm::factory(),
-            'name' => $this->faker->word . ' Breed',
+            'name' => $this->faker->unique()->word . ' Breed',
         ];
     }
 }

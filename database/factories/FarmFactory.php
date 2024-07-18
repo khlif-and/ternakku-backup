@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Farm;
+use App\Models\User;
+use App\Enums\RoleEnum;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +20,10 @@ class FarmFactory extends Factory
         return [
             'name' => $this->faker->company,
             'registration_date' => Carbon::now(),
-            'qurban_partner' => true
+            'qurban_partner' => true,
+            'owner_id' => User::whereHas('roles', function ($query) {
+                $query->where('name', RoleEnum::FARMER->value);
+            })->inRandomOrder()->first()->id,
         ];
     }
 

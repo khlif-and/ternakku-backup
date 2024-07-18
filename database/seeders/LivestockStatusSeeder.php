@@ -6,16 +6,17 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class LivestockGroupSeeder extends Seeder
+class LivestockStatusSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('livestock_groups')->insert([
-            ['name' => 'pedaging'],
-            ['name' => 'perah'],
+        DB::table('livestock_statuses')->insert([
+            ['name' => 'hidup'],
+            ['name' => 'mati'],
+            ['name' => 'terjual'],
         ]);
     }
 }

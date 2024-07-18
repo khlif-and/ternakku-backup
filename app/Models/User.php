@@ -74,4 +74,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return !is_null($this->email_verified_at);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'role_users');
+    }
 }

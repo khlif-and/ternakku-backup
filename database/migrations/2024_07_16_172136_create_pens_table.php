@@ -21,6 +21,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('farm_id')->references('id')->on('farms')->onDelete('cascade');
+            $table->unique(['farm_id', 'name']);
         });
     }
 

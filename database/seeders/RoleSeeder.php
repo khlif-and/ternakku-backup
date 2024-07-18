@@ -2,20 +2,18 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class LivestockGroupSeeder extends Seeder
+class RoleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table('livestock_groups')->insert([
-            ['name' => 'pedaging'],
-            ['name' => 'perah'],
-        ]);
+        Role::create(['name' => 'registered_user']);
+        Role::create(['name' => 'farmer']);
     }
 }

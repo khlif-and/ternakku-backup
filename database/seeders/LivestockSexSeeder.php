@@ -14,8 +14,8 @@ class LivestockSexSeeder extends Seeder
     public function run(): void
     {
         DB::table('livestock_sexes')->insert([
-            ['name' => 'Jantan'],
-            ['name' => 'Betina'],
+            ['name' => 'jantan'],
+            ['name' => 'betina'],
         ]);
     }
 }
