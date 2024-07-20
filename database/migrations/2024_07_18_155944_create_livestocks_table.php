@@ -14,11 +14,13 @@ return new class extends Migration
         Schema::create('livestocks', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('livestock_reception_d_id');
+            $table->unsignedBigInteger('livestock_status_id');
             $table->boolean('is_qurban')->default(false);
             $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('livestock_reception_d_id')->references('id')->on('livestock_reception_d')->onDelete('cascade');
+            $table->foreign('livestock_status_id')->references('id')->on('livestock_statuses')->onDelete('cascade');
         });
     }
 
