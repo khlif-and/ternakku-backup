@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Farm;
 use App\Models\LivestockBreed;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -13,7 +12,7 @@ class LivestockBreedFactory extends Factory
     public function definition()
     {
         return [
-            'farm_id' => Farm::factory(),
+            'farm_id' => rand(1,3),
             'name' => $this->faker->unique()->word . ' Breed',
         ];
     }

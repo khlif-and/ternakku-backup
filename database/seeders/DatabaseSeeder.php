@@ -27,30 +27,25 @@ class DatabaseSeeder extends Seeder
             LivestockStatusSeeder::class,
             RoleSeeder::class,
             UserSeeder::class,
+            FarmSeeder::class,
         ]);
-
-        $farms = Farm::factory()
-            ->count(3)
-            ->has(FarmDetail::factory()->count(1), 'farmDetail')
-            ->create();
-
-        // Create pens for each farm
-        $farms->each(function ($farm) {
-            Pen::factory()->count(rand(1, 5))->create(['farm_id' => $farm->id]);
-        });
 
         // Get all livestock types
         $types = LivestockType::all();
 
         // Create livestock breeds for each farm
+        $farms = Farm::all();
+
+        $farms->each(function ($farm) {
+            Pen::factory()->count(rand(1, 5))->create(['farm_id' => $farm->id]);
+        });
+
         $farms->each(function ($farm) use ($types) {
             LivestockBreed::factory()->count(rand(1, 5))->create([
                 'farm_id' => $farm->id,
                 'livestock_type_id' => $types->random()->id,
             ]);
         });
-
-        Supplier::factory()->count(10)->create();
 
         $this->call([
             LivestockReceptionSeeder::class,

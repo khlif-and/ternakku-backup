@@ -200,14 +200,14 @@ class AuthController extends Controller
                 ->orWhere('phone_number', $credentials['username']);
         })->first();
 
-        // Check if email is verified
-        if (!$user->hasVerifiedEmail()) {
-            return ResponseHelper::error('Email not verified.', 403);
-        }
-
         // Return error if user not found or authentication fails
         if (!$user || !Auth::attempt(['email' => $user->email, 'password' => $credentials['password']])) {
             return ResponseHelper::error('Incorrect username or password', 401);
+        }
+
+        // Check if email is verified
+        if (!$user->hasVerifiedEmail()) {
+            return ResponseHelper::error('Email not verified.', 403);
         }
 
         // Generate a JWT token for the user

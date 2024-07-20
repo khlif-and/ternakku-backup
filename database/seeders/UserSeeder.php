@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
         $user1 = User::create([
                     'name' => 'Muhammad Iqbal Mubarok',
                     'email' => 'mubarok.iqbal@gmail.com',
-                    'phone_number' => '082116654123',
+                    'phone_number' => '6282116654123',
                     'password' => Hash::make('1234567890'),
                     'email_verified_at' => Carbon::now(),
                 ]);
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
         $user2 = User::create([
                     'name' => 'Peternak Bandung',
                     'email' => 'farmer@farmer.com',
-                    'phone_number' => '08212345678',
+                    'phone_number' => '628212345678',
                     'password' => Hash::make('1234567890'),
                     'email_verified_at' => Carbon::now(),
                 ]);

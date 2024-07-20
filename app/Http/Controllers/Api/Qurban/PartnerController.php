@@ -18,17 +18,17 @@ class PartnerController extends Controller
         $query = Farm::where('qurban_partner', true)
                     ->with([
                         'farmDetail',
-                        'detail.province',
-                        'detail.regency',
-                        'detail.district',
-                        'detail.village'
+                        'farmDetail.province',
+                        'farmDetail.regency',
+                        'farmDetail.district',
+                        'farmDetail.village'
                     ]);
 
         // If there is a search term, add where clauses to filter by various fields
         if ($searchTerm) {
             $query->where(function($q) use ($searchTerm) {
                 $q->where('name', 'LIKE', '%' . $searchTerm . '%')
-                ->orWhereHas('detail', function($q) use ($searchTerm) {
+                ->orWhereHas('farmDetail', function($q) use ($searchTerm) {
                     $q->where('address_line', 'LIKE', '%' . $searchTerm . '%')
                         ->orWhereHas('province', function($p) use ($searchTerm) {
                             $p->where('name', 'LIKE', '%' . $searchTerm . '%');

@@ -14,3 +14,10 @@ if (!function_exists('generateOtp')) {
         return rand(100000, 999999);
     }
 }
+
+if (!function_exists('getNeoObject')) {
+    function getNeoObject($fileName)
+    {
+        return config('filesystems.disks.neo.endpoint') . config('filesystems.disks.neo.bucket') . '/' . $fileName;
+    }
+}

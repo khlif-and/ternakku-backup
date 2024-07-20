@@ -16,7 +16,7 @@ class PenFactory extends Factory
     public function definition()
     {
         return [
-            'farm_id' => Farm::factory(), // Ensure a related farm is created
+            'farm_id' => rand(1,3),
             'name' => $this->faker->unique()->word . ' Pen',
             'area' => $this->faker->numberBetween(100, 500), // Random area between 100 and 500
             'capacity' => $this->faker->numberBetween(10, 50), // Random capacity between 10 and 50

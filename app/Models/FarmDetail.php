@@ -33,4 +33,17 @@ class FarmDetail extends Model
     {
         return $this->belongsTo(Village::class);
     }
+
+    // Definisikan accessor untuk logo
+    public function getLogoAttribute($value)
+    {
+        return getNeoObject($value);
+    }
+
+    // Definisikan mutator untuk logo
+    public function setLogoAttribute($value)
+    {
+        $this->attributes['logo'] = getNeoObject($value);
+    }
+
 }
