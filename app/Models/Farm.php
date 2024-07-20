@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Farm extends Model
 {
@@ -32,4 +33,10 @@ class Farm extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    public function scopeQurban(Builder $query): void
+    {
+        $query->where('qurban_partner', true);
+    }
+
 }
