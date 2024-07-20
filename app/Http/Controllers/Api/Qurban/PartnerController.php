@@ -6,6 +6,7 @@ use App\Models\Farm;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Qurban\PartnerResource;
 
 class PartnerController extends Controller
 {
@@ -15,14 +16,7 @@ class PartnerController extends Controller
         $searchTerm = $request->query('search');
 
         // Build the query
-        $query = Farm::where('qurban_partner', true)
-                    ->with([
-                        'farmDetail',
-                        'farmDetail.province',
-                        'farmDetail.regency',
-                        'farmDetail.district',
-                        'farmDetail.village'
-                    ]);
+        $query = Farm::qurban();
 
         // If there is a search term, add where clauses to filter by various fields
         if ($searchTerm) {
@@ -46,10 +40,11 @@ class PartnerController extends Controller
             });
         }
 
-        // Execute the query and get the results
-        $data = $query->get();
+        $data = PartnerResource::collection($query->get());
 
-        return ResponseHelper::success($data, 'Qurban partners retrieved successfully');
+        $message = $query->count() > 0 ? 'Qurban partners  retrieved successfully' : 'Data empty';
+
+        return ResponseHelper::success($data, $message);
     }
 
 }

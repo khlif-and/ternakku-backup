@@ -26,7 +26,7 @@ class RegisterRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'phone_number' => 'required|string|max:15|unique:users',
+            'phone_number' => 'required|string|max:15|unique:users|regex:/^62[0-9]{9,14}$/',
             'password' => 'required|string|min:8|confirmed',
         ];
     }
@@ -45,6 +45,7 @@ class RegisterRequest extends FormRequest
             'email.unique' => 'Email has already been taken',
             'phone_number.required' => 'Phone number is required',
             'phone_number.unique' => 'Phone number has already been taken',
+            'phone_number.regex' => 'Phone number must start with 62 and contain 9 to 14 digits after 62',
             'password.required' => 'Password is required',
             'password.confirmed' => 'Password confirmation does not match',
         ];
