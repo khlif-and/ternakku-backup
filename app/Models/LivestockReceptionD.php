@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Livestock;
+use App\Models\LivestockStatus;
+use App\Enums\LivestockStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use App\Exceptions\DuplicateEartagException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -70,6 +72,7 @@ class LivestockReceptionD extends Model
     {
         Livestock::create([
             'livestock_reception_d_id' => $this->id,
+            'livestock_status_id' => LivestockStatus::getLivestockStatusId(LivestockStatusEnum::HIDUP),
         ]);
     }
 

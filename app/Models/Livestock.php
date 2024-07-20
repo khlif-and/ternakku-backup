@@ -21,6 +21,11 @@ class Livestock extends Model
         return $this->belongsTo(LivestockReceptionD::class, 'livestock_reception_d_id');
     }
 
+    public function livestockStatus()
+    {
+        return $this->belongsTo(LivestockStatus::class, 'livestock_status_id');
+    }
+
     public function scopeQurban(Builder $query): void
     {
         $query->where('is_qurban', true);
