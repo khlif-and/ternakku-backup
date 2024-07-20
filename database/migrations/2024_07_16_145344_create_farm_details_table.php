@@ -14,14 +14,15 @@ return new class extends Migration
         Schema::create('farm_details', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('farm_id');
+            $table->longText('description')->nullable();
             $table->char('province_id', 2);
             $table->char('regency_id' , 4);
             $table->char('district_id' , 7);
             $table->char('village_id' , 10);
             $table->string('postal_code');
-            $table->string('address_line');
-            $table->decimal('longitude', 10, 7);
-            $table->decimal('latitude', 10, 7);
+            $table->string('address_line')->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
             $table->integer('capacity');
             $table->string('logo');
 

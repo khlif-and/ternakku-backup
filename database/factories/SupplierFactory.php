@@ -13,7 +13,8 @@ class SupplierFactory extends Factory
     public function definition()
     {
         return [
-            'farm_id' => \App\Models\Farm::factory(),
+            'farm_id' => rand(1,3),
+            'phone_number' => '6282116654129',
             'name' => $this->faker->company,
             'province_id' => 32,
             'regency_id' => 3273,
