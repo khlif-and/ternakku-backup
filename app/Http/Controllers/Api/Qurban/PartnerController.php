@@ -47,4 +47,20 @@ class PartnerController extends Controller
         return ResponseHelper::success($data, $message);
     }
 
+    public function detail($id)
+    {
+        // Find the Farm by ID
+        $farm = Farm::qurban()->find($id);
+
+        // If farm not found, return error response
+        if (!$farm) {
+            return ResponseHelper::error(null, 'Farm not found', 404);
+        }
+
+        // If farm found, return it using the PartnerResource
+        $data = new PartnerResource($farm);
+
+        return ResponseHelper::success($data, 'Qurban partner detail retrieved successfully');
+    }
+
 }
