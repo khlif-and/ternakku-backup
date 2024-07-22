@@ -18,6 +18,6 @@ if (!function_exists('generateOtp')) {
 if (!function_exists('getNeoObject')) {
     function getNeoObject($fileName)
     {
-        return config('filesystems.disks.neo.endpoint') . config('filesystems.disks.neo.bucket') . '/' . $fileName;
+        return config('filesystems.disks.neo.endpoint') . '/' . config('filesystems.disks.neo.bucket') . '/' . $fileName;
     }
 }
