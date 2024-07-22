@@ -27,7 +27,7 @@ class PartnerResource extends JsonResource
             'longitude' => $this->farmDetail?->longitude,
             'latitude' => $this->farmDetail?->latitude,
             'capacity' => $this->farmDetail?->capacity,
-            'logo' => $this->farmDetail?->logo,
+            'logo' => getNeoObject($this->farmDetail?->logo),
             'description' => $this->farmDetail?->description,
             'owner_name' => $this->owner?->name,
         ];
