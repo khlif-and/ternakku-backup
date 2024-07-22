@@ -2,8 +2,8 @@
 
 namespace App\Enums;
 
-enum LivestockSexEnum: string
+enum LivestockSexEnum: int
 {
-    case JANTAN = 'jantan';
-    case BETINA = 'betina';
+    case JANTAN = 1;
+    case BETINA = 2;
 }

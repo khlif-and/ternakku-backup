@@ -24,11 +24,6 @@ class Farm extends Model
         return $this->hasMany(Pen::class);
     }
 
-    public function livestockBreeds()
-    {
-        return $this->hasMany(LivestockBreed::class);
-    }
-
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');

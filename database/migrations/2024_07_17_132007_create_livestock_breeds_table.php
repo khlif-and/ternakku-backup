@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('livestock_breeds', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('farm_id');
             $table->unsignedBigInteger('livestock_type_id');
             $table->string('name');
-            $table->foreign('farm_id')->references('id')->on('farms')->onDelete('cascade');
             $table->foreign('livestock_type_id')->references('id')->on('livestock_types')->onDelete('cascade');
-            $table->unique(['farm_id', 'livestock_type_id' , 'name']);
+            $table->unique(['livestock_type_id' , 'name']);
             $table->timestamps();
 
         });
