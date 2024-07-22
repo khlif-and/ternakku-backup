@@ -72,7 +72,7 @@ class LivestockReceptionD extends Model
     {
         Livestock::create([
             'livestock_reception_d_id' => $this->id,
-            'livestock_status_id' => LivestockStatus::getLivestockStatusId(LivestockStatusEnum::HIDUP),
+            'livestock_status_id' => LivestockStatusEnum::HIDUP,
         ]);
     }
 

@@ -10,15 +10,9 @@ class LivestockBreed extends Model
     use HasFactory;
 
     protected $fillable = [
-        'farm_id',
         'livestock_type_id',
         'name',
     ];
-
-    public function farm()
-    {
-        return $this->belongsTo(Farm::class);
-    }
 
     public function livestockType()
     {

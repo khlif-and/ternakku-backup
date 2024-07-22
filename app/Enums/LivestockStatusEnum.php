@@ -2,9 +2,9 @@
 
 namespace App\Enums;
 
-enum LivestockStatusEnum: string
+enum LivestockStatusEnum: int
 {
-    case HIDUP = 'hidup';
-    case MATI = 'mati';
-    case TERJUAL = 'terjual';
+    case HIDUP = 1;
+    case MATI = 2;
+    case TERJUAL = 3;
 }

@@ -19,7 +19,7 @@ class LivestockReceptionDFactory extends Factory
     {
         $livestockReceptionH = LivestockReceptionH::factory()->create();
         $farmId = $livestockReceptionH->farm_id;
-        $livestockBreed = LivestockBreed::where('farm_id', $farmId)->first();
+        $livestockBreed = LivestockBreed::inRandomOrder()->first();
         $livestockTypeId = $livestockBreed->livestock_type_id;
 
         return [

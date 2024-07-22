@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\LivestockBreed;
+use App\Models\Farm;
 use Illuminate\Support\Carbon;
 use App\Models\LivestockReceptionH;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,10 +16,8 @@ class LivestockReceptionHFactory extends Factory
 
     public function definition()
     {
-        $livestockBreed = LivestockBreed::inRandomOrder()->first();
-
         return [
-            'farm_id' => $livestockBreed->farm_id,
+            'farm_id' => Farm::inRandomOrder()->first()->id,
             'transaction_date' => Carbon::now(),
             'supplier_id' => \App\Models\Supplier::factory(),
             'notes' => $this->faker->sentence

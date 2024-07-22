@@ -2,10 +2,10 @@
 
 namespace App\Enums;
 
-enum LivestockTypeEnum: string
+enum LivestockTypeEnum: int
 {
-    case SAPI = 'sapi';
-    case KERBAU = 'kerbau';
-    case DOMBA = 'domba';
-    case KAMBING = 'kambing';
+    case SAPI = 1;
+    case KERBAU = 2;
+    case DOMBA = 3;
+    case KAMBING = 4;
 }
