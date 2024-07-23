@@ -18,9 +18,7 @@ Route::group([
     'middleware' => 'api',
 ], function () {
 
-    Route::group([
-        'prefix' => 'auth'
-    ], function () {
+    Route::group(['prefix' => 'auth'], function () {
         Route::post('register', [App\Http\Controllers\Api\AuthController::class, 'register']);
         Route::post('verify', [App\Http\Controllers\Api\AuthController::class, 'verify']);
         Route::post('/resend-otp', [App\Http\Controllers\Api\AuthController::class,'resendOtp']);
@@ -32,21 +30,26 @@ Route::group([
         });
     });
 
-    Route::group([
-        'prefix' => 'qurban',
-    ], function () {
-        Route::get('partner', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'index']);
-        Route::get('partner/{id}', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'detail']);
-        Route::get('partner/{id}/pen', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'getPen']);
+    Route::group(['prefix' => 'qurban'], function () {
+        Route::group(['prefix' => 'partner'], function () {
+            Route::get('/', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'index']);
+            Route::get('{id}', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'detail']);
+            Route::get('{id}/pen', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'getPen']);
+        });
 
         Route::get('livestock', [App\Http\Controllers\Api\Qurban\LivestockController::class, 'index']);
 
-        Route::group([
-            'middleware' => ['auth:api', 'email.verified'],
-        ], function () {
+        Route::middleware(['auth:api', 'email.verified'])->group(function() {
 
         });
     });
 
-    Route::get('farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
+    Route::group(['prefix' => 'data-master'], function () {
+        Route::group(['prefix' => 'livestock'], function () {
+            Route::get('type', [App\Http\Controllers\Api\DataMasterController::class, 'getLivestockType']);
+            Route::get('sex', [App\Http\Controllers\Api\DataMasterController::class, 'getLivestockSex']);
+            Route::get('group', [App\Http\Controllers\Api\DataMasterController::class, 'getLivestockGroup']);
+            Route::get('breed', [App\Http\Controllers\Api\DataMasterController::class, 'getLivestockBreed']);
+        });
+    });
 });
