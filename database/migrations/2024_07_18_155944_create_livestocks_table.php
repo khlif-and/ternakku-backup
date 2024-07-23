@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('livestock_reception_d_id');
             $table->unsignedBigInteger('livestock_status_id');
-            $table->boolean('is_qurban')->default(false);
             $table->timestamps();
 
             // Foreign key constraints
