@@ -21,4 +21,15 @@ class Pen extends Model
     {
         return $this->belongsTo(Farm::class);
     }
+
+    public function livestockReceptionDs()
+    {
+        return $this->hasMany(LivestockReceptionD::class);
+    }
+
+    public function getPopulationAttribute()
+    {
+        return $this->livestockReceptionDs()->count();
+    }
+
 }
