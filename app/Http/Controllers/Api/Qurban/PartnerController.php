@@ -6,6 +6,7 @@ use App\Models\Farm;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Qurban\PartnerPenResource;
 use App\Http\Resources\Qurban\PartnerListResource;
 use App\Http\Resources\Qurban\PartnerDetailResource;
 
@@ -55,12 +56,28 @@ class PartnerController extends Controller
 
         // If farm not found, return error response
         if (!$farm) {
-            return ResponseHelper::error(null, 'Farm not found', 404);
+            return ResponseHelper::error('Qurban partner not found', 404);
         }
 
         // If farm found, return it using the PartnerResource
         $data = new PartnerDetailResource($farm);
 
         return ResponseHelper::success($data, 'Qurban partner detail retrieved successfully');
+    }
+
+    public function getPen($id)
+    {
+        // Find the Farm by ID
+        $farm = Farm::qurban()->find($id);
+
+        // If farm not found, return error response
+        if (!$farm) {
+            return ResponseHelper::error('Qurban partner not found', 404);
+        }
+
+        // If farm found, return it using the PartnerResource
+        $data = PartnerPenResource::collection($farm->pens);
+
+        return ResponseHelper::success($data, 'Qurban partner pens retrieved successfully');
     }
 }
