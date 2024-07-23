@@ -55,7 +55,7 @@ class PartnerController extends Controller
 
         // If farm not found, return error response
         if (!$farm) {
-            return ResponseHelper::error(null, 'Farm not found', 404);
+            return ResponseHelper::error('Qurban partner not found', 404);
         }
 
         // If farm found, return it using the PartnerResource

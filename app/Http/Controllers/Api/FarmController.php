@@ -17,7 +17,7 @@ class FarmController extends Controller
 
         // If farm not found, return error response
         if (!$farm) {
-            return ResponseHelper::error(null, 'Farm not found', 404);
+            return ResponseHelper::error('Farm not found', 404);
         }
 
         // If farm found, return it using the FarmResource
