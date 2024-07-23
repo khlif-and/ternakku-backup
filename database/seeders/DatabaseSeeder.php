@@ -41,11 +41,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             LivestockReceptionSeeder::class,
+            QurbanLivestockSeeder::class,
         ]);
 
-        //ubah ternak jadi is_qurban = true
-        Livestock::query()->update([
-            'is_qurban' => true,
-        ]);
+
     }
 }

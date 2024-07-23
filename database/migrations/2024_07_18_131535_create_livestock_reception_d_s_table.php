@@ -25,7 +25,7 @@ return new class extends Migration
             $table->integer('age_months');
             $table->decimal('weight', 8, 2);
             $table->decimal('price_per_kg', 8, 2);
-            $table->decimal('price_per_head', 10, 2);
+            $table->decimal('price_per_head', 15, 2);
             $table->string('photo')->nullable();
             $table->string('notes')->nullable();
             $table->timestamps();
