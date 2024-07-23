@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources\Qurban;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\PenResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PartnerResource extends JsonResource
+class FarmResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -30,6 +31,7 @@ class PartnerResource extends JsonResource
             'logo' => getNeoObject($this->farmDetail?->logo),
             'description' => $this->farmDetail?->description,
             'owner_name' => $this->owner?->name,
+            'pens' => PenResource::collection($this->pens),
         ];
     }
 }

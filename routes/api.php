@@ -37,6 +37,7 @@ Route::group([
     ], function () {
         Route::get('partner', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'index']);
         Route::get('partner/{id}', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'detail']);
+
         Route::get('livestock', [App\Http\Controllers\Api\Qurban\LivestockController::class, 'index']);
 
         Route::group([
@@ -46,4 +47,5 @@ Route::group([
         });
     });
 
+    Route::get('farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
 });
