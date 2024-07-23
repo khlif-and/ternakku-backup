@@ -34,4 +34,25 @@ class Farm extends Model
         $query->where('qurban_partner', true);
     }
 
+    public function getFullAddressAttribute()
+    {
+        $farmDetail = $this->farmDetail;
+        if (!$farmDetail) {
+            return null;
+        }
+
+        $addressParts = [
+            $farmDetail->address_line,
+            $farmDetail->village?->name,
+            $farmDetail->district?->name,
+            $farmDetail->regency?->name,
+            $farmDetail->province?->name,
+        ];
+
+        // Menghilangkan bagian alamat yang null
+        $filteredAddressParts = array_filter($addressParts, fn($part) => !is_null($part));
+
+        return implode(', ', $filteredAddressParts);
+    }
+
 }

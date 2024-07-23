@@ -6,7 +6,8 @@ use App\Models\Farm;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Qurban\PartnerResource;
+use App\Http\Resources\Qurban\PartnerListResource;
+use App\Http\Resources\Qurban\PartnerDetailResource;
 
 class PartnerController extends Controller
 {
@@ -40,7 +41,7 @@ class PartnerController extends Controller
             });
         }
 
-        $data = PartnerResource::collection($query->get());
+        $data = PartnerListResource::collection($query->get());
 
         $message = $query->count() > 0 ? 'Qurban partners  retrieved successfully' : 'Data empty';
 
@@ -58,9 +59,8 @@ class PartnerController extends Controller
         }
 
         // If farm found, return it using the PartnerResource
-        $data = new PartnerResource($farm);
+        $data = new PartnerDetailResource($farm);
 
         return ResponseHelper::success($data, 'Qurban partner detail retrieved successfully');
     }
-
 }
