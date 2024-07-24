@@ -69,4 +69,9 @@ class Livestock extends Model
         return "{$ageInYears} years and {$ageInMonths} months";
     }
 
+    public function getCurrentPhotoAttribute()
+    {
+        return $this->livestockReceptionD->photo ?? null;
+    }
+
 }

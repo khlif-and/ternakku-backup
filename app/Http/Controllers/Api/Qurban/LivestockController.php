@@ -6,7 +6,8 @@ use App\Models\Livestock;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Qurban\LivestockResource;
+use App\Http\Resources\Qurban\LivestockListResource;
+use App\Http\Resources\Qurban\LivestockDetailResource;
 
 class LivestockController extends Controller
 {
@@ -41,13 +42,29 @@ class LivestockController extends Controller
         }
 
         // Eksekusi query dan ambil hasilnya
-        $data = LivestockResource::collection($query->get());
+        $data = LivestockListResource::collection($query->get());
 
         // Tentukan pesan respons
         $message = $query->count() > 0 ? 'Livestock retrieved successfully' : 'Data empty';
 
         // Kembalikan respons dengan data dan pesan
         return ResponseHelper::success($data, $message);
+    }
+
+    public function detail($id)
+    {
+        // Find the Livestock by ID
+        $livestock = Livestock::qurban()->find($id);
+
+        // If Livestock not found, return error response
+        if (!$livestock) {
+            return ResponseHelper::error('Livestock not found', 404);
+        }
+
+        // If Livestock found, return it using the PartnerResource
+        $data = new LivestockDetailResource($livestock);
+
+        return ResponseHelper::success($data, 'Livestock detail retrieved successfully');
     }
 
 }
