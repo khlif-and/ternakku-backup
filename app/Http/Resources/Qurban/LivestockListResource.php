@@ -5,7 +5,7 @@ namespace App\Http\Resources\Qurban;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class LivestockResource extends JsonResource
+class LivestockListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,7 +24,8 @@ class LivestockResource extends JsonResource
             'livestock_type_name' => $this->livestockReceptionD->livestockType->name,
             'livestock_breed_id' => $this->livestockReceptionD->livestock_breed_id,
             'livestock_breed_name' => $this->livestockReceptionD->livestockBreed->name,
-            'price' => $this->qurbanLivestock->price,
+            'price' => (float) $this->qurbanLivestock->price,
+            'current_photo' => $this->current_photo,
         ];
     }
 }

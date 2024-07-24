@@ -37,7 +37,11 @@ Route::group([
             Route::get('{id}/pen', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'getPen']);
         });
 
-        Route::get('livestock', [App\Http\Controllers\Api\Qurban\LivestockController::class, 'index']);
+        Route::group(['prefix' => 'livestock'], function () {
+            Route::get('/', [App\Http\Controllers\Api\Qurban\LivestockController::class, 'index']);
+            Route::get('{id}', [App\Http\Controllers\Api\Qurban\LivestockController::class, 'detail']);
+        });
+
 
         Route::middleware(['auth:api', 'email.verified'])->group(function() {
 
