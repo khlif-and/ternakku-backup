@@ -18,42 +18,49 @@ Route::group([
     'middleware' => 'api',
 ], function () {
 
-    Route::group(['prefix' => 'auth'], function () {
-        Route::post('register', [App\Http\Controllers\Api\AuthController::class, 'register']);
-        Route::post('verify', [App\Http\Controllers\Api\AuthController::class, 'verify']);
-        Route::post('/resend-otp', [App\Http\Controllers\Api\AuthController::class,'resendOtp']);
-        Route::post('login', [App\Http\Controllers\Api\AuthController::class, 'login']);
+    Route::group([
+        'prefix' => 'auth',
+        'controller' => App\Http\Controllers\Api\AuthController::class
+    ], function () {
+        Route::post('register', 'register');
+        Route::post('verify', 'verify');
+        Route::post('resend-otp', 'resendOtp');
+        Route::post('login', 'login');
 
         Route::middleware(['auth:api', 'email.verified'])->group(function() {
-            Route::get('/me', [App\Http\Controllers\Api\AuthController::class, 'me']);
-            Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
+            Route::get('me', 'me');
+            Route::post('logout', 'logout');
         });
     });
 
     Route::group(['prefix' => 'qurban'], function () {
-        Route::group(['prefix' => 'partner'], function () {
-            Route::get('/', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'index']);
-            Route::get('{id}', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'detail']);
-            Route::get('{id}/pen', [App\Http\Controllers\Api\Qurban\PartnerController::class, 'getPen']);
+        Route::group([
+            'prefix' => 'partner',
+            'controller' => App\Http\Controllers\Api\Qurban\PartnerController::class
+        ], function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'detail');
+            Route::get('{id}/pen', 'getPen');
         });
 
-        Route::group(['prefix' => 'livestock'], function () {
-            Route::get('/', [App\Http\Controllers\Api\Qurban\LivestockController::class, 'index']);
-            Route::get('{id}', [App\Http\Controllers\Api\Qurban\LivestockController::class, 'detail']);
-        });
-
-
-        Route::middleware(['auth:api', 'email.verified'])->group(function() {
-
+        Route::group([
+            'prefix' => 'livestock',
+            'controller' => App\Http\Controllers\Api\Qurban\LivestockController::class
+        ], function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'detail');
         });
     });
 
-    Route::group(['prefix' => 'data-master'], function () {
+    Route::group([
+        'prefix' => 'data-master',
+        'controller' => App\Http\Controllers\Api\DataMasterController::class
+    ], function () {
         Route::group(['prefix' => 'livestock'], function () {
-            Route::get('type', [App\Http\Controllers\Api\DataMasterController::class, 'getLivestockType']);
-            Route::get('sex', [App\Http\Controllers\Api\DataMasterController::class, 'getLivestockSex']);
-            Route::get('group', [App\Http\Controllers\Api\DataMasterController::class, 'getLivestockGroup']);
-            Route::get('breed', [App\Http\Controllers\Api\DataMasterController::class, 'getLivestockBreed']);
+            Route::get('type', 'getLivestockType');
+            Route::get('sex', 'getLivestockSex');
+            Route::get('group', 'getLivestockGroup');
+            Route::get('breed', 'getLivestockBreed');
         });
     });
 });

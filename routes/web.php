@@ -13,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group([
+    'prefix' => 'auth',
+    'controller' => App\Http\Controllers\Admin\AuthController::class
+], function () {
+    Route::get('login', 'showLoginForm');
+    Route::post('login', 'login');
+    // Route::post('register', 'register');
+    // Route::post('verify', 'verify');
+    // Route::post('resend-otp', 'resendOtp');
 });
