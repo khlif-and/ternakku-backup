@@ -16,6 +16,7 @@ class LivestockDetailResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'eartag' => $this->livestockReceptionD->eartag_number,
             'current_weight' => $this->current_weight,
             'current_age' => $this->current_age,
