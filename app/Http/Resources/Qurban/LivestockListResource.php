@@ -15,6 +15,7 @@ class LivestockListResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => $this->id,
             'farm_id' => $this->livestockReceptionD->livestockReceptionH->farm_id,
             'farm_name' => $this->livestockReceptionD->livestockReceptionH->farm->name,
             'eartag' => $this->livestockReceptionD->eartag_number,
