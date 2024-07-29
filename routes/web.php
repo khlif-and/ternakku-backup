@@ -19,7 +19,7 @@ Route::group([
 ], function () {
     Route::get('login', 'showLoginForm');
     Route::post('login', 'login');
-    // Route::post('register', 'register');
+    Route::get('register', 'showRegisterForm');
     // Route::post('verify', 'verify');
     // Route::post('resend-otp', 'resendOtp');
 });
