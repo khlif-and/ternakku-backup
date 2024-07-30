@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PenResource extends JsonResource
+class PenListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -25,6 +25,7 @@ class PenResource extends JsonResource
             'name' => $this->name,
             'area' => $this->area,
             'capacity' => $this->capacity,
+            'population' => $this->population,
             'photo' => $this->photo,
         ];
     }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Support\Carbon;
+use App\Enums\LivestockSexEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -74,4 +75,24 @@ class Livestock extends Model
         return $this->livestockReceptionD->photo ?? null;
     }
 
+    public function scopeOfType($query, $typeId)
+    {
+        return $query->whereHas('livestockReceptionD', function($q) use ($typeId) {
+            $q->where('livestock_type_id', $typeId);
+        });
+    }
+
+    public function scopeMale($query)
+    {
+        return $query->whereHas('livestockReceptionD', function($q) {
+            $q->where('livestock_sex_id', LivestockSexEnum::JANTAN->value);
+        });
+    }
+
+    public function scopeFemale($query)
+    {
+        return $query->whereHas('livestockReceptionD', function($q) {
+            $q->where('livestock_sex_id', LivestockSexEnum::BETINA->value);
+        });
+    }
 }
