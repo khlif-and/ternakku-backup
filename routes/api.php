@@ -63,4 +63,21 @@ Route::group([
             Route::get('breed', 'getLivestockBreed');
         });
     });
+
+    Route::group([
+        'prefix' => 'farming',
+        'middleware' => ['auth:api', 'email.verified']
+    ], function () {
+        Route::get('/farm', [App\Http\Controllers\Api\FarmController::class, 'index']);
+        Route::get('/farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
+
+        Route::group([
+            'prefix' => 'dashboard',
+            'controller' => App\Http\Controllers\Api\Farming\DashboardController::class
+        ], function () {
+            Route::get('/{farm_id}/pen', 'getPen');
+            Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
+            Route::get('/{farm_id}/livestock', 'getLivestock');
+        });
+    });
 });

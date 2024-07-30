@@ -3,13 +3,29 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Farm;
-use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\FarmResource;
+use App\Http\Resources\FarmListResource;
+use App\Http\Resources\FarmDetailResource;
 
 class FarmController extends Controller
 {
+    public function index()
+    {
+        $user = auth()->user();
+
+        $farms = Farm::where('owner_id' , $user->id)->get();
+
+        $data = FarmListResource::collection($farms);
+
+        // Tentukan pesan respons
+        $message = $farms->count() > 0 ? 'Farms retrieved successfully' : 'Data empty';
+
+        // Kembalikan respons dengan data dan pesan
+        return ResponseHelper::success($data, $message);
+
+    }
+
     public function detail($id)
     {
         // Find the Farm by ID
@@ -21,7 +37,7 @@ class FarmController extends Controller
         }
 
         // If farm found, return it using the FarmResource
-        $data = new FarmResource($farm);
+        $data = new FarmDetailResource($farm);
 
         return ResponseHelper::success($data, 'Farm detail retrieved successfully');
     }

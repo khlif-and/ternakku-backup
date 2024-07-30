@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\PenResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FarmResource extends JsonResource
+class FarmDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -31,7 +31,6 @@ class FarmResource extends JsonResource
             'logo' => getNeoObject($this->farmDetail?->logo),
             'description' => $this->farmDetail?->description,
             'owner_name' => $this->owner?->name,
-            'pens' => PenResource::collection($this->pens),
         ];
     }
 }
