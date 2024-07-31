@@ -44,6 +44,14 @@ Route::group([
         });
 
         Route::group([
+            'prefix' => 'breed',
+            'controller' => App\Http\Controllers\Api\Qurban\BreedController::class
+        ], function () {
+            Route::get('/', 'index');
+            Route::get('{id}', 'detail');
+        });
+
+        Route::group([
             'prefix' => 'livestock',
             'controller' => App\Http\Controllers\Api\Qurban\LivestockController::class
         ], function () {

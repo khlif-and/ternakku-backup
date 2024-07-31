@@ -22,7 +22,7 @@ class PartnerDetailResource extends JsonResource
             'latitude' => $this->farmDetail?->latitude,
             'description' => $this->farmDetail?->description,
             'logo' => getNeoObject($this->farmDetail?->logo),
-            'pen_hoto' => $this->pens->first()?->photo
+            'pen_hoto' => $this->farmDetail?->cover_photo
         ];
     }
 }
