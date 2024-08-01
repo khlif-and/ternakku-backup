@@ -2,10 +2,12 @@
 
 namespace App\Http\Resources\Qurban;
 
+use App\Models\Farm;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Http\Resources\Qurban\PartnerListResource;
 
-class LivestockBreedListResource extends JsonResource
+class LivestockBreedDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,6 +24,17 @@ class LivestockBreedListResource extends JsonResource
             'min_weight' => $this->min_weight,
             'max_weight' => $this->max_weight,
             'photo' => getNeoObject($this->photo),
+            'description' => $this->description,
+            'avaliable_on' => PartnerListResource::collection( $this->avaliableOn($this->id))
         ];
+    }
+
+    private function avaliableOn($livestockBreedId)
+    {
+        $farms = Farm::whereHas('livestockReceptionH.livestockReceptionD', function ($query) use ($livestockBreedId) {
+            $query->where('livestock_breed_id', $livestockBreedId);
+        })->get();
+
+        return $farms;
     }
 }
