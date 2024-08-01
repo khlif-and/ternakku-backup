@@ -58,6 +58,13 @@ Route::group([
             Route::get('/', 'index');
             Route::get('{id}', 'detail');
         });
+
+        Route::group([
+            'prefix' => 'blog',
+            'controller' => App\Http\Controllers\Api\Qurban\BlogController::class
+        ], function () {
+            Route::get('/', 'index');
+        });
     });
 
     Route::group([
