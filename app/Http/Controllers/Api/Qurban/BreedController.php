@@ -8,6 +8,7 @@ use App\Models\LivestockBreed;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Qurban\LivestockBreedListResource;
+use App\Http\Resources\Qurban\LivestockBreedDetailResource;
 
 class BreedController extends Controller
 {
@@ -37,5 +38,18 @@ class BreedController extends Controller
 
         // Kembalikan respons dengan data dan pesan
         return ResponseHelper::success($data, $message);
+    }
+
+    public function detail($id)
+    {
+        $breed = LivestockBreed::find($id);
+
+        if (!$breed) {
+            return ResponseHelper::error('Livestock not found', 404);
+        }
+
+        $data = new LivestockBreedDetailResource($breed);
+
+        return ResponseHelper::success($data, 'Livestock breed detail retrieved successfully');
     }
 }
