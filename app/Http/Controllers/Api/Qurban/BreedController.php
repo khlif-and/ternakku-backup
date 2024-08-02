@@ -18,7 +18,7 @@ class BreedController extends Controller
         $livestockTypeId = $request->query('livestock_type_id');
         $searchTerm = $request->query('search');
 
-        $query = LivestockBreed::with([
+        $query = LivestockBreed::qurban()->with([
             'livestockType',
         ]);
 
@@ -42,7 +42,7 @@ class BreedController extends Controller
 
     public function detail($id)
     {
-        $breed = LivestockBreed::find($id);
+        $breed = LivestockBreed::qurban()->find($id);
 
         if (!$breed) {
             return ResponseHelper::error('Livestock not found', 404);
