@@ -77,6 +77,7 @@ Route::group([
             Route::get('group', 'getLivestockGroup');
             Route::get('breed', 'getLivestockBreed');
         });
+        Route::get('bank', 'getBank');
     });
 
     Route::group([

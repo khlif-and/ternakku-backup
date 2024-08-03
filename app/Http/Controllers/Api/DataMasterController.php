@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Bank;
 use App\Models\LivestockSex;
 use Illuminate\Http\Request;
 use App\Models\LivestockType;
@@ -45,6 +46,15 @@ class DataMasterController extends Controller
         }
 
         $data = LivestockBreedResource::collection($query->get());
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function getBank()
+    {
+        $data = Bank::select('id', 'name', 'swift_code')
+                ->orderBy('name')
+                ->get();
 
         return ResponseHelper::success($data, 'Data retrieved successfully');
     }

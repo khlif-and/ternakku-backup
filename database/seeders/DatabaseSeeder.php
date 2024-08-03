@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LivestockReceptionSeeder::class,
             QurbanLivestockSeeder::class,
+            BankSeeder::class,
         ]);
 
 
