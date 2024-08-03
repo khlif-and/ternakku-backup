@@ -14,20 +14,20 @@ return new class extends Migration
         Schema::create('qurban_saving_registration_user', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('qurban_saving_registration_id');
-            $table->unsignedBigInteger('bank_user_id');
+            $table->unsignedBigInteger('user_bank_id');
             $table->tinyInteger('portion')->default(1);
             $table->timestamps();
 
             // Define foreign key constraints with custom names
             $table->foreign('qurban_saving_registration_id', 'qssr_qss_id_foreign')
-            ->references('id')
-            ->on('qurban_saving_registrations')
-            ->onDelete('cascade');
+                ->references('id')
+                ->on('qurban_saving_registrations')
+                ->onDelete('cascade');
 
-            $table->foreign('bank_user_id', 'qssr_bu_id_foreign')
-            ->references('id')
-            ->on('user_bank') // Update this to 'user_bank' instead of 'bank_user'
-            ->onDelete('cascade');
+            $table->foreign('user_bank_id', 'qssr_bu_id_foreign')
+                ->references('id')
+                ->on('user_bank') // Update this to 'user_bank' instead of 'bank_user'
+                ->onDelete('cascade');
 
         });
     }
@@ -37,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('qurban_saving_registration_users');
+        Schema::dropIfExists('qurban_saving_registration_user');
     }
 };
