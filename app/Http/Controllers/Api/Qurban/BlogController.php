@@ -12,7 +12,7 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::active()->get();
+        $blogs = Blog::active()->where('module' , 'qurban')->orderBy('order')->get();
         return ResponseHelper::success(BlogResource::collection($blogs), 'Blogs retrieved successfully.');
     }
 }
