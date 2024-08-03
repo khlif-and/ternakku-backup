@@ -84,17 +84,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Bank::class, 'bank_user');
     }
-
-    public function qurbanSavingRegistrations()
-    {
-        return $this->hasManyThrough(
-            QurbanSavingRegistration::class,
-            BankUser::class,
-            'user_id', // Foreign key on BankUser table
-            'id', // Foreign key on QurbanSavingRegistration table
-            'id', // Local key on User table
-            'qurban_saving_registration_id' // Local key on BankUser table
-        );
-    }
-
 }

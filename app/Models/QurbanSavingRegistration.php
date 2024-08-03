@@ -45,11 +45,4 @@ class QurbanSavingRegistration extends Model
     {
         return $this->hasMany(QurbanSavingRegistrationUser::class);
     }
-
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'qurban_saving_registration_user', 'qurban_saving_registration_id', 'user_bank_id')
-            ->withPivot('portion')
-            ->withTimestamps();
-    }
 }

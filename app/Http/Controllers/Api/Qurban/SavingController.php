@@ -8,11 +8,29 @@ use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\QurbanSavingRegistration;
+use App\Models\QurbanSavingRegistrationUser;
 use App\Http\Requests\Qurban\SavingRegisterRequest;
+use App\Http\Resources\Qurban\SavingRegistrationListResource;
 use App\Http\Resources\Qurban\SavingRegistrationDetailResource;
 
 class SavingController extends Controller
 {
+    public function index()
+    {
+        $user = auth()->user();
+
+        $userBankIds = UserBank::where('user_id' , $user->id)->pluck('id');
+        $qurbanSavingRegistrationUserIds = QurbanSavingRegistrationUser::whereIn('user_bank_id' , $userBankIds)->pluck('id');
+
+        $qurbanSavingRegistrations = QurbanSavingRegistration::whereIn('id', $qurbanSavingRegistrationUserIds)
+            ->with(['livestockBreed', 'livestockBreed.livestockType', 'farm', 'province', 'regency', 'district', 'village'])
+            ->get();
+
+        // Mengembalikan data dalam bentuk resource collection
+        return SavingRegistrationListResource::collection($qurbanSavingRegistrations);
+
+    }
+
     public function register(SavingRegisterRequest $request)
     {
         try {
@@ -41,8 +59,11 @@ class SavingController extends Controller
                     'account_number' => $user['account_number']
                 ]);
 
-                // Associate user_bank with Qurban saving registration
-                $qurbanSavingRegistration->users()->attach($userBank->id, ['portion' => $user['portion']]);
+                QurbanSavingRegistrationUser::create([
+                    'user_bank_id' => $userBank->id,
+                    'qurban_saving_registration_id' => $qurbanSavingRegistration->id,
+                    'portion' => $user['portion']
+                ]);
             }
 
             DB::commit();
@@ -63,7 +84,6 @@ class SavingController extends Controller
         $data =  new SavingRegistrationDetailResource($qurbanSavingRegistration);
 
         return ResponseHelper::success($data, 'Qurban saving registration created successfully');
-        ;
     }
 
 }
