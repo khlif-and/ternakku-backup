@@ -28,6 +28,10 @@ return new class extends Migration
 
             $table->foreign('livestock_breed_id')->references('id')->on('livestock_breeds')->onDelete('cascade');
             $table->foreign('farm_id')->references('id')->on('farms')->onDelete('cascade');
+            $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade');
+            $table->foreign('regency_id')->references('id')->on('regencies')->onDelete('cascade');
+            $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
+            $table->foreign('village_id')->references('id')->on('villages')->onDelete('cascade');
         });
     }
 

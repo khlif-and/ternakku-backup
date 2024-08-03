@@ -65,6 +65,20 @@ Route::group([
         ], function () {
             Route::get('/', 'index');
         });
+
+        Route::middleware(['auth:api', 'email.verified'])->group(function() {
+
+            Route::group([
+                'prefix' => 'saving',
+                'controller' => App\Http\Controllers\Api\Qurban\SavingController::class
+            ], function () {
+                Route::get('/register', 'index');
+                Route::post('/register', 'register');
+                Route::get('/register/{id}', 'detail');
+            });
+
+        });
+
     });
 
     Route::group([
