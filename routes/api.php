@@ -18,10 +18,7 @@ Route::group([
     'middleware' => 'api',
 ], function () {
 
-    Route::group([
-        'prefix' => 'auth',
-        'controller' => App\Http\Controllers\Api\AuthController::class
-    ], function () {
+    Route::group(['prefix' => 'auth', 'controller' => App\Http\Controllers\Api\AuthController::class], function () {
         Route::post('register', 'register');
         Route::post('verify', 'verify');
         Route::post('resend-otp', 'resendOtp');
@@ -34,77 +31,58 @@ Route::group([
     });
 
     Route::group(['prefix' => 'qurban'], function () {
-        Route::group([
-            'prefix' => 'partner',
-            'controller' => App\Http\Controllers\Api\Qurban\PartnerController::class
-        ], function () {
+        Route::group(['prefix' => 'partner', 'controller' => App\Http\Controllers\Api\Qurban\PartnerController::class], function () {
             Route::get('/', 'index');
             Route::get('{id}', 'detail');
             Route::get('{id}/pen', 'getPen');
         });
 
-        Route::group([
-            'prefix' => 'breed',
-            'controller' => App\Http\Controllers\Api\Qurban\BreedController::class
-        ], function () {
+        Route::group(['prefix' => 'breed', 'controller' => App\Http\Controllers\Api\Qurban\BreedController::class], function () {
             Route::get('/', 'index');
             Route::get('{id}', 'detail');
         });
 
-        Route::group([
-            'prefix' => 'livestock',
-            'controller' => App\Http\Controllers\Api\Qurban\LivestockController::class
-        ], function () {
+        Route::group(['prefix' => 'livestock', 'controller' => App\Http\Controllers\Api\Qurban\LivestockController::class], function () {
             Route::get('/', 'index');
             Route::get('{id}', 'detail');
         });
 
-        Route::group([
-            'prefix' => 'blog',
-            'controller' => App\Http\Controllers\Api\Qurban\BlogController::class
-        ], function () {
+        Route::group(['prefix' => 'blog', 'controller' => App\Http\Controllers\Api\Qurban\BlogController::class], function () {
             Route::get('/', 'index');
         });
 
         Route::middleware(['auth:api', 'email.verified'])->group(function() {
-
-            Route::group([
-                'prefix' => 'saving',
-                'controller' => App\Http\Controllers\Api\Qurban\SavingController::class
-            ], function () {
+            Route::group(['prefix' => 'saving', 'controller' => App\Http\Controllers\Api\Qurban\SavingController::class], function () {
                 Route::get('/register', 'index');
                 Route::post('/register', 'register');
                 Route::get('/register/{id}', 'detail');
             });
-
         });
-
     });
 
-    Route::group([
-        'prefix' => 'data-master',
-        'controller' => App\Http\Controllers\Api\DataMasterController::class
-    ], function () {
+    Route::group(['prefix' => 'data-master', 'controller' => App\Http\Controllers\Api\DataMasterController::class], function () {
         Route::group(['prefix' => 'livestock'], function () {
             Route::get('type', 'getLivestockType');
             Route::get('sex', 'getLivestockSex');
             Route::get('group', 'getLivestockGroup');
             Route::get('breed', 'getLivestockBreed');
         });
+
+        Route::group(['prefix' => 'location'], function () {
+            Route::get('province', 'getProvince');
+            Route::get('regency', 'getRegency');
+            Route::get('district', 'getDistrict');
+            Route::get('village', 'getVillage');
+        });
+
         Route::get('bank', 'getBank');
     });
 
-    Route::group([
-        'prefix' => 'farming',
-        'middleware' => ['auth:api', 'email.verified']
-    ], function () {
+    Route::group(['prefix' => 'farming', 'middleware' => ['auth:api', 'email.verified']], function () {
         Route::get('/farm', [App\Http\Controllers\Api\FarmController::class, 'index']);
         Route::get('/farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
 
-        Route::group([
-            'prefix' => 'dashboard',
-            'controller' => App\Http\Controllers\Api\Farming\DashboardController::class
-        ], function () {
+        Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
             Route::get('/{farm_id}/pen', 'getPen');
             Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
             Route::get('/{farm_id}/livestock', 'getLivestock');

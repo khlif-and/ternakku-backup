@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Bank;
+use App\Models\Regency;
+use App\Models\Village;
+use App\Models\District;
+use App\Models\Province;
 use App\Models\LivestockSex;
 use Illuminate\Http\Request;
 use App\Models\LivestockType;
@@ -55,6 +59,58 @@ class DataMasterController extends Controller
         $data = Bank::select('id', 'name', 'swift_code')
                 ->orderBy('name')
                 ->get();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function getProvince()
+    {
+        $data = Province::orderBy('name')->get();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function getRegency(Request $request)
+    {
+        $provinceId = $request->query('province_id');
+
+        $query = Regency::orderBy('name');
+
+        if ($provinceId) {
+            $query->where('province_id', $provinceId);
+        }
+
+        $data = $query->get();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function getDistrict(Request $request)
+    {
+        $regencyId = $request->query('regency_id');
+
+        $query = District::orderBy('name');
+
+        if ($regencyId) {
+            $query->where('regency_id', $regencyId);
+        }
+
+        $data = $query->get();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function getVillage(Request $request)
+    {
+        $districtId = $request->query('district_id');
+
+        $query = Village::orderBy('name');
+
+        if ($districtId) {
+            $query->where('district_id', $districtId);
+        }
+
+        $data = $query->get();
 
         return ResponseHelper::success($data, 'Data retrieved successfully');
     }
