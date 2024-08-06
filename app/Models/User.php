@@ -6,6 +6,7 @@ namespace App\Models;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -84,4 +85,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsToMany(Bank::class, 'bank_user');
     }
+
+    public function scopeVerified(Builder $query)
+    {
+        return $query->whereNotNull('email_verified_at');
+    }
+
 }
