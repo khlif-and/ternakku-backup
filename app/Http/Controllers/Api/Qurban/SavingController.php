@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Qurban;
 
+use App\Models\User;
 use App\Models\UserBank;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\QurbanSavingRegistration;
 use App\Models\QurbanSavingRegistrationUser;
+use App\Http\Requests\Qurban\FindUserRequest;
 use App\Http\Requests\Qurban\SavingRegisterRequest;
 use App\Http\Resources\Qurban\SavingRegistrationListResource;
 use App\Http\Resources\Qurban\SavingRegistrationDetailResource;
@@ -27,8 +29,9 @@ class SavingController extends Controller
             ->get();
 
         // Mengembalikan data dalam bentuk resource collection
-        return SavingRegistrationListResource::collection($qurbanSavingRegistrations);
+        $data = SavingRegistrationListResource::collection($qurbanSavingRegistrations);
 
+        return ResponseHelper::success($data, 'Data retrieved successfully');
     }
 
     public function register(SavingRegisterRequest $request)
@@ -79,11 +82,23 @@ class SavingController extends Controller
 
     public function detail($id)
     {
-        $qurbanSavingRegistration = QurbanSavingRegistration::with('users')->findOrFail($id);
+        $qurbanSavingRegistration = QurbanSavingRegistration::findOrFail($id);
 
         $data =  new SavingRegistrationDetailResource($qurbanSavingRegistration);
 
-        return ResponseHelper::success($data, 'Qurban saving registration created successfully');
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function findUser(FindUserRequest $request)
+    {
+        $validatedData = $request->validated();
+
+        $user = User::verified()->where(function($query) use ($validatedData) {
+            $query->where('email', $validatedData['username'])
+                ->orWhere('phone_number', $validatedData['username']);
+        })->firstOrFail();
+
+        return ResponseHelper::success($user, 'Data retrieved successfully');
     }
 
 }

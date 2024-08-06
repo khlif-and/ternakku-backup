@@ -56,6 +56,7 @@ Route::group([
                 Route::get('/register', 'index');
                 Route::post('/register', 'register');
                 Route::get('/register/{id}', 'detail');
+                Route::post('/find-user', 'findUser');
             });
         });
     });
