@@ -58,6 +58,11 @@ Route::group([
                 Route::get('/register/{id}', 'detail');
                 Route::post('/find-user', 'findUser');
             });
+
+            Route::group(['prefix' => 'contract', 'controller' => App\Http\Controllers\Api\Qurban\ContractController::class], function () {
+                Route::post('/', 'contract');
+                Route::get('/{id}', 'detail');
+            });
         });
     });
 
