@@ -24,7 +24,7 @@ Route::group([
         Route::post('resend-otp', 'resendOtp');
         Route::post('login', 'login');
 
-        Route::middleware(['auth', 'email.verified'])->group(function() {
+        Route::middleware(['auth:api', 'email.verified'])->group(function() {
             Route::get('me', 'me');
             Route::post('logout', 'logout');
         });
@@ -51,7 +51,7 @@ Route::group([
             Route::get('/', 'index');
         });
 
-        Route::middleware(['auth', 'email.verified'])->group(function() {
+        Route::middleware(['auth:api', 'email.verified'])->group(function() {
             Route::group(['prefix' => 'saving', 'controller' => App\Http\Controllers\Api\Qurban\SavingController::class], function () {
                 Route::get('/register', 'index');
                 Route::post('/register', 'register');
@@ -84,7 +84,7 @@ Route::group([
         Route::get('bank', 'getBank');
     });
 
-    Route::group(['prefix' => 'farming', 'middleware' => ['auth', 'email.verified']], function () {
+    Route::group(['prefix' => 'farming', 'middleware' => ['auth:api', 'email.verified']], function () {
         Route::get('/farm', [App\Http\Controllers\Api\FarmController::class, 'index']);
         Route::get('/farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
 
