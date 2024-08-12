@@ -112,8 +112,14 @@ class AuthController extends Controller
         $user->email_verified_at = Carbon::now();
         $user->save();
 
-        // Return success response
-        return ResponseHelper::success($user, 'Email verified successfully', 200);
+        $token = auth('api')->login($user);
+
+        // Return success response with the token
+        return ResponseHelper::success([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth('api')->factory()->getTTL() * 60
+        ], 'Login successful');
     }
 
     /**
