@@ -16,9 +16,4 @@ class Role extends Model
     {
         return $this->belongsToMany(User::class, 'role_users');
     }
-
-    public static function getRoleId(RoleEnum $RoleEnum)
-    {
-        return self::where('name', $RoleEnum->value)->first()->id;
-    }
 }

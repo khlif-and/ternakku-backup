@@ -93,5 +93,9 @@ Route::group([
             Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
             Route::get('/{farm_id}/livestock', 'getLivestock');
         });
+
+        Route::get('test' ,  function(){
+            dd(auth()->user()->isFarmer());
+        });
     });
 });

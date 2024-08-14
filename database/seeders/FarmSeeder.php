@@ -42,7 +42,7 @@ class FarmSeeder extends Seeder
                         'registration_date' => Carbon::now(),
                         'qurban_partner' => true,
                         'owner_id' => User::whereHas('roles', function ($query) {
-                            $query->where('name', RoleEnum::FARMER->value);
+                            $query->where('name', RoleEnum::FARMER->name);
                         })->inRandomOrder()->first()->id,
                     ]);
 
