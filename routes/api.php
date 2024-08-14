@@ -88,14 +88,14 @@ Route::group([
         Route::get('/farm', [App\Http\Controllers\Api\FarmController::class, 'index']);
         Route::get('/farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
 
-        Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
-            Route::get('/{farm_id}/pen', 'getPen');
-            Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
-            Route::get('/{farm_id}/livestock', 'getLivestock');
-        });
+        Route::group(['middleware' => ['check.farm.ownership']], function () {
+            Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
+                Route::get('/{farm_id}/pen', 'getPen');
+                Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
+                Route::get('/{farm_id}/livestock', 'getLivestock');
+            });
 
-        Route::get('test' ,  function(){
-            dd('masuk');
+            Route::apiResource('pen', App\Http\Controllers\Api\Farming\PenController::class);
         });
     });
 });
