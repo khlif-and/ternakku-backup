@@ -24,7 +24,7 @@ Route::group([
         Route::post('resend-otp', 'resendOtp');
         Route::post('login', 'login');
 
-        Route::middleware(['auth:api', 'email.verified'])->group(function() {
+        Route::middleware(['auth:api', 'email.verified',])->group(function() {
             Route::get('me', 'me');
             Route::post('logout', 'logout');
         });
