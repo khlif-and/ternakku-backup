@@ -84,7 +84,7 @@ Route::group([
         Route::get('bank', 'getBank');
     });
 
-    Route::group(['prefix' => 'farming', 'middleware' => ['auth:api', 'email.verified']], function () {
+    Route::group(['prefix' => 'farming', 'middleware' => ['auth:api', 'email.verified' , 'farmer']], function () {
         Route::get('/farm', [App\Http\Controllers\Api\FarmController::class, 'index']);
         Route::get('/farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
 
@@ -95,7 +95,7 @@ Route::group([
         });
 
         Route::get('test' ,  function(){
-            dd(auth()->user()->isFarmer());
+            dd('masuk');
         });
     });
 });

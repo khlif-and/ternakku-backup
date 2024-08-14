@@ -15,6 +15,9 @@ class FarmerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if(auth()->user()->isFarmer()){
+            return $next($request);
+        }
+        abort(401);
     }
 }
