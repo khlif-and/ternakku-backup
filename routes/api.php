@@ -90,11 +90,11 @@ Route::group([
 
         Route::group(['middleware' => ['check.farm.ownership']], function () {
             Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
-                Route::get('/{farm_id}/pen', 'getPen');
                 Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
                 Route::get('/{farm_id}/livestock', 'getLivestock');
             });
 
+            Route::apiResource('pen', App\Http\Controllers\Api\Farming\PenController::class);
             Route::apiResource('pen', App\Http\Controllers\Api\Farming\PenController::class);
         });
     });

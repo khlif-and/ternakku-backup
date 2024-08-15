@@ -9,40 +9,14 @@ use App\Enums\LivestockSexEnum;
 use App\Helpers\ResponseHelper;
 use App\Enums\LivestockTypeEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\PenListResource;
+use App\Http\Resources\Farming\PenResource;
 use App\Http\Resources\LivestockListResource;
 
 class DashboardController extends Controller
 {
-    public function getPen($farmId)
+    public function livestockPopulationSummary()
     {
-        $user = auth()->user();
-
-        // Find the Farm by ID
-        $farm = Farm::where('owner_id' , $user->id)->find($farmId);
-
-        // If farm not found, return error response
-        if (!$farm) {
-            return ResponseHelper::error('Farm not found', 404);
-        }
-
-        // If farm found, return it using the PartnerResource
-        $data = PenListResource::collection($farm->pens);
-
-        return ResponseHelper::success($data, 'Pens retrieved successfully');
-    }
-
-    public function livestockPopulationSummary($farmId)
-    {
-        $user = auth()->user();
-
-        // Find the Farm by ID
-        $farm = Farm::where('owner_id', $user->id)->find($farmId);
-
-        // If farm not found, return error response
-        if (!$farm) {
-            return ResponseHelper::error('Farm not found', 404);
-        }
+        $farm = request()->attributes->get('farm');
 
         $livestockTypes = LivestockType::all();
         $summary = [];
@@ -56,17 +30,9 @@ class DashboardController extends Controller
         return ResponseHelper::success($summary, 'Population Summary retrieved successfully');
     }
 
-    public function getLivestock($farmId)
+    public function getLivestock()
     {
-        $user = auth()->user();
-
-        // Find the Farm by ID
-        $farm = Farm::where('owner_id', $user->id)->find($farmId);
-
-        // If farm not found, return error response
-        if (!$farm) {
-            return ResponseHelper::error('Farm not found', 404);
-        }
+        $farm = request()->attributes->get('farm');
 
         $data = LivestockListResource::collection($farm->livestocks()->get());
 

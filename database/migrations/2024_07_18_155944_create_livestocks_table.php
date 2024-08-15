@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('livestocks', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('livestock_reception_d_id');
+            $table->unsignedBigInteger('livestock_reception_d_id')->nullable();
             $table->unsignedBigInteger('livestock_status_id');
             $table->timestamps();
 
