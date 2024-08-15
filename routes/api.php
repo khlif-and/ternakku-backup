@@ -95,7 +95,7 @@ Route::group([
             });
 
             Route::apiResource('pen', App\Http\Controllers\Api\Farming\PenController::class);
-            Route::apiResource('pen', App\Http\Controllers\Api\Farming\PenController::class);
+            Route::apiResource('livestock-reception', App\Http\Controllers\Api\Farming\LivestockReceptionController::class);
         });
     });
 });

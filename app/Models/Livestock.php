@@ -16,7 +16,6 @@ class Livestock extends Model
         'livestock_reception_d_id',
     ];
 
-    // Relasi ke model lain jika ada
     public function livestockReceptionD()
     {
         return $this->belongsTo(LivestockReceptionD::class, 'livestock_reception_d_id');
