@@ -49,10 +49,7 @@ class FarmSeeder extends Seeder
             $farmDetail = FarmDetail::create([
                 'farm_id' => $farm->id,
                 'description' => $item['description'],
-                'province_id' => 32,
-                'regency_id' => 3273,
-                'district_id' => 3273230,
-                'village_id' => 3273230002,
+                'region_id' => 1101012001,
                 'postal_code' => '40132',
                 'address_line' => 'Tamansari',
                 'longitude' => 107.607540,

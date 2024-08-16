@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            IndoRegionSeeder::class,
+            RegionSeeder::class,
             LivestockTypeSeeder::class,
             LivestockSexSeeder::class,
             LivestockGroupSeeder::class,
@@ -44,7 +44,5 @@ class DatabaseSeeder extends Seeder
             QurbanLivestockSeeder::class,
             BankSeeder::class,
         ]);
-
-
     }
 }
