@@ -17,7 +17,7 @@ return new class extends Migration
             $table->dropForeign(['district_id']);
             $table->dropForeign(['village_id']);
             $table->dropColumn(['province_id', 'regency_id', 'district_id', 'village_id']);
-            $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
         });
 
@@ -27,7 +27,7 @@ return new class extends Migration
             $table->dropForeign(['district_id']);
             $table->dropForeign(['village_id']);
             $table->dropColumn(['province_id', 'regency_id', 'district_id', 'village_id']);
-            $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
         });
 
@@ -37,7 +37,7 @@ return new class extends Migration
             $table->dropForeign(['district_id']);
             $table->dropForeign(['village_id']);
             $table->dropColumn(['province_id', 'regency_id', 'district_id', 'village_id']);
-            $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
         });
 
@@ -47,7 +47,7 @@ return new class extends Migration
             $table->dropForeign(['district_id']);
             $table->dropForeign(['village_id']);
             $table->dropColumn(['province_id', 'regency_id', 'district_id', 'village_id']);
-            $table->unsignedBigInteger('region_id');
+            $table->unsignedBigInteger('region_id')->nullable();
             $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
         });
 
