@@ -103,10 +103,10 @@ return new class extends Migration
         Schema::table('qurban_contracts', function (Blueprint $table) {
             $table->dropForeign(['region_id']);
             $table->dropColumn('region_id');
-            $table->char('province_id', 2);
-            $table->char('regency_id', 4);
-            $table->char('district_id', 7);
-            $table->char('village_id', 10);
+            $table->char('province_id', 2)->nullable();
+            $table->char('regency_id', 4)->nullable();
+            $table->char('district_id', 7)->nullable();
+            $table->char('village_id', 10)->nullable();
             $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade');
             $table->foreign('regency_id')->references('id')->on('regencies')->onDelete('cascade');
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
@@ -116,10 +116,10 @@ return new class extends Migration
         Schema::table('qurban_saving_registrations', function (Blueprint $table) {
             $table->dropForeign(['region_id']);
             $table->dropColumn('region_id');
-            $table->char('province_id', 2);
-            $table->char('regency_id', 4);
-            $table->char('district_id', 7);
-            $table->char('village_id', 10);
+            $table->char('province_id', 2)->nullable();
+            $table->char('regency_id', 4)->nullable();
+            $table->char('district_id', 7)->nullable();
+            $table->char('village_id', 10)->nullable();
             $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade');
             $table->foreign('regency_id')->references('id')->on('regencies')->onDelete('cascade');
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
@@ -129,10 +129,10 @@ return new class extends Migration
         Schema::table('suppliers', function (Blueprint $table) {
             $table->dropForeign(['region_id']);
             $table->dropColumn('region_id');
-            $table->char('province_id', 2);
-            $table->char('regency_id', 4);
-            $table->char('district_id', 7);
-            $table->char('village_id', 10);
+            $table->char('province_id', 2)->nullable();
+            $table->char('regency_id', 4)->nullable();
+            $table->char('district_id', 7)->nullable();
+            $table->char('village_id', 10)->nullable();
             $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade');
             $table->foreign('regency_id')->references('id')->on('regencies')->onDelete('cascade');
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
@@ -142,10 +142,10 @@ return new class extends Migration
         Schema::table('farm_details', function (Blueprint $table) {
             $table->dropForeign(['region_id']);
             $table->dropColumn('region_id');
-            $table->char('province_id', 2);
-            $table->char('regency_id', 4);
-            $table->char('district_id', 7);
-            $table->char('village_id', 10);
+            $table->char('province_id', 2)->nullable();
+            $table->char('regency_id', 4)->nullable();
+            $table->char('district_id', 7)->nullable();
+            $table->char('village_id', 10)->nullable();
             $table->foreign('province_id')->references('id')->on('provinces')->onDelete('cascade');
             $table->foreign('regency_id')->references('id')->on('regencies')->onDelete('cascade');
             $table->foreign('district_id')->references('id')->on('districts')->onDelete('cascade');
