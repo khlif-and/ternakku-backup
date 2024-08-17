@@ -42,9 +42,7 @@ class Farm extends Model
 
     public function livestocks()
     {
-        return Livestock::whereHas('livestockReceptionD.livestockReceptionH.farm', function ($q) {
-            $q->where('id', $this->id);
-        });
+        return  $this->hasMany(Livestock::class);
     }
 
     public function getLivestockSummary($typeId)

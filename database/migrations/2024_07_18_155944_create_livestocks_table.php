@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('livestock_status_id');
             $table->string('eartag_number');
             $table->string('rfid_number')->nullable();
+            $table->unsignedBigInteger('farm_id');
             $table->unsignedBigInteger('livestock_type_id');
             $table->unsignedBigInteger('livestock_group_id');
             $table->unsignedBigInteger('livestock_breed_id');
@@ -30,6 +31,7 @@ return new class extends Migration
 
 
             // Foreign key constraints
+            $table->foreign('farm_id')->references('id')->on('farms')->onDelete('cascade');
             $table->foreign('livestock_reception_d_id')->references('id')->on('livestock_reception_d')->onDelete('cascade');
             $table->foreign('livestock_status_id')->references('id')->on('livestock_statuses')->onDelete('cascade');
 

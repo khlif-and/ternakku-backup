@@ -34,7 +34,7 @@ class DashboardController extends Controller
     {
         $farm = request()->attributes->get('farm');
 
-        $data = LivestockListResource::collection($farm->livestocks()->get());
+        $data = LivestockListResource::collection($farm->livestocks);
 
         return ResponseHelper::success($data, 'Livestocks retrieved successfully');
     }

@@ -76,6 +76,7 @@ class LivestockReceptionD extends Model
     public function createLivestock()
     {
         Livestock::create([
+            'farm_id' => $this->livestockReceptionH->farm_id,
             'livestock_reception_d_id' => $this->id,
             'livestock_status_id' => LivestockStatusEnum::HIDUP,
             'eartag_number' => $this->eartag_number,
