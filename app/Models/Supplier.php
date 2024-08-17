@@ -24,4 +24,9 @@ class Supplier extends Model
     {
         return $this->belongsTo(Farm::class);
     }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
+    }
 }

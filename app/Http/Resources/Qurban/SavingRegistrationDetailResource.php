@@ -27,7 +27,7 @@ class SavingRegistrationDetailResource extends JsonResource
             'price_per_kg' => (int) $this->price_per_kg,
             'price_total' =>  $this->weight * $this->price_per_kg,
             'postal_code' => $this->postal_code,
-            'address_line' => $this->address_line,
+            'full_address' => $this->full_address,
             'duration_months' => (int) $this->duration_months,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

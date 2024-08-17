@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             UserSeeder::class,
             FarmSeeder::class,
+            BlogSeeder::class,
         ]);
 
         // Get all livestock types

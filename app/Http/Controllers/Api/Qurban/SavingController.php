@@ -25,7 +25,7 @@ class SavingController extends Controller
         $qurbanSavingRegistrationUserIds = QurbanSavingRegistrationUser::whereIn('user_bank_id' , $userBankIds)->pluck('id');
 
         $qurbanSavingRegistrations = QurbanSavingRegistration::whereIn('id', $qurbanSavingRegistrationUserIds)
-            ->with(['livestockBreed', 'livestockBreed.livestockType', 'farm', 'province', 'regency', 'district', 'village'])
+            ->with(['livestockBreed', 'livestockBreed.livestockType', 'farm', 'region'])
             ->get();
 
         // Mengembalikan data dalam bentuk resource collection

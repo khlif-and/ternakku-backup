@@ -21,28 +21,26 @@ class QurbanSavingRegistration extends Model
         return $this->belongsTo(LivestockBreed::class);
     }
 
-    public function province()
+    public function region()
     {
-        return $this->belongsTo(Province::class);
-    }
-
-    public function regency()
-    {
-        return $this->belongsTo(Regency::class);
-    }
-
-    public function district()
-    {
-        return $this->belongsTo(District::class);
-    }
-
-    public function village()
-    {
-        return $this->belongsTo(Village::class);
+        return $this->belongsTo(Region::class);
     }
 
     public function qurbanSavingRegistrationUser()
     {
         return $this->hasMany(QurbanSavingRegistrationUser::class);
+    }
+
+    public function getFullAddressAttribute()
+    {
+        $addressParts = [
+            $this->address_line,
+            $this->region?->name,
+        ];
+
+        // Menghilangkan bagian alamat yang null
+        $filteredAddressParts = array_filter($addressParts, fn($part) => !is_null($part));
+
+        return implode(', ', $filteredAddressParts);
     }
 }
