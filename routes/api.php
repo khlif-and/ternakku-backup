@@ -74,12 +74,7 @@ Route::group([
             Route::get('breed', 'getLivestockBreed');
         });
 
-        Route::group(['prefix' => 'location'], function () {
-            Route::get('province', 'getProvince');
-            Route::get('regency', 'getRegency');
-            Route::get('district', 'getDistrict');
-            Route::get('village', 'getVillage');
-        });
+        Route::get('/region', 'getRegion');
 
         Route::get('bank', 'getBank');
     });
