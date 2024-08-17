@@ -59,4 +59,22 @@ class Farm extends Model
             'female' => $female,
         ];
     }
+
+    public function getFullAddressAttribute()
+    {
+        $farmDetail = $this->farmDetail;
+        if (!$farmDetail) {
+            return null;
+        }
+
+        $addressParts = [
+            $farmDetail->address_line,
+            $farmDetail->region?->name,
+        ];
+
+        // Menghilangkan bagian alamat yang null
+        $filteredAddressParts = array_filter($addressParts, fn($part) => !is_null($part));
+
+        return implode(', ', $filteredAddressParts);
+    }
 }

@@ -14,23 +14,8 @@ class FarmDetail extends Model
         return $this->belongsTo(Farm::class);
     }
 
-    public function province()
+    public function region()
     {
-        return $this->belongsTo(Province::class);
-    }
-
-    public function regency()
-    {
-        return $this->belongsTo(Regency::class);
-    }
-
-    public function district()
-    {
-        return $this->belongsTo(District::class);
-    }
-
-    public function village()
-    {
-        return $this->belongsTo(Village::class);
+        return $this->belongsTo(Region::class);
     }
 }

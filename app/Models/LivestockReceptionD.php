@@ -52,6 +52,11 @@ class LivestockReceptionD extends Model
                 throw new DuplicateEartagException();
             }
         });
+
+        static::updated(function ($model) {
+            $model->updateLivestock();
+        });
+
     }
 
     public function checkEartag()
@@ -73,6 +78,34 @@ class LivestockReceptionD extends Model
         Livestock::create([
             'livestock_reception_d_id' => $this->id,
             'livestock_status_id' => LivestockStatusEnum::HIDUP,
+            'eartag_number' => $this->eartag_number,
+            'rfid_number' => $this->rfid_number,
+            'livestock_type_id' => $this->livestock_type_id,
+            'livestock_group_id' => $this->livestock_group_id,
+            'livestock_breed_id' => $this->livestock_breed_id,
+            'livestock_sex_id' => $this->livestock_sex_id,
+            'pen_id' => $this->pen_id,
+            'start_age_years' => $this->age_years,
+            'start_age_months' => $this->age_months,
+            'last_weight' => $this->weight,
+            'photo' => $this->photo,
+        ]);
+    }
+
+    public function updateLivestock()
+    {
+        Livestock::where('livestock_reception_d_id' , $this->id)->update([
+            'eartag_number' => $this->eartag_number,
+            'rfid_number' => $this->rfid_number,
+            'livestock_type_id' => $this->livestock_type_id,
+            'livestock_group_id' => $this->livestock_group_id,
+            'livestock_breed_id' => $this->livestock_breed_id,
+            'livestock_sex_id' => $this->livestock_sex_id,
+            'pen_id' => $this->pen_id,
+            'start_age_years' => $this->age_years,
+            'start_age_months' => $this->age_months,
+            'last_weight' => $this->weight,
+            'photo' => $this->photo,
         ]);
     }
 
