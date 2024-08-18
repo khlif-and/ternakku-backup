@@ -89,8 +89,16 @@ Route::group([
                 Route::get('/{farm_id}/livestock', 'getLivestock');
             });
 
-            Route::apiResource('pen', App\Http\Controllers\Api\Farming\PenController::class);
-            Route::apiResource('livestock-reception', App\Http\Controllers\Api\Farming\LivestockReceptionController::class);
+            Route::group(['prefix' => 'pen','controller' => App\Http\Controllers\Api\Farming\PenController::class], function () {
+                Route::get('/{farm_id}', 'index');
+                Route::get('/{farm_id}/{pen_id}', 'show');
+                Route::post('/{farm_id}', 'store');
+                Route::put('/{farm_id}/{pen_id}/update', 'update');
+                Route::delete('/{farm_id}/{pen_id}', 'destroy');
+            });
+
+            // Route::apiResource('pen', App\Http\Controllers\Api\Farming\PenController::class);
+            // Route::apiResource('livestock-reception', App\Http\Controllers\Api\Farming\LivestockReceptionController::class);
         });
     });
 });

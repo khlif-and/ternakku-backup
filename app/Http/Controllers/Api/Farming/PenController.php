@@ -14,20 +14,21 @@ use App\Http\Requests\Farming\PenUpdateRequest;
 
 class PenController extends Controller
 {
-    public function index(): JsonResponse
+    public function index($farmId): JsonResponse
     {
        // Mendapatkan farm dari middleware
        $farm = request()->attributes->get('farm');
 
        // Mengambil semua pens terkait dengan farm
-       $pens = $farm->pens;
+       $pens = $farm->pens()->orderBy('updated_at' , 'desc')->get();
+
        $data = PenResource::collection($pens);
 
        $message = $pens->count() > 0 ? 'Pens retrieved successfully' : 'No pens found';
        return ResponseHelper::success($data, $message);
     }
 
-    public function store(PenStoreRequest $request): JsonResponse
+    public function store($farmId ,PenStoreRequest $request): JsonResponse
     {
         $validated = $request->validated();
         $farm = request()->attributes->get('farm'); // Mendapatkan farm dari middleware
@@ -48,7 +49,7 @@ class PenController extends Controller
         return ResponseHelper::success(new PenResource($pen), 'Pen created successfully', Response::HTTP_CREATED);
     }
 
-    public function show($penId): JsonResponse
+    public function show($farmId, $penId): JsonResponse
     {
         $farm = request()->attributes->get('farm'); // Mendapatkan farm dari middleware
 
@@ -57,7 +58,7 @@ class PenController extends Controller
         return ResponseHelper::success(new PenResource($pen), 'Pen retrieved successfully');
     }
 
-    public function update(PenUpdateRequest $request, $penId): JsonResponse
+    public function update(PenUpdateRequest $request, $farmId , $penId): JsonResponse
     {
         $validated = $request->validated();
         $farm = request()->attributes->get('farm'); // Mendapatkan farm dari middleware
@@ -82,7 +83,7 @@ class PenController extends Controller
         return ResponseHelper::success(new PenResource($pen), 'Pen updated successfully');
     }
 
-    public function destroy($penId): JsonResponse
+    public function destroy($farmId, $penId): JsonResponse
     {
         $farm = request()->attributes->get('farm'); // Mendapatkan farm dari middleware
 
@@ -95,7 +96,7 @@ class PenController extends Controller
 
         $pen->delete();
 
-        return ResponseHelper::success(null, 'Pen deleted successfully', Response::HTTP_NO_CONTENT);
+        return ResponseHelper::success(null, 'Pen deleted successfully', 200);
     }
 
 }
