@@ -20,7 +20,7 @@ class LivestockReceptionController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(): JsonResponse
+    public function index($farmId): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
@@ -41,7 +41,7 @@ class LivestockReceptionController extends Controller
      * @param  \App\Http\Requests\LivestockReceptionStoreRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(LivestockReceptionStoreRequest $request): JsonResponse
+    public function store(LivestockReceptionStoreRequest $request, $farmId): JsonResponse
     {
         $validated = $request->validated();
         $farm = request()->attributes->get('farm');
@@ -87,7 +87,7 @@ class LivestockReceptionController extends Controller
      * @param  int  $receptionId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function show($receptionId): JsonResponse
+    public function show($farmId, $receptionId): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
@@ -106,16 +106,17 @@ class LivestockReceptionController extends Controller
      * @param  int  $receptionId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(LivestockReceptionUpdateRequest $request, LivestockReceptionD $reception): JsonResponse
+    public function update(LivestockReceptionUpdateRequest $request, $farmId , $receptionId): JsonResponse
     {
         $validated = $request->validated();
         $farm = request()->attributes->get('farm');
+        $reception = LivestockReceptionD::findOrFail($receptionId);
 
         DB::transaction(function () use ($validated, $reception, $farm) {
             // Update data header LivestockReceptionH
             $livestockReceptionH = $reception->livestockReceptionH;
+
             $livestockReceptionH->update([
-                'farm_id'          => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
                 'supplier_id'      => $validated['supplier_id'],
                 'notes'            => $validated['notes'],
@@ -157,7 +158,7 @@ class LivestockReceptionController extends Controller
      * @param  int  $receptionId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($receptionId): JsonResponse
+    public function destroy($farmId, $receptionId): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
@@ -179,12 +180,12 @@ class LivestockReceptionController extends Controller
             $reception->delete();
 
             // Cek apakah LivestockReceptionH masih memiliki LivestockReceptionD terkait
-            if ($livestockReceptionH->livestockReceptions()->count() === 0) {
+            if ($livestockReceptionH->livestockReceptionD()->count() === 0) {
                 // Hapus LivestockReceptionH jika tidak ada LivestockReceptionD terkait
                 $livestockReceptionH->delete();
             }
 
-            return ResponseHelper::success(null, 'Livestock Reception deleted successfully', \Illuminate\Http\Response::HTTP_NO_CONTENT);
+            return ResponseHelper::success(null, 'Livestock Reception deleted successfully', 200);
         });
     }
 }
