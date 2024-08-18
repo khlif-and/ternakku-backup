@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Enums\RoleEnum;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -89,6 +91,14 @@ class User extends Authenticatable implements JWTSubject
     public function scopeVerified(Builder $query)
     {
         return $query->whereNotNull('email_verified_at');
+    }
+
+    public function isFarmer(): bool
+    {
+        if($this->roles->where('id' , 2)->first()){
+            return true;
+        }
+        return false;
     }
 
 }

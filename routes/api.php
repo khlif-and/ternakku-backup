@@ -24,7 +24,7 @@ Route::group([
         Route::post('resend-otp', 'resendOtp');
         Route::post('login', 'login');
 
-        Route::middleware(['auth:api', 'email.verified'])->group(function() {
+        Route::middleware(['auth:api', 'email.verified',])->group(function() {
             Route::get('me', 'me');
             Route::post('logout', 'logout');
         });
@@ -74,24 +74,31 @@ Route::group([
             Route::get('breed', 'getLivestockBreed');
         });
 
-        Route::group(['prefix' => 'location'], function () {
-            Route::get('province', 'getProvince');
-            Route::get('regency', 'getRegency');
-            Route::get('district', 'getDistrict');
-            Route::get('village', 'getVillage');
-        });
+        Route::get('/region', 'getRegion');
 
         Route::get('bank', 'getBank');
     });
 
-    Route::group(['prefix' => 'farming', 'middleware' => ['auth:api', 'email.verified']], function () {
+    Route::group(['prefix' => 'farming', 'middleware' => ['auth:api', 'email.verified' , 'farmer']], function () {
         Route::get('/farm', [App\Http\Controllers\Api\FarmController::class, 'index']);
         Route::get('/farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
 
-        Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
-            Route::get('/{farm_id}/pen', 'getPen');
-            Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
-            Route::get('/{farm_id}/livestock', 'getLivestock');
+        Route::group(['middleware' => ['check.farm.ownership']], function () {
+            Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
+                Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
+                Route::get('/{farm_id}/livestock', 'getLivestock');
+            });
+
+            Route::group(['prefix' => 'pen','controller' => App\Http\Controllers\Api\Farming\PenController::class], function () {
+                Route::get('/{farm_id}', 'index');
+                Route::get('/{farm_id}/{pen_id}', 'show');
+                Route::post('/{farm_id}', 'store');
+                Route::put('/{farm_id}/{pen_id}/update', 'update');
+                Route::delete('/{farm_id}/{pen_id}', 'destroy');
+            });
+
+            // Route::apiResource('pen', App\Http\Controllers\Api\Farming\PenController::class);
+            // Route::apiResource('livestock-reception', App\Http\Controllers\Api\Farming\LivestockReceptionController::class);
         });
     });
 });

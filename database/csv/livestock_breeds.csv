@@ -1,0 +1,143 @@
+"id","livestock_type_id","name","photo","description","min_weight","max_weight","is_qurban"
+1,3,Awassi,ternak-kurban/hewan-kurban/DombaAwassi.png,"Domba Awassi adalah jenis domba yang berasal dari kawasan Timur Tengah, terutama dari wilayah Syam yang meliputi Suriah, Lebanon, dan Palestina. Domba ini terkenal sebagai domba penghasil susu yang luar biasa, mampu menghasilkan jumlah susu yang signifikan bahkan dalam kondisi lingkungan yang keras. Domba Awassi memiliki tubuh yang besar dan kuat, dengan bulu panjang yang berfungsi sebagai pelindung dari kondisi cuaca ekstrem, baik panas maupun dingin. Bulu mereka biasanya berwarna putih atau cokelat kekuningan. Selain produksi susu yang tinggi, domba Awassi juga dimanfaatkan untuk daging dan wolnya. 
+
+
+
+Daging domba Awassi memiliki tekstur yang lembut dan rasa yang lezat, sementara wolnya digunakan untuk berbagai produk tekstil berkualitas tinggi. Kemampuan adaptasi yang baik terhadap lingkungan yang keras menjadikan domba ini pilihan favorit bagi peternak di daerah yang sulit. Domba ini juga dikenal dengan kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Selain itu, domba Awassi memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya.",,,1
+2,3,Barbados Blackbelly,,,,,0
+3,3,Dorper,ternak-kurban/hewan-kurban/DombaDorper.png,"Domba Dorper
+
+
+
+Domba Dorper adalah jenis domba yang dikembangkan di Afrika Selatan pada tahun 1930-an sebagai hasil persilangan antara domba Dorset Horn dan domba Blackhead Persian. Domba Dorper terkenal dengan kemampuan pertumbuhan cepat, efisiensi dalam penggunaan pakan, dan adaptasi yang luar biasa terhadap berbagai kondisi lingkungan, termasuk daerah semi-gersang. Domba ini memiliki tubuh yang kekar dan berotot dengan kulit yang tidak berbulu, menjadikannya lebih tahan terhadap serangan parasit. 
+
+
+
+Kulit domba Dorper juga dihargai di pasar komersial karena kualitasnya yang baik. Selain itu,
+
+
+daging domba Dorper dikenal karena kualitasnya yang tinggi, dengan rasio daging terhadap tulang yang sangat baik, membuatnya populer di industri daging. Domba Dorper dapat dipelihara dengan mudah dalam berbagai kondisi lingkungan, dari padang rumput yang subur hingga daerah yang kering. Domba ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Selain itu, domba Dorper memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula.",50,90,1
+4,3,Ekor Gemuk,,,,,0
+5,3,Ekor Tipis,,,,,0
+6,3,Garut,ternak-kurban/hewan-kurban/DombaGarut.png,"Domba Garut adalah jenis domba lokal Indonesia yang berasal dari Kabupaten Garut, Jawa Barat. Domba ini memiliki ciri khas penampilan fisik yang unik dengan tanduk besar yang melengkung pada domba jantan dan bulu tebal yang melindungi tubuh mereka. Domba Garut sering digunakan dalam kontes adu domba, sebuah tradisi budaya yang sangat populer di daerah asalnya. 
+
+
+
+Selain nilai budaya, domba Garut juga memiliki nilai ekonomi yang tinggi karena dagingnya yang lezat dan wolnya yang berkualitas. Daging domba Garut dikenal memiliki tekstur yang lembut dan rasa yang kaya, sementara wolnya digunakan untuk berbagai produk tekstil. Domba ini juga terkenal dengan ketahanannya terhadap penyakit dan kemampuan adaptasinya yang baik terhadap lingkungan tropis Indonesia. Selain itu, domba Garut memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. Domba ini juga mudah dirawat dan dipelihara, sehingga cocok untuk peternak yang ingin mengembangkan usaha ternak domba.",,,1
+7,3,Merino,ternak-kurban/hewan-kurban/DombaMerino.png,"Domba Merino
+
+
+
+Domba Merino adalah salah satu jenis domba yang paling terkenal di dunia, berasal dari Spanyol dan telah tersebar luas ke berbagai negara seperti Australia dan Selandia Baru.
+
+
+Domba ini sangat dihargai karena kualitas wolnya yang sangat halus dan lembut. Wol Merino dianggap sebagai salah satu wol terbaik di dunia, digunakan dalam industri tekstil untuk membuat pakaian mewah seperti sweater, syal, dan pakaian dalam yang nyaman. Selain wol, domba Merino juga dimanfaatkan untuk dagingnya. Domba ini memiliki tubuh yang kuat dan kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim dingin hingga panas. Domba Merino juga dikenal dengan kemampuan reproduksi yang tinggi, membuatnya pilihan utama bagi peternak yang fokus pada produksi wol dan daging. Selain itu, domba Merino memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Wol domba Merino juga memiliki sifat termal yang baik, menjaga tubuh tetap hangat saat cuaca dingin dan tetap sejuk saat cuaca panas. Kemampuan ini membuat wol Merino sangat dicari dalam industri pakaian outdoor dan olahraga.",,,1
+8,3,Priangan,,,,,0
+9,3,Texel,ternak-kurban/hewan-kurban/DombaTexel.png,"Domba Texel adalah jenis domba yang berasal dari Pulau Texel di Belanda. Domba ini terkenal dengan kualitas dagingnya yang sangat baik, memiliki daging yang rendah lemak dan bertekstur halus. Domba Texel memiliki tubuh yang berotot dan berbulu tebal, dengan warna bulu putih yang dominan. Mereka juga dikenal dengan pertumbuhan cepat dan efisiensi dalam pakan, membuatnya populer di kalangan peternak yang fokus pada produksi daging. Selain itu, domba Texel sering digunakan dalam program pembiakan untuk meningkatkan kualitas daging domba lokal. Daging domba Texel sangat dihargai di pasar daging premium karena rasa dan teksturnya yang superior. 
+
+
+
+Domba ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Selain itu, domba Texel memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Domba Texel juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya.",,,1
+10,4,Anglo Nubian,ternak-kurban/hewan-kurban/KambingAngloNubian.png,"Kambing Anglo Nubian adalah jenis kambing yang merupakan hasil persilangan antara kambing asal Inggris dengan kambing dari Timur Tengah dan India. Kambing ini dikenal dengan telinganya yang panjang dan menjuntai serta tubuhnya yang besar dan berotot. Kambing Anglo Nubian memiliki produksi susu yang baik dengan kandungan lemak yang tinggi, membuat susu mereka sangat cocok untuk pembuatan keju dan produk susu lainnya. 
+
+
+
+Kambing ini juga dimanfaatkan untuk dagingnya yang berkualitas. Selain itu, kambing Anglo Nubian memiliki sifat yang ramah dan mudah ditangani, menjadikannya pilihan favorit bagi peternak. Kambing ini juga memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. Selain itu, kambing Anglo Nubian memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Kambing ini juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Kambing Anglo Nubian juga dikenal dengan sifat yang cerdas dan penasaran, membuat mereka mudah untuk dilatih dan diajari.",,,1
+11,4,Boer,ternak-kurban/hewan-kurban/KambingBoer.png,"Kambing Boer adalah jenis kambing yang berasal dari Afrika Selatan dan dikenal sebagai kambing pedaging unggul. Kambing ini memiliki pertumbuhan yang sangat cepat dan kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, termasuk daerah semi-gersang. Kambing Boer memiliki tubuh yang besar dan berotot dengan daging yang berkualitas tinggi dan rendah lemak. 
+
+
+
+Daging kambing Boer sangat dihargai karena rasanya yang lezat dan teksturnya yang lembut. Kambing ini sering digunakan dalam program pembiakan untuk meningkatkan produksi daging kambing lokal. Selain itu, kambing Boer juga memiliki ketahanan yang baik terhadap penyakit, menjadikannya pilihan yang ideal bagi peternak yang ingin memaksimalkan produksi daging. Kambing ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Selain itu, kambing Boer memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Kambing Boer juga memiliki daya tahan yang baik terhadap kondisi lingkungan yang keras, sehingga dapat dipelihara dengan baik dalam berbagai kondisi iklim.",,,1
+12,4,Etawa,ternak-kurban/hewan-kurban/KambingEttawa.png,"Kambing Ettawa
+
+
+
+Kambing Ettawa adalah jenis kambing yang berasal dari India dan telah dikembangkan di Indonesia, terutama di daerah Kaligesing, Jawa Tengah. Kambing ini dikenal dengan produksi susu yang tinggi dan ukuran tubuh yang besar. Kambing Ettawa memiliki telinga panjang yang khas dan tubuh yang ramping. Mereka sering digunakan dalam kontes kecantikan kambing karena penampilannya yang menarik. Susu kambing Ettawa memiliki kandungan gizi yang tinggi dan sering dijadikan produk olahan seperti susu kambing segar, keju, dan yogurt. 
+
+
+
+Selain itu, kambing Ettawa juga dimanfaatkan untuk dagingnya yang lezat dan rendah lemak. Kambing ini juga memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. 
+
+
+Selain itu, kambing Ettawa memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Kambing ini juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Kambing Ettawa juga dikenal dengan sifat yang ramah dan mudah ditangani, menjadikannya pilihan favorit bagi peternak.",,,1
+13,4,Jawa Randu,ternak-kurban/hewan-kurban/KambingJawaRandu.png,"Kambing Jawa Randu adalah jenis kambing lokal Indonesia yang berasal dari persilangan antara kambing Kacang dan kambing Peranakan Ettawa. Kambing ini memiliki ukuran tubuh yang sedang dengan bulu yang bervariasi warna, mulai dari cokelat hingga putih. Kambing Jawa Randu dikenal dengan kemampuan adaptasi yang baik terhadap lingkungan tropis dan produksi susu yang cukup tinggi. Susu kambing Jawa Randu memiliki kandungan gizi yang baik, sementara dagingnya dihargai karena rasa dan teksturnya yang lezat. 
+
+
+
+Kambing ini sering dipelihara oleh peternak lokal untuk produksi susu dan daging. Kambing Jawa Randu juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Selain itu, kambing ini memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Kambing Jawa Randu juga dikenal dengan sifat yang ramah dan mudah ditangani, menjadikannya pilihan favorit bagi peternak.",,,1
+14,4,Kacang,ternak-kurban/hewan-kurban/KambingKacang.png,"Kambing Kacang
+
+
+
+Kambing Kacang adalah jenis kambing asli Indonesia yang dikenal dengan ukurannya yang kecil dan kemampuan adaptasi yang luar biasa terhadap berbagai kondisi lingkungan. Kambing ini sering dipelihara di pedesaan sebagai sumber daging dan susu. Daging kambing Kacang memiliki rasa yang lezat dan rendah lemak, sementara susu kambingnya kaya akan nutrisi dan sering digunakan sebagai bahan olahan berbagai produk makanan. 
+
+
+Kambing Kacang juga memiliki ketahanan yang baik terhadap penyakit dan kemampuan reproduksi yang tinggi, menjadikannya pilihan favorit bagi peternak di daerah pedesaan. Selain itu, kambing Kacang memiliki sifat yang ramah dan mudah ditangani, sehingga cocok untuk peternak pemula. Kambing ini juga memiliki daya tahan yang baik terhadap kondisi lingkungan yang keras, sehingga dapat dipelihara dengan baik dalam berbagai kondisi iklim. Kambing Kacang juga dikenal dengan kemampuan bertahan hidup yang baik, bahkan dalam kondisi pakan yang minim.",,,1
+15,4,Kaligesing,,,,,0
+16,4,Peranakan Etawa,ternak-kurban/hewan-kurban/KambingPeranakanEttawa.png,"Kambing Peranakan Ettawa (PE) adalah hasil persilangan antara kambing Ettawa dan kambing lokal Indonesia. Kambing ini memiliki tubuh yang besar dengan telinga panjang yang khas dan bulu yang tebal. Kambing PE dikenal dengan produksi susu yang tinggi dan kualitas daging yang baik. Susu kambing PE memiliki kandungan lemak dan protein yang tinggi, menjadikannya bahan yang baik untuk pembuatan produk olahan susu. Kambing ini sering dipelihara sebagai hewan ternak di daerah Jawa dan sekitarnya, dengan manfaat ekonomi yang signifikan bagi peternak lokal. Selain itu, kambing PE juga sering digunakan dalam kontes kecantikan kambing karena penampilannya yang menarik. 
+
+
+
+Kambing ini juga memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. Selain itu, kambing PE memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Kambing ini juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Kambing PE juga dikenal dengan sifat yang ramah dan mudah ditangani, menjadikannya pilihan favorit bagi peternak.",,,1
+17,4,Saburai,ternak-kurban/hewan-kurban/KambingSaburai.png,"Kambing Saburai adalah jenis kambing yang dikembangkan di Indonesia, terutama di daerah Lampung. Kambing ini merupakan hasil persilangan antara kambing Boer dan kambing lokal. Kambing Saburai dikenal dengan pertumbuhan yang cepat dan kemampuan adaptasi yang baik terhadap lingkungan tropis. Kambing ini sering dipelihara untuk produksi daging, dengan kualitas daging yang baik dan rendah lemak. Daging kambing Saburai sangat dihargai karena rasanya yang lezat dan teksturnya yang lembut. Kambing ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Selain itu, kambing Saburai memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Kambing Saburai juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Kambing ini juga dikenal dengan kemampuan bertahan hidup yang baik, bahkan dalam kondisi pakan yang minim.",,,1
+18,4,Saanen,ternak-kurban/hewan-kurban/KambingSaanen.png,"Kambing Saanen adalah jenis kambing perah yang berasal dari lembah Saanen di Swiss dan dikenal dengan produksi susu yang sangat tinggi. Kambing ini memiliki tubuh yang besar dan berbulu putih dengan telinga tegak dan wajah yang ramping. Susu kambing Saanen memiliki kualitas yang sangat baik dengan kandungan lemak dan protein yang tinggi. Kambing ini sangat populer di kalangan peternak susu karena produktivitasnya yang tinggi dan kemudahan dalam perawatan. Selain itu, kambing Saanen juga memiliki sifat yang ramah dan mudah ditangani, menjadikannya pilihan favorit bagi peternak yang fokus pada produksi susu. Kambing Saanen juga memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. Selain itu, kambing ini memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Kambing Saanen juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Kambing ini juga dikenal dengan kemampuan produksi susu yang konsisten, bahkan dalam kondisi pakan yang minim.",,,1
+19,4,Senduro,ternak-kurban/hewan-kurban/KambingSenduro.png,"Kambing Senduro adalah jenis kambing lokal Indonesia yang berasal dari daerah Senduro, Lumajang, Jawa Timur. Kambing ini dikenal dengan produksi susu yang tinggi dan kualitas daging yang baik. Kambing Senduro memiliki tubuh yang besar dan berotot, dengan bulu yang tebal dan berwarna putih. Kambing ini sering dipelihara oleh peternak lokal karena nilai ekonominya yang tinggi dan kemudahan dalam perawatan. Selain itu, kambing Senduro juga memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. Kambing ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran kembar yang cukup tinggi. Kambing Senduro juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Kambing ini juga dikenal dengan sifat yang ramah dan mudah ditangani, menjadikannya pilihan favorit bagi peternak",,,1
+20,4,Sapera,,,,,0
+21,2,Kundhi,,,,,0
+22,2,Kalang,,,,,0
+23,2,Murrah,,,,,0
+24,2,Mehsana,,,,,0
+25,2,Nagpuri,,,,,0
+26,2,Ravi,,,,,0
+27,2,Surti,,,,,0
+28,2,Toraya,,,,,0
+29,2,Zaffarabadi,,,,,0
+30,1,Angus,ternak-kurban/hewan-kurban/SapiAngus.png,"Sapi Angus adalah jenis sapi yang berasal dari Skotlandia dan sangat populer di seluruh dunia karena kualitas dagingnya yang sangat baik. Sapi ini memiliki tubuh yang besar dan berotot, dengan daging yang bertekstur halus dan marbling yang tinggi. Sapi Angus sering dipelihara untuk produksi daging premium, yang dikenal dengan rasa yang lezat dan kelembutan yang luar biasa. Sapi ini juga memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. Sapi Angus juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. 
+
+
+
+Selain itu, sapi ini memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Sapi Angus juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Sapi ini juga dikenal dengan kemampuan produksi daging yang konsisten, bahkan dalam kondisi pakan yang minim.",,,1
+31,1,Brahman Angus,,,,,0
+32,1,Bali,ternak-kurban/hewan-kurban/SapiBali.png,"Dikenal sebagai sapi lokal asli Indonesia (plasmanutfah) dengan keunggulan serat daging yang lebih halus sehingga memiliki kualitas daging yang bagus, menjadi salah satu pilihan favorit hewan kurban karena memiliki karkas (rendemen daging) yang memadai.
+Kisaran berat Sapi Bali untuk hewan kurban umumnya pada berat 225 kg sampai dengan 350 kg, menjadi salahsatu pilihan ideal bagi anda yang akan berkurban dengan kualitas daging yang baik
+",225,375,1
+33,1,Brahman,ternak-kurban/hewan-kurban/SapiBrahman.png,"Sapi Brahman adalah jenis sapi yang berasal dari Amerika Serikat dan dikenal dengan kemampuan adaptasinya yang baik terhadap iklim panas. Sapi ini memiliki tubuh yang besar dan berotot, dengan warna kulit yang bervariasi dari abu-abu hingga merah. Sapi Brahman sering dipelihara untuk produksi daging dan sebagai indukan dalam program pembiakan karena daya tahan terhadap penyakit dan parasit. 
+
+
+
+Sapi ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. Selain itu, sapi Brahman memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Sapi ini juga memiliki daya tahan yang baik terhadap kondisi lingkungan yang keras, sehingga dapat dipelihara dengan baik dalam berbagai kondisi iklim. Sapi Brahman juga dikenal dengan kemampuan bertahan hidup yang baik, bahkan dalam kondisi pakan yang minim. Daging sapi Brahman memiliki kualitas yang baik dengan rasa yang lezat dan rendah lemak.",,,1
+34,1,Brahman Cross,,,,,0
+35,1,Drough Master,,,,,0
+36,1,Friesian Holstein,ternak-kurban/hewan-kurban/SapiFriesianHolstein.png,"Sapi Friesian Holstein adalah jenis sapi perah yang paling populer di dunia, berasal dari Belanda dan Jerman. Sapi ini dikenal dengan produksi susu yang sangat tinggi, dengan tubuh yang besar dan berbulu hitam-putih. Susu sapi Friesian Holstein memiliki kandungan lemak dan protein yang tinggi, menjadikannya pilihan utama dalam industri susu global. Selain produksi susu, sapi ini juga dimanfaatkan untuk dagingnya. 
+
+
+
+Sapi Friesian Holstein memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. Sapi ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. Selain itu, sapi Friesian Holstein memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Sapi ini juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Sapi Friesian Holstein juga dikenal dengan kemampuan produksi susu yang konsisten, bahkan dalam kondisi pakan yang minim. Sapi ini sangat populer di kalangan peternak susu karena produktivitasnya yang tinggi dan kemudahan dalam perawatan.",,,1
+37,1,Kupang,,,,,0
+38,1,Limousine,ternak-kurban/hewan-kurban/SapiLimousin.png,"Sapi Limousin adalah jenis sapi yang berasal dari Prancis dan dikenal dengan kualitas dagingnya yang sangat baik. Sapi ini memiliki tubuh yang besar dan berotot, dengan daging yang rendah lemak dan bertekstur halus. Sapi Limousin sering dipelihara untuk produksi daging premium, yang dikenal dengan rasa yang lezat dan kelembutan yang luar biasa. Sapi ini juga memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. 
+
+
+
+Sapi Limousin juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. Selain itu, sapi ini memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Sapi Limousin juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. ",,,1
+39,1,Limousin PO,,,,,0
+40,1,Nellore,ternak-kurban/hewan-kurban/SapiNellore.png,"Sapi Nellore adalah jenis sapi yang berasal dari India dan dikenal dengan kemampuan adaptasinya yang baik terhadap iklim panas. Sapi ini memiliki tubuh yang besar dan berotot, dengan warna kulit yang bervariasi dari abu-abu hingga merah. Sapi Nellore sering dipelihara untuk produksi daging dan sebagai indukan dalam program pembiakan karena daya tahan terhadap penyakit dan parasit. 
+
+
+
+Sapi ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. Selain itu, sapi Nellore memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Sapi ini juga memiliki daya tahan yang baik terhadap kondisi lingkungan yang keras, sehingga dapat dipelihara dengan baik dalam berbagai kondisi iklim. Sapi Nellore juga dikenal dengan kemampuan bertahan hidup yang baik, bahkan dalam kondisi pakan yang minim. Daging sapi Nellore memiliki kualitas yang baik dengan rasa yang lezat dan rendah lemak.",,,1
+41,1,Peranakan Ongole,,,,,0
+42,1,Sapi Madura,ternak-kurban/hewan-kurban/SapiMadura.png,"Sapi Madura adalah jenis sapi lokal Indonesia yang berasal dari Pulau Madura. Sapi ini dikenal dengan ukuran tubuh yang relatif kecil namun memiliki ketahanan yang baik terhadap penyakit dan adaptasi yang baik terhadap lingkungan tropis. Sapi Madura sering dipelihara untuk produksi daging dan tenaga kerja di sawah. Daging sapi Madura memiliki kualitas yang baik dengan rasa yang lezat dan rendah lemak. 
+
+
+
+Sapi ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. Selain itu, sapi Madura memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Sapi Madura juga memiliki daya tahan yang baik terhadap kondisi lingkungan yang keras, sehingga dapat dipelihara dengan baik dalam berbagai kondisi iklim. Sapi ini juga dikenal dengan kemampuan bertahan hidup yang baik, bahkan dalam kondisi pakan yang minim.",,,1
+43,1,Ongole,ternak-kurban/hewan-kurban/SapiOngole.png,"Sapi Ongole adalah jenis sapi yang berasal dari India dan dikenal dengan kemampuan adaptasinya yang baik terhadap iklim panas. Sapi ini memiliki tubuh yang besar dan berotot, dengan warna kulit yang bervariasi dari abu-abu hingga merah. Sapi Ongole sering dipelihara untuk produksi daging dan sebagai indukan dalam program pembiakan karena daya tahan terhadap penyakit dan parasit. Sapi ini juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. Selain itu, sapi Ongole memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. 
+
+
+
+Sapi ini juga memiliki daya tahan yang baik terhadap kondisi lingkungan yang keras, sehingga dapat dipelihara dengan baik dalam berbagai kondisi iklim. Sapi Ongole juga dikenal dengan kemampuan bertahan hidup yang baik, bahkan dalam kondisi pakan yang minim. Daging sapi Ongole memiliki kualitas yang baik dengan rasa yang lezat dan rendah lemak.",,,1
+44,1,Simental,ternak-kurban/hewan-kurban/SapiSimmental.png,"Sapi Simmental adalah jenis sapi yang berasal dari Swiss dan dikenal dengan kualitas dagingnya yang sangat baik. Sapi ini memiliki tubuh yang besar dan berotot, dengan daging yang rendah lemak dan bertekstur halus. Sapi Simmental sering dipelihara untuk produksi daging premium, yang dikenal dengan rasa yang lezat dan kelembutan yang luar biasa. Sapi ini juga memiliki kemampuan adaptasi yang baik terhadap berbagai kondisi lingkungan, dari iklim panas hingga dingin. 
+
+
+
+Sapi Simmental juga memiliki kemampuan reproduksi yang baik, dengan tingkat kelahiran yang cukup tinggi. Selain itu, sapi ini memiliki sifat yang jinak dan mudah ditangani, sehingga cocok untuk peternak pemula. Sapi Simmental juga memiliki daya tahan yang baik terhadap penyakit, sehingga memudahkan perawatan dan pemeliharaannya. Sapi ini juga dikenal dengan kemampuan produksi daging yang konsisten, bahkan dalam kondisi pakan yang minim. Daging sapi Simmental sangat dihargai di pasar daging premium karena rasa dan teksturnya yang superior.",,,1

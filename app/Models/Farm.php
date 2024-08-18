@@ -35,27 +35,6 @@ class Farm extends Model
         $query->where('qurban_partner', true);
     }
 
-    public function getFullAddressAttribute()
-    {
-        $farmDetail = $this->farmDetail;
-        if (!$farmDetail) {
-            return null;
-        }
-
-        $addressParts = [
-            $farmDetail->address_line,
-            $farmDetail->village?->name,
-            $farmDetail->district?->name,
-            $farmDetail->regency?->name,
-            $farmDetail->province?->name,
-        ];
-
-        // Menghilangkan bagian alamat yang null
-        $filteredAddressParts = array_filter($addressParts, fn($part) => !is_null($part));
-
-        return implode(', ', $filteredAddressParts);
-    }
-
     public function livestockReceptionH()
     {
         return $this->hasMany(LivestockReceptionH::class);
@@ -63,9 +42,7 @@ class Farm extends Model
 
     public function livestocks()
     {
-        return Livestock::whereHas('livestockReceptionD.livestockReceptionH.farm', function ($q) {
-            $q->where('id', $this->id);
-        });
+        return  $this->hasMany(Livestock::class);
     }
 
     public function getLivestockSummary($typeId)
@@ -79,5 +56,23 @@ class Farm extends Model
             'male' => $male,
             'female' => $female,
         ];
+    }
+
+    public function getFullAddressAttribute()
+    {
+        $farmDetail = $this->farmDetail;
+        if (!$farmDetail) {
+            return null;
+        }
+
+        $addressParts = [
+            $farmDetail->address_line,
+            $farmDetail->region?->name,
+        ];
+
+        // Menghilangkan bagian alamat yang null
+        $filteredAddressParts = array_filter($addressParts, fn($part) => !is_null($part));
+
+        return implode(', ', $filteredAddressParts);
     }
 }

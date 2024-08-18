@@ -13,10 +13,7 @@ class Supplier extends Model
         'farm_id',
         'name',
         'phone_number',
-        'province_id',
-        'regency_id',
-        'district_id',
-        'village_id',
+        'region_id',
         'postal_code',
         'address_line',
         'longitude',
@@ -26,5 +23,10 @@ class Supplier extends Model
     public function farm()
     {
         return $this->belongsTo(Farm::class);
+    }
+
+    public function region()
+    {
+        return $this->belongsTo(Region::class);
     }
 }

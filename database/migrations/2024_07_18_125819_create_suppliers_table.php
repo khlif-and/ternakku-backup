@@ -16,10 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('farm_id');
             $table->string('name');
             $table->string('phone_number')->nullable();
-            $table->char('province_id', 2)->nullable();
-            $table->char('regency_id', 4)->nullable();
-            $table->char('district_id', 7)->nullable();
-            $table->char('village_id', 10)->nullable();
+            $table->unsignedBigInteger('region_id');
             $table->string('postal_code')->nullable();
             $table->string('address_line')->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
@@ -31,10 +28,7 @@ return new class extends Migration
 
             // Foreign key constraints
             $table->foreign('farm_id')->references('id')->on('farms')->onDelete('cascade');
-            $table->foreign('province_id')->references('id')->on('provinces')->onDelete('set null');
-            $table->foreign('regency_id')->references('id')->on('regencies')->onDelete('set null');
-            $table->foreign('district_id')->references('id')->on('districts')->onDelete('set null');
-            $table->foreign('village_id')->references('id')->on('villages')->onDelete('set null');
+            $table->foreign('region_id')->references('id')->on('regions')->onDelete('cascade');
         });
     }
 

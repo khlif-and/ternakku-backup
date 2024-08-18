@@ -35,17 +35,17 @@ class UserSeeder extends Seeder
                 ]);
 
         // Attach roles to users with timestamps using enum
-        $user1->roles()->attach(Role::getRoleId(RoleEnum::REGISTERED_USER), [
+        $user1->roles()->attach(RoleEnum::REGISTERED_USER->value, [
             'created_at' => now(),
             'updated_at' => now()
         ]);
 
         $user2->roles()->attach([
-            Role::getRoleId(RoleEnum::REGISTERED_USER) => [
+            RoleEnum::REGISTERED_USER->value => [
                 'created_at' => now(),
                 'updated_at' => now()
             ],
-            Role::getRoleId(RoleEnum::FARMER) => [
+            RoleEnum::FARMER->value => [
                 'created_at' => now(),
                 'updated_at' => now()
             ]
