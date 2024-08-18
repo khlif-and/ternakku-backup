@@ -12,9 +12,7 @@ class Livestock extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'livestock_reception_d_id',
-    ];
+    protected $guarded = [];
 
     public function livestockReceptionD()
     {

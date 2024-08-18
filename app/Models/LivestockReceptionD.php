@@ -78,7 +78,7 @@ class LivestockReceptionD extends Model
         Livestock::create([
             'farm_id' => $this->livestockReceptionH->farm_id,
             'livestock_reception_d_id' => $this->id,
-            'livestock_status_id' => LivestockStatusEnum::HIDUP,
+            'livestock_status_id' => LivestockStatusEnum::HIDUP->value,
             'eartag_number' => $this->eartag_number,
             'rfid_number' => $this->rfid_number,
             'livestock_type_id' => $this->livestock_type_id,
@@ -137,6 +137,6 @@ class LivestockReceptionD extends Model
 
     public function pen()
     {
-        return $this->belongsTo(Pen::class, 'livestock_pen_id');
+        return $this->belongsTo(Pen::class, 'pen_id');
     }
 }
