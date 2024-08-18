@@ -14,6 +14,7 @@ class QurbanContract extends Model
         'livestock_breed_id',
         'weight',
         'price_per_kg',
+        'region_id',
         'postal_code',
         'address_line',
         'longitude',

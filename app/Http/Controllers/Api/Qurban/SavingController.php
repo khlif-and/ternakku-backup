@@ -45,6 +45,7 @@ class SavingController extends Controller
                 'farm_id',
                 'weight',
                 'price_per_kg',
+                'region_id',
                 'postal_code',
                 'address_line',
                 'duration_months'

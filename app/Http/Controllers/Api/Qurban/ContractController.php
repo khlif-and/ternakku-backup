@@ -23,6 +23,7 @@ class ContractController extends Controller
             'livestock_breed_id' => $request->input('livestock_breed_id'),
             'weight' => $request->input('weight'),
             'price_per_kg' => $request->input('price_per_kg'),
+            'region_id' => $request->input('region_id'),
             'postal_code' => $request->input('postal_code'),
             'address_line' => $request->input('address_line'),
             'longitude' => $request->input('longitude'),

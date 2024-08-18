@@ -26,6 +26,7 @@ class ContractStoreRequest extends FormRequest
             'livestock_breed_id' => 'required|exists:livestock_breeds,id',
             'weight' => 'required|numeric|min:0',
             'price_per_kg' => 'required|numeric|min:0',
+            'region_id' => 'required|exists:regions,id',
             'postal_code' => 'required|string|max:10',
             'address_line' => 'nullable|string|max:255',
             'longitude' => 'nullable|numeric|between:-180,180',
