@@ -238,7 +238,9 @@ class AuthController extends Controller
     public function me()
     {
         // Get the authenticated user
-        $user = auth('api')->user();
+        $user = auth('api')->user()->load('roles:id,name');
+
+        $user->roles->makeHidden('pivot');
 
         // Return success response with user details
         return ResponseHelper::success($user, 'User details retrieved successfully', 200);

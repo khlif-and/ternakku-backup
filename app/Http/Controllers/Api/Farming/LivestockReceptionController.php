@@ -110,7 +110,9 @@ class LivestockReceptionController extends Controller
     {
         $validated = $request->validated();
         $farm = request()->attributes->get('farm');
-        $reception = LivestockReceptionD::findOrFail($receptionId);
+        $reception = LivestockReceptionD::whereHas('livestockReceptionH', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id);
+        })->findOrFail($receptionId);
 
         DB::transaction(function () use ($validated, $reception, $farm) {
             // Update data header LivestockReceptionH

@@ -16,7 +16,8 @@ class FarmListResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name
+            'name' => $this->name,
+            'logo' => getNeoObject($this->farmDetail?->logo),
         ];
     }
 }
