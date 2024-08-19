@@ -9,6 +9,8 @@ class FarmDetail extends Model
 {
     use HasFactory;
 
+    protected $guarded = [];
+
     public function farm()
     {
         return $this->belongsTo(Farm::class);
