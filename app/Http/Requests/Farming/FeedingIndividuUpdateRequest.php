@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Http\Requests\Farming;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class FeedingIndividuUpdateRequest extends FormRequest
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize(): bool
+    {
+        return true; // You can add your authorization logic here if needed
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules(): array
+    {
+        return [
+            'transaction_date'        => 'required|date',
+            'feeding_h_id'            => 'required|exists:feeding_h,id',
+            'livestock_id'            => 'required|exists:livestocks,id',
+
+            // Forage details
+            'forage_name'             => 'required|string|max:255',
+            'forage_qty_kg'           => 'required|numeric|min:0',
+            'forage_price_kg'         => 'required|numeric|min:0',
+            'forage_total'            => 'required|numeric|min:0',
+
+            // Concentrate details
+            'concentrate_name'        => 'required|string|max:255',
+            'concentrate_qty_kg'      => 'required|numeric|min:0',
+            'concentrate_price_kg'    => 'required|numeric|min:0',
+            'concentrate_total'       => 'required|numeric|min:0',
+
+            // Feed ingredient details
+            'ingredient_name'         => 'required|string|max:255',
+            'ingredient_qty_kg'       => 'required|numeric|min:0',
+            'ingredient_price_kg'     => 'required|numeric|min:0',
+            'ingredient_total'        => 'required|numeric|min:0',
+
+            // Additional fields
+            'total_cost'              => 'required|numeric|min:0',
+            'notes'                   => 'nullable|string',
+        ];
+    }
+
+    /**
+     * Get the custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages(): array
+    {
+        return [
+            'feeding_h_id.required'          => 'Feeding header ID is required.',
+            'feeding_h_id.exists'            => 'The selected feeding header ID does not exist.',
+            'livestock_id.required'          => 'Livestock ID is required.',
+            'livestock_id.exists'            => 'The selected livestock ID does not exist.',
+
+            'forage_name.required'           => 'Forage name is required.',
+            'forage_qty_kg.required'         => 'Forage quantity (kg) is required.',
+            'forage_price_kg.required'       => 'Forage price per kg is required.',
+            'forage_total.required'          => 'Forage total is required.',
+
+            'concentrate_name.required'      => 'Concentrate name is required.',
+            'concentrate_qty_kg.required'    => 'Concentrate quantity (kg) is required.',
+            'concentrate_price_kg.required'  => 'Concentrate price per kg is required.',
+            'concentrate_total.required'     => 'Concentrate total is required.',
+
+            'ingredient_name.required'       => 'Ingredient name is required.',
+            'ingredient_qty_kg.required'     => 'Ingredient quantity (kg) is required.',
+            'ingredient_price_kg.required'   => 'Ingredient price per kg is required.',
+            'ingredient_total.required'      => 'Ingredient total is required.',
+
+            'total_cost.required'            => 'Total cost is required.',
+        ];
+    }
+}
