@@ -81,7 +81,10 @@ Route::group([
 
     Route::group(['prefix' => 'farming', 'middleware' => ['auth:api', 'email.verified' , 'farmer']], function () {
         Route::get('/farm', [App\Http\Controllers\Api\FarmController::class, 'index']);
-        Route::get('/farm/{id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
+        Route::post('/farm', [App\Http\Controllers\Api\FarmController::class, 'store']);
+        Route::get('/farm/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
+        Route::post('/farm/{farmId}/update', [App\Http\Controllers\Api\FarmController::class, 'update']);
+        Route::delete('/farm/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'destroy']);
 
         Route::group(['middleware' => ['check.farm.ownership']], function () {
             Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
