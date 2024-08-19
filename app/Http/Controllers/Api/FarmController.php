@@ -21,7 +21,7 @@ class FarmController extends Controller
 
         $farms = Farm::where('owner_id' , $user->id)->get();
 
-        $data = FarmListResource::collection($farms);
+        $data = FarmDetailResource::collection($farms);
 
         // Tentukan pesan respons
         $message = $farms->count() > 0 ? 'Farms retrieved successfully' : 'Data empty';
