@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Otp;
 use App\Models\User;
+use App\Enums\RoleEnum;
 use Illuminate\Http\Request;
 use App\Events\UserRegistered;
 use Illuminate\Support\Carbon;
@@ -118,6 +119,11 @@ class AuthController extends Controller
         $user->save();
 
         $token = auth('api')->login($user);
+
+        $user->roles()->attach(RoleEnum::REGISTERED_USER->value, [
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
 
         // Return success response with the token
         return ResponseHelper::success([
