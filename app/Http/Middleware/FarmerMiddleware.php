@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use App\Helpers\ResponseHelper;
 use Symfony\Component\HttpFoundation\Response;
 
 class FarmerMiddleware
@@ -18,6 +19,6 @@ class FarmerMiddleware
         if(auth()->user()->isFarmer()){
             return $next($request);
         }
-        abort(401);
+        return ResponseHelper::error('Access denied: The user does not hold the farmer role.', 401);
     }
 }
