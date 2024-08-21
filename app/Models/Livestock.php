@@ -74,22 +74,21 @@ class Livestock extends Model
 
     public function scopeOfType($query, $typeId)
     {
-        return $query->whereHas('livestockReceptionD', function($q) use ($typeId) {
-            $q->where('livestock_type_id', $typeId);
-        });
+        return $query->where('livestock_type_id', $typeId);
     }
 
     public function scopeMale($query)
     {
-        return $query->whereHas('livestockReceptionD', function($q) {
-            $q->where('livestock_sex_id', LivestockSexEnum::JANTAN->value);
-        });
+        return $query->where('livestock_sex_id', LivestockSexEnum::JANTAN->value);
     }
 
     public function scopeFemale($query)
     {
-        return $query->whereHas('livestockReceptionD', function($q) {
-            $q->where('livestock_sex_id', LivestockSexEnum::BETINA->value);
-        });
+        return $query->where('livestock_sex_id', LivestockSexEnum::BETINA->value);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(LivestockExpense::class, 'livestock_expense_type_id');
     }
 }
