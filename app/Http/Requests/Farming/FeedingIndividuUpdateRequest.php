@@ -40,11 +40,11 @@ class FeedingIndividuUpdateRequest extends FormRequest
             'concentrate_price_kg'    => 'required|numeric|min:0',
             'concentrate_total'       => 'required|numeric|min:0',
 
-            // Feed ingredient details
-            'ingredient_name'         => 'required|string|max:255',
-            'ingredient_qty_kg'       => 'required|numeric|min:0',
-            'ingredient_price_kg'     => 'required|numeric|min:0',
-            'ingredient_total'        => 'required|numeric|min:0',
+            // Feed Feed Material details
+            'feed_material_name'         => 'required|string|max:255',
+            'feed_material_qty_kg'       => 'required|numeric|min:0',
+            'feed_material_price_kg'     => 'required|numeric|min:0',
+            'feed_material_total'        => 'required|numeric|min:0',
 
             // Additional fields
             'total_cost'              => 'required|numeric|min:0',
@@ -75,10 +75,10 @@ class FeedingIndividuUpdateRequest extends FormRequest
             'concentrate_price_kg.required'  => 'Concentrate price per kg is required.',
             'concentrate_total.required'     => 'Concentrate total is required.',
 
-            'ingredient_name.required'       => 'Ingredient name is required.',
-            'ingredient_qty_kg.required'     => 'Ingredient quantity (kg) is required.',
-            'ingredient_price_kg.required'   => 'Ingredient price per kg is required.',
-            'ingredient_total.required'      => 'Ingredient total is required.',
+            'feed_material_name.required'       => 'Feed Material name is required.',
+            'feed_material_qty_kg.required'     => 'Feed Material quantity (kg) is required.',
+            'feed_material_price_kg.required'   => 'Feed Material price per kg is required.',
+            'feed_material_total.required'      => 'Feed Material total is required.',
 
             'total_cost.required'            => 'Total cost is required.',
         ];
