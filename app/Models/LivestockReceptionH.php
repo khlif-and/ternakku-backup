@@ -28,13 +28,14 @@ class LivestockReceptionH extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber();
+            $model->transaction_number = $model->generateTransactionNumber($model->transaction_date);
         });
     }
 
-    private function generateTransactionNumber()
+    private function generateTransactionNumber($transaction_date)
     {
-        $date = Carbon::now();
+        $date = Carbon::parse($transaction_date);
+
         $year = $date->format('y'); // last two digits of the year
         $month = $date->format('m'); // month with leading zero
         $prefix = "$year$month-LR-";

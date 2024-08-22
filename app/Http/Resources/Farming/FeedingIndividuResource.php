@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Farming;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\LivestockListResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FeedingIndividuResource extends JsonResource

@@ -37,12 +37,18 @@ class FeedingIndividuController extends Controller
 
         $feedingIndividu = null;
 
+        $livestock = $farm->livestocks()->find($validated['livestock_id']);
+
+        if (!$livestock) {
+            return ResponseHelper::error('Livestock not found.', 404);
+        }
+
         DB::transaction(function () use ($validated, $farm, &$feedingIndividu) {
 
             $feedingH = FeedingH::create([
                 'farm_id'          => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
-                'type'             => 'inividu',
+                'type'             => 'individu',
                 'notes'            => $validated['notes'],
             ]);
 

@@ -12,21 +12,24 @@ class FeedingH extends Model
 
     protected $table = 'feeding_h';
 
+    protected $guarded = [];
+
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber();
+            $model->transaction_number = $model->generateTransactionNumber($model->type , $model->transaction_date);
         });
     }
 
-    private function generateTransactionNumber()
+    private function generateTransactionNumber($type , $transaction_date)
     {
-        $date = Carbon::now();
+        $date = Carbon::parse($transaction_date);
+
         $year = $date->format('y'); // last two digits of the year
         $month = $date->format('m'); // month with leading zero
-        $prefix = "$year$month-FD-";
+        $prefix = $type == 'colony' ? "$year$month-FC-" : "$year$month-FI-";
 
         // Get the last transaction number for the current month and year
         $lastTransaction = self::whereYear('transaction_date', $date->year)
