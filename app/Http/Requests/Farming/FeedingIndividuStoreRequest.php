@@ -25,7 +25,6 @@ class FeedingIndividuStoreRequest extends FormRequest
     {
         return [
             'transaction_date'        => 'required|date',
-            'feeding_h_id'            => 'required|exists:feeding_h,id',
             'livestock_id'            => 'required|exists:livestocks,id',
 
             // Forage details
@@ -60,8 +59,6 @@ class FeedingIndividuStoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'feeding_h_id.required'          => 'Feeding header ID is required.',
-            'feeding_h_id.exists'            => 'The selected feeding header ID does not exist.',
             'livestock_id.required'          => 'Livestock ID is required.',
             'livestock_id.exists'            => 'The selected livestock ID does not exist.',
 

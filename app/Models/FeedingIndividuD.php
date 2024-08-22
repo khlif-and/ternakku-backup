@@ -13,6 +13,8 @@ class FeedingIndividuD extends Model
 
     protected $table = 'feeding_individu_d';
 
+    protected $guarded = [];
+
     public function feedingH()
     {
         return $this->belongsTo(FeedingH::class, 'feeding_h_id');

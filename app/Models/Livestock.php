@@ -14,6 +14,11 @@ class Livestock extends Model
 
     protected $guarded = [];
 
+    public function farm()
+    {
+        return $this->belongsTo(Farm::class);
+    }
+
     public function livestockReceptionD()
     {
         return $this->belongsTo(LivestockReceptionD::class, 'livestock_reception_d_id');
@@ -22,6 +27,26 @@ class Livestock extends Model
     public function livestockStatus()
     {
         return $this->belongsTo(LivestockStatus::class, 'livestock_status_id');
+    }
+
+    public function livestockType()
+    {
+        return $this->belongsTo(LivestockType::class, 'livestock_type_id');
+    }
+
+    public function livestockGroup()
+    {
+        return $this->belongsTo(LivestockGroup::class, 'livestock_group_id');
+    }
+
+    public function livestockBreed()
+    {
+        return $this->belongsTo(LivestockBreed::class, 'livestock_breed_id');
+    }
+
+    public function livestockSex()
+    {
+        return $this->belongsTo(LivestockSex::class, 'livestock_sex_id');
     }
 
     public function qurbanLivestock()
