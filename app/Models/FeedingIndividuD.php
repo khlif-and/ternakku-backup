@@ -11,7 +11,7 @@ class FeedingIndividuD extends Model
 {
     use HasFactory;
 
-    protected $table = 'feeding_inividu_d';
+    protected $table = 'feeding_individu_d';
 
     public function feedingH()
     {

@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('feeding_inividu_d', function (Blueprint $table) {
+        Schema::table('feeding_individu_d', function (Blueprint $table) {
             // Mengganti nama kolom ingredient menjadi feed_material
             $table->renameColumn('ingredient_name', 'feed_material_name');
             $table->renameColumn('ingredient_qty_kg', 'feed_material_qty_kg');
@@ -26,7 +26,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('feeding_inividu_d', function (Blueprint $table) {
+        Schema::table('feeding_individu_d', function (Blueprint $table) {
             // Mengembalikan nama kolom ke ingredient
             $table->renameColumn('feed_material_name', 'ingredient_name');
             $table->renameColumn('feed_material_qty_kg', 'ingredient_qty_kg');
