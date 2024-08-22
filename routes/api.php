@@ -80,7 +80,7 @@ Route::group([
     });
 
     Route::group(['prefix' => 'farming', 'middleware' => ['auth:api', 'email.verified']], function () {
-        Route::post('/', [App\Http\Controllers\Api\FarmController::class, 'store']);
+        Route::post('/farm', [App\Http\Controllers\Api\FarmController::class, 'store']);
 
         Route::group(['middleware' => ['farmer']] ,  function(){
             Route::group(['prefix' => 'farm'], function(){
