@@ -25,7 +25,7 @@ class PenStoreRequest extends FormRequest
             'name' => 'required|string|max:255',
             'area' => 'required|numeric|between:0,999999.99',
             'capacity' => 'required|integer|min:1',
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif',
         ];
     }
 
