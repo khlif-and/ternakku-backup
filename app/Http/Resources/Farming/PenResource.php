@@ -20,7 +20,7 @@ class PenResource extends JsonResource
             'area' => $this->area,
             'capacity' => $this->capacity,
             'population' => $this->population,
-            'photo' => getNeoObject($this->photo),
+            'photo' => $this->photo ? getNeoObject($this->photo) : null,
         ];
     }
 }

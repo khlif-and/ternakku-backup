@@ -38,10 +38,10 @@ class FeedingIndividuResource extends JsonResource
             'concentrate_total'   => $this->concentrate_total,
 
             // Feed ingredient details
-            'ingredient_name'     => $this->ingredient_name,
-            'ingredient_qty_kg'   => $this->ingredient_qty_kg,
-            'ingredient_price_kg' => $this->ingredient_price_kg,
-            'ingredient_total'    => $this->ingredient_total,
+            'feed_material_name'     => $this->feed_material_name,
+            'feed_material_qty_kg'   => $this->feed_material_qty_kg,
+            'feed_material_price_kg' => $this->feed_material_price_kg,
+            'feed_material_total'    => $this->feed_material_total,
 
             // Additional fields
             'total_cost'          => $this->total_cost,
