@@ -55,8 +55,8 @@ class FeedingH extends Model
         return $this->belongsTo(Farm::class);
     }
 
-    public function feedingD()
+    public function feedingIndividuD()
     {
-        return $this->hasMany(FeedingD::class, 'feeding_h_id');
+        return $this->hasMany(FeedingIndividuD::class, 'feeding_h_id');
     }
 }
