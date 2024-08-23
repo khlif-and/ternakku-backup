@@ -28,11 +28,11 @@ class LivestockReceptionH extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber($model->transaction_date);
+            $model->transaction_number = $model->generateTransactionNumber($model->transaction_date , $model->farm_id);
         });
     }
 
-    private function generateTransactionNumber($transaction_date)
+    private function generateTransactionNumber($transaction_date, $farmId)
     {
         $date = Carbon::parse($transaction_date);
 
@@ -43,6 +43,7 @@ class LivestockReceptionH extends Model
         // Get the last transaction number for the current month and year
         $lastTransaction = self::whereYear('transaction_date', $date->year)
             ->whereMonth('transaction_date', $date->month)
+            ->where('farm_id' , $farmId)
             ->orderBy('transaction_number', 'desc')
             ->first();
 

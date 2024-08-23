@@ -19,13 +19,13 @@ class FeedingH extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber($model->type , $model->transaction_date);
+            $model->transaction_number = $model->generateTransactionNumber($model->type , $model->transaction_date,  $model->farm_id);
         });
     }
 
-    private function generateTransactionNumber($type , $transaction_date)
+    private function generateTransactionNumber($type , $transactionDate, $farmId)
     {
-        $date = Carbon::parse($transaction_date);
+        $date = Carbon::parse($transactionDate);
 
         $year = $date->format('y'); // last two digits of the year
         $month = $date->format('m'); // month with leading zero
@@ -34,6 +34,7 @@ class FeedingH extends Model
         // Get the last transaction number for the current month and year
         $lastTransaction = self::whereYear('transaction_date', $date->year)
             ->whereMonth('transaction_date', $date->month)
+            ->where('farm_id' , $farmId)
             ->orderBy('transaction_number', 'desc')
             ->first();
 
