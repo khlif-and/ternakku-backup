@@ -9,9 +9,10 @@ use App\Models\LivestockType;
 use App\Enums\LivestockSexEnum;
 use App\Helpers\ResponseHelper;
 use App\Enums\LivestockTypeEnum;
+use App\Enums\LivestockStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Farming\PenResource;
-use App\Http\Resources\LivestockListResource;
+use App\Http\Resources\LivestockResource;
 use App\Http\Resources\Farming\SupplierListResource;
 
 class DashboardController extends Controller
@@ -37,7 +38,7 @@ class DashboardController extends Controller
         $farm = $request->attributes->get('farm');
 
         // Mulai query builder dengan livestock milik farm
-        $query = $farm->livestocks();
+        $query = $farm->livestocks()->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value);
 
         // Terapkan filter jika ada
         if ($request->filled('livestock_breed_id')) {
@@ -57,7 +58,7 @@ class DashboardController extends Controller
         }
 
         // Dapatkan hasil akhir dan koleksi sebagai resource
-        $data = LivestockListResource::collection($query->get());
+        $data = LivestockResource::collection($query->get());
 
         return ResponseHelper::success($data, 'Livestocks retrieved successfully');
     }
@@ -84,7 +85,7 @@ class DashboardController extends Controller
         }
 
         // Dapatkan hasil akhir sebagai resource tunggal
-        $data = new LivestockListResource($livestock);
+        $data = new LivestockResource($livestock);
 
         return ResponseHelper::success($data, 'Livestock retrieved successfully');
     }

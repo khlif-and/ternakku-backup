@@ -113,6 +113,14 @@ Route::group([
                     Route::delete('/{farm_id}/{livestockReceptionId}', 'destroy');
                 });
 
+                Route::group(['prefix' => 'livestock-death', 'controller' => App\Http\Controllers\Api\Farming\LivestockDeathController::class], function () {
+                    Route::get('/{farm_id}', 'index');
+                    Route::get('/{farm_id}/{livestockDeathId}', 'show');
+                    Route::post('/{farm_id}', 'store');
+                    Route::post('/{farm_id}/{livestockDeathId}/update', 'update');
+                    Route::delete('/{farm_id}/{livestockDeathId}', 'destroy');
+                });
+
                 Route::group(['prefix' => 'feeding-individu', 'controller' => App\Http\Controllers\Api\Farming\FeedingIndividuController::class], function () {
                     Route::get('/{farm_id}', 'index');
                     Route::get('/{farm_id}/{feedingIndividuId}', 'show');
