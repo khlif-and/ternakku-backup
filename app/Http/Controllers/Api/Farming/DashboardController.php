@@ -11,6 +11,7 @@ use App\Enums\LivestockTypeEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Farming\PenResource;
 use App\Http\Resources\LivestockListResource;
+use App\Http\Resources\Farming\SupplierListResource;
 
 class DashboardController extends Controller
 {
@@ -35,6 +36,15 @@ class DashboardController extends Controller
         $farm = request()->attributes->get('farm');
 
         $data = LivestockListResource::collection($farm->livestocks);
+
+        return ResponseHelper::success($data, 'Livestocks retrieved successfully');
+    }
+
+    public function getSupplier()
+    {
+        $farm = request()->attributes->get('farm');
+
+        $data = SupplierListResource::collection($farm->suppliers);
 
         return ResponseHelper::success($data, 'Livestocks retrieved successfully');
     }
