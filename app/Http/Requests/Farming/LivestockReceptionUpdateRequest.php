@@ -38,7 +38,7 @@ class LivestockReceptionUpdateRequest extends FormRequest
             'price_per_head' => 'required|numeric|min:0|max:999999999999.99',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'notes' => 'nullable|string|max:255',
-            'supplier_id'             => 'required|exists:suppliers,id', // Tambahan validasi untuk supplier_id
+            'supplier'             => 'required|string',
             'transaction_date'        => 'required|date',
         ];
     }

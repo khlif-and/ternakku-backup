@@ -95,7 +95,6 @@ Route::group([
                     Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
                     Route::get('/{farm_id}/livestock', 'getLivestock');
                     Route::get('/{farm_id}/livestock/{id}', 'getDetailLivestock');
-                    Route::get('/{farm_id}/supplier', 'getSupplier');
                 });
 
                 Route::group(['prefix' => 'pen','controller' => App\Http\Controllers\Api\Farming\PenController::class], function () {
