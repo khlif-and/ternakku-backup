@@ -71,4 +71,22 @@ class DashboardController extends Controller
         return ResponseHelper::success($data, 'Livestocks retrieved successfully');
     }
 
+    public function getDetailLivestock(Request $request, $farmId , $id)
+    {
+        $farm = $request->attributes->get('farm');
+
+        // Temukan livestock berdasarkan ID yang diberikan dan pastikan milik farm yang benar
+        $livestock = $farm->livestocks()->find($id);
+
+        // Periksa apakah livestock ditemukan
+        if (!$livestock) {
+            return ResponseHelper::error('Livestock not found', 404);
+        }
+
+        // Dapatkan hasil akhir sebagai resource tunggal
+        $data = new LivestockListResource($livestock);
+
+        return ResponseHelper::success($data, 'Livestock retrieved successfully');
+    }
+
 }

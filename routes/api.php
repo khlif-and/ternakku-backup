@@ -94,6 +94,7 @@ Route::group([
                 Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
                     Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
                     Route::get('/{farm_id}/livestock', 'getLivestock');
+                    Route::get('/{farm_id}/livestock/{id}', 'getDetailLivestock');
                     Route::get('/{farm_id}/supplier', 'getSupplier');
                 });
 
