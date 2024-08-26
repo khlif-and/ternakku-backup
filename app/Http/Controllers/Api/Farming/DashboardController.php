@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Farming;
 
 use App\Models\Farm;
 use App\Models\Livestock;
+use Illuminate\Http\Request;
 use App\Models\LivestockType;
 use App\Enums\LivestockSexEnum;
 use App\Helpers\ResponseHelper;
@@ -31,11 +32,32 @@ class DashboardController extends Controller
         return ResponseHelper::success($summary, 'Population Summary retrieved successfully');
     }
 
-    public function getLivestock()
+    public function getLivestock(Request $request)
     {
-        $farm = request()->attributes->get('farm');
+        $farm = $request->attributes->get('farm');
 
-        $data = LivestockListResource::collection($farm->livestocks);
+        // Mulai query builder dengan livestock milik farm
+        $query = $farm->livestocks();
+
+        // Terapkan filter jika ada
+        if ($request->filled('livestock_breed_id')) {
+            $query->where('livestock_breed_id', $request->input('livestock_breed_id'));
+        }
+
+        if ($request->filled('livestock_sex_id')) {
+            $query->where('livestock_sex_id', $request->input('livestock_sex_id'));
+        }
+
+        if ($request->filled('livestock_type_id')) {
+            $query->where('livestock_type_id', $request->input('livestock_type_id'));
+        }
+
+        if ($request->filled('livestock_group_id')) {
+            $query->where('livestock_group_id', $request->input('livestock_group_id'));
+        }
+
+        // Dapatkan hasil akhir dan koleksi sebagai resource
+        $data = LivestockListResource::collection($query->get());
 
         return ResponseHelper::success($data, 'Livestocks retrieved successfully');
     }
