@@ -45,6 +45,11 @@ class Farm extends Model
         return  $this->hasMany(Livestock::class);
     }
 
+    public function suppliers()
+    {
+        return  $this->hasMany(Supplier::class);
+    }
+
     public function getLivestockSummary($typeId)
     {
         $total = $this->livestocks()->ofType($typeId)->count();
