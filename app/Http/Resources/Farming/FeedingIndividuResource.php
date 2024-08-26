@@ -3,7 +3,7 @@
 namespace App\Http\Resources\Farming;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\LivestockListResource;
+use App\Http\Resources\LivestockResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class FeedingIndividuResource extends JsonResource
@@ -23,7 +23,7 @@ class FeedingIndividuResource extends JsonResource
             'transaction_number'  => $this->feedingH->transaction_number,
             'transaction_date'    => $this->feedingH->transaction_date,
             'livestock_id'        => $this->livestock_id,
-            'livestock'           => new LivestockListResource($this->livestock),
+            'livestock'           => new LivestockResource($this->livestock),
 
             // Forage details
             'forage_name'         => $this->forage_name,

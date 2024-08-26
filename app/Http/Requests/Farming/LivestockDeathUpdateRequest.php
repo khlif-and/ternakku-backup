@@ -22,7 +22,6 @@ class LivestockDeathUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'farm_id' => 'required|exists:farms,id',
             'transaction_date' => 'required|date',
             'livestock_id' => 'required|exists:livestocks,id',
             'diagnosis' => 'nullable|string',

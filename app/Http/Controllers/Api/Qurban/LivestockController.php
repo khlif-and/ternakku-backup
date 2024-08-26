@@ -6,7 +6,7 @@ use App\Models\Livestock;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Qurban\LivestockListResource;
+use App\Http\Resources\Qurban\LivestockResource;
 use App\Http\Resources\Qurban\LivestockDetailResource;
 
 class LivestockController extends Controller
@@ -42,7 +42,7 @@ class LivestockController extends Controller
         }
 
         // Eksekusi query dan ambil hasilnya
-        $data = LivestockListResource::collection($query->get());
+        $data = LivestockResource::collection($query->get());
 
         // Tentukan pesan respons
         $message = $query->count() > 0 ? 'Livestock retrieved successfully' : 'Data empty';
