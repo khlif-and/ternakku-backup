@@ -19,7 +19,7 @@ class LivestockReceptionHFactory extends Factory
         return [
             'farm_id' => Farm::inRandomOrder()->first()->id,
             'transaction_date' => Carbon::now(),
-            'supplier_id' => \App\Models\Supplier::factory(),
+            'supplier' => 'CV Sarana Ternak',
             'notes' => $this->faker->sentence
         ];
     }

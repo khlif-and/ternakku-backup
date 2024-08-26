@@ -53,7 +53,7 @@ class LivestockReceptionController extends Controller
             $livestockReceptionH = LivestockReceptionH::create([
                 'farm_id'          => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
-                'supplier_id'      => $validated['supplier_id'],
+                'supplier'      => $validated['supplier'],
                 'notes'            => $validated['notes'],
             ]);
 
@@ -61,8 +61,8 @@ class LivestockReceptionController extends Controller
             $receptionData = $validated;
             $receptionData['livestock_reception_h_id'] = $livestockReceptionH->id;
 
-            // Hapus supplier_id dari $receptionData karena tidak ada di tabel LivestockReception
-            unset($receptionData['supplier_id']);
+            // Hapus supplier dari $receptionData karena tidak ada di tabel LivestockReception
+            unset($receptionData['supplier']);
             unset($receptionData['transaction_date']);
 
             // Handle file upload if present
@@ -120,7 +120,7 @@ class LivestockReceptionController extends Controller
 
             $livestockReceptionH->update([
                 'transaction_date' => $validated['transaction_date'],
-                'supplier_id'      => $validated['supplier_id'],
+                'supplier'      => $validated['supplier'],
                 'notes'            => $validated['notes'],
             ]);
 
@@ -128,8 +128,8 @@ class LivestockReceptionController extends Controller
             $receptionData = $validated;
             $receptionData['livestock_reception_h_id'] = $livestockReceptionH->id;
 
-            // Hapus supplier_id dan transaction_date dari $receptionData karena tidak ada di tabel LivestockReceptionD
-            unset($receptionData['supplier_id']);
+            // Hapus supplier dan transaction_date dari $receptionData karena tidak ada di tabel LivestockReceptionD
+            unset($receptionData['supplier']);
             unset($receptionData['transaction_date']);
 
             // Handle file upload if present

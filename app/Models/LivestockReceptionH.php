@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Farm;
-use App\Models\Supplier;
 use Illuminate\Support\Carbon;
 use App\Models\LivestockReceptionD;
 use Illuminate\Database\Eloquent\Model;
@@ -19,8 +18,8 @@ class LivestockReceptionH extends Model
         'farm_id',
         'transaction_number',
         'transaction_date',
-        'supplier_id',
-        'notes'
+        'notes',
+        'supplier'
     ];
 
     public static function boot()
@@ -62,11 +61,6 @@ class LivestockReceptionH extends Model
     public function farm()
     {
         return $this->belongsTo(Farm::class);
-    }
-
-    public function supplier()
-    {
-        return $this->belongsTo(Supplier::class);
     }
 
     public function livestockReceptionD()
