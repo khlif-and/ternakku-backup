@@ -129,29 +129,29 @@ Route::group([
                     Route::delete('/{farm_id}/{feedingIndividuId}', 'destroy');
                 });
 
-                Route::group(['prefix' => 'feeding-colony', 'controller' => App\Http\Controllers\Api\Farming\FeedingColonyController::class], function () {
-                    Route::get('/{farm_id}', 'index');
-                    Route::get('/{farm_id}/{feedingColonyId}', 'show');
-                    Route::post('/{farm_id}', 'store');
-                    Route::post('/{farm_id}/{feedingColonyId}/update', 'update');
-                    Route::delete('/{farm_id}/{feedingColonyId}', 'destroy');
-                });
+                // Route::group(['prefix' => 'feeding-colony', 'controller' => App\Http\Controllers\Api\Farming\FeedingColonyController::class], function () {
+                //     Route::get('/{farm_id}', 'index');
+                //     Route::get('/{farm_id}/{feedingColonyId}', 'show');
+                //     Route::post('/{farm_id}', 'store');
+                //     Route::post('/{farm_id}/{feedingColonyId}/update', 'update');
+                //     Route::delete('/{farm_id}/{feedingColonyId}', 'destroy');
+                // });
 
-                Route::group(['prefix' => 'treatment-individu', 'controller' => App\Http\Controllers\Api\Farming\TreatmentIndividuController::class], function () {
-                    Route::get('/{farm_id}', 'index');
-                    Route::get('/{farm_id}/{treatmentIndividuId}', 'show');
-                    Route::post('/{farm_id}', 'store');
-                    Route::post('/{farm_id}/{treatmentIndividuId}/update', 'update');
-                    Route::delete('/{farm_id}/{treatmentIndividuId}', 'destroy');
-                });
+                // Route::group(['prefix' => 'treatment-individu', 'controller' => App\Http\Controllers\Api\Farming\TreatmentIndividuController::class], function () {
+                //     Route::get('/{farm_id}', 'index');
+                //     Route::get('/{farm_id}/{treatmentIndividuId}', 'show');
+                //     Route::post('/{farm_id}', 'store');
+                //     Route::post('/{farm_id}/{treatmentIndividuId}/update', 'update');
+                //     Route::delete('/{farm_id}/{treatmentIndividuId}', 'destroy');
+                // });
 
-                Route::group(['prefix' => 'treatment-colony', 'controller' => App\Http\Controllers\Api\Farming\TreatmentColonyController::class], function () {
-                    Route::get('/{farm_id}', 'index');
-                    Route::get('/{farm_id}/{treatmentColonyId}', 'show');
-                    Route::post('/{farm_id}', 'store');
-                    Route::post('/{farm_id}/{treatmentColonyId}/update', 'update');
-                    Route::delete('/{farm_id}/{treatmentColonyId}', 'destroy');
-                });
+                // Route::group(['prefix' => 'treatment-colony', 'controller' => App\Http\Controllers\Api\Farming\TreatmentColonyController::class], function () {
+                //     Route::get('/{farm_id}', 'index');
+                //     Route::get('/{farm_id}/{treatmentColonyId}', 'show');
+                //     Route::post('/{farm_id}', 'store');
+                //     Route::post('/{farm_id}/{treatmentColonyId}/update', 'update');
+                //     Route::delete('/{farm_id}/{treatmentColonyId}', 'destroy');
+                // });
             });
         });
 
