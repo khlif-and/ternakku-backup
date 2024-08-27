@@ -17,7 +17,7 @@ use App\Http\Resources\Farming\SupplierListResource;
 
 class DashboardController extends Controller
 {
-    public function livestockPopulationSummary()
+    public function livestockPopulationSummary($farmId)
     {
         $farm = request()->attributes->get('farm');
 
@@ -33,7 +33,7 @@ class DashboardController extends Controller
         return ResponseHelper::success($summary, 'Population Summary retrieved successfully');
     }
 
-    public function getLivestock(Request $request)
+    public function getLivestock(Request $request, $farmId)
     {
         $farm = $request->attributes->get('farm');
 
@@ -63,7 +63,7 @@ class DashboardController extends Controller
         return ResponseHelper::success($data, 'Livestocks retrieved successfully');
     }
 
-    public function getSupplier()
+    public function getSupplier($farmId)
     {
         $farm = request()->attributes->get('farm');
 
