@@ -30,6 +30,7 @@ class LivestockResource extends JsonResource
             'livestock_sex_id' => $this->livestock_sex_id,
             'livestock_sex_name' => $this->livestockSex->name,
             'current_photo' => $this->current_photo,
+            'characteristic' => $this->characteristic,
         ];
     }
 }

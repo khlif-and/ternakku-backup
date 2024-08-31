@@ -31,6 +31,7 @@ class LivestockReceptionD extends Model
         'price_per_head',
         'notes',
         'photo',
+        'characteristics'
     ];
 
     public static function boot()
@@ -90,6 +91,7 @@ class LivestockReceptionD extends Model
             'start_age_months' => $this->age_months,
             'last_weight' => $this->weight,
             'photo' => $this->photo,
+            'characteristics' => $this->characteristics,
         ]);
     }
 
