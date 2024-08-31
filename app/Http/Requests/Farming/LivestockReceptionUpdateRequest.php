@@ -38,6 +38,7 @@ class LivestockReceptionUpdateRequest extends FormRequest
             'price_per_head' => 'required|numeric|min:0|max:999999999999.99',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'notes' => 'nullable|string|max:255',
+            'characteristics' => 'nullable|string|max:255',
             'supplier'             => 'required|string',
             'transaction_date'        => 'required|date',
         ];

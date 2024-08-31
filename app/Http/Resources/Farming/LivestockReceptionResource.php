@@ -39,6 +39,7 @@ class LivestockReceptionResource extends JsonResource
             'price_per_kg'          => $this->price_per_kg,
             'price_per_head'        => $this->price_per_head,
             'notes'                 => $this->notes,
+            'characteristics'       => $this->characteristics,
             'photo_url'             => $this->photo ? getNeoObject($this->photo) : null,
             'created_at'            => $this->created_at->toDateTimeString(),
             'updated_at'            => $this->updated_at->toDateTimeString(),
