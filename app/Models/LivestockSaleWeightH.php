@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LivestockSaleWeightH extends Model
 {
     use HasFactory;
 
-    protected $table = 'livestock_reception_h';
+    protected $table = 'livestock_sale_weight_h';
 
     protected $fillable = [
         'farm_id',
