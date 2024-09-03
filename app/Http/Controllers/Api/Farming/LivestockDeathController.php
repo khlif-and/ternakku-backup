@@ -53,8 +53,8 @@ class LivestockDeathController extends Controller
             }
 
             // Check if the livestock is already deceased
-            if ($livestock->livestock_status_id === LivestockStatusEnum::MATI->value) {
-                return ResponseHelper::error('This livestock is already recorded as deceased.', 400);
+            if ($livestock->livestock_status_id !== LivestockStatusEnum::HIDUP->value) {
+                return ResponseHelper::error('This livestock not found', 404);
             }
 
             // Create a new LivestockDeath record
@@ -68,7 +68,6 @@ class LivestockDeathController extends Controller
             ]);
 
             // Update the livestock status to 2 (e.g., deceased)
-            $livestock = Livestock::find($validated['livestock_id']);
             $livestock->livestock_status_id = LivestockStatusEnum::MATI->value;
             $livestock->save();
 

@@ -39,7 +39,22 @@ class LivestockSaleWeightController extends Controller
 
         $saleWeightD = null;
 
-        DB::transaction(function () use ($validated, $farm, &$saleWeightD) {
+        DB::beginTransaction();
+
+        try {
+            // Find the livestock record
+            $livestock = Livestock::find($validated['livestock_id']);
+
+            // Check if the livestock exists
+            if (!$livestock) {
+                return ResponseHelper::error('Livestock not found.', 404);
+            }
+
+            // Check if the livestock is already deceased
+            if ($livestock->livestock_status_id !== LivestockStatusEnum::HIDUP->value) {
+                return ResponseHelper::error('This livestock not found', 404);
+            }
+
             // Simpan data header LivestockSaleWeightH
             $livestockSaleWeightH = LivestockSaleWeightH::create([
                 'farm_id'          => $farm->id,
@@ -67,12 +82,20 @@ class LivestockSaleWeightController extends Controller
             // Simpan LivestockSaleWeightD dengan data yang telah di-assign
             $saleWeightD = LivestockSaleWeightD::create($saleWeightDData);
 
-            $livestock = Livestock::find($validated['livestock_id']);
             $livestock->livestock_status_id = LivestockStatusEnum::TERJUAL->value;
             $livestock->save();
-        });
 
-        return ResponseHelper::success(new LivestockSaleWeightResource($saleWeightD), 'Livestock Sale Weight created successfully', 200);
+            DB::commit();
+
+            return ResponseHelper::success(new LivestockSaleWeightResource($saleWeightD), 'Livestock Sale Weight created successfully', 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Handle exceptions and return an error response
+            return ResponseHelper::error(null, 'An error occurred while recording the livestock saleweight.', 500);
+        }
+
     }
 
     public function show($farmId, $saleWeightId): JsonResponse
@@ -87,7 +110,7 @@ class LivestockSaleWeightController extends Controller
         return ResponseHelper::success(new LivestockSaleWeightResource($saleWeight), 'Livestock Sale Weight retrieved successfully');
     }
 
-    public function update(LivestockSaleWeightUpdateRequest $request, $farmId, $id): JsonResponse
+    public function update(LivestockSaleWeightUpdateRequest $request, $farmId, $livestockSaleWeightId): JsonResponse
     {
         DB::beginTransaction();
 
@@ -99,11 +122,19 @@ class LivestockSaleWeightController extends Controller
             $validated = $request->validated();
 
             // Cari record LivestockSaleWeightD
-            $livestockSaleWeightD = LivestockSaleWeightD::whereHas('livestockSalesWeightH', function ($query) use ($farm) {
+            $livestockSaleWeightD = LivestockSaleWeightD::whereHas('livestockSaleWeightH', function ($query) use ($farm) {
                 $query->where('farm_id', $farm->id);
-            })->findOrFail($receptionId);
+            })->findOrFail($livestockSaleWeightId);
 
-            // Ambil ID ternak lama
+            $livestockSaleWeightH = $livestockSaleWeightD->livestockSaleWeightH;
+
+            $livestockSaleWeightH->update([
+                'transaction_date' => $validated['transaction_date'],
+                'customer'      => $validated['customer'],
+                'notes'            => $validated['notes'],
+            ]);
+
+            //Ambil ID ternak lama
             $oldLivestockId = $livestockSaleWeightD->livestock_id;
 
             // Update data LivestockSaleWeightD
