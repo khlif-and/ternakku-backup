@@ -75,7 +75,7 @@ class LivestockDeathController extends Controller
             DB::commit();
 
             // Return the created resource using LivestockDeathResource
-            return ResponseHelper::success(new LivestockDeathResource($livestockDeath), 'Livestock death recorded successfully.', 201);
+            return ResponseHelper::success(new LivestockDeathResource($livestockDeath), 'Livestock death recorded successfully.', 200);
 
         } catch (\Exception $e) {
             DB::rollBack();

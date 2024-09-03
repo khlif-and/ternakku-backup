@@ -77,7 +77,7 @@ class LivestockReceptionController extends Controller
             $reception = LivestockReceptionD::create($receptionData);
         });
 
-        return ResponseHelper::success(new LivestockReceptionResource($reception), 'Livestock Reception created successfully', \Illuminate\Http\Response::HTTP_CREATED);
+        return ResponseHelper::success(new LivestockReceptionResource($reception), 'Livestock Reception created successfully', 200);
     }
 
 

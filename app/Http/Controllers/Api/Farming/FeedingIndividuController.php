@@ -60,7 +60,7 @@ class FeedingIndividuController extends Controller
             $feedingIndividu = FeedingIndividuD::create($feedingIndividu);
         });
 
-        return ResponseHelper::success(new FeedingIndividuResource($feedingIndividu), 'Data created successfully', \Illuminate\Http\Response::HTTP_CREATED);
+        return ResponseHelper::success(new FeedingIndividuResource($feedingIndividu), 'Data created successfully', 200);
     }
 
     public function show($farmId, $feedingIndividuId): JsonResponse

@@ -64,7 +64,7 @@ class AuthController extends Controller
             DB::commit();
 
             // Return success response
-            return ResponseHelper::success($user, 'User registered successfully', 201);
+            return ResponseHelper::success($user, 'User registered successfully', 200);
         } catch (\Exception $e) {
             // Rollback the transaction if an error occurs
             DB::rollBack();

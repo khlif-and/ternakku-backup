@@ -72,7 +72,7 @@ class LivestockSaleWeightController extends Controller
             $livestock->save();
         });
 
-        return ResponseHelper::success(new LivestockSaleWeightResource($saleWeightD), 'Livestock Sale Weight created successfully', \Illuminate\Http\Response::HTTP_CREATED);
+        return ResponseHelper::success(new LivestockSaleWeightResource($saleWeightD), 'Livestock Sale Weight created successfully', 200);
     }
 
     public function show($farmId, $saleWeightId): JsonResponse
