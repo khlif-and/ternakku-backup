@@ -101,7 +101,7 @@ class FarmController extends Controller
             ]);
         });
 
-        return ResponseHelper::success(new FarmDetailResource($farm), 'Farm created successfully', \Illuminate\Http\Response::HTTP_CREATED);
+        return ResponseHelper::success(new FarmDetailResource($farm), 'Farm created successfully', 200);
     }
 
 

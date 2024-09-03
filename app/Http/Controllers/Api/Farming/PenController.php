@@ -46,7 +46,7 @@ class PenController extends Controller
 
         $pen->save();
 
-        return ResponseHelper::success(new PenResource($pen), 'Pen created successfully', Response::HTTP_CREATED);
+        return ResponseHelper::success(new PenResource($pen), 'Pen created successfully', 200);
     }
 
     public function show($farmId, $penId): JsonResponse
