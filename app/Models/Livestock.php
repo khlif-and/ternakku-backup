@@ -116,4 +116,16 @@ class Livestock extends Model
     {
         return $this->hasMany(LivestockExpense::class, 'livestock_expense_type_id');
     }
+
+    public function dof()
+    {
+        // Tanggal pertama
+        $tanggal1 = Carbon::parse( $this->livestockReceptionD->livestockReceptionH->transaction_date );
+
+        // Tanggal kedua
+        $tanggal2 = Carbon::now();
+
+        // Hitung jarak hari
+        return $tanggal1->diffInDays($tanggal2);
+    }
 }
