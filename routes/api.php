@@ -137,6 +137,14 @@ Route::group([
                     Route::delete('/{farm_id}/{milkAnalysisGlobalId}', 'destroy');
                 });
 
+                Route::group(['prefix' => 'milk-production-global', 'controller' => App\Http\Controllers\Api\Farming\MilkProductionGlobalController::class], function () {
+                    Route::get('/{farm_id}', 'index');
+                    Route::get('/{farm_id}/{milkProductionGlobalId}', 'show');
+                    Route::post('/{farm_id}', 'store');
+                    Route::post('/{farm_id}/{milkProductionGlobalId}/update', 'update');
+                    Route::delete('/{farm_id}/{milkProductionGlobalId}', 'destroy');
+                });
+
                 Route::group(['prefix' => 'feeding-individu', 'controller' => App\Http\Controllers\Api\Farming\FeedingIndividuController::class], function () {
                     Route::get('/{farm_id}', 'index');
                     Route::get('/{farm_id}/{feedingIndividuId}', 'show');
