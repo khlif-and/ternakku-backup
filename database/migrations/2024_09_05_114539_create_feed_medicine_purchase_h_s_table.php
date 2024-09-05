@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('transaction_number');
             $table->date('transaction_date');
             $table->string('supplier');
+            $table->decimal('total_amount', 10, 2)->default(0);
             $table->string('notes')->nullable();
             $table->timestamps();
 

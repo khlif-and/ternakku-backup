@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('feed_medicine_purchase_d', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('feed_medicine_purchase_h_id');
-            $table->enum('purchase_type', ['feed', 'medicine']);
+            $table->enum('purchase_type', ['forage', 'concentrate' , 'medicine']);
             $table->string('item_name');
             $table->decimal('quantity', 8, 2);
             $table->string('unit');
