@@ -11,6 +11,7 @@ use App\Models\LivestockExpense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Models\FeedingIndividuItem;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Enums\LivestockExpenseTypeEnum;
 use App\Http\Resources\Farming\FeedingIndividuResource;
