@@ -25,30 +25,13 @@ class FeedingIndividuResource extends JsonResource
             'livestock_id'        => $this->livestock_id,
             'livestock'           => new LivestockResource($this->livestock),
 
-            // Forage details
-            'forage_name'         => $this->forage_name,
-            'forage_qty_kg'       => $this->forage_qty_kg,
-            'forage_price_kg'     => $this->forage_price_kg,
-            'forage_total'        => $this->forage_total,
-
-            // Concentrate details
-            'concentrate_name'    => $this->concentrate_name,
-            'concentrate_qty_kg'  => $this->concentrate_qty_kg,
-            'concentrate_price_kg'=> $this->concentrate_price_kg,
-            'concentrate_total'   => $this->concentrate_total,
-
-            // Feed ingredient details
-            'feed_material_name'     => $this->feed_material_name,
-            'feed_material_qty_kg'   => $this->feed_material_qty_kg,
-            'feed_material_price_kg' => $this->feed_material_price_kg,
-            'feed_material_total'    => $this->feed_material_total,
-
-            // Additional fields
             'total_cost'          => $this->total_cost,
             'notes'               => $this->notes,
 
-            'created_at'          => $this->created_at,
-            'updated_at'          => $this->updated_at,
+            'items'               => FeedingIndividuItemResource::collection($this->feedingIndividuItems),
+
+            'created_at'          => $this->created_at->toDateTimeString(),
+            'updated_at'          => $this->updated_at->toDateTimeString(),
         ];
     }
 
