@@ -6,11 +6,11 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class FeedMedicinePurchaseH extends Model
+class FeedMedicinePurchase extends Model
 {
     use HasFactory;
 
-    protected $table = 'feed_medicine_purchase_h';
+    protected $table = 'feed_medicine_purchase';
 
     protected $fillable = [
         'farm_id',
@@ -57,19 +57,13 @@ class FeedMedicinePurchaseH extends Model
         return $prefix . $newNumber;
     }
 
-    public function feedMedicinePurchaseD()
+    public function feedMedicinePurchaseItem()
     {
-        return $this->hasMany(FeedMedicinePurchaseD::class, 'feed_medicine_purchase_h_id');
+        return $this->hasMany(FeedMedicinePurchaseItem::class, 'feed_medicine_purchase_id');
     }
 
     public function farm()
     {
         return $this->belongsTo(Farm::class);
-    }
-
-    public function calculateTotalAmount()
-    {
-        $this->total_amount = $this->details->sum('total_price');
-        $this->save();
     }
 }

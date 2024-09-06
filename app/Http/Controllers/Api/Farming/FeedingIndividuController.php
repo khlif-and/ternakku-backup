@@ -7,9 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Helpers\ResponseHelper;
 use App\Models\FeedingIndividuD;
+use App\Models\LivestockExpense;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Enums\LivestockExpenseTypeEnum;
 use App\Http\Resources\Farming\FeedingIndividuResource;
 use App\Http\Requests\Farming\FeedingIndividuStoreRequest;
 use App\Http\Requests\Farming\FeedingIndividuUpdateRequest;
@@ -52,12 +54,22 @@ class FeedingIndividuController extends Controller
                 'notes'            => $validated['notes'],
             ]);
 
-            $feedingIndividu = $validated;
             $feedingIndividu['feeding_h_id'] = $feedingH->id;
 
-            unset($feedingIndividu['transaction_date']);
+            $forage_total = $validated['forage_qty_kg'] * $validated['forage_price_kg'];
+            $concentrate_total = $validated['concentrate_qty_kg'] * $validated['concentrate_price_kg'];
+            $feed_material_total = $validated['feed_material_qty_kg'] * $validated['feed_material_price_kg'];
+            $total_cost = $forage_total + $concentrate_total + $feed_material_total;
 
-            $feedingIndividu = FeedingIndividuD::create($feedingIndividu);
+
+            // $feedingIndividu = FeedingIndividuD::create([
+            //     'feeding_h_id' =>  $feedingH->id,
+            //     'livestock_id' =>
+            // ]);
+
+            $livestockExpense = LivestockExpense::where('livestock_id', $validated['livestock_id'])
+                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::FEEDING->value)
+                ->first();
         });
 
         return ResponseHelper::success(new FeedingIndividuResource($feedingIndividu), 'Data created successfully', 200);

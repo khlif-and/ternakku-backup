@@ -7,19 +7,19 @@ use App\Helpers\ResponseHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\FeedMedicinePurchaseD;
-use App\Models\FeedMedicinePurchaseH;
+use App\Models\FeedMedicinePurchaseItem;
+use App\Models\FeedMedicinePurchase;
 use App\Http\Resources\Farming\FeedMedicinePurchaseResource;
 use App\Http\Requests\Farming\FeedMedicinePurchaseStoreRequest;
 use App\Http\Requests\Farming\FeedMedicinePurchaseUpdateRequest;
 
 class FeedMedicinePurchaseController extends Controller
 {
-    public function index($farmId): JsonResponse
+    public function index($farmId)
     {
         $farm = request()->attributes->get('farm');
 
-        $data = FeedMedicinePurchaseH::where('farm_id', $farm->id)->get();
+        $data = FeedMedicinePurchase::where('farm_id', $farm->id)->get();
 
         $data = FeedMedicinePurchaseResource::collection($data);
 
@@ -29,7 +29,7 @@ class FeedMedicinePurchaseController extends Controller
         return ResponseHelper::success($data, $message);
     }
 
-    public function store(FeedMedicinePurchaseStoreRequest $request): JsonResponse
+    public function store(FeedMedicinePurchaseStoreRequest $request)
     {
         DB::beginTransaction();
 
@@ -40,7 +40,7 @@ class FeedMedicinePurchaseController extends Controller
             // Retrieve the validated input data
             $validated = $request->validated();
 
-            $feedMedicinePurchaseH = FeedMedicinePurchaseH::create([
+            $feedMedicinePurchase = FeedMedicinePurchase::create([
                 'farm_id' => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
                 'supplier' =>  $validated['supplier'],
@@ -54,8 +54,8 @@ class FeedMedicinePurchaseController extends Controller
                 $totalPrice = $item['quantity'] * $item['price_per_unit'];
                 $totalAmount += $totalPrice;
 
-                FeedMedicinePurchaseD::create([
-                    'feed_medicine_purchase_h_id' => $feedMedicinePurchaseH->id,
+                FeedMedicinePurchaseItem::create([
+                    'feed_medicine_purchase_id' => $feedMedicinePurchase->id,
                     'purchase_type' => $item['purchase_type'],
                     'item_name' => $item['item_name'],
                     'quantity' => $item['quantity'],
@@ -66,14 +66,14 @@ class FeedMedicinePurchaseController extends Controller
             }
 
             // Update the total_amount in the header record
-            $feedMedicinePurchaseH->update([
+            $feedMedicinePurchase->update([
                 'total_amount' => $totalAmount,
             ]);
 
 
             DB::commit();
 
-            return ResponseHelper::success(new FeedMedicinePurchaseResource($feedMedicinePurchaseH), 'Data recorded successfully.', 200);
+            return ResponseHelper::success(new FeedMedicinePurchaseResource($feedMedicinePurchase), 'Data recorded successfully.', 200);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -83,13 +83,13 @@ class FeedMedicinePurchaseController extends Controller
         }
     }
 
-    public function show(int $farmId, int $id): JsonResponse
+    public function show(int $farmId, int $id)
     {
         try {
             // Get the farm from request attributes
             $farm = request()->attributes->get('farm');
 
-            $data = FeedMedicinePurchaseH::where('farm_id', $farm->id)->findOrFail($id);
+            $data = FeedMedicinePurchase::where('farm_id', $farm->id)->findOrFail($id);
 
             return ResponseHelper::success(new FeedMedicinePurchaseResource($data), 'The data retrieved successfully.');
 
@@ -99,7 +99,7 @@ class FeedMedicinePurchaseController extends Controller
         }
     }
 
-    public function update(FeedMedicinePurchaseUpdateRequest $request, $farmId, $id): JsonResponse
+    public function update(FeedMedicinePurchaseUpdateRequest $request, $farmId, $id)
     {
         DB::beginTransaction();
 
@@ -111,10 +111,10 @@ class FeedMedicinePurchaseController extends Controller
             $validated = $request->validated();
 
             // Find the LivestockDeath record
-            $feedMedicinePurchaseH = FeedMedicinePurchaseH::where('farm_id', $farm->id)->findOrFail($id);
+            $feedMedicinePurchase = FeedMedicinePurchase::where('farm_id', $farm->id)->findOrFail($id);
 
             // Update the header information
-            $feedMedicinePurchaseH->update([
+            $feedMedicinePurchase->update([
                 'transaction_date' => $validated['transaction_date'],
                 'supplier' =>  $validated['supplier'],
                 'notes' => $validated['notes'] ?? null,
@@ -123,15 +123,15 @@ class FeedMedicinePurchaseController extends Controller
             $totalAmount = 0;
 
             // Hapus semua detail lama sebelum menambahkan yang baru
-            $feedMedicinePurchaseH->feedMedicinePurchaseD()->delete();
+            $feedMedicinePurchase->feedMedicinePurchaseItem()->delete();
 
             // Loop through the items and create detail records
             foreach ($validated['items'] as $item) {
                 $totalPrice = $item['quantity'] * $item['price_per_unit'];
                 $totalAmount += $totalPrice;
 
-                FeedMedicinePurchaseD::create([
-                    'feed_medicine_purchase_h_id' => $feedMedicinePurchaseH->id,
+                FeedMedicinePurchaseItem::create([
+                    'feed_medicine_purchase_id' => $feedMedicinePurchase->id,
                     'purchase_type' => $item['purchase_type'],
                     'item_name' => $item['item_name'],
                     'quantity' => $item['quantity'],
@@ -142,13 +142,13 @@ class FeedMedicinePurchaseController extends Controller
             }
 
             // Update the total_amount in the header record
-            $feedMedicinePurchaseH->update([
+            $feedMedicinePurchase->update([
                 'total_amount' => $totalAmount,
             ]);
 
             DB::commit();
 
-            return ResponseHelper::success(new FeedMedicinePurchaseResource($feedMedicinePurchaseH), 'Data updated successfully.', 200);
+            return ResponseHelper::success(new FeedMedicinePurchaseResource($feedMedicinePurchase), 'Data updated successfully.', 200);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -166,13 +166,13 @@ class FeedMedicinePurchaseController extends Controller
 
             $farm = request()->attributes->get('farm');
 
-            $feedMedicinePurchaseH = FeedMedicinePurchaseH::where('farm_id', $farm->id)->findOrFail($id);
+            $feedMedicinePurchase = FeedMedicinePurchase::where('farm_id', $farm->id)->findOrFail($id);
 
             // Hapus semua detail yang terkait dengan header
-            $feedMedicinePurchaseH->feedMedicinePurchaseD()->delete();
+            $feedMedicinePurchase->feedMedicinePurchaseItem()->delete();
 
             // Hapus header itu sendiri
-            $feedMedicinePurchaseH->delete();
+            $feedMedicinePurchase->delete();
 
             DB::commit();
 
