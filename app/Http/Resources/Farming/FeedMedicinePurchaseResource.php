@@ -25,7 +25,7 @@ class FeedMedicinePurchaseResource extends JsonResource
             'notes' => $this->notes,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
-            'items' => FeedMedicinePurchaseDetailResource::collection($this->feedMedicinePurchaseD),
+            'items' => FeedMedicinePurchaseItemResource::collection($this->feedMedicinePurchaseItem),
         ];
     }
 }
