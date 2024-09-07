@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Carbon;
 use App\Enums\LivestockSexEnum;
+use App\Enums\LivestockStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -100,6 +101,11 @@ class Livestock extends Model
     public function scopeOfType($query, $typeId)
     {
         return $query->where('livestock_type_id', $typeId);
+    }
+
+    public function scopeAlive($query)
+    {
+        return $query->where('livestock_status_id', LivestockStatusEnum::HIDUP->value);
     }
 
     public function scopeMale($query)
