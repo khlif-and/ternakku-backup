@@ -47,9 +47,9 @@ class Farm extends Model
 
     public function getLivestockSummary($typeId)
     {
-        $total = $this->livestocks()->ofType($typeId)->count();
-        $male = $this->livestocks()->ofType($typeId)->male()->count();
-        $female = $this->livestocks()->ofType($typeId)->female()->count();
+        $total = $this->livestocks()->alive()->ofType($typeId)->count();
+        $male = $this->livestocks()->alive()->ofType($typeId)->male()->count();
+        $female = $this->livestocks()->alive()->ofType($typeId)->female()->count();
 
         return [
             'total' => $total,
