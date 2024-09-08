@@ -27,9 +27,14 @@ class Pen extends Model
         return $this->hasMany(LivestockReceptionD::class);
     }
 
+    public function livestocks()
+    {
+        return $this->hasMany(Livestock::class);
+    }
+
     public function getPopulationAttribute()
     {
-        return $this->livestockReceptionDs()->count();
+        return $this->livestocks()->alive()->count();
     }
 
 }
