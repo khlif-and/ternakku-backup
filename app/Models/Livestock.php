@@ -95,7 +95,7 @@ class Livestock extends Model
 
     public function getCurrentPhotoAttribute()
     {
-        return $this->livestockReceptionD->photo ?? null;
+        return $this->livestockReceptionD->photo ? getNeoObject( $this->livestockReceptionD->photo) : null;
     }
 
     public function scopeOfType($query, $typeId)
