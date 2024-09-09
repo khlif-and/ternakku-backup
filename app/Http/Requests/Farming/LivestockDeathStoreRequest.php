@@ -24,7 +24,7 @@ class LivestockDeathStoreRequest extends FormRequest
         return [
             'transaction_date' => 'required|date',
             'livestock_id' => 'required|exists:livestocks,id',
-            'diagnosis' => 'nullable|string',
+            'disease_id' => 'required|exists:diseases,id',
             'indication' => 'nullable|string',
             'notes' => 'nullable|string',
         ];

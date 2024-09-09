@@ -62,7 +62,7 @@ class LivestockDeathController extends Controller
                 'farm_id' => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
                 'livestock_id' => $validated['livestock_id'],
-                'diagnosis' => $validated['diagnosis'] ?? null,
+                'disease_id' => $validated['disease_id'] ?? null,
                 'indication' => $validated['indication'] ?? null,
                 'notes' => $validated['notes'] ?? null,
             ]);
@@ -103,7 +103,7 @@ class LivestockDeathController extends Controller
     }
 
 
-    public function update(LivestockDeathUpdateRequest $request, $farmId, $id): JsonResponse
+    public function update(LivestockDeathUpdateRequest $request, $farmId, $id)
     {
         DB::beginTransaction();
 
@@ -124,7 +124,7 @@ class LivestockDeathController extends Controller
             $livestockDeath->update([
                 'transaction_date' => $validated['transaction_date'],
                 'livestock_id' => $validated['livestock_id'],
-                'diagnosis' => $validated['diagnosis'] ?? null,
+                'disease_id' => $validated['disease_id'] ?? null,
                 'indication' => $validated['indication'] ?? null,
                 'notes' => $validated['notes'] ?? null,
             ]);

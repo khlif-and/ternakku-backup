@@ -15,7 +15,7 @@ class LivestockDeath extends Model
         'transaction_number',
         'farm_id',
         'livestock_id',
-        'diagnosis',
+        'disease_id',
         'indication',
         'notes',
     ];
@@ -66,5 +66,10 @@ class LivestockDeath extends Model
     public function farm()
     {
         return $this->belongsTo(Farm::class);
+    }
+
+    public function disease()
+    {
+        return $this->belongsTo(Disease::class);
     }
 }
