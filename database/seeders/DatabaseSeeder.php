@@ -44,7 +44,8 @@ class DatabaseSeeder extends Seeder
             LivestockReceptionSeeder::class,
             QurbanLivestockSeeder::class,
             BankSeeder::class,
-            LivestockExpenseTypeSeeder::class
+            LivestockExpenseTypeSeeder::class,
+            DiseaseSeeder::class
         ]);
     }
 }

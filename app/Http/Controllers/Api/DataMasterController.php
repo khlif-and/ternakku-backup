@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Bank;
 use App\Models\Region;
+use App\Models\Disease;
 use App\Models\Regency;
 use App\Models\Village;
 use App\Models\District;
@@ -74,4 +75,11 @@ class DataMasterController extends Controller
 
         return ResponseHelper::success($data, 'Data retrieved successfully');
     }
-}
+
+
+    public function getLivestockDisease()
+    {
+        $data = Disease::orderBy('name')->get();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }}

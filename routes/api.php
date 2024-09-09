@@ -72,11 +72,13 @@ Route::group([
             Route::get('sex', 'getLivestockSex');
             Route::get('group', 'getLivestockGroup');
             Route::get('breed', 'getLivestockBreed');
+            Route::get('disease', 'getLivestockDisease');
         });
 
         Route::get('/region', 'getRegion');
 
         Route::get('bank', 'getBank');
+
     });
 
     Route::group(['prefix' => 'farming'], function () {
