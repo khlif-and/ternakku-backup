@@ -77,10 +77,11 @@ class LivestockDeathController extends Controller
             return ResponseHelper::success(new LivestockDeathResource($livestockDeath), 'Livestock death recorded successfully.', 200);
 
         } catch (\Exception $e) {
+
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while recording the livestock death.', 500);
+            return ResponseHelper::error($e->getMessage(), 500);
         }
     }
 
@@ -98,7 +99,7 @@ class LivestockDeathController extends Controller
 
         } catch (\Exception $e) {
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while retrieving the livestock death record.', 500);
+            return ResponseHelper::error( 'An error occurred while retrieving the livestock death record.', 500);
         }
     }
 
@@ -155,7 +156,7 @@ class LivestockDeathController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while updating the livestock death.', 500);
+            return ResponseHelper::error( 'An error occurred while updating the livestock death.', 500);
         }
     }
 
@@ -192,7 +193,7 @@ class LivestockDeathController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while deleting the livestock death record.', 500);
+            return ResponseHelper::error( 'An error occurred while deleting the livestock death record.', 500);
         }
     }
 

@@ -106,7 +106,7 @@ class FeedingIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while recording the data.', 500);
+            return ResponseHelper::error( 'An error occurred while recording the data.', 500);
         }
     }
 
@@ -202,7 +202,7 @@ class FeedingIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while uodating the data.', 500);
+            return ResponseHelper::error( 'An error occurred while uodating the data.', 500);
         }
     }
 
@@ -252,7 +252,7 @@ class FeedingIndividuController extends Controller
             Log::error('Delete FeedingIndividu Error: ', ['error' => $e->getMessage()]);
 
             // Handle exceptions dan kembalikan respon error
-            return ResponseHelper::error(null, 'An error occurred while deleting the data.', 500);
+            return ResponseHelper::error( 'An error occurred while deleting the data.', 500);
         }
     }
 

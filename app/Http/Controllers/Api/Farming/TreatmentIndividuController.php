@@ -101,7 +101,7 @@ class TreatmentIndividuController extends Controller
             dd($e);
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while recording the data.', 500);
+            return ResponseHelper::error( 'An error occurred while recording the data.', 500);
         }
     }
 
@@ -223,7 +223,7 @@ class TreatmentIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while uodating the data.', 500);
+            return ResponseHelper::error( 'An error occurred while uodating the data.', 500);
         }
     }
 
@@ -270,7 +270,7 @@ class TreatmentIndividuController extends Controller
             Log::error('Delete treatmentIndividu Error: ', ['error' => $e->getMessage()]);
 
             // Handle exceptions dan kembalikan respon error
-            return ResponseHelper::error(null, 'An error occurred while deleting the data.', 500);
+            return ResponseHelper::error( 'An error occurred while deleting the data.', 500);
         }
     }
 }

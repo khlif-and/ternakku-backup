@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('livestock_deaths', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('farm_id');
-            $table->string('transaction_number')->unique();
+            $table->string('transaction_number');
             $table->date('transaction_date');
             $table->unsignedBigInteger('livestock_id');
             $table->string('diagnosis')->nullable();
