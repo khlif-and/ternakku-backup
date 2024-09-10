@@ -47,6 +47,8 @@ class FeedingIndividuController extends Controller
 
         try {
 
+            DB::beginTransaction();  // Awal transaksional
+
             $feedingH = FeedingH::create([
                 'farm_id'          => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
@@ -129,6 +131,8 @@ class FeedingIndividuController extends Controller
             $query->where('farm_id', $farm->id)->where('type' , 'individu');
         })->findOrFail($feedingIndividuId);
         try {
+
+            DB::beginTransaction();  // Awal transaksional
 
             $feedingH = $feedingIndividuD->FeedingH;
 
