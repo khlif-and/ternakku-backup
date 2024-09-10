@@ -93,7 +93,7 @@ class LivestockSaleWeightController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while recording the livestock saleweight.', 500);
+            return ResponseHelper::error( 'An error occurred while recording the livestock saleweight.', 500);
         }
 
     }
@@ -188,7 +188,7 @@ class LivestockSaleWeightController extends Controller
             DB::rollBack();
 
             // Tangani exception dan kembalikan respons error
-            return ResponseHelper::error(null, 'An error occurred while updating the livestock sale weight.', 500);
+            return ResponseHelper::error( 'An error occurred while updating the livestock sale weight.', 500);
         }
     }
 

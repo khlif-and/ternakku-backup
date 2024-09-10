@@ -79,7 +79,7 @@ class FeedMedicinePurchaseController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while recording the livestock death.', 500);
+            return ResponseHelper::error( 'An error occurred while recording the livestock death.', 500);
         }
     }
 
@@ -95,7 +95,7 @@ class FeedMedicinePurchaseController extends Controller
 
         } catch (\Exception $e) {
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while retrieving the data.', 500);
+            return ResponseHelper::error( 'An error occurred while retrieving the data.', 500);
         }
     }
 
@@ -154,7 +154,7 @@ class FeedMedicinePurchaseController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while updating the livestock death.', 500);
+            return ResponseHelper::error( 'An error occurred while updating the livestock death.', 500);
         }
     }
 
@@ -182,7 +182,7 @@ class FeedMedicinePurchaseController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while deleting the record.', 500);
+            return ResponseHelper::error( 'An error occurred while deleting the record.', 500);
         }
     }
 }

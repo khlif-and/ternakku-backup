@@ -71,7 +71,7 @@ class MilkProductionIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while recording the data.', 500);
+            return ResponseHelper::error( 'An error occurred while recording the data.', 500);
         }
     }
 
@@ -130,7 +130,7 @@ class MilkProductionIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while recording the data.', 500);
+            return ResponseHelper::error( 'An error occurred while recording the data.', 500);
         }
     }
 
@@ -164,7 +164,7 @@ class MilkProductionIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error(null, 'An error occurred while deleting the data.', 500);
+            return ResponseHelper::error( 'An error occurred while deleting the data.', 500);
         }
     }
 }
