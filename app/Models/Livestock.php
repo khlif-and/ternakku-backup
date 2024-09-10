@@ -120,7 +120,7 @@ class Livestock extends Model
 
     public function expenses()
     {
-        return $this->hasMany(LivestockExpense::class, 'livestock_expense_type_id');
+        return $this->hasMany(LivestockExpense::class, 'livestock_id');
     }
 
     public function dof()
