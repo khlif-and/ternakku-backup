@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,13 +14,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [HomeController::class, 'index']);
+
 Route::group([
     'prefix' => 'auth',
     'controller' => App\Http\Controllers\Admin\AuthController::class
 ], function () {
-    Route::get('login', 'showLoginForm');
+    Route::get('login', 'showLoginForm'); //->name('login');
     Route::post('login', 'login');
-    Route::get('register', 'showRegisterForm');
+    Route::get('register', 'showRegisterForm'); //->name('register');
     // Route::post('verify', 'verify');
     // Route::post('resend-otp', 'resendOtp');
 });
