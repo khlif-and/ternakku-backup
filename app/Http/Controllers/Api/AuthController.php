@@ -180,7 +180,7 @@ class AuthController extends Controller
             ]);
 
             // Trigger the UserRegistered event to resend the OTP email
-            // event(new UserRegistered($user, $otp));
+            event(new UserRegistered($user, $otp));
 
             // Commit the transaction
             DB::commit();
