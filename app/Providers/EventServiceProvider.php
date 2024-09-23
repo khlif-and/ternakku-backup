@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\UserRegistered;
+use App\Listeners\SendOtpWAListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\SendOtpEmailListener;
@@ -22,7 +23,8 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         UserRegistered::class => [
-            SendOtpEmailListener::class,
+            // SendOtpEmailListener::class,
+            SendOtpWAListener::class,
         ],
     ];
 
