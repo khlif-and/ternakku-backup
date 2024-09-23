@@ -11,6 +11,7 @@ use Illuminate\Support\Carbon;
 use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -58,7 +59,7 @@ class AuthController extends Controller
             ]);
 
             // Trigger the UserRegistered event to send the OTP email
-            // event(new UserRegistered($user, $otp));
+            event(new UserRegistered($user, $otp));
 
             // Commit the transaction
             DB::commit();
@@ -66,6 +67,7 @@ class AuthController extends Controller
             // Return success response
             return ResponseHelper::success($user, 'User registered successfully', 200);
         } catch (\Exception $e) {
+            Log::error($e->getMessage());
             // Rollback the transaction if an error occurs
             DB::rollBack();
             return ResponseHelper::error('Failed to register user', 500);
