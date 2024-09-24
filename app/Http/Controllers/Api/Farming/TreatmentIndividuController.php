@@ -98,8 +98,6 @@ class TreatmentIndividuController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            dd($e);
-
             // Handle exceptions and return an error response
             return ResponseHelper::error( 'An error occurred while recording the data.', 500);
         }
