@@ -31,7 +31,7 @@ class TreatmentIndividuUpdateRequest extends FormRequest
             'notes' => 'nullable|string',
 
             // Validasi untuk array medicines
-            'medicines' => 'required|array',
+            'medicines' => 'array', // 'required' dihilangkan
             'medicines.*.name' => 'required|string',
             'medicines.*.unit' => 'required|string',
             'medicines.*.qty_per_unit' => 'required|numeric|min:0',
@@ -39,12 +39,36 @@ class TreatmentIndividuUpdateRequest extends FormRequest
             'medicines.*.total_price' => 'required|numeric|min:0',
 
             // Validasi untuk array treatments
-            'treatments' => 'required|array',
+            'treatments' => 'array', // 'required' dihilangkan
             'treatments.*.name' => 'required|string',
             'treatments.*.cost' => 'required|numeric|min:0',
         ];
     }
 
+    /**
+     * Configure the validator instance.
+     *
+     * @param \Illuminate\Validation\Validator $validator
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $medicines = $this->input('medicines');
+            $treatments = $this->input('treatments');
+
+            // Memastikan setidaknya salah satu dari medicines atau treatments diisi
+            if (empty($medicines) && empty($treatments)) {
+                $validator->errors()->add('medicines', 'At least one of medicines or treatments is required.');
+                $validator->errors()->add('treatments', 'At least one of medicines or treatments is required.');
+            }
+        });
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
     public function messages()
     {
         return [
@@ -54,7 +78,6 @@ class TreatmentIndividuUpdateRequest extends FormRequest
             'total_cost.required' => 'The total cost is required.',
 
             // Messages for medicines validation
-            'medicines.required' => 'At least one medicine is required.',
             'medicines.*.name.required' => 'The name of the medicine is required.',
             'medicines.*.unit.required' => 'The unit of the medicine is required.',
             'medicines.*.qty_per_unit.required' => 'The quantity per unit is required.',
@@ -62,7 +85,6 @@ class TreatmentIndividuUpdateRequest extends FormRequest
             'medicines.*.total_price.required' => 'The total price of the medicine is required.',
 
             // Messages for treatments validation
-            'treatments.required' => 'At least one treatment is required.',
             'treatments.*.name.required' => 'The name of the treatment is required.',
             'treatments.*.cost.required' => 'The cost of the treatment is required.',
         ];
