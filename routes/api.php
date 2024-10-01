@@ -95,8 +95,9 @@ Route::group([
                     Route::get('/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
                     Route::post('/{farmId}/update', [App\Http\Controllers\Api\FarmController::class, 'update']);
                     Route::delete('/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'destroy']);
+                    Route::get('/{farmId}/user-list', [App\Http\Controllers\Api\FarmController::class, 'userList']);
                     Route::post('/{farmId}/add-user', [App\Http\Controllers\Api\FarmController::class, 'addUser']);
-                    Route::post('/{farmId}/delete-user', [App\Http\Controllers\Api\FarmController::class, 'deleteUser']);
+                    Route::post('/{farmId}/remove-user', [App\Http\Controllers\Api\FarmController::class, 'removeUser']);
                 });
 
                 Route::group(['middleware' => ['check.farm.access']], function () {

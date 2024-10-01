@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Farm;
+use App\Models\User;
 use App\Enums\RoleEnum;
 use App\Models\FarmUser;
 use App\Models\FarmDetail;
@@ -13,6 +14,8 @@ use App\Http\Resources\FarmListResource;
 use App\Http\Resources\FarmDetailResource;
 use App\Http\Requests\Farming\FarmStoreRequest;
 use App\Http\Requests\Farming\FarmUpdateRequest;
+use App\Http\Resources\Farming\FarmUserResource;
+use App\Http\Requests\Farming\FarmUserStoreRequest;
 
 class FarmController extends Controller
 {
@@ -201,10 +204,7 @@ class FarmController extends Controller
             }
 
             // Hapus data di tabel FarmUser
-            FarmUser::where([
-                'farm_id' => $farm->id,
-                'user_id' => auth()->id()
-            ])->delete();
+            FarmUser::where('farm_id' , $farm->id)->delete();
 
             // Hapus data di tabel FarmDetail
             $farm->farmDetail()->delete();
@@ -224,8 +224,125 @@ class FarmController extends Controller
         }
     }
 
-    public function addUser()
+    public function userList($farmId)
     {
+        $farm = Farm::findOrFail($farmId);
 
+        if(!$farm){
+            return ResponseHelper::error('Farm not found', 404);
+        }
+
+        if($farm->owner_id !== auth()->id()){
+            return ResponseHelper::error("You don't have permission to access this", 403);
+        }
+
+        $famUsers = FarmUser::with(['user' , 'farm'])->where('farm_id', $farmId)->get();
+
+        $data = FarmUserResource::collection($famUsers);
+
+        // Tentukan pesan respons
+        $message = $famUsers->count() > 0 ? 'Data retrieved successfully' : 'Data empty';
+
+        // Kembalikan respons dengan data dan pesan
+        return ResponseHelper::success($data, $message);
     }
+
+
+    public function addUser(FarmUserStoreRequest $request, $farmId)
+    {
+        $farm = Farm::findOrFail($farmId);
+
+        if (!$farm) {
+            return ResponseHelper::error('Farm not found', 404);
+        }
+
+        if ($farm->owner_id !== auth()->id()) {
+            return ResponseHelper::error("You don't have permission to access this", 403);
+        }
+
+        $validated = $request->validated();
+
+        $user = User::where('phone_number', $validated['phone_number'])->first();
+
+        // Start transaction
+        DB::beginTransaction();
+
+        try {
+            // First or create FarmUser
+            $farmUser = FarmUser::firstOrCreate([
+                'user_id' => $user->id,
+                'farm_id' => $farm->id,
+            ]);
+
+            // Sync user roles without detaching existing roles
+            $user->roles()->syncWithoutDetaching([
+                RoleEnum::FARMER->value => [
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            ]);
+
+            // Commit transaction
+            DB::commit();
+
+            $data = new FarmUserResource($farmUser);
+
+            return ResponseHelper::success($data, 'User added to the farm successfully');
+
+        } catch (\Exception $e) {
+            // Rollback transaction on failure
+            DB::rollBack();
+
+            return ResponseHelper::error('An error occurred while adding the user', 500);
+        }
+    }
+
+    public function removeUser(FarmUserStoreRequest $request, $farmId)
+    {
+        $farm = Farm::findOrFail($farmId);
+
+        if (!$farm) {
+            return ResponseHelper::error('Farm not found', 404);
+        }
+
+        if ($farm->owner_id !== auth()->id()) {
+            return ResponseHelper::error("You don't have permission to access this", 403);
+        }
+
+        $validated = $request->validated();
+
+        $user = User::where('phone_number', $validated['phone_number'])->first();
+
+        if (!$user) {
+            return ResponseHelper::error('User not found', 404);
+        }
+
+        // Start transaction
+        DB::beginTransaction();
+
+        try {
+            // Find and delete FarmUser
+            $farmUser = FarmUser::where('user_id', $user->id)->where('farm_id', $farm->id)->first();
+
+            if ($farmUser) {
+                $farmUser->delete();
+            } else {
+                return ResponseHelper::error('User is not part of this farm', 404);
+            }
+
+            // Detach the FARMER role from the user
+            $user->roles()->detach(RoleEnum::FARMER->value);
+
+            // Commit transaction
+            DB::commit();
+
+            return ResponseHelper::success('User removed from the farm successfully');
+        } catch (\Exception $e) {
+            // Rollback transaction on failure
+            DB::rollBack();
+
+            return ResponseHelper::error('An error occurred while removing the user', 500);
+        }
+    }
+
 }
