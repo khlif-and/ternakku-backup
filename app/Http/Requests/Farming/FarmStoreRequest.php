@@ -30,8 +30,8 @@ class FarmStoreRequest extends FormRequest
             'longitude'         => 'nullable|numeric|between:-180,180',
             'latitude'          => 'nullable|numeric|between:-90,90',
             'capacity'          => 'nullable|integer|min:1',
-            'logo'              => 'nullable|image|mimes:jpg,jpeg,png,gif',
-            'cover_photo'       => 'nullable|image|mimes:jpg,jpeg,png,gif',
+            'logo'              => 'required|image|mimes:jpg,jpeg,png,gif',
+            'cover_photo'       => 'required|image|mimes:jpg,jpeg,png,gif',
         ];
     }
 }
