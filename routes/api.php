@@ -97,7 +97,7 @@ Route::group([
                     Route::delete('/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'destroy']);
                 });
 
-                Route::group(['middleware' => ['check.farm.ownership']], function () {
+                Route::group(['middleware' => ['check.farm.access']], function () {
                     Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
                         Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
                         Route::get('/{farm_id}/livestock', 'getLivestock');

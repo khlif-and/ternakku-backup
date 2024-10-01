@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Farm;
 use App\Enums\RoleEnum;
+use App\Models\FarmUser;
 use App\Models\FarmDetail;
 use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
@@ -19,9 +20,11 @@ class FarmController extends Controller
     {
         $user = auth()->user();
 
-        $farms = Farm::where('owner_id' , $user->id)->get();
+        // Ambil data farm milik user dan relasi farm-nya
+        $farms = FarmUser::with('farm')->where('user_id', $user->id)->get();
 
-        $data = FarmDetailResource::collection($farms);
+        // Gunakan FarmDetailResource untuk menyesuaikan data yang akan dikirim
+        $data = FarmDetailResource::collection($farms->pluck('farm'));
 
         // Tentukan pesan respons
         $message = $farms->count() > 0 ? 'Farms retrieved successfully' : 'Data empty';
@@ -33,16 +36,16 @@ class FarmController extends Controller
 
     public function detail($id)
     {
-        // Find the Farm by ID
-        $farm = Farm::where('owner_id' , auth()->id())->findOrFail($id);
+        // Cari farm berdasarkan user_id dan farm_id
+        $farmUser = FarmUser::with('farm')->where('user_id', auth()->id())->where('farm_id', $id)->first();
 
-        // If farm not found, return error response
-        if (!$farm) {
+        // Jika farm tidak ditemukan, kembalikan respons error
+        if (!$farmUser || !$farmUser->farm) {
             return ResponseHelper::error('Farm not found', 404);
         }
 
-        // If farm found, return it using the FarmResource
-        $data = new FarmDetailResource($farm);
+        // Jika farm ditemukan, gunakan FarmDetailResource untuk mengambil detailnya
+        $data = new FarmDetailResource($farmUser->farm);
 
         return ResponseHelper::success($data, 'Farm detail retrieved successfully');
     }
@@ -53,7 +56,9 @@ class FarmController extends Controller
         $user = auth()->user();
         $ownerId = auth()->id(); // Mendapatkan ID pengguna yang sedang login
 
-        DB::transaction(function () use ($validated, $ownerId, &$farm , $user, $request) {
+        DB::beginTransaction();
+
+        try {
             // Simpan data ke tabel farms
             $farm = Farm::create([
                 'name'              => $validated['name'],
@@ -92,6 +97,11 @@ class FarmController extends Controller
             // Simpan FarmDetail dengan data yang telah di-assign
             FarmDetail::create($farmDetailData);
 
+            FarmUser::create([
+                'farm_id' => $farm->id,
+                'user_id' => $ownerId
+            ]);
+
             // Menambahkan peran FARMER jika belum ada
             $user->roles()->syncWithoutDetaching([
                 RoleEnum::FARMER->value => [
@@ -99,11 +109,18 @@ class FarmController extends Controller
                     'updated_at' => now(),
                 ],
             ]);
-        });
 
-        return ResponseHelper::success(new FarmDetailResource($farm), 'Farm created successfully', 200);
+            // Commit transaksi
+            DB::commit();
+
+            return ResponseHelper::success(new FarmDetailResource($farm), 'Farm created successfully', 200);
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to create farm: ' . $e->getMessage(), 500);
+        }
     }
-
 
     public function update(FarmUpdateRequest $request, $id)
     {
@@ -170,28 +187,40 @@ class FarmController extends Controller
 
     public function destroy($id)
     {
-        $farm = Farm::where('owner_id' , auth()->id())->findOrFail($id);
+        $farm = Farm::where('owner_id', auth()->id())->findOrFail($id);
 
-        DB::transaction(function () use ($farm) {
+        DB::beginTransaction();
+
+        try {
             // Hapus logo dan cover photo jika ada
-            if ($farm->farmDetail->logo) {
+            if ($farm->farmDetail && $farm->farmDetail->logo) {
                 deleteNeoObject($farm->farmDetail->logo);
             }
-            if ($farm->farmDetail->cover_photo) {
+            if ($farm->farmDetail && $farm->farmDetail->cover_photo) {
                 deleteNeoObject($farm->farmDetail->cover_photo);
             }
+
+            // Hapus data di tabel FarmUser
+            FarmUser::where([
+                'farm_id' => $farm->id,
+                'user_id' => auth()->id()
+            ])->delete();
 
             // Hapus data di tabel FarmDetail
             $farm->farmDetail()->delete();
 
             // Hapus data di tabel Farm
             $farm->delete();
-        });
 
-        return ResponseHelper::success(null, 'Farm deleted successfully', 200);
+            // Commit transaksi
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Farm deleted successfully', 200);
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to delete farm: ' . $e->getMessage(), 500);
+        }
     }
-
-
-
-
 }
