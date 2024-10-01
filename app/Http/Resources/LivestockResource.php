@@ -23,7 +23,7 @@ class LivestockResource extends JsonResource
             'reception_date' => $this->livestockReceptionD->livestockReceptionH->transaction_date,
             'dof' => $this->dof(),
             'reception_weight' => $this->livestockReceptionD->weight,
-            'current_weight' => $this->current_weight,
+            'current_weight' => $this->last_weight,
             'current_age' => $this->current_age,
             'livestock_type_id' => $this->livestock_type_id,
             'livestock_type_name' => $this->livestockType->name,

@@ -83,8 +83,8 @@ class Livestock extends Model
         $receivedAt = Carbon::parse($this->livestockReceptionD->created_at);
 
         // Tambahkan umur saat diterima
-        $receivedAt->addYears($this->livestockReceptionD->age_years);
-        $receivedAt->addMonths($this->livestockReceptionD->age_months);
+        $receivedAt->addYears($this->start_age_years);
+        $receivedAt->addMonths($this->start_age_months);
 
         // Hitung selisih umur dari tanggal diterima hingga sekarang
         $ageInYears = $now->diffInYears($receivedAt);
@@ -95,7 +95,7 @@ class Livestock extends Model
 
     public function getCurrentPhotoAttribute()
     {
-        return $this->livestockReceptionD->photo ? getNeoObject( $this->livestockReceptionD->photo) : null;
+        return $this->photo ? getNeoObject( $this->photo) : null;
     }
 
     public function scopeOfType($query, $typeId)

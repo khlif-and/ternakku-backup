@@ -223,4 +223,9 @@ class FarmController extends Controller
             return ResponseHelper::error('Failed to delete farm: ' . $e->getMessage(), 500);
         }
     }
+
+    public function addUser()
+    {
+
+    }
 }
