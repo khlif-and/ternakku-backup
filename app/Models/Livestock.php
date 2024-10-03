@@ -170,6 +170,6 @@ class Livestock extends Model
 
     public function children_number()
     {
-        return null;
+        return 0;
     }
 }
