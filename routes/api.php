@@ -203,6 +203,18 @@ Route::group([
                         Route::delete('/{farm_id}/{reweightId}', 'destroy');
                     });
 
+                    Route::group(['prefix' => 'reproduction'], function () {
+                        Route::get('get-female-livestock-data/{farm_id}/{livestock_id}' , [App\Http\Controllers\Api\Farming\ReproductionMasterController::class , 'getFemaleLivestockData']);
+
+                        Route::group(['prefix' => 'artificial-insemination', 'controller' => App\Http\Controllers\Api\Farming\ArtificialInseminationController::class], function () {
+                            Route::get('/{farm_id}', 'index');
+                            Route::get('/{farm_id}/{reweightId}', 'show');
+                            Route::post('/{farm_id}', 'store');
+                            Route::post('/{farm_id}/{reweightId}/update', 'update');
+                            Route::delete('/{farm_id}/{reweightId}', 'destroy');
+                        });
+                    });
+
                     // Route::group(['prefix' => 'feeding-colony', 'controller' => App\Http\Controllers\Api\Farming\FeedingColonyController::class], function () {
                     //     Route::get('/{farm_id}', 'index');
                     //     Route::get('/{farm_id}/{feedingColonyId}', 'show');

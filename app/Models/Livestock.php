@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Support\Carbon;
 use App\Enums\LivestockSexEnum;
+use App\Models\ReproductionCycle;
 use App\Enums\LivestockStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -133,5 +134,42 @@ class Livestock extends Model
 
         // Hitung jarak hari
         return $tanggal1->diffInDays($tanggal2);
+    }
+
+    public function insemination_number()
+    {
+        if($this->livestock_sex_id == LivestockSexEnum::BETINA->value){
+            return ReproductionCycle::where('livestock_id' , $this->id)->count();
+        }
+        return null;
+    }
+
+    public function artificial_insemination_number()
+    {
+        if($this->livestock_sex_id == LivestockSexEnum::BETINA->value){
+            return ReproductionCycle::where('livestock_id' , $this->id)->where('insemination_type' , 'artificial')->count();
+        }
+        return null;
+    }
+
+    public function natural_insemination_number()
+    {
+        if($this->livestock_sex_id == LivestockSexEnum::BETINA->value){
+            return ReproductionCycle::where('livestock_id' , $this->id)->where('insemination_type' , 'natural')->count();
+        }
+        return null;
+    }
+
+    public function pregnant_number()
+    {
+        if($this->livestock_sex_id == LivestockSexEnum::BETINA->value){
+            return ReproductionCycle::where('livestock_id' , $this->id)->whereIn('reproduction_cycle_status_id' , [3,4,5,6])->count();
+        }
+        return null;
+    }
+
+    public function children_number()
+    {
+        return null;
     }
 }
