@@ -11,7 +11,7 @@ class ArtificialInseminationUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,16 @@ class ArtificialInseminationUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'transaction_date' => 'required|date',
+            // 'livestock_id' => 'required|exists:livestocks,id',
+            'action_time' => 'required|date_format:H:i',
+            'officer_name' => 'required|string|max:255',
+            'semen_breed_id' => 'required|exists:livestock_breeds,id',
+            'sire_name' => 'required|string|max:255',
+            'semen_producer' => 'required|string|max:255',
+            'semen_batch' => 'required|string|max:100',
+            'cost' => 'required|numeric|min:0',
+            'notes' => 'nullable|string'
         ];
     }
 }

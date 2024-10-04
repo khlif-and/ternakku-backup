@@ -52,4 +52,9 @@ class Insemination extends Model
     {
         return $this->belongsTo(Farm::class);
     }
+
+    public function inseminationArtificial()
+    {
+        return $this->hasMany(InseminationArtificial::class, 'insemination_id');
+    }
 }

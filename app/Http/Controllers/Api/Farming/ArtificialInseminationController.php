@@ -18,6 +18,7 @@ use App\Models\ReproductionCycleStatus;
 use App\Enums\ReproductionCycleStatusEnum;
 use App\Http\Resources\Farming\ArtificialInseminationResource;
 use App\Http\Requests\Farming\ArtificialInseminationStoreRequest;
+use App\Http\Requests\Farming\ArtificialInseminationUpdateRequest;
 
 class ArtificialInseminationController extends Controller
 {
@@ -40,15 +41,6 @@ class ArtificialInseminationController extends Controller
         try {
 
             DB::beginTransaction();
-
-            /*
-                1. cek data reproduction cycle
-                    1.1 kalau ada, cek ReproductionCycleStatusId, kalau 1 => 2, kalau 3 => 5
-                2. create data reproduction cycle , set ReproductionCycleStatusId jadi 1
-                3. create data inseminasi header
-                4. create data inseminasi_artificial
-                5. create / update data expenses
-            */
 
             $check = ReproductionCycle::where('livestock_id' , $validated['livestock_id'])->orderBy('created_at' , 'desc')->first();
 
@@ -135,5 +127,116 @@ class ArtificialInseminationController extends Controller
 
         $message = $inseminationArtificial->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
         return ResponseHelper::success($data, $message);
+    }
+
+    public function show($farmId , $artificialInseminationId): JsonResponse
+    {
+        $farm = request()->attributes->get('farm');
+
+        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'artificial');
+        })->findOrFail($artificialInseminationId);
+
+        return ResponseHelper::success(new ArtificialInseminationResource($inseminationArtificial), 'Data retrieved successfully');
+    }
+
+    public function update(ArtificialInseminationUpdateRequest $request , $farmId, $artificialInseminationId)
+    {
+        $validated = $request->validated();
+
+        $farm = request()->attributes->get('farm');
+
+        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'artificial');
+        })->findOrFail($artificialInseminationId);
+
+        $livestock =  $inseminationArtificial->reproductionCycle->livestock;
+
+        try {
+            DB::beginTransaction();
+
+            $insemination = $inseminationArtificial->insemination;
+
+            $insemination->update([
+                'transaction_date' => $validated['transaction_date'],
+                'notes'            => $validated['notes'] ?? null,
+            ]);
+
+            $livestockExpenseOld = LivestockExpense::where('livestock_id', $livestock->id)
+                    ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::AI->value)
+                    ->first();
+
+            $oldAmount = $livestockExpenseOld->amount;
+
+            $livestockExpenseOld->update(['amount' => $oldAmount - $inseminationArtificial->cost + $validated['cost']]);
+
+            $inseminationArtificial->update([
+                'action_time' => $validated['action_time'],
+                'officer_name' => $validated['officer_name'],
+                'semen_breed_id' => $validated['semen_breed_id'],
+                'sire_name' => $validated['sire_name'],
+                'semen_producer' => $validated['semen_producer'],
+                'semen_batch' => $validated['semen_batch'],
+                'cycle_date' => getInseminationCycleDate($livestock->livestock_type_id , $validated['transaction_date']),
+                'cost' => $validated['cost'],
+            ]);
+
+            DB::commit();
+
+            return ResponseHelper::success(new ArtificialInseminationResource($inseminationArtificial), 'Data updated successfully');
+
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            // Handle exceptions and return an error response
+            return ResponseHelper::error( 'An error occurred while uodating the data.', 500);
+        }
+    }
+
+    public function destroy($farmId, $artificialInseminationId)
+    {
+        $farm = request()->attributes->get('farm');
+
+        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'artificial');
+        })->findOrFail($artificialInseminationId);
+
+        $livestock =  $inseminationArtificial->reproductionCycle->livestock;
+
+        try {
+            DB::beginTransaction();
+
+            $livestockExpense = LivestockExpense::where('livestock_id', $livestock->id)
+                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::AI->value)
+                ->first();
+
+            if ($livestockExpense) {
+                $livestockExpense->update([
+                    'amount' => $livestockExpense->amount - $inseminationArtificial->cost
+                ]);
+            }
+
+            $inseminationArtificial->delete();
+
+            $insemination = $inseminationArtificial->insemination;
+
+            if (!$insemination->inseminationArtificial()->exists()) {
+                $insemination->delete();
+            }
+
+            $inseminationArtificial->reproductionCycle->delete();
+
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Data deleted successfully', 200);
+
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+
+            // Handle exceptions and return an error response
+            return ResponseHelper::error( 'An error occurred while deleting the data.', 500);
+        }
     }
 }
