@@ -57,4 +57,9 @@ class Insemination extends Model
     {
         return $this->hasMany(InseminationArtificial::class, 'insemination_id');
     }
+
+    public function inseminationNatural()
+    {
+        return $this->hasMany(InseminationNatural::class, 'insemination_id');
+    }
 }

@@ -12,17 +12,17 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Models\InseminationArtificial;
+use App\Models\InseminationNatural;
 use App\Enums\LivestockExpenseTypeEnum;
 use App\Models\ReproductionCycleStatus;
 use App\Enums\ReproductionCycleStatusEnum;
-use App\Http\Resources\Farming\ArtificialInseminationResource;
-use App\Http\Requests\Farming\ArtificialInseminationStoreRequest;
-use App\Http\Requests\Farming\ArtificialInseminationUpdateRequest;
+use App\Http\Resources\Farming\NaturalInseminationResource;
+use App\Http\Requests\Farming\NaturalInseminationStoreRequest;
+use App\Http\Requests\Farming\NaturalInseminationUpdateRequest;
 
-class ArtificialInseminationController extends Controller
+class NaturalInseminationController extends Controller
 {
-    public function store(ArtificialInseminationStoreRequest $request, $farmId): JsonResponse
+    public function store(NaturalInseminationStoreRequest $request, $farmId): JsonResponse
     {
         $validated = $request->validated();
 
@@ -59,40 +59,37 @@ class ArtificialInseminationController extends Controller
             $reproCycle = ReproductionCycle::create([
                 'livestock_id' => $validated['livestock_id'],
                 'reproduction_cycle_status_id' =>ReproductionCycleStatusEnum::INSEMINATION->value,
-                'insemination_type' => 'artificial'
+                'insemination_type' => 'natural'
             ]);
 
             $insemination = Insemination::create([
                 'farm_id'          => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
-                'type'             => 'artificial',
+                'type'             => 'natural',
                 'notes'            => $validated['notes'],
             ]);
 
-            $inseminationArtificial = InseminationArtificial::create([
+            $inseminationNatural = InseminationNatural::create([
                 'reproduction_cycle_id' => $reproCycle->id,
                 'insemination_id' => $insemination->id,
                 'action_time' => $validated['action_time'],
-                'officer_name' => $validated['officer_name'],
                 'insemination_number' => $livestock->insemination_number(),
                 'pregnant_number' => $livestock->pregnant_number() + 1,
                 'children_number' => $livestock->children_number() + 1,
-                'semen_breed_id' => $validated['semen_breed_id'],
-                'sire_name' => $validated['sire_name'],
-                'semen_producer' => $validated['semen_producer'],
-                'semen_batch' => $validated['semen_batch'],
+                'sire_breed_id' => $validated['sire_breed_id'],
+                'sire_owner_name' => $validated['sire_owner_name'],
                 'cycle_date' => getInseminationCycleDate($livestock->livestock_type_id , $validated['transaction_date']),
                 'cost' => $validated['cost'],
             ]);
 
             $livestockExpense = LivestockExpense::where('livestock_id', $validated['livestock_id'])
-                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::AI->value)
+                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::NI->value)
                 ->first();
 
             if(!$livestockExpense){
                 LivestockExpense::create([
                     'livestock_id' =>  $validated['livestock_id'],
-                    'livestock_expense_type_id' => LivestockExpenseTypeEnum::AI->value,
+                    'livestock_expense_type_id' => LivestockExpenseTypeEnum::NI->value,
                     'amount' => $validated['cost']
                 ]);
             }else{
@@ -102,7 +99,7 @@ class ArtificialInseminationController extends Controller
 
             DB::commit();
 
-            return ResponseHelper::success(new ArtificialInseminationResource($inseminationArtificial), 'Data created successfully', 200);
+            return ResponseHelper::success(new NaturalInseminationResource($inseminationNatural), 'Data created successfully', 200);
 
         } catch (\Exception $e) {
 
@@ -119,43 +116,43 @@ class ArtificialInseminationController extends Controller
     {
         $farm = request()->attributes->get('farm');
 
-        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'artificial');
+        $inseminationNatural = InseminationNatural::whereHas('insemination', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'Natural');
         })->get();
 
-        $data = ArtificialInseminationResource::collection($inseminationArtificial);
+        $data = NaturalInseminationResource::collection($inseminationNatural);
 
-        $message = $inseminationArtificial->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
+        $message = $inseminationNatural->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
         return ResponseHelper::success($data, $message);
     }
 
-    public function show($farmId , $artificialInseminationId): JsonResponse
+    public function show($farmId , $naturalInseminationId): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
-        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'artificial');
-        })->findOrFail($artificialInseminationId);
+        $inseminationNatural = InseminationNatural::whereHas('insemination', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'Natural');
+        })->findOrFail($naturalInseminationId);
 
-        return ResponseHelper::success(new ArtificialInseminationResource($inseminationArtificial), 'Data retrieved successfully');
+        return ResponseHelper::success(new NaturalInseminationResource($inseminationNatural), 'Data retrieved successfully');
     }
 
-    public function update(ArtificialInseminationUpdateRequest $request , $farmId, $artificialInseminationId)
+    public function update(NaturalInseminationUpdateRequest $request , $farmId, $naturalInseminationId)
     {
         $validated = $request->validated();
 
         $farm = request()->attributes->get('farm');
 
-        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'artificial');
-        })->findOrFail($artificialInseminationId);
+        $inseminationNatural = InseminationNatural::whereHas('insemination', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'Natural');
+        })->findOrFail($naturalInseminationId);
 
-        $livestock =  $inseminationArtificial->reproductionCycle->livestock;
+        $livestock =  $inseminationNatural->reproductionCycle->livestock;
 
         try {
             DB::beginTransaction();
 
-            $insemination = $inseminationArtificial->insemination;
+            $insemination = $inseminationNatural->insemination;
 
             $insemination->update([
                 'transaction_date' => $validated['transaction_date'],
@@ -163,30 +160,27 @@ class ArtificialInseminationController extends Controller
             ]);
 
             $livestockExpenseOld = LivestockExpense::where('livestock_id', $livestock->id)
-                    ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::AI->value)
+                    ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::NI->value)
                     ->first();
 
             $oldAmount = $livestockExpenseOld->amount;
 
-            $livestockExpenseOld->update(['amount' => $oldAmount - $inseminationArtificial->cost + $validated['cost']]);
+            $livestockExpenseOld->update(['amount' => $oldAmount - $inseminationNatural->cost + $validated['cost']]);
 
-            $inseminationArtificial->update([
+            $inseminationNatural->update([
                 'action_time' => $validated['action_time'],
-                'officer_name' => $validated['officer_name'],
-                'semen_breed_id' => $validated['semen_breed_id'],
-                'sire_name' => $validated['sire_name'],
-                'semen_producer' => $validated['semen_producer'],
-                'semen_batch' => $validated['semen_batch'],
+                'sire_breed_id' => $validated['sire_breed_id'],
+                'sire_owner_name' => $validated['sire_owner_name'],
                 'cycle_date' => getInseminationCycleDate($livestock->livestock_type_id , $validated['transaction_date']),
                 'cost' => $validated['cost'],
             ]);
 
             DB::commit();
 
-            return ResponseHelper::success(new ArtificialInseminationResource($inseminationArtificial), 'Data updated successfully');
+            return ResponseHelper::success(new NaturalInseminationResource($inseminationNatural), 'Data updated successfully');
 
         } catch (\Throwable $e) {
-
+            Log::error($e->getMessage());
             DB::rollBack();
 
             // Handle exceptions and return an error response
@@ -194,38 +188,38 @@ class ArtificialInseminationController extends Controller
         }
     }
 
-    public function destroy($farmId, $artificialInseminationId)
+    public function destroy($farmId, $naturalInseminationId)
     {
         $farm = request()->attributes->get('farm');
 
-        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'artificial');
-        })->findOrFail($artificialInseminationId);
+        $inseminationNatural = InseminationNatural::whereHas('insemination', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'Natural');
+        })->findOrFail($naturalInseminationId);
 
-        $livestock =  $inseminationArtificial->reproductionCycle->livestock;
+        $livestock =  $inseminationNatural->reproductionCycle->livestock;
 
         try {
             DB::beginTransaction();
 
             $livestockExpense = LivestockExpense::where('livestock_id', $livestock->id)
-                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::AI->value)
+                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::NI->value)
                 ->first();
 
             if ($livestockExpense) {
                 $livestockExpense->update([
-                    'amount' => $livestockExpense->amount - $inseminationArtificial->cost
+                    'amount' => $livestockExpense->amount - $inseminationNatural->cost
                 ]);
             }
 
-            $inseminationArtificial->delete();
+            $inseminationNatural->delete();
 
-            $insemination = $inseminationArtificial->insemination;
+            $insemination = $inseminationNatural->insemination;
 
-            if (!$insemination->inseminationArtificial()->exists()) {
+            if (!$insemination->inseminationNatural()->exists()) {
                 $insemination->delete();
             }
 
-            $inseminationArtificial->reproductionCycle->delete();
+            $inseminationNatural->reproductionCycle->delete();
 
             DB::commit();
 
