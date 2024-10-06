@@ -1,7 +1,6 @@
 <?php
 
 use Aws\S3\S3Client;
-use InvalidArgumentException;
 use Illuminate\Support\Carbon;
 use App\Enums\LivestockTypeEnum;
 
@@ -104,7 +103,7 @@ if (!function_exists('getInseminationCycleDate')) {
                 $tglSiklus = $tglTransaksi->addDays(17)->format('Y-m-d');
                 break;
             default:
-                throw new InvalidArgumentException('Invalid livestock type');
+                $tglSiklus = null;
         }
 
         return $tglSiklus;

@@ -79,6 +79,10 @@ Route::group([
 
         Route::get('bank', 'getBank');
 
+        Route::get('module' , 'getModule');
+
+        Route::get('module/{moduleId}' , 'getModuleDetail');
+
     });
 
     Route::group(['prefix' => 'farming'], function () {
