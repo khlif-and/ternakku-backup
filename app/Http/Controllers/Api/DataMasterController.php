@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\Bank;
+use App\Models\Module;
 use App\Models\Region;
 use App\Models\Disease;
 use App\Models\Regency;
@@ -10,6 +11,7 @@ use App\Models\Village;
 use App\Models\District;
 use App\Models\Province;
 use App\Models\LivestockSex;
+use App\Models\ModuleDetail;
 use Illuminate\Http\Request;
 use App\Models\LivestockType;
 use App\Models\LivestockBreed;
@@ -82,4 +84,21 @@ class DataMasterController extends Controller
         $data = Disease::orderBy('name')->get();
 
         return ResponseHelper::success($data, 'Data retrieved successfully');
-    }}
+    }
+
+    public function getModule()
+    {
+        $data = Module::select('id', 'name', 'description')
+                ->get();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function getModuleDetail($moduleId)
+    {
+        $data = ModuleDetail::where('module_id' , $moduleId)->select('id', 'name', 'description')
+                ->get();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+}

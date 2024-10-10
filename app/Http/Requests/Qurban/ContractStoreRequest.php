@@ -27,7 +27,7 @@ class ContractStoreRequest extends FormRequest
             'weight' => 'required|numeric|min:0',
             'price_per_kg' => 'required|numeric|min:0',
             'region_id' => 'required|exists:regions,id',
-            'postal_code' => 'required|string|max:10',
+            'postal_code' => 'nullable|string|max:10',
             'address_line' => 'nullable|string|max:255',
             'longitude' => 'nullable|numeric|between:-180,180',
             'latitude' => 'nullable|numeric|between:-90,90',

@@ -134,7 +134,7 @@ class FeedingIndividuController extends Controller
 
             DB::beginTransaction();  // Awal transaksional
 
-            $feedingH = $feedingIndividuD->FeedingH;
+            $feedingH = $feedingIndividuD->feedingH;
 
             $feedingH->update([
                 'transaction_date' => $validated['transaction_date'],

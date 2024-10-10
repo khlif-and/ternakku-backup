@@ -1,6 +1,8 @@
 <?php
 
 use Aws\S3\S3Client;
+use Illuminate\Support\Carbon;
+use App\Enums\LivestockTypeEnum;
 
 if (!function_exists('generateOtp')) {
     /**
@@ -81,5 +83,29 @@ if (!function_exists('deleteNeoObject')) {
         } catch (S3Exception $e) {
             \Log::error('S3 Deletion Error: ' . $e->getMessage());
         }
+    }
+}
+
+if (!function_exists('getInseminationCycleDate')) {
+    function getInseminationCycleDate($livestockTypeId, string $startDate): string
+    {
+        $tglTransaksi = Carbon::parse($startDate);
+
+        switch ($livestockTypeId) {
+            case LivestockTypeEnum::SAPI->value:
+            case LivestockTypeEnum::KERBAU->value:
+                $tglSiklus = $tglTransaksi->addDays(21)->format('Y-m-d');
+                break;
+            case LivestockTypeEnum::DOMBA->value:
+                $tglSiklus = $tglTransaksi->addDays(16)->format('Y-m-d');
+                break;
+            case LivestockTypeEnum::KAMBING->value:
+                $tglSiklus = $tglTransaksi->addDays(17)->format('Y-m-d');
+                break;
+            default:
+                $tglSiklus = null;
+        }
+
+        return $tglSiklus;
     }
 }

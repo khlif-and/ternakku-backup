@@ -27,6 +27,7 @@ Route::group([
         Route::middleware(['auth:api', 'email.verified',])->group(function() {
             Route::get('me', 'me');
             Route::post('logout', 'logout');
+            Route::post('update-profile', 'updateProfile');
         });
     });
 
@@ -79,6 +80,10 @@ Route::group([
 
         Route::get('bank', 'getBank');
 
+        Route::get('module' , 'getModule');
+
+        Route::get('module/{moduleId}' , 'getModuleDetail');
+
     });
 
     Route::group(['prefix' => 'farming'], function () {
@@ -95,8 +100,9 @@ Route::group([
                     Route::get('/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
                     Route::post('/{farmId}/update', [App\Http\Controllers\Api\FarmController::class, 'update']);
                     Route::delete('/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'destroy']);
+                    Route::get('/{farmId}/user-list', [App\Http\Controllers\Api\FarmController::class, 'userList']);
                     Route::post('/{farmId}/add-user', [App\Http\Controllers\Api\FarmController::class, 'addUser']);
-                    Route::post('/{farmId}/delete-user', [App\Http\Controllers\Api\FarmController::class, 'deleteUser']);
+                    Route::post('/{farmId}/remove-user', [App\Http\Controllers\Api\FarmController::class, 'removeUser']);
                 });
 
                 Route::group(['middleware' => ['check.farm.access']], function () {
@@ -201,6 +207,27 @@ Route::group([
                         Route::post('/{farm_id}/{reweightId}/update', 'update');
                         Route::delete('/{farm_id}/{reweightId}', 'destroy');
                     });
+
+                    Route::group(['prefix' => 'reproduction'], function () {
+                        Route::get('get-female-livestock-data/{farm_id}/{livestock_id}' , [App\Http\Controllers\Api\Farming\ReproductionMasterController::class , 'getFemaleLivestockData']);
+
+                        Route::group(['prefix' => 'artificial-insemination', 'controller' => App\Http\Controllers\Api\Farming\ArtificialInseminationController::class], function () {
+                            Route::get('/{farm_id}', 'index');
+                            Route::get('/{farm_id}/{reweightId}', 'show');
+                            Route::post('/{farm_id}', 'store');
+                            Route::post('/{farm_id}/{reweightId}/update', 'update');
+                            Route::delete('/{farm_id}/{reweightId}', 'destroy');
+                        });
+
+                        Route::group(['prefix' => 'natural-insemination', 'controller' => App\Http\Controllers\Api\Farming\NaturalInseminationController::class], function () {
+                            Route::get('/{farm_id}', 'index');
+                            Route::get('/{farm_id}/{reweightId}', 'show');
+                            Route::post('/{farm_id}', 'store');
+                            Route::post('/{farm_id}/{reweightId}/update', 'update');
+                            Route::delete('/{farm_id}/{reweightId}', 'destroy');
+                        });
+                    });
+
 
                     // Route::group(['prefix' => 'feeding-colony', 'controller' => App\Http\Controllers\Api\Farming\FeedingColonyController::class], function () {
                     //     Route::get('/{farm_id}', 'index');

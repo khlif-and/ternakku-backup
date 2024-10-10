@@ -274,4 +274,9 @@ class AuthController extends Controller
             return ResponseHelper::error('Failed to log out', 500);
         }
     }
+
+    public function updateProfile()
+    {
+
+    }
 }

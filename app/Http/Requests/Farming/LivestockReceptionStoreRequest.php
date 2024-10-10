@@ -37,7 +37,7 @@ class LivestockReceptionStoreRequest extends FormRequest
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'notes' => 'nullable|string|max:255',
             'characteristics' => 'nullable|string|max:255',
-            'supplier'             => 'required|string',
+            'supplier'             => 'nullable|string',
             'transaction_date'        => 'required|date',
         ];
     }
