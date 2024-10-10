@@ -27,6 +27,7 @@ Route::group([
         Route::middleware(['auth:api', 'email.verified',])->group(function() {
             Route::get('me', 'me');
             Route::post('logout', 'logout');
+            Route::post('update-profile', 'updateProfile');
         });
     });
 

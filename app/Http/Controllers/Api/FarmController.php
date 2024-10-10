@@ -74,7 +74,7 @@ class FarmController extends Controller
                 'farm_id'      => $farm->id,
                 'description'  => $validated['description'],
                 'region_id'    => $validated['region_id'],
-                'postal_code'  => $validated['postal_code'],
+                'postal_code'  => $validated['postal_code'] ?? '',
                 'address_line' => $validated['address_line'],
                 'longitude'    => $validated['longitude'],
                 'latitude'     => $validated['latitude'],
@@ -146,7 +146,7 @@ class FarmController extends Controller
             $farmDetailData = [
                 'description'  => $validated['description'],
                 'region_id'    => $validated['region_id'],
-                'postal_code'  => $validated['postal_code'],
+                'postal_code'  => $validated['postal_code'] ?? '',
                 'address_line' => $validated['address_line'],
                 'longitude'    => $validated['longitude'],
                 'latitude'     => $validated['latitude'],

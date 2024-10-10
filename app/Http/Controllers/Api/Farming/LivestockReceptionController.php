@@ -53,7 +53,7 @@ class LivestockReceptionController extends Controller
             $livestockReceptionH = LivestockReceptionH::create([
                 'farm_id'          => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
-                'supplier'      => $validated['supplier'],
+                'supplier'      => $validated['supplier'] ?? '',
                 'notes'            => $validated['notes'],
             ]);
 
@@ -120,7 +120,7 @@ class LivestockReceptionController extends Controller
 
             $livestockReceptionH->update([
                 'transaction_date' => $validated['transaction_date'],
-                'supplier'      => $validated['supplier'],
+                'supplier'      => $validated['supplier'] ?? '',
                 'notes'            => $validated['notes'],
             ]);
 

@@ -31,15 +31,15 @@ class LivestockReceptionUpdateRequest extends FormRequest
             'livestock_breed_id' => 'required|exists:livestock_breeds,id',
             'livestock_sex_id' => 'required|exists:livestock_sexes,id',
             'pen_id' => 'required|exists:pens,id',
-            'age_years' => 'required|integer|min:0',
-            'age_months' => 'required|integer|min:0|max:11',
+            'age_years' => 'nullable|integer|min:0',
+            'age_months' => 'nullable|integer|min:0|max:11',
             'weight' => 'required|numeric|min:0|max:999999.99',
             'price_per_kg' => 'required|numeric|min:0|max:999999.99',
             'price_per_head' => 'required|numeric|min:0|max:999999999999.99',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
             'notes' => 'nullable|string|max:255',
             'characteristics' => 'nullable|string|max:255',
-            'supplier'             => 'required|string',
+            'supplier'             => 'nullable|string',
             'transaction_date'        => 'required|date',
         ];
     }

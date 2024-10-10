@@ -27,7 +27,7 @@ class SavingRegisterRequest extends FormRequest
             'weight' => 'required|numeric|min:0',
             'region_id' => 'required|exists:regions,id',
             'price_per_kg' => 'required|numeric|min:0',
-            'postal_code' => 'required|string|max:10',
+            'postal_code' => 'nullable|string|max:10',
             'address_line' => 'nullable|string|max:255',
             'duration_months' => 'required|integer|min:1',
             'users' => 'required|array',
