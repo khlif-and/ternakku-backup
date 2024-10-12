@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Otp;
 use App\Models\User;
 use App\Enums\RoleEnum;
+use App\Models\Profile;
 use Illuminate\Http\Request;
 use App\Events\UserRegistered;
 use Illuminate\Support\Carbon;
@@ -13,11 +14,13 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResendOtpRequest;
 use App\Http\Requests\VerifyOtpRequest;
+use App\Http\Requests\ProfileUpdateRequest;
 
 class AuthController extends Controller
 {
@@ -251,7 +254,7 @@ class AuthController extends Controller
         $user->roles->makeHidden('pivot');
 
         // Return success response with user details
-        return ResponseHelper::success($user, 'User details retrieved successfully', 200);
+        return ResponseHelper::success(new UserResource($user), 'User details retrieved successfully', 200);
     }
 
     /**
@@ -275,8 +278,50 @@ class AuthController extends Controller
         }
     }
 
-    public function updateProfile()
+    public function updateProfile(ProfileUpdateRequest $request)
     {
+        $validated = $request->validated();
 
+        DB::beginTransaction();
+
+        try {
+            $user = auth()->user()->load('profile');
+
+            $user->update([
+                'name' => $validated['name'],
+            ]);
+
+            $profile = $user->profile;
+
+            if (isset($validated['photo']) && $request->hasFile('photo')) {
+
+                if ($profile && $profile->photo) {
+                    deleteNeoObject($profile->photo);
+                }
+
+                $file = $validated['photo'];
+                $fileName = time() . '-profile-' . $file->getClientOriginalName();
+                $filePath = 'profile/';
+                $profileData['photo'] = uploadNeoObject($file, $fileName, $filePath);
+
+            }
+
+            if($profile){
+                $profile->update($profileData);
+            }else{
+                $profileData['user_id'] = $user->id;
+                Profile::create($profileData);
+            }
+
+            DB::commit();
+
+            return ResponseHelper::success(new UserResource($user), 'Profile updated successfully', 200);
+
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to update profile: ' . $e->getMessage(), 500);
+        }
     }
 }
