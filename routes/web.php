@@ -23,3 +23,4 @@ Route::group([
     // Route::post('verify', 'verify');
     // Route::post('resend-otp', 'resendOtp');
 });
+
