@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\TreatmentScheduleIndividu;
 use App\Http\Resources\Farming\TreatmentScheduleIndividuResource;
 use App\Http\Requests\Farming\TreatmentScheduleIndividuStoreRequest;
+use App\Http\Requests\Farming\TreatmentScheduleIndividuUpdateRequest;
 
 class TreatmentScheduleIndividuController extends Controller
 {
@@ -72,6 +73,95 @@ class TreatmentScheduleIndividuController extends Controller
 
             // Handle exceptions and return an error response
             return ResponseHelper::error( 'An error occurred while recording the data.', 500);
+        }
+    }
+
+    public function show($farmId, $treatmentScheduleIndividuId): JsonResponse
+    {
+        $farm = request()->attributes->get('farm');
+
+        $treatmentScheduleIndividu = TreatmentScheduleIndividu::whereHas('treatmentSchedule', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'individu');
+        })->findOrFail($treatmentScheduleIndividuId);
+
+        return ResponseHelper::success(new TreatmentScheduleIndividuResource($treatmentScheduleIndividu), 'Data retrieved successfully');
+    }
+
+    public function update(TreatmentScheduleIndividuUpdateRequest $request, $farmId , $treatmentScheduleIndividuId)
+    {
+        $validated = $request->validated();
+
+        $farm = request()->attributes->get('farm');
+
+        $treatmentScheduleIndividu = TreatmentScheduleIndividu::whereHas('treatmentSchedule', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'individu');
+        })->findOrFail($treatmentScheduleIndividuId);
+
+        try {
+
+            DB::beginTransaction();  // Awal transaksional
+
+            $treatmentSchedule = $treatmentScheduleIndividu->treatmentSchedule;
+
+            $treatmentSchedule->update([
+                'transaction_date' => $validated['transaction_date'],
+                'notes'            => $validated['notes'] ?? null,
+            ]);
+
+            $treatmentScheduleIndividu->update([
+                'livestock_id' => $validated['livestock_id'],
+                'livestock_id' => $validated['livestock_id'],
+                'notes' => $validated['notes'] ?? null,
+                'medicine_name' => $validated['medicine_name'] ?? null,
+                'medicine_unit' => $validated['medicine_unit'] ?? null,
+                'medicine_qty_per_unit' => $validated['medicine_qty_per_unit'] ?? null,
+                'treatment_name' => $validated['treatment_name'] ?? null,
+            ]);
+
+            DB::commit();
+
+            return ResponseHelper::success(new TreatmentScheduleIndividuResource($treatmentScheduleIndividu), 'Data updated successfully');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Handle exceptions and return an error response
+            return ResponseHelper::error( 'An error occurred while uodating the data.', 500);
+        }
+    }
+
+    public function destroy($farmId, $treatmentScheduleIndividuId)
+    {
+        $farm = request()->attributes->get('farm');
+
+        // Cari treatmentScheduleIndividu dengan memastikan farm dan tipe individu
+        $treatmentScheduleIndividu = TreatmentScheduleIndividu::whereHas('treatmentSchedule', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type', 'individu');
+        })->findOrFail($treatmentScheduleIndividuId);
+
+        try {
+            DB::beginTransaction();
+
+            $treatmentScheduleIndividu->delete();
+
+            $treatmentSchedule = $treatmentScheduleIndividu->treatmentSchedule;
+
+            if (!$treatmentSchedule->treatmentScheduleIndividu()->exists()) {
+                $treatmentSchedule->delete();
+            }
+
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Data deleted successfully', 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();  // Rollback jika ada kesalahan
+
+            // Log error untuk debugging (opsional)
+            Log::error('Delete treatmentScheduleIndividu Error: ', ['error' => $e->getMessage()]);
+
+            // Handle exceptions dan kembalikan respon error
+            return ResponseHelper::error( 'An error occurred while deleting the data.', 500);
         }
     }
 }
