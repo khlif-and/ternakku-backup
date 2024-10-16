@@ -208,31 +208,39 @@ Route::group([
                         Route::delete('/{farm_id}/{reweightId}', 'destroy');
                     });
 
+                    Route::group(['prefix' => 'treatment-schedule-individu', 'controller' => App\Http\Controllers\Api\Farming\TreatmentScheduleIndividuController::class], function () {
+                        Route::get('/{farm_id}', 'index');
+                        Route::get('/{farm_id}/{dataId}', 'show');
+                        Route::post('/{farm_id}', 'store');
+                        Route::post('/{farm_id}/{dataId}/update', 'update');
+                        Route::delete('/{farm_id}/{dataId}', 'destroy');
+                    });
+
                     Route::group(['prefix' => 'reproduction'], function () {
                         Route::get('get-female-livestock-data/{farm_id}/{livestock_id}' , [App\Http\Controllers\Api\Farming\ReproductionMasterController::class , 'getFemaleLivestockData']);
 
                         Route::group(['prefix' => 'artificial-insemination', 'controller' => App\Http\Controllers\Api\Farming\ArtificialInseminationController::class], function () {
                             Route::get('/{farm_id}', 'index');
-                            Route::get('/{farm_id}/{reweightId}', 'show');
+                            Route::get('/{farm_id}/{dataId}', 'show');
                             Route::post('/{farm_id}', 'store');
-                            Route::post('/{farm_id}/{reweightId}/update', 'update');
-                            Route::delete('/{farm_id}/{reweightId}', 'destroy');
+                            Route::post('/{farm_id}/{dataId}/update', 'update');
+                            Route::delete('/{farm_id}/{dataId}', 'destroy');
                         });
 
                         Route::group(['prefix' => 'natural-insemination', 'controller' => App\Http\Controllers\Api\Farming\NaturalInseminationController::class], function () {
                             Route::get('/{farm_id}', 'index');
                             Route::get('/{farm_id}/{reweightId}', 'show');
                             Route::post('/{farm_id}', 'store');
-                            Route::post('/{farm_id}/{reweightId}/update', 'update');
-                            Route::delete('/{farm_id}/{reweightId}', 'destroy');
+                            Route::post('/{farm_id}/{dataId}/update', 'update');
+                            Route::delete('/{farm_id}/{dataId}', 'destroy');
                         });
 
                         Route::group(['prefix' => 'pregnant-check', 'controller' => App\Http\Controllers\Api\Farming\PregnantCheckController::class], function () {
                             Route::get('/{farm_id}', 'index');
-                            Route::get('/{farm_id}/{reweightId}', 'show');
+                            Route::get('/{farm_id}/{dataId}', 'show');
                             Route::post('/{farm_id}', 'store');
-                            Route::post('/{farm_id}/{reweightId}/update', 'update');
-                            Route::delete('/{farm_id}/{reweightId}', 'destroy');
+                            Route::post('/{farm_id}/{dataId}/update', 'update');
+                            Route::delete('/{farm_id}/{dataId}', 'destroy');
                         });
                     });
 
