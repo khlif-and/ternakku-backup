@@ -17,6 +17,7 @@ use App\Enums\LivestockExpenseTypeEnum;
 use App\Enums\ReproductionCycleStatusEnum;
 use App\Http\Resources\Farming\PregnantCheckResource;
 use App\Http\Requests\Farming\PregnantCheckStoreRequest;
+use App\Http\Requests\Farming\PregnantCheckUpdateRequest;
 
 class PregnantCheckController extends Controller
 {
@@ -51,9 +52,9 @@ class PregnantCheckController extends Controller
             }
 
             if($validated['status'] == 'PREGNANT'){
-                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::GAVE_BIRTH->value;
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::PREGNANT->value;
             }else{
-                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::BIRTH_FAILED->value;
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::INSEMINATION_FAILED->value;
             }
 
             $reproductionCycle->save();
@@ -121,58 +122,70 @@ class PregnantCheckController extends Controller
         return ResponseHelper::success($data, $message);
     }
 
-    public function show($farmId , $PregnantCheckId): JsonResponse
+    public function show($farmId , $pregnantCheckId): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
-        $inseminationNatural = InseminationNatural::whereHas('insemination', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'Natural');
-        })->findOrFail($PregnantCheckId);
+        $pregnantCheckD = PregnantCheckD::whereHas('pregnantCheck', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id);
+        })->findOrFail($pregnantCheckId);
 
-        return ResponseHelper::success(new PregnantCheckResource($inseminationNatural), 'Data retrieved successfully');
+        return ResponseHelper::success(new PregnantCheckResource($pregnantCheckD), 'Data retrieved successfully');
     }
 
-    public function update(PregnantCheckUpdateRequest $request , $farmId, $PregnantCheckId)
+    public function update(PregnantCheckUpdateRequest $request , $farmId, $pregnantCheckId)
     {
         $validated = $request->validated();
 
         $farm = request()->attributes->get('farm');
 
-        $inseminationNatural = InseminationNatural::whereHas('insemination', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'Natural');
-        })->findOrFail($PregnantCheckId);
+        $pregnantCheckD = PregnantCheckD::whereHas('pregnantCheck', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id);
+        })->findOrFail($pregnantCheckId);
 
-        $livestock =  $inseminationNatural->reproductionCycle->livestock;
+        $livestock =  $pregnantCheckD->reproductionCycle->livestock;
 
         try {
             DB::beginTransaction();
 
-            $insemination = $inseminationNatural->insemination;
+            $pregnantCheck = $pregnantCheckD->pregnantCheck;
 
-            $insemination->update([
+            $pregnantCheck->update([
                 'transaction_date' => $validated['transaction_date'],
                 'notes'            => $validated['notes'] ?? null,
             ]);
 
+            $reproductionCycle =   $pregnantCheckD->reproductionCycle;
+
+            if($validated['status'] == 'PREGNANT'){
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::PREGNANT->value;
+            }else{
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::INSEMINATION_FAILED->value;
+            }
+
+            $reproductionCycle->save();
+
             $livestockExpenseOld = LivestockExpense::where('livestock_id', $livestock->id)
-                    ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::NI->value)
+                    ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::PREGNANT_CHECK->value)
                     ->first();
 
             $oldAmount = $livestockExpenseOld->amount;
 
-            $livestockExpenseOld->update(['amount' => $oldAmount - $inseminationNatural->cost + $validated['cost']]);
+            $livestockExpenseOld->update(['amount' => $oldAmount - $pregnantCheckD->cost + $validated['cost']]);
 
-            $inseminationNatural->update([
+            $pregnantCheckD->update([
+                'pregnant_check_id' => $pregnantCheck->id,
                 'action_time' => $validated['action_time'],
-                'sire_breed_id' => $validated['sire_breed_id'],
-                'sire_owner_name' => $validated['sire_owner_name'],
-                'cycle_date' => getInseminationCycleDate($livestock->livestock_type_id , $validated['transaction_date']),
+                'officer_name' => $validated['officer_name'],
+                'status' =>  $validated['status'],
+                'pregnant_age' =>  $validated['pregnant_age'],
+                'estimated_birth_date' =>  $validated['status'] == 'PREGNANT' ? getEstimatedBirthDate($livestock->livestock_type_id , $validated['transaction_date'] , $validated['pregnant_age']) : null,
                 'cost' => $validated['cost'],
             ]);
 
             DB::commit();
 
-            return ResponseHelper::success(new PregnantCheckResource($inseminationNatural), 'Data updated successfully');
+            return ResponseHelper::success(new PregnantCheckResource($pregnantCheckD), 'Data updated successfully');
 
         } catch (\Throwable $e) {
             Log::error($e->getMessage());
@@ -183,38 +196,44 @@ class PregnantCheckController extends Controller
         }
     }
 
-    public function destroy($farmId, $PregnantCheckId)
+    public function destroy($farmId, $pregnantCheckId)
     {
         $farm = request()->attributes->get('farm');
 
-        $inseminationNatural = InseminationNatural::whereHas('insemination', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'Natural');
-        })->findOrFail($PregnantCheckId);
+        $pregnantCheckD = PregnantCheckD::whereHas('pregnantCheck', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id);
+        })->findOrFail($pregnantCheckId);
 
-        $livestock =  $inseminationNatural->reproductionCycle->livestock;
+        $livestock =  $pregnantCheckD->reproductionCycle->livestock;
 
         try {
             DB::beginTransaction();
 
             $livestockExpense = LivestockExpense::where('livestock_id', $livestock->id)
-                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::NI->value)
+                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::PREGNANT_CHECK->value)
                 ->first();
 
             if ($livestockExpense) {
                 $livestockExpense->update([
-                    'amount' => $livestockExpense->amount - $inseminationNatural->cost
+                    'amount' => $livestockExpense->amount - $pregnantCheckD->cost
                 ]);
             }
 
-            $inseminationNatural->delete();
-
-            $insemination = $inseminationNatural->insemination;
-
-            if (!$insemination->inseminationNatural()->exists()) {
-                $insemination->delete();
+            $reproductionCycle =  $pregnantCheckD->reproductionCycle;
+            if( !$reproductionCycle->inseminationArtificial && !$reproductionCycle->inseminationNatural){
+                $reproductionCycle->delete();
+            }else{
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::INSEMINATION->value;
+                $reproductionCycle->save();
             }
 
-            $inseminationNatural->reproductionCycle->delete();
+            $pregnantCheckD->delete();
+
+            $pregnantCheck = $pregnantCheckD->pregnantCheck;
+
+            if (!$pregnantCheck->pregnantCheckD()->exists()) {
+                $pregnantCheck->delete();
+            }
 
             DB::commit();
 
