@@ -16,4 +16,14 @@ class ReproductionCycle extends Model
         return $this->belongsTo(Livestock::class, 'livestock_id');
     }
 
+    public function inseminationNatural()
+    {
+        return $this->hasOne(InseminationNatural::class , 'reproduction_cycle_id');
+    }
+
+    public function inseminationArtificial()
+    {
+        return $this->hasOne(InseminationArtificial::class , 'reproduction_cycle_id');
+    }
+
 }
