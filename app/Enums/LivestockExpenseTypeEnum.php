@@ -8,4 +8,5 @@ enum LivestockExpenseTypeEnum: int
     case FEEDING = 2;
     case AI = 3;
     case NI = 4;
+    case PREGNANT_CHECK = 5;
 }
