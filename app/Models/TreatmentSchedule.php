@@ -6,11 +6,11 @@ use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class PregnantCheck extends Model
+class TreatmentSchedule extends Model
 {
     use HasFactory;
 
-    protected $table = 'pregnant_checks';
+    protected $table = 'treatment_schedules';
 
     protected $guarded = [];
 
@@ -29,7 +29,7 @@ class PregnantCheck extends Model
 
         $year = $date->format('y'); // last two digits of the year
         $month = $date->format('m'); // month with leading zero
-        $prefix = "$year$month-PC-";
+        $prefix = $type == 'colony' ? "$year$month-TSC-" : "$year$month-TSI-";
 
         // Get the last transaction number for the current month and year
         $lastTransaction = self::whereYear('transaction_date', $date->year)
@@ -55,9 +55,8 @@ class PregnantCheck extends Model
         return $this->belongsTo(Farm::class);
     }
 
-    public function pregnantCheckD()
+    public function treatmentScheduleIndividu()
     {
-        return $this->hasMany(PregnantCheckD::class, 'pregnant_check_id');
+        return $this->hasMany(TreatmentScheduleIndividu::class, 'treatment_schedule_id');
     }
-
 }
