@@ -109,3 +109,31 @@ if (!function_exists('getInseminationCycleDate')) {
         return $tglSiklus;
     }
 }
+
+if (!function_exists('getEstimatedBirthDate')) {
+    function getEstimatedBirthDate($livestockTypeId, string $transactionDate, int $pregnantAge = null): ?string
+    {
+        // Konversi tanggal transaksi ke objek Carbon
+        $tglTransaksi = Carbon::parse($transactionDate);
+
+        // Jika usia bunting diberikan, hitung usia bunting dalam hari
+        $usiaBuntingHari = $pregnantAge ? $pregnantAge * 30 : 0;
+
+        switch ($livestockTypeId) {
+            case LivestockTypeEnum::DOMBA->value: // Domba
+            case LivestockTypeEnum::KAMBING->value: // Kambing
+                // Tambahkan 150 hari - usia bunting (dalam hari)
+                $tglEstimasi = $tglTransaksi->addDays(150 - $usiaBuntingHari)->format('Y-m-d');
+                break;
+            case LivestockTypeEnum::SAPI->value:
+            case LivestockTypeEnum::KERBAU->value:
+                // Tambahkan 280 hari - usia bunting (dalam hari)
+                $tglEstimasi = $tglTransaksi->addDays(280 - $usiaBuntingHari)->format('Y-m-d');
+                break;
+            default:
+                $tglEstimasi = null;
+        }
+
+        return $tglEstimasi;
+    }
+}
