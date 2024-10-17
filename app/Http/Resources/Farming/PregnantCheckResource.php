@@ -26,6 +26,7 @@ class PregnantCheckResource extends JsonResource
             'cost'                  => (float) $this->cost,
             'action_time'           => $this->action_time,
             'officer_name'          => $this->officer_name,
+            'status'                => $this->status,
             'pregnant_number'       => $this->pregnant_number,
             'children_number'       => $this->children_number,
             'estimated_birth_date'  => $this->estimated_birth_date,
