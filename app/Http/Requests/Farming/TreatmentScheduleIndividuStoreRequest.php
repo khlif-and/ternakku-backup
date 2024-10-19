@@ -25,6 +25,7 @@ class TreatmentScheduleIndividuStoreRequest extends FormRequest
     {
         return [
             'transaction_date' => 'required|date',
+            'schedule_date' => 'required|date',
             'livestock_id' => 'required|integer|exists:livestocks,id',
             'medicine_name' => 'nullable|string',
             'medicine_unit' => 'nullable|string',

@@ -22,6 +22,7 @@ class TreatmentScheduleIndividuResource extends JsonResource
             'farm_name'           => $this->treatmentSchedule->farm->name,
             'transaction_number'  => $this->treatmentSchedule->transaction_number,
             'transaction_date'    => $this->treatmentSchedule->transaction_date,
+            'schedule_date'       => $this->schedule_date,
             'livestock_id'        => $this->livestock_id,
             'livestock'           => new LivestockResource($this->livestock),
             'medicine_name'       => $this->medicine_name,

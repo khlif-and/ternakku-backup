@@ -22,16 +22,20 @@ class TreatmentScheduleIndividuController extends Controller
 
         $treatmentScheduleIndividu = TreatmentScheduleIndividu::whereHas('treatmentSchedule', function ($query) use ($farm, $request) {
             $query->where('farm_id', $farm->id)->where('type' , 'individu');
-
-            // Filter berdasarkan start_date atau end_date dari transaction_number
-            if ($request->filled('start_date')) {
-                $query->where('transaction_date', '>=', $request->input('start_date'));
-            }
-
-            if ($request->filled('end_date')) {
-                $query->where('transaction_date', '<=', $request->input('end_date'));
-            }
         });
+
+        // Filter berdasarkan start_date atau end_date dari transaction_number
+        if ($request->filled('start_date')) {
+            $treatmentScheduleIndividu->where('schedule_date', '>=', $request->input('start_date'));
+        }
+
+        if ($request->filled('end_date')) {
+            $treatmentScheduleIndividu->where('schedule_date', '<=', $request->input('end_date'));
+        }
+
+        if ($request->filled('livestock_id')) {
+            $treatmentScheduleIndividu->where('livestock_id', $request->input('livestock_id'));
+        }
 
         // Filter berdasarkan relasi Livestock (misalnya livestock_type_id)
         if ($request->filled('livestock_type_id')) {
@@ -94,6 +98,7 @@ class TreatmentScheduleIndividuController extends Controller
 
             $treatmentScheduleIndividu = TreatmentScheduleIndividu::create([
                 'treatment_schedule_id' =>  $treatmentSchedule->id,
+                'schedule_date' => $validated['schedule_date'],
                 'livestock_id' => $validated['livestock_id'],
                 'notes' => $validated['notes'] ?? null,
                 'medicine_name' => $validated['medicine_name'] ?? null,
@@ -150,6 +155,7 @@ class TreatmentScheduleIndividuController extends Controller
 
             $treatmentScheduleIndividu->update([
                 'livestock_id' => $validated['livestock_id'],
+                'schedule_date' => $validated['schedule_date'],
                 'livestock_id' => $validated['livestock_id'],
                 'notes' => $validated['notes'] ?? null,
                 'medicine_name' => $validated['medicine_name'] ?? null,
