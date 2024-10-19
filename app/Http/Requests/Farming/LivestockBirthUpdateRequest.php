@@ -4,7 +4,7 @@ namespace App\Http\Requests\Farming;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LivestockBirthStoreRequest extends FormRequest
+class LivestockBirthUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,7 +21,7 @@ class LivestockBirthStoreRequest extends FormRequest
     {
         return [
             'transaction_date' => 'required|date',
-            'livestock_id' => 'required|exists:livestocks,id',
+            // 'livestock_id' => 'required|exists:livestocks,id',
             'officer_name' => 'required|string|max:255',
             'cost' => 'required|numeric|min:0',
             'status' => 'required|in:NORMAL,ABORTUS,PREMATURE',

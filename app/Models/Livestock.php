@@ -8,6 +8,7 @@ use App\Models\ReproductionCycle;
 use App\Enums\LivestockStatusEnum;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use App\Enums\ReproductionCycleStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Livestock extends Model
@@ -168,13 +169,30 @@ class Livestock extends Model
     public function pregnant_number()
     {
         if($this->livestock_sex_id == LivestockSexEnum::BETINA->value){
-            return ReproductionCycle::where('livestock_id' , $this->id)->whereIn('reproduction_cycle_status_id' , [3,4,5,6])->count();
+            return ReproductionCycle::where('livestock_id' , $this->id)
+                        ->whereIn('reproduction_cycle_status_id' , [
+                                ReproductionCycleStatusEnum::PREGNANT->value,
+                                ReproductionCycleStatusEnum::GAVE_BIRTH->value,
+                                ReproductionCycleStatusEnum::BIRTH_FAILED->value,
+                            ])
+                        ->count();
         }
         return null;
     }
 
     public function children_number()
     {
-        return 0;
+        if($this->livestock_sex_id == LivestockSexEnum::BETINA->value){
+            $count = 0;
+            $reproductionCycleGaveBirth = ReproductionCycle::where('livestock_id' , $this->id)
+                                            ->where('reproduction_cycle_status_id' , ReproductionCycleStatusEnum::GAVE_BIRTH->value)
+                                            ->get();
+            foreach($reproductionCycleGaveBirth as $item){
+                $count += $item->livestockBirth->livestockBirthD->count();
+            }
+
+            return $count;
+        }
+        return null;
     }
 }

@@ -155,6 +155,10 @@ class TreatmentIndividuController extends Controller
             });
         }
 
+        if ($request->filled('livestock_id')) {
+            $treatmentIndividu->where('livestock_id', $request->input('livestock_id'));
+        }
+
         $data = TreatmentIndividuResource::collection($treatmentIndividu->get());
 
         $message = $treatmentIndividu->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
@@ -265,7 +269,7 @@ class TreatmentIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error( 'An error occurred while uodating the data.', 500);
+            return ResponseHelper::error( 'An error occurred while updating the data.', 500);
         }
     }
 

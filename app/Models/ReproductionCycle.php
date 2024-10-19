@@ -26,4 +26,14 @@ class ReproductionCycle extends Model
         return $this->hasOne(InseminationArtificial::class , 'reproduction_cycle_id');
     }
 
+    public function pregnantCheckD()
+    {
+        return $this->hasOne(PregnantCheckD::class , 'reproduction_cycle_id');
+    }
+
+    public function livestockBirth()
+    {
+        return $this->hasOne(LivestockBirth::class , 'reproduction_cycle_id');
+    }
+
 }

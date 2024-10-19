@@ -68,6 +68,10 @@ class FeedingIndividuController extends Controller
             });
         }
 
+        if ($request->filled('livestock_id')) {
+            $feedingIndividu->where('livestock_id', $request->input('livestock_id'));
+        }
+
         $data = FeedingIndividuResource::collection($feedingIndividu->get());
 
         $message = $feedingIndividu->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
@@ -242,7 +246,7 @@ class FeedingIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error( 'An error occurred while uodating the data.', 500);
+            return ResponseHelper::error( 'An error occurred while updating the data.', 500);
         }
     }
 
