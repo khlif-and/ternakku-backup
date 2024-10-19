@@ -21,11 +21,11 @@ class MilkProductionGlobalController extends Controller
         $milkProductionGlobal = MilkProductionGlobal::where('farm_id', $farm->id);
 
         // Filter berdasarkan start_date atau end_date dari transaction_number
-        if ($request->has('start_date')) {
+        if ($request->filled('start_date')) {
             $milkProductionGlobal->where('transaction_date', '>=', $request->input('start_date'));
         }
 
-        if ($request->has('end_date')) {
+        if ($request->filled('end_date')) {
             $milkProductionGlobal->where('transaction_date', '<=', $request->input('end_date'));
         }
 

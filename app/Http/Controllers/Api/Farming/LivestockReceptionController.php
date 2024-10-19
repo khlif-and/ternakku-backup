@@ -29,33 +29,33 @@ class LivestockReceptionController extends Controller
             $query->where('farm_id', $farm->id);
 
             // Filter berdasarkan start_date atau end_date
-            if ($request->has('start_date')) {
+            if ($request->filled('start_date')) {
                 $query->where('transaction_date', '>=', $request->input('start_date'));
             }
 
-            if ($request->has('end_date')) {
+            if ($request->filled('end_date')) {
                 $query->where('transaction_date', '<=', $request->input('end_date'));
             }
         });
 
         // Filter berdasarkan livestock_type_id, livestock_group_id, livestock_breed_id, dan livestock_sex_id
-        if ($request->has('livestock_type_id')) {
+        if ($request->filled('livestock_type_id')) {
             $receptions->where('livestock_type_id', $request->input('livestock_type_id'));
         }
 
-        if ($request->has('livestock_group_id')) {
+        if ($request->filled('livestock_group_id')) {
             $receptions->where('livestock_group_id', $request->input('livestock_group_id'));
         }
 
-        if ($request->has('livestock_breed_id')) {
+        if ($request->filled('livestock_breed_id')) {
             $receptions->where('livestock_breed_id', $request->input('livestock_breed_id'));
         }
 
-        if ($request->has('livestock_sex_id')) {
+        if ($request->filled('livestock_sex_id')) {
             $receptions->where('livestock_sex_id', $request->input('livestock_sex_id'));
         }
 
-        if ($request->has('pen_id')) {
+        if ($request->filled('pen_id')) {
             $receptions->where('pen_id', $request->input('pen_id'));
         }
 
