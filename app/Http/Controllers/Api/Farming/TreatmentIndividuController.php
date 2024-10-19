@@ -269,7 +269,7 @@ class TreatmentIndividuController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error( 'An error occurred while uodating the data.', 500);
+            return ResponseHelper::error( 'An error occurred while updating the data.', 500);
         }
     }
 

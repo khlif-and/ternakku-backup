@@ -22,6 +22,7 @@ class FemaleLivestockResource extends JsonResource
                 'artificial_insemination_number' => $this->artificial_insemination_number(),
                 'natural_insemination_number' => $this->natural_insemination_number(),
                 'pregnant_number' => $this->pregnant_number(),
+                'children_number' => $this->children_number(),
             ]
         ];
     }

@@ -18,6 +18,7 @@ use App\Enums\LivestockExpenseTypeEnum;
 use App\Enums\ReproductionCycleStatusEnum;
 use App\Http\Resources\Farming\LivestockBirthResource;
 use App\Http\Requests\Farming\LivestockBirthStoreRequest;
+use App\Http\Requests\Farming\LivestockBirthUpdateRequest;
 
 class LivestockBirthController extends Controller
 {
@@ -56,8 +57,14 @@ class LivestockBirthController extends Controller
                 $reproductionCycle['insemination_type'] = 'unknown';
             }
 
-            $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::GAVE_BIRTH->value;
-            $reproductionCycle->save();
+            if ($validated['status'] !== 'ABORTUS' && isset($validated['details'])) {
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::GAVE_BIRTH->value;
+                $reproductionCycle->save();
+            }else{
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::BIRTH_FAILED->value;
+                $reproductionCycle->save();
+            }
+
 
             $livestockBirth = LivestockBirth::create([
                 'reproduction_cycle_id' => $reproductionCycle->id,
@@ -76,6 +83,7 @@ class LivestockBirthController extends Controller
                     LivestockBirthD::create([
                         'livestock_birth_id' => $livestockBirth->id,
                         'livestock_sex_id' => $detail['livestock_sex_id'],
+                        'livestock_breed_id' => $detail['livestock_breed_id'],
                         'weight' => $detail['weight'],
                         'birth_order' => $detail['birth_order'],
                         'status' => $detail['status'],
@@ -170,5 +178,130 @@ class LivestockBirthController extends Controller
         $data = LivestockBirth::where('farm_id', $farm->id)->findOrFail($dataId);
 
         return ResponseHelper::success(new LivestockBirthResource($data), 'Data retrieved successfully');
+    }
+
+    public function update($farmId, $dataId, LivestockBirthUpdateRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $farm = request()->attributes->get('farm');
+
+        $livestockBirth =  LivestockBirth::where('farm_id', $farm->id)->findOrFail($dataId);
+
+        $livestock =  $livestockBirth->reproductionCycle->livestock;
+
+        try {
+            DB::beginTransaction();
+
+            $reproductionCycle = $livestockBirth->reproductionCycle;
+
+            if ($validated['status'] !== 'ABORTUS' && isset($validated['details'])) {
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::GAVE_BIRTH->value;
+                $reproductionCycle->save();
+            }else{
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::BIRTH_FAILED->value;
+                $reproductionCycle->save();
+            }
+
+            $livestockBirth->LivestockBirthD()->delete();
+
+            if ($validated['status'] !== 'ABORTUS' && isset($validated['details'])) {
+                foreach ($validated['details'] as $detail) {
+                    LivestockBirthD::create([
+                        'livestock_birth_id' => $livestockBirth->id,
+                        'livestock_sex_id' => $detail['livestock_sex_id'],
+                        'livestock_breed_id' => $detail['livestock_breed_id'],
+                        'weight' => $detail['weight'],
+                        'birth_order' => $detail['birth_order'],
+                        'status' => $detail['status'],
+                        'offspring_value' => $detail['status'] === 'alive' ? $detail['offspring_value'] : null,
+                        'disease_id' => $detail['status'] === 'dead' ? $detail['disease_id'] : null,
+                        'indication' => $detail['status'] === 'dead' ? $detail['indication'] : null,
+                    ]);
+                }
+            }
+
+            $livestockExpenseOld = LivestockExpense::where('livestock_id', $livestock->id)
+                    ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::BIRTH->value)
+                    ->first();
+
+            $oldAmount = $livestockExpenseOld->amount;
+
+            $livestockExpenseOld->update(['amount' => $oldAmount - $livestockBirth->cost + $validated['cost']]);
+
+            $livestockBirth->update([
+                'transaction_date' => $validated['transaction_date'],
+                'officer_name' => $validated['officer_name'] ?? null,
+                'cost' => $validated['cost'],
+                'status' => $validated['status'],
+                'estimated_weaning' => $validated['estimated_weaning'] ?? null,
+                'notes' => $validated['notes'] ?? null,
+            ]);
+
+            DB::commit();
+
+            return ResponseHelper::success(new LivestockBirthResource($livestockBirth), 'Data retrieved successfully');
+
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+            DB::rollBack();
+
+            // Handle exceptions and return an error response
+            return ResponseHelper::error('An error occurred while updating the data.', 500);
+        }
+    }
+
+    public function destroy($farmId, $dataId)
+    {
+        $farm = request()->attributes->get('farm');
+
+        $livestockBirth =  LivestockBirth::where('farm_id', $farm->id)->findOrFail($dataId);
+
+        $livestock =  $livestockBirth->reproductionCycle->livestock;
+
+        try {
+            DB::beginTransaction();
+
+            $livestockExpense = LivestockExpense::where('livestock_id', $livestock->id)
+                ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::BIRTH->value)
+                ->first();
+
+            if ($livestockExpense) {
+                $livestockExpense->update([
+                    'amount' => $livestockExpense->amount - $livestockBirth->cost
+                ]);
+            }
+
+            $reproductionCycle =  $livestockBirth->reproductionCycle;
+
+            $livestockBirth->livestockBirthD()->delete();
+
+            $livestockBirth->delete();
+
+            if($reproductionCycle->pregnantCheckD && $reproductionCycle->pregnantCheckD->status == 'PREGNANT'){
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::PREGNANT->value;
+                $reproductionCycle->save();
+            }else if($reproductionCycle->pregnantCheckD && $reproductionCycle->pregnantCheckD->status == 'NOT_PREGNANT'){
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::INSEMINATION_FAILED->value;
+                $reproductionCycle->save();
+            }else if( $reproductionCycle->inseminationArtificial || $reproductionCycle->inseminationNatural){
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::INSEMINATION->value;
+                $reproductionCycle->save();
+            }else{
+                $reproductionCycle->delete();
+            }
+
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Data deleted successfully', 200);
+
+        } catch (\Throwable $e) {
+
+            Log::error($e->getMessage());
+            DB::rollBack();
+
+            // Handle exceptions and return an error response
+            return ResponseHelper::error( 'An error occurred while deleting the data.', 500);
+        }
     }
 }

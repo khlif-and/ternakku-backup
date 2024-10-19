@@ -224,7 +224,7 @@ class PregnantCheckController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error( 'An error occurred while uodating the data.', 500);
+            return ResponseHelper::error( 'An error occurred while updating the data.', 500);
         }
     }
 
@@ -252,12 +252,6 @@ class PregnantCheckController extends Controller
             }
 
             $reproductionCycle =  $pregnantCheckD->reproductionCycle;
-            if( !$reproductionCycle->pregnantCheckD && !$reproductionCycle->inseminationNatural){
-                $reproductionCycle->delete();
-            }else{
-                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::INSEMINATION->value;
-                $reproductionCycle->save();
-            }
 
             $pregnantCheckD->delete();
 
@@ -265,6 +259,13 @@ class PregnantCheckController extends Controller
 
             if (!$pregnantCheck->pregnantCheckD()->exists()) {
                 $pregnantCheck->delete();
+            }
+
+            if( !$reproductionCycle->pregnantCheckD && !$reproductionCycle->inseminationNatural){
+                $reproductionCycle->delete();
+            }else{
+                $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::INSEMINATION->value;
+                $reproductionCycle->save();
             }
 
             DB::commit();

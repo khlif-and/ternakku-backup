@@ -19,6 +19,8 @@ class LivestockBirthDetailResource extends JsonResource
             'livestock_birth_id' => $this->livestock_birth_id,
             'livestock_sex_id'   => $this->livestock_sex_id,
             'livestock_sex_name' => $this->livestockSex->name,
+            'livestock_breed_id'   => $this->livestock_breed_id,
+            'livestock_breed_name' => $this->livestockBreed?->name,
             'weight'             => $this->weight,
             'birth_order'        => $this->birth_order,
             'status'             => $this->status,

@@ -23,6 +23,11 @@ class LivestockBirthD extends Model
         return $this->belongsTo(LivestockSex::class, 'livestock_sex_id');
     }
 
+    public function livestockBreed()
+    {
+        return $this->belongsTo(LivestockBreed::class, 'livestock_breed_id');
+    }
+
     public function disease()
     {
         return $this->belongsTo(Disease::class, 'disease_id');

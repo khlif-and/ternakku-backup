@@ -247,8 +247,8 @@ Route::group([
                             Route::get('/{farm_id}', 'index');
                             Route::get('/{farm_id}/{dataId}', 'show');
                             Route::post('/{farm_id}', 'store');
-                            // Route::post('/{farm_id}/{dataId}/update', 'update');
-                            // Route::delete('/{farm_id}/{dataId}', 'destroy');
+                            Route::post('/{farm_id}/{dataId}/update', 'update');
+                            Route::delete('/{farm_id}/{dataId}', 'destroy');
                         });
                     });
 
