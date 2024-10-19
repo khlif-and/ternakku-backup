@@ -115,15 +115,47 @@ class ArtificialInseminationController extends Controller
         }
     }
 
-    public function index($farmId): JsonResponse
+    public function index($farmId , Request $request) : JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
-        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm) {
+        $inseminationArtificial = InseminationArtificial::whereHas('insemination', function ($query) use ($farm, $request) {
             $query->where('farm_id', $farm->id)->where('type' , 'artificial');
-        })->get();
 
-        $data = ArtificialInseminationResource::collection($inseminationArtificial);
+            if ($request->filled('start_date')) {
+                $query->where('transaction_date', '>=', $request->input('start_date'));
+            }
+
+            if ($request->filled('end_date')) {
+                $query->where('transaction_date', '<=', $request->input('end_date'));
+            }
+        });
+
+        if ($request->filled('livestock_type_id')) {
+            $inseminationArtificial->whereHas('reproductionCycle.livestock', function ($query) use ($request) {
+                $query->where('livestock_type_id', $request->input('livestock_type_id'));
+            });
+        }
+
+        if ($request->filled('livestock_group_id')) {
+            $inseminationArtificial->whereHas('reproductionCycle.livestock', function ($query) use ($request) {
+                $query->where('livestock_group_id', $request->input('livestock_group_id'));
+            });
+        }
+
+        if ($request->filled('livestock_breed_id')) {
+            $inseminationArtificial->whereHas('reproductionCycle.livestock', function ($query) use ($request) {
+                $query->where('livestock_breed_id', $request->input('livestock_breed_id'));
+            });
+        }
+
+        if ($request->filled('pen_id')) {
+            $inseminationArtificial->whereHas('reproductionCycle.livestock', function ($query) use ($request) {
+                $query->where('pen_id', $request->input('pen_id'));
+            });
+        }
+
+        $data = ArtificialInseminationResource::collection($inseminationArtificial->get());
 
         $message = $inseminationArtificial->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
         return ResponseHelper::success($data, $message);

@@ -108,15 +108,47 @@ class PregnantCheckController extends Controller
         }
     }
 
-    public function index($farmId): JsonResponse
+    public function index($farmId, Request $request) : JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
-        $pregnantCheckD =PregnantCheckD::whereHas('pregnantCheck', function ($query) use ($farm) {
+        $pregnantCheckD =PregnantCheckD::whereHas('pregnantCheck', function ($query) use ($farm, $request) {
             $query->where('farm_id', $farm->id);
-        })->get();
 
-        $data = PregnantCheckResource::collection($pregnantCheckD);
+            if ($request->filled('start_date')) {
+                $query->where('transaction_date', '>=', $request->input('start_date'));
+            }
+
+            if ($request->filled('end_date')) {
+                $query->where('transaction_date', '<=', $request->input('end_date'));
+            }
+        });
+
+        if ($request->filled('livestock_type_id')) {
+            $pregnantCheckD->whereHas('reproductionCycle.livestock', function ($query) use ($request) {
+                $query->where('livestock_type_id', $request->input('livestock_type_id'));
+            });
+        }
+
+        if ($request->filled('livestock_group_id')) {
+            $pregnantCheckD->whereHas('reproductionCycle.livestock', function ($query) use ($request) {
+                $query->where('livestock_group_id', $request->input('livestock_group_id'));
+            });
+        }
+
+        if ($request->filled('livestock_breed_id')) {
+            $pregnantCheckD->whereHas('reproductionCycle.livestock', function ($query) use ($request) {
+                $query->where('livestock_breed_id', $request->input('livestock_breed_id'));
+            });
+        }
+
+        if ($request->filled('pen_id')) {
+            $pregnantCheckD->whereHas('reproductionCycle.livestock', function ($query) use ($request) {
+                $query->where('pen_id', $request->input('pen_id'));
+            });
+        }
+
+        $data = PregnantCheckResource::collection($pregnantCheckD->get());
 
         $message = $pregnantCheckD->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
         return ResponseHelper::success($data, $message);
@@ -220,7 +252,7 @@ class PregnantCheckController extends Controller
             }
 
             $reproductionCycle =  $pregnantCheckD->reproductionCycle;
-            if( !$reproductionCycle->inseminationArtificial && !$reproductionCycle->inseminationNatural){
+            if( !$reproductionCycle->pregnantCheckD && !$reproductionCycle->inseminationNatural){
                 $reproductionCycle->delete();
             }else{
                 $reproductionCycle['reproduction_cycle_status_id'] = ReproductionCycleStatusEnum::INSEMINATION->value;
