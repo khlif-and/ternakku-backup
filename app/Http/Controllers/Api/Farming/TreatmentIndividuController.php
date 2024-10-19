@@ -155,6 +155,10 @@ class TreatmentIndividuController extends Controller
             });
         }
 
+        if ($request->filled('livestock_id')) {
+            $treatmentIndividu->where('livestock_id', $request->input('livestock_id'));
+        }
+
         $data = TreatmentIndividuResource::collection($treatmentIndividu->get());
 
         $message = $treatmentIndividu->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
