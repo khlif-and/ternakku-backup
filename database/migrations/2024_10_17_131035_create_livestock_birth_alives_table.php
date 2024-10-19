@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('livestock_birth_id');
             $table->unsignedBigInteger('livestock_sex_id');
             $table->decimal('weight', 8, 2);
-            $table->decimal('value', 10, 2);
             $table->unsignedSmallInteger('birth_order');
             $table->enum('status', ['alive', 'dead']);
 

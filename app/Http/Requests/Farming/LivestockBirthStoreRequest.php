@@ -32,9 +32,11 @@ class LivestockBirthStoreRequest extends FormRequest
             'details' => 'required_if:status,NORMAL,PREMATURE|array',
             'details.*.livestock_sex_id' => 'required|exists:livestock_sexes,id',
             'details.*.weight' => 'required|numeric|min:0',
-            'details.*.value' => 'required|numeric|min:0',
-            'details.*.birth_order' => 'required|integer|min:1',
-            'details.*.status' => 'required|in:alive,dead',
+            'details.*.offspring_value' => 'nullable|numeric|min:0',
+            'details.*.birth_order' => 'nullable|integer|min:1',
+            'details.*.status' => 'nullable|in:alive,dead',
+            'details.*.disease_id' => 'nullable|exists:diseases,id',
+            'details.*.indication' => 'nullable|string',
         ];
     }
 
@@ -43,21 +45,33 @@ class LivestockBirthStoreRequest extends FormRequest
      */
     public function withValidator($validator)
     {
-        $validator->sometimes('details.*.offspring_value', 'required|numeric|min:0', function ($input) {
-            // Check if any of the details have 'status' as 'alive'
-            return collect($this->input('details'))->contains('status', 'alive');
-        });
+        $validator->after(function ($validator) {
+            $details = $this->input('details');
 
-        $validator->sometimes('details.*.disease_id', 'required|exists:diseases,id', function ($input) {
-            // Check if any of the details have 'status' as 'dead'
-            return collect($this->input('details'))->contains('status', 'dead');
-        });
+            if (is_array($details)) {
+                foreach ($details as $index => $detail) {
+                    // Jika status 'alive', offspring_value harus diisi
+                    if (isset($detail['status']) && $detail['status'] === 'alive') {
+                        if (!isset($detail['offspring_value']) || $detail['offspring_value'] === null) {
+                            $validator->errors()->add("details.{$index}.offspring_value", 'The offspring value is required when the status is alive.');
+                        }
+                    }
 
-        $validator->sometimes('details.*.indication', 'required|string|max:255', function ($input) {
-            // Check if any of the details have 'status' as 'dead'
-            return collect($this->input('details'))->contains('status', 'dead');
+                    // Jika status 'dead', disease_id dan indication harus diisi
+                    if (isset($detail['status']) && $detail['status'] === 'dead') {
+                        if (!isset($detail['disease_id']) || $detail['disease_id'] === null) {
+                            $validator->errors()->add("details.{$index}.disease_id", 'The disease ID is required when the status is dead.');
+                        }
+
+                        if (!isset($detail['indication']) || $detail['indication'] === null) {
+                            $validator->errors()->add("details.{$index}.indication", 'The indication is required when the status is dead.');
+                        }
+                    }
+                }
+            }
         });
     }
+
 
     /**
      * Custom messages for validation errors.
