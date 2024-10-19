@@ -11,12 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('livestock_birth_alives', function (Blueprint $table) {
+        Schema::create('livestock_birth_d', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('livestock_birth_id');
+            $table->unsignedBigInteger('livestock_sex_id');
+            $table->decimal('weight', 8, 2);
+            $table->unsignedSmallInteger('birth_order');
+            $table->enum('status', ['alive', 'dead']);
+
+            $table->decimal('offspring_value', 10, 2)->nullable();
+            $table->unsignedBigInteger('disease_id')->nullable();
+            $table->string('indication')->nullable();
+
 
             $table->timestamps();
             $table->foreign('livestock_birth_id')->references('id')->on('livestock_birth')->onDelete('cascade');
+            $table->foreign('disease_id')->references('id')->on('diseases')->onDelete('cascade');
+            $table->foreign('livestock_sex_id')->references('id')->on('livestock_sexes')->onDelete('cascade');
+
         });
     }
 
@@ -25,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('livestock_birth_alives');
+        Schema::dropIfExists('livestock_birth_d');
     }
 };

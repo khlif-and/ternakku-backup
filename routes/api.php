@@ -242,6 +242,14 @@ Route::group([
                             Route::post('/{farm_id}/{dataId}/update', 'update');
                             Route::delete('/{farm_id}/{dataId}', 'destroy');
                         });
+
+                        Route::group(['prefix' => 'livestock-birth', 'controller' => App\Http\Controllers\Api\Farming\LivestockBirthController::class], function () {
+                            Route::get('/{farm_id}', 'index');
+                            Route::get('/{farm_id}/{dataId}', 'show');
+                            Route::post('/{farm_id}', 'store');
+                            // Route::post('/{farm_id}/{dataId}/update', 'update');
+                            // Route::delete('/{farm_id}/{dataId}', 'destroy');
+                        });
                     });
 
 
