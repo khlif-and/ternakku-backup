@@ -12,6 +12,7 @@
         "laravel/tinker": "^2.8",
         "league/csv": "^9.16",
         "phpoffice/phpspreadsheet": "^2.2",
+        "sentry/sentry-laravel": "^4.9",
         "tymon/jwt-auth": "^2.1"
     },
     "require-dev": {
