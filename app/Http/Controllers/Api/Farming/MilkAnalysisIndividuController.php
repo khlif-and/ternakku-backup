@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api\Farming;
 
 use Illuminate\Http\Request;
+use App\Models\MilkAnalysisH;
 use App\Enums\LivestockSexEnum;
 use App\Helpers\ResponseHelper;
-use App\Models\MilkAnalysisH;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\MilkAnalysisIndividuD;
@@ -16,15 +17,55 @@ use App\Http\Requests\Farming\MilkAnalysisIndividuUpdateRequest;
 class MilkAnalysisIndividuController extends Controller
 {
 
-    public function index($farmId)
+    public function index($farmId, Request $request): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
-        $milkAnalysisIndividu = MilkAnalysisIndividuD::whereHas('milkAnalysisH', function ($query) use ($farm) {
+        $milkAnalysisIndividu = MilkAnalysisIndividuD::whereHas('milkAnalysisH', function ($query) use ($farm, $request) {
             $query->where('farm_id', $farm->id)->where('type' , 'individu');
-        })->get();
 
-        $data = MilkAnalysisIndividuResource::collection($milkAnalysisIndividu);
+            // Filter berdasarkan start_date atau end_date dari transaction_number
+            if ($request->filled('start_date')) {
+                $query->where('transaction_date', '>=', $request->input('start_date'));
+            }
+
+            if ($request->filled('end_date')) {
+                $query->where('transaction_date', '<=', $request->input('end_date'));
+            }
+        });
+
+        // Filter berdasarkan relasi Livestock (misalnya livestock_type_id)
+        if ($request->filled('livestock_type_id')) {
+            $milkAnalysisIndividu->whereHas('livestock', function ($query) use ($request) {
+                $query->where('livestock_type_id', $request->input('livestock_type_id'));
+            });
+        }
+
+        if ($request->filled('livestock_group_id')) {
+            $milkAnalysisIndividu->whereHas('livestock', function ($query) use ($request) {
+                $query->where('livestock_group_id', $request->input('livestock_group_id'));
+            });
+        }
+
+        if ($request->filled('livestock_breed_id')) {
+            $milkAnalysisIndividu->whereHas('livestock', function ($query) use ($request) {
+                $query->where('livestock_breed_id', $request->input('livestock_breed_id'));
+            });
+        }
+
+        if ($request->filled('livestock_sex_id')) {
+            $milkAnalysisIndividu->whereHas('livestock', function ($query) use ($request) {
+                $query->where('livestock_sex_id', $request->input('livestock_sex_id'));
+            });
+        }
+
+        if ($request->filled('pen_id')) {
+            $milkAnalysisIndividu->whereHas('livestock', function ($query) use ($request) {
+                $query->where('pen_id', $request->input('pen_id'));
+            });
+        }
+
+        $data = MilkAnalysisIndividuResource::collection($milkAnalysisIndividu->get());
 
         $message = $milkAnalysisIndividu->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
         return ResponseHelper::success($data, $message);
