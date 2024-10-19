@@ -15,13 +15,22 @@ use App\Http\Requests\Farming\FeedMedicinePurchaseUpdateRequest;
 
 class FeedMedicinePurchaseController extends Controller
 {
-    public function index($farmId)
+    public function index($farmId, Request $request)
     {
         $farm = request()->attributes->get('farm');
 
-        $data = FeedMedicinePurchase::where('farm_id', $farm->id)->get();
+        $feedMedicinePurchase = FeedMedicinePurchase::where('farm_id', $farm->id);
 
-        $data = FeedMedicinePurchaseResource::collection($data);
+        // Filter berdasarkan start_date atau end_date dari transaction_number
+        if ($request->has('start_date')) {
+            $feedMedicinePurchase->where('transaction_date', '>=', $request->input('start_date'));
+        }
+
+        if ($request->has('end_date')) {
+            $feedMedicinePurchase->where('transaction_date', '<=', $request->input('end_date'));
+        }
+
+        $data = FeedMedicinePurchaseResource::collection($feedMedicinePurchase->get());
 
         $message = $data->count() > 0 ? 'The data retrieved successfully' : 'No data found';
 

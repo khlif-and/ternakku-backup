@@ -25,11 +25,11 @@ class LivestockDeathController extends Controller
 
         // Filter berdasarkan start_date atau end_date dari transaction_number
         if ($request->has('start_date')) {
-            $deaths->where('transaction_number', '>=', $request->input('start_date'));
+            $deaths->where('transaction_date', '>=', $request->input('start_date'));
         }
 
         if ($request->has('end_date')) {
-            $deaths->where('transaction_number', '<=', $request->input('end_date'));
+            $deaths->where('transaction_date', '<=', $request->input('end_date'));
         }
 
         // Filter berdasarkan relasi Livestock (misalnya livestock_type_id)

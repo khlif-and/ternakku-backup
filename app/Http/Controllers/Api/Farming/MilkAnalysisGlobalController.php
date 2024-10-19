@@ -14,13 +14,22 @@ use App\Http\Requests\Farming\MilkAnalysisGlobalUpdateRequest;
 
 class MilkAnalysisGlobalController extends Controller
 {
-    public function index($farmId): JsonResponse
+    public function index($farmId, Request $request): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
-        $data = MilkAnalysisGlobal::where('farm_id', $farm->id)->get();
+        $milkAnalysisGlobal = MilkAnalysisGlobal::where('farm_id', $farm->id);
 
-        $data = MilkAnalysisGlobalResource::collection($data);
+        // Filter berdasarkan start_date atau end_date dari transaction_number
+        if ($request->has('start_date')) {
+            $milkAnalysisGlobal->where('transaction_date', '>=', $request->input('start_date'));
+        }
+
+        if ($request->has('end_date')) {
+            $milkAnalysisGlobal->where('transaction_date', '<=', $request->input('end_date'));
+        }
+
+        $data = MilkAnalysisGlobalResource::collection($milkAnalysisGlobal->get());
 
         $message = $data->count() > 0 ? 'Data retrieved successfully' : 'No data found';
 
