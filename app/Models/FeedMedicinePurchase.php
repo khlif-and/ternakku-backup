@@ -42,7 +42,7 @@ class FeedMedicinePurchase extends Model
         $lastTransaction = self::whereYear('transaction_date', $date->year)
             ->whereMonth('transaction_date', $date->month)
             ->where('farm_id' , $farmId)
-            ->orderBy('transaction_number', 'desc')
+            ->orderBy('created_at', 'desc')
             ->first();
 
         if ($lastTransaction) {
