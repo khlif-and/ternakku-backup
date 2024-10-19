@@ -20,16 +20,46 @@ class LivestockReceptionController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index($farmId): JsonResponse
+    public function index($farmId, Request $request): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
         // Mengambil LivestockReception yang terkait dengan farm tertentu
-        $receptions = LivestockReceptionD::whereHas('livestockReceptionH', function ($query) use ($farm) {
+        $receptions = LivestockReceptionD::whereHas('livestockReceptionH', function ($query) use ($farm, $request) {
             $query->where('farm_id', $farm->id);
-        })->get();
 
-        $data = LivestockReceptionResource::collection($receptions);
+            // Filter berdasarkan start_date atau end_date
+            if ($request->has('start_date')) {
+                $query->where('transaction_date', '>=', $request->input('start_date'));
+            }
+
+            if ($request->has('end_date')) {
+                $query->where('transaction_date', '<=', $request->input('end_date'));
+            }
+        });
+
+        // Filter berdasarkan livestock_type_id, livestock_group_id, livestock_breed_id, dan livestock_sex_id
+        if ($request->has('livestock_type_id')) {
+            $receptions->where('livestock_type_id', $request->input('livestock_type_id'));
+        }
+
+        if ($request->has('livestock_group_id')) {
+            $receptions->where('livestock_group_id', $request->input('livestock_group_id'));
+        }
+
+        if ($request->has('livestock_breed_id')) {
+            $receptions->where('livestock_breed_id', $request->input('livestock_breed_id'));
+        }
+
+        if ($request->has('livestock_sex_id')) {
+            $receptions->where('livestock_sex_id', $request->input('livestock_sex_id'));
+        }
+
+        if ($request->has('pen_id')) {
+            $receptions->where('pen_id', $request->input('pen_id'));
+        }
+
+        $data = LivestockReceptionResource::collection($receptions->get());
 
         $message = $receptions->count() > 0 ? 'Livestock Receptions retrieved successfully' : 'No Livestock Receptions found';
         return ResponseHelper::success($data, $message);

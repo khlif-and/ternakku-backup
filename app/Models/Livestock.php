@@ -51,6 +51,11 @@ class Livestock extends Model
         return $this->belongsTo(LivestockSex::class, 'livestock_sex_id');
     }
 
+    public function pen()
+    {
+        return $this->belongsTo(Pen::class, 'pen_id');
+    }
+
     public function qurbanLivestock()
     {
         return $this->hasOne(QurbanLivestock::class);
