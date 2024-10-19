@@ -16,15 +16,56 @@ use App\Http\Requests\Farming\LivestockDeathUpdateRequest;
 
 class LivestockDeathController extends Controller
 {
-    public function index($farmId): JsonResponse
+    public function index($farmId, Request $request): JsonResponse
     {
         $farm = request()->attributes->get('farm');
 
         // Fetch LivestockDeath records associated with the farm
-        $data = LivestockDeath::where('farm_id', $farm->id)->get();
+        $deaths = LivestockDeath::where('farm_id', $farm->id);
+
+        // Filter berdasarkan start_date atau end_date dari transaction_number
+        if ($request->has('start_date')) {
+            $deaths->where('transaction_number', '>=', $request->input('start_date'));
+        }
+
+        if ($request->has('end_date')) {
+            $deaths->where('transaction_number', '<=', $request->input('end_date'));
+        }
+
+        // Filter berdasarkan relasi Livestock (misalnya livestock_type_id)
+        if ($request->has('livestock_type_id')) {
+            $deaths->whereHas('livestock', function ($query) use ($request) {
+                $query->where('livestock_type_id', $request->input('livestock_type_id'));
+            });
+        }
+
+        if ($request->has('livestock_group_id')) {
+            $deaths->whereHas('livestock', function ($query) use ($request) {
+                $query->where('livestock_group_id', $request->input('livestock_group_id'));
+            });
+        }
+
+        if ($request->has('livestock_breed_id')) {
+            $deaths->whereHas('livestock', function ($query) use ($request) {
+                $query->where('livestock_breed_id', $request->input('livestock_breed_id'));
+            });
+        }
+
+        if ($request->has('livestock_sex_id')) {
+            $deaths->whereHas('livestock', function ($query) use ($request) {
+                $query->where('livestock_sex_id', $request->input('livestock_sex_id'));
+            });
+        }
+
+        if ($request->has('pen_id')) {
+            $deaths->whereHas('livestock', function ($query) use ($request) {
+                $query->where('pen_id', $request->input('pen_id'));
+            });
+        }
 
         // Transform the data using LivestockReceptionResource (you should create a specific resource if needed)
-        $data = LivestockDeathResource::collection($data);
+        $data = LivestockDeathResource::collection($deaths->get());
+
 
         // Determine the message based on the data count
         $message = $data->count() > 0 ? 'Livestock deaths retrieved successfully' : 'No livestock deaths found';
