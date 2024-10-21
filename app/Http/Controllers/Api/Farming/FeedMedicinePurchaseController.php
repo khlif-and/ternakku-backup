@@ -30,7 +30,19 @@ class FeedMedicinePurchaseController extends Controller
             $feedMedicinePurchase->where('transaction_date', '<=', $request->input('end_date'));
         }
 
-        $data = FeedMedicinePurchaseResource::collection($feedMedicinePurchase->get());
+        // Ambil data terlebih dahulu
+        $data = $feedMedicinePurchase->get();
+
+        // Jika ada filter `purchase_type`, lakukan filtering tambahan
+        if ($request->filled('purchase_type')) {
+            $purchaseType = $request->input('purchase_type');
+            $data = $data->filter(function ($purchase) use ($purchaseType) {
+                // Filter parent yang memiliki item sesuai dengan `purchase_type`
+                return $purchase->feedMedicinePurchaseItem()->where('purchase_type', $purchaseType)->exists();
+            });
+        }
+
+        $data = FeedMedicinePurchaseResource::collection($data);
 
         $message = $data->count() > 0 ? 'The data retrieved successfully' : 'No data found';
 
