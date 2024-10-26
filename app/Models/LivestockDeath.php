@@ -41,7 +41,7 @@ class LivestockDeath extends Model
         $lastTransaction = self::whereYear('transaction_date', $date->year)
             ->whereMonth('transaction_date', $date->month)
             ->where('farm_id' , $farmId)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('transaction_number', 'desc')
             ->first();
 
         if ($lastTransaction) {
