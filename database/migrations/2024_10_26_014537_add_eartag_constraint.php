@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('livestocks', function (Blueprint $table) {
             // Add unique constraint for eartag_number with farm_id and livestock_type_id
-            $table->unique(['farm_id', 'livestock_type_id', 'eartag_number'], 'unique_eartag_per_farm_and_type');
+            $table->unique(['farm_id', 'livestock_type_id', 'eartag_number', 'rfid_number'], 'unique_eartag_rfid_per_farm_and_type');
         });
     }
 
@@ -22,6 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        $table->dropUnique('unique_eartag_per_farm_and_type');
+        // Schema::table('livestocks', function (Blueprint $table) {
+        //     $table->dropUnique(['unique_eartag_rfid_per_farm_and_type']);
+        // });
+
     }
 };
