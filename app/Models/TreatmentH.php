@@ -61,4 +61,9 @@ class TreatmentH extends Model
     {
         return $this->hasMany(TreatmentIndividuD::class, 'treatment_h_id');
     }
+
+    public function treatmentColonyD()
+    {
+        return $this->hasMany(TreatmentColonyD::class, 'treatment_h_id');
+    }
 }
