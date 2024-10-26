@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Enums\RoleEnum;
 use App\Models\Profile;
 use Illuminate\Http\Request;
+use App\Services\AuthService;
 use App\Events\UserRegistered;
 use Illuminate\Support\Carbon;
 use App\Helpers\ResponseHelper;
@@ -24,6 +25,12 @@ use App\Http\Requests\ProfileUpdateRequest;
 
 class AuthController extends Controller
 {
+    private $authService;
+
+    public function __construct(AuthService $authService)
+    {
+        $this->authService = $authService;
+    }
     /**
      * Handle the user registration process.
      *
@@ -39,41 +46,15 @@ class AuthController extends Controller
         // Validate the request input
         $validatedData = $request->validated();
 
-        // Begin database transaction
-        DB::beginTransaction();
-
         try {
-            // Create a new user
-            $user = User::create([
-                'name' => $validatedData['name'],
-                'email' => $validatedData['email'],
-                'phone_number' => $validatedData['phone_number'],
-                'password' => Hash::make($validatedData['password']),
-            ]);
-
-            // Generate a new OTP
-            $otp = generateOtp();
-
-            // Save the OTP to the database
-            Otp::create([
-                'user_id' => $user->id,
-                'code' => $otp,
-                'is_used' => false,
-            ]);
-
-            // Trigger the UserRegistered event to send the OTP email
-            event(new UserRegistered($user, $otp));
-
-            // Commit the transaction
-            DB::commit();
+            $user = $this->authService->register($validatedData);
 
             // Return success response
             return ResponseHelper::success($user, 'User registered successfully', 200);
+
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            // Rollback the transaction if an error occurs
-            DB::rollBack();
-            return ResponseHelper::error('Failed to register user', 500);
+
+            return ResponseHelper::error($e->getMessage(), 500);
         }
     }
 
