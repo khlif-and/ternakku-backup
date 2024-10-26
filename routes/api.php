@@ -253,13 +253,13 @@ Route::group([
                     });
 
 
-                    // Route::group(['prefix' => 'feeding-colony', 'controller' => App\Http\Controllers\Api\Farming\FeedingColonyController::class], function () {
-                    //     Route::get('/{farm_id}', 'index');
-                    //     Route::get('/{farm_id}/{feedingColonyId}', 'show');
-                    //     Route::post('/{farm_id}', 'store');
-                    //     Route::post('/{farm_id}/{feedingColonyId}/update', 'update');
-                    //     Route::delete('/{farm_id}/{feedingColonyId}', 'destroy');
-                    // });
+                    Route::group(['prefix' => 'feeding-colony', 'controller' => App\Http\Controllers\Api\Farming\FeedingColonyController::class], function () {
+                        Route::get('/{farm_id}', 'index');
+                        Route::get('/{farm_id}/{feedingColonyId}', 'show');
+                        Route::post('/{farm_id}', 'store');
+                        Route::post('/{farm_id}/{feedingColonyId}/update', 'update');
+                        Route::delete('/{farm_id}/{feedingColonyId}', 'destroy');
+                    });
 
                     // Route::group(['prefix' => 'treatment-colony', 'controller' => App\Http\Controllers\Api\Farming\TreatmentColonyController::class], function () {
                     //     Route::get('/{farm_id}', 'index');

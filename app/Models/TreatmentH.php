@@ -27,14 +27,16 @@ class TreatmentH extends Model
     {
         $date = Carbon::parse($transactionDate);
 
+        $code =  $type == 'colony' ? 'TC' : 'TI';
         $year = $date->format('y'); // last two digits of the year
         $month = $date->format('m'); // month with leading zero
-        $prefix = $type == 'colony' ? "$year$month-TC-" : "$year$month-TI-";
+        $prefix = "$year$month-$code-";
 
         // Get the last transaction number for the current month and year
         $lastTransaction = self::whereYear('transaction_date', $date->year)
             ->whereMonth('transaction_date', $date->month)
             ->where('farm_id' , $farmId)
+            ->where('transaction_number' , 'like' , "%$code%")
             ->orderBy('transaction_number', 'desc')
             ->first();
 
