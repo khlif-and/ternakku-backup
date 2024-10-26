@@ -20,6 +20,7 @@ class LivestockResource extends JsonResource
             'farm_id' => $this->farm_id,
             'farm_name' => $this->farm->name,
             'eartag' => $this->eartag_number,
+            'rfid' => $this->rfid_number,
             'reception_date' => $this->livestockReceptionD->livestockReceptionH->transaction_date,
             'dof' => $this->dof(),
             'reception_weight' => $this->livestockReceptionD->weight,

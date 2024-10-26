@@ -22,7 +22,7 @@ class LivestockReceptionStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'eartag_number' => 'required|string|max:255|unique:livestock_reception_d,eartag_number',
+            'eartag_number' => 'required|string|max:255',
             'rfid_number' => 'nullable|string|max:255|unique:livestock_reception_d,rfid_number',
             'livestock_type_id' => 'required|exists:livestock_types,id',
             'livestock_group_id' => 'required|exists:livestock_groups,id',

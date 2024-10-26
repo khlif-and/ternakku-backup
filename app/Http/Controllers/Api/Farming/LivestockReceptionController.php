@@ -78,7 +78,9 @@ class LivestockReceptionController extends Controller
 
         $reception = null;
 
-        DB::transaction(function () use ($validated, $farm, &$reception) {
+        try {
+
+            DB::beginTransaction();
             // Simpan data header LivestockReceptionH
             $livestockReceptionH = LivestockReceptionH::create([
                 'farm_id'          => $farm->id,
@@ -105,9 +107,18 @@ class LivestockReceptionController extends Controller
 
             // Simpan LivestockReception dengan data yang telah di-assign
             $reception = LivestockReceptionD::create($receptionData);
-        });
 
-        return ResponseHelper::success(new LivestockReceptionResource($reception), 'Livestock Reception created successfully', 200);
+            DB::commit();
+
+            return ResponseHelper::success(new LivestockReceptionResource($reception), 'Livestock Reception created successfully', 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Handle exceptions and return an error response
+            return ResponseHelper::error( $e->getMessage(), 500);
+        }
+
     }
 
 

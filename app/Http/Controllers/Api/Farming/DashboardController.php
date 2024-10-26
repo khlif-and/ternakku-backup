@@ -41,6 +41,14 @@ class DashboardController extends Controller
         $query = $farm->livestocks()->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value);
 
         // Terapkan filter jika ada
+        if ($request->filled('eartag_number')) {
+            $query->where('eartag_number', $request->input('eartag_number'));
+        }
+
+        if ($request->filled('rfid_number')) {
+            $query->where('rfid_number', $request->input('rfid_number'));
+        }
+
         if ($request->filled('livestock_breed_id')) {
             $query->where('livestock_breed_id', $request->input('livestock_breed_id'));
         }
