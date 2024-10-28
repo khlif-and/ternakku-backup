@@ -65,6 +65,10 @@ class DashboardController extends Controller
             $query->where('livestock_group_id', $request->input('livestock_group_id'));
         }
 
+        if ($request->filled('pen_id')) {
+            $query->where('pen_id', $request->input('pen_id'));
+        }
+
         // Dapatkan hasil akhir dan koleksi sebagai resource
         $data = LivestockResource::collection($query->get());
 

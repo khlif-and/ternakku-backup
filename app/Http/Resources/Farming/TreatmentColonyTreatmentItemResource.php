@@ -17,6 +17,7 @@ class TreatmentColonyTreatmentItemResource extends JsonResource
         return [
             'name' => $this->name,
             'cost' => (float) $this->cost,
+            'average_cost' => (float) ($this->cost / $this->treatmentColonyD->total_livestock),
         ];
     }
 }

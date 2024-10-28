@@ -30,6 +30,7 @@ class TreatmentColonyResource extends JsonResource
             'disease_id'          => $this->disease_id,
             'disease_name'        => $this->disease->name,
 
+            'total_livestock'     => $this->total_livestock,
             'total_cost'          => (float) $this->total_cost,
             'average_cost'        => (float) $this->average_cost,
             'notes'               => $this->notes,

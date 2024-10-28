@@ -27,8 +27,9 @@ class FeedingColonyResource extends JsonResource
             'pen_id'              => $this->pen_id,
             'pen'                 => new PenResource($this->pen),
 
+            'total_livestock'     => $this->total_livestock,
             'total_cost'          => $this->total_cost,
-            'average_cost'          => $this->average_cost,
+            'average_cost'        => $this->average_cost,
             'notes'               => $this->notes,
 
             'items'               => FeedingColonyItemResource::collection($this->feedingColonyItems),
