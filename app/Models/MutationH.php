@@ -2,44 +2,40 @@
 
 namespace App\Models;
 
-use Illuminate\Support\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class LivestockReweightH extends Model
+class MutationH extends Model
 {
     use HasFactory;
 
-    protected $table = 'livestock_reweight_h';
+    protected $table = 'mutation_h';
 
-    protected $fillable = [
-        'farm_id',
-        'transaction_number',
-        'transaction_date',
-        'notes',
-    ];
+    protected $guarded = [];
 
     public static function boot()
     {
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber($model->transaction_date , $model->farm_id);
+            $model->transaction_number = $model->generateTransactionNumber($model->type , $model->transaction_date,  $model->farm_id);
         });
     }
 
-    private function generateTransactionNumber($transaction_date, $farmId)
+    private function generateTransactionNumber($type , $transactionDate, $farmId)
     {
-        $date = Carbon::parse($transaction_date);
+        $date = Carbon::parse($transactionDate);
 
+        $code =  $type == 'colony' ? 'MC' : 'MI';
         $year = $date->format('y'); // last two digits of the year
         $month = $date->format('m'); // month with leading zero
-        $prefix = "$year$month-RW-";
+        $prefix = "$year$month-$code-";
 
         // Get the last transaction number for the current month and year
         $lastTransaction = self::whereYear('transaction_date', $date->year)
             ->whereMonth('transaction_date', $date->month)
             ->where('farm_id' , $farmId)
+            ->where('transaction_number' , 'like' , "%$code%")
             ->orderBy('transaction_number', 'desc')
             ->first();
 
@@ -60,9 +56,13 @@ class LivestockReweightH extends Model
         return $this->belongsTo(Farm::class);
     }
 
-    public function livestockReweightD()
+    public function mutationIndividuD()
     {
-        return $this->hasMany(LivestockReweightD::class, 'livestock_reweight_h_id');
+        return $this->hasMany(MutationIndividuD::class, 'mutation_h_id');
+    }
+
+    public function mutationColonyD()
+    {
+        return $this->hasMany(MutationColonyD::class, 'mutation_h_id');
     }
 }
-
