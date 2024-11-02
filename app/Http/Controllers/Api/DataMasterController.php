@@ -18,6 +18,7 @@ use App\Models\LivestockBreed;
 use App\Models\LivestockGroup;
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
+use App\Models\LivestockClassification;
 use App\Http\Resources\LivestockBreedResource;
 
 class DataMasterController extends Controller
@@ -32,6 +33,13 @@ class DataMasterController extends Controller
     public function getLivestockSex()
     {
         $data = LivestockSex::all();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function getLivestockClassification()
+    {
+        $data = LivestockClassification::orderBy('id' , 'asc')->get();
 
         return ResponseHelper::success($data, 'Data retrieved successfully');
     }

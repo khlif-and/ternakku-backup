@@ -71,6 +71,7 @@ Route::group([
         Route::group(['prefix' => 'livestock'], function () {
             Route::get('type', 'getLivestockType');
             Route::get('sex', 'getLivestockSex');
+            Route::get('classification', 'getLivestockClassification');
             Route::get('group', 'getLivestockGroup');
             Route::get('breed', 'getLivestockBreed');
             Route::get('disease', 'getLivestockDisease');
@@ -119,6 +120,8 @@ Route::group([
                         Route::post('/{farm_id}/{pen_id}/update', 'update');
                         Route::delete('/{farm_id}/{pen_id}', 'destroy');
                     });
+
+                    Route::post('update-classification/{farm_id}/{data_ud}/update', [App\Http\Controllers\Api\Farming\UpdateClassificationController::class, 'update']);
 
                     Route::group(['prefix' => 'livestock-reception', 'controller' => App\Http\Controllers\Api\Farming\LivestockReceptionController::class], function () {
                         Route::get('/{farm_id}', 'index');

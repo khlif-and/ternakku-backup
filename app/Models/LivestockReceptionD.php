@@ -23,6 +23,7 @@ class LivestockReceptionD extends Model
         'livestock_group_id',
         'livestock_breed_id',
         'livestock_sex_id',
+        'livestock_classification_id',
         'pen_id',
         'age_years',
         'age_months',
@@ -86,6 +87,7 @@ class LivestockReceptionD extends Model
             'livestock_group_id' => $this->livestock_group_id,
             'livestock_breed_id' => $this->livestock_breed_id,
             'livestock_sex_id' => $this->livestock_sex_id,
+            'livestock_classification_id' => $this->livestock_classification_id,
             'pen_id' => $this->pen_id,
             'start_age_years' => $this->age_years,
             'start_age_months' => $this->age_months,
@@ -104,6 +106,7 @@ class LivestockReceptionD extends Model
             'livestock_group_id' => $this->livestock_group_id,
             'livestock_breed_id' => $this->livestock_breed_id,
             'livestock_sex_id' => $this->livestock_sex_id,
+            'livestock_classification_id' => $this->livestock_classification_id,
             'pen_id' => $this->pen_id,
             'start_age_years' => $this->age_years,
             'start_age_months' => $this->age_months,
@@ -135,6 +138,11 @@ class LivestockReceptionD extends Model
     public function livestockSex()
     {
         return $this->belongsTo(LivestockSex::class, 'livestock_sex_id');
+    }
+
+    public function livestockClassification()
+    {
+        return $this->belongsTo(LivestockClassification::class, 'livestock_classification_id');
     }
 
     public function pen()

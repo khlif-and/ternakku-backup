@@ -163,7 +163,7 @@ class FeedingColonyController extends Controller
         $farm = request()->attributes->get('farm');
 
         $feedingColonyD = FeedingColonyD::whereHas('feedingH', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'Colony');
+            $query->where('farm_id', $farm->id)->where('type' , 'colony');
         })->findOrFail($feedingColonyId);
 
         try {

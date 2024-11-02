@@ -47,7 +47,8 @@ class DatabaseSeeder extends Seeder
             LivestockExpenseTypeSeeder::class,
             DiseaseSeeder::class,
             FarmUserSeeder::class,
-            ReproductionStatusSeeder::class
+            ReproductionStatusSeeder::class,
+            LivestockClassificationSeeder::class,
         ]);
     }
 }
