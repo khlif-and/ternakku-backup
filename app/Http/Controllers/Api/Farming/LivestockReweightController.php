@@ -105,6 +105,8 @@ class LivestockReweightController extends Controller
                 'notes'            => $validated['notes'],
             ]);
 
+            $photo = null;
+
             // Handle file upload if present
             if (isset($validated['photo']) && request()->hasFile('photo')) {
                 $file = $validated['photo'];
