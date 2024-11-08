@@ -28,6 +28,7 @@ class LivestockReceptionStoreRequest extends FormRequest
             'livestock_group_id' => 'required|exists:livestock_groups,id',
             'livestock_breed_id' => 'required|exists:livestock_breeds,id',
             'livestock_sex_id' => 'required|exists:livestock_sexes,id',
+            'livestock_classification_id' => 'required|exists:livestock_classifications,id',
             'pen_id' => 'required|exists:pens,id',
             'age_years' => 'required|integer|min:0',
             'age_months' => 'required|integer|min:0|max:11',

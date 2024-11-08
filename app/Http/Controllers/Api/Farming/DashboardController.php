@@ -57,12 +57,20 @@ class DashboardController extends Controller
             $query->where('livestock_sex_id', $request->input('livestock_sex_id'));
         }
 
+        if ($request->filled('livestock_classification_id')) {
+            $query->where('livestock_classification_id', $request->input('livestock_classification_id'));
+        }
+
         if ($request->filled('livestock_type_id')) {
             $query->where('livestock_type_id', $request->input('livestock_type_id'));
         }
 
         if ($request->filled('livestock_group_id')) {
             $query->where('livestock_group_id', $request->input('livestock_group_id'));
+        }
+
+        if ($request->filled('pen_id')) {
+            $query->where('pen_id', $request->input('pen_id'));
         }
 
         // Dapatkan hasil akhir dan koleksi sebagai resource

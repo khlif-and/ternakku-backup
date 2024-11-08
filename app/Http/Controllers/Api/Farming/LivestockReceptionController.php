@@ -55,6 +55,10 @@ class LivestockReceptionController extends Controller
             $receptions->where('livestock_sex_id', $request->input('livestock_sex_id'));
         }
 
+        if ($request->filled('livestock_classification_id')) {
+            $receptions->where('livestock_classification_id', $request->input('livestock_classification_id'));
+        }
+
         if ($request->filled('pen_id')) {
             $receptions->where('pen_id', $request->input('pen_id'));
         }

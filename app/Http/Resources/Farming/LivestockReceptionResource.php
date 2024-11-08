@@ -31,6 +31,8 @@ class LivestockReceptionResource extends JsonResource
             'livestock_breed_name'  => $this->livestockBreed->name ?? null,
             'livestock_sex_id'      => $this->livestock_sex_id,
             'livestock_sex_name'    => $this->livestockSex->name ?? null,
+            'livestock_classification_id'      => $this->livestock_classification_id,
+            'livestock_classification_name'    => $this->livestockClassification->name ?? null,
             'pen_id'                => $this->pen_id,
             'pen_name'              => $this->pen->name ?? null,
             'age_years'             => $this->age_years,

@@ -52,6 +52,11 @@ class Livestock extends Model
         return $this->belongsTo(LivestockSex::class, 'livestock_sex_id');
     }
 
+    public function livestockClassification()
+    {
+        return $this->belongsTo(LivestockClassification::class, 'livestock_classification_id');
+    }
+
     public function pen()
     {
         return $this->belongsTo(Pen::class, 'pen_id');

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\LivestockClassificationEnum;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pen extends Model
 {
@@ -37,4 +38,12 @@ class Pen extends Model
         return $this->livestocks()->alive()->count();
     }
 
+    public function livestockLactations()
+    {
+        return $this->livestocks()
+            ->whereIn('livestock_classification_id' , [
+                LivestockClassificationEnum::LAKTASI_BUNTING ,
+                LivestockClassificationEnum::LAKTASI_KOSONG
+            ])->get();
+    }
 }
