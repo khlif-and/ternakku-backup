@@ -59,12 +59,12 @@ class MilkProductionColonyController extends Controller
             return ResponseHelper::error('Pen not found.', 404);
         }
 
-        $livestocks = $pen->livestocks;
+        $livestockLactations = $pen->livestockLactations();
 
-        $totalLivestocks = count($livestocks);
+        $totalLivestockLactations = count($livestockLactations);
 
-        if ($totalLivestocks < 1) {
-            return ResponseHelper::error('There is no livestock in this pen.', 404);
+        if ($totalLivestockLactations < 1) {
+            return ResponseHelper::error('No lactating livestock found in this pen.', 404);
         }
 
         try {
@@ -81,13 +81,17 @@ class MilkProductionColonyController extends Controller
             $milkProductionColonyD = MilkProductionColonyD::create([
                 'milk_production_h_id' =>  $milkProductionH->id,
                 'pen_id' => $validated['pen_id'],
+                'milking_shift' => $validated['milking_shift'],
+                'milking_time' => $validated['milking_time'],
+                'milker_name' => $validated['milker_name'],
+                'milk_condition' => $validated['milk_condition'] ?? null,
                 'notes' => $validated['notes'] ?? null,
-                'total_livestock' => $totalLivestocks,
+                'total_livestock' => $totalLivestockLactations,
                 'quantity_liters' => $validated['quantity_liters'] ,
-                'average_liters' => $validated['quantity_liters']  / $totalLivestocks,
+                'average_liters' => $validated['quantity_liters']  / $totalLivestockLactations,
             ]);
 
-            foreach($livestocks as $livestock){
+            foreach($livestockLactations as $livestock){
                 MilkProductionColonyLivestock::create([
                     'milk_production_colony_d_id' => $milkProductionColonyD->id,
                     'livestock_id' => $livestock->id

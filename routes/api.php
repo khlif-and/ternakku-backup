@@ -287,6 +287,14 @@ Route::group([
                         Route::post('/{farm_id}/{dataId}/update', 'update');
                         Route::delete('/{farm_id}/{dataId}', 'destroy');
                     });
+
+                    Route::group(['prefix' => 'milk-production-colony', 'controller' => App\Http\Controllers\Api\Farming\MilkProductionColonyController::class], function () {
+                        Route::get('/{farm_id}', 'index');
+                        Route::get('/{farm_id}/{milkProductionColonyId}', 'show');
+                        Route::post('/{farm_id}', 'store');
+                        Route::post('/{farm_id}/{milkProductionColonyId}/update', 'update');
+                        Route::delete('/{farm_id}/{milkProductionColonyId}', 'destroy');
+                    });
                 });
             });
         });
