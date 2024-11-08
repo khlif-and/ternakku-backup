@@ -30,6 +30,7 @@ class MilkProductionColonyResource extends JsonResource
             'quantity_liters' => $this->quantity_liters,
             'average_liters' => $this->average_liters,
             'milk_condition' => $this->milk_condition,
+            'total_livestock' => $this->total_livestock,
             'livestocks'          => LivestockResource::collection($this->livestocks),
             'notes' => $this->notes,
         ];

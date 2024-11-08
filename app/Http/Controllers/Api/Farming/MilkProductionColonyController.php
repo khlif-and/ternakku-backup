@@ -142,16 +142,14 @@ class MilkProductionColonyController extends Controller
                 'notes'            => $validated['notes'] ?? null,
             ]);
 
-            $livestocks =  $milkProductionColonyD->livestocks;
-
-            $totalLivestocks = count($livestocks);
-
-            MilkProductionColonyItem::where('milk_production_colony_d_id', $milkProductionColonyD->id)->delete();
-
             $milkProductionColonyD->update([
+                'milking_shift' => $validated['milking_shift'],
+                'milking_time' => $validated['milking_time'],
+                'milker_name' => $validated['milker_name'],
+                'milk_condition' => $validated['milk_condition'] ?? null,
                 'notes' => $validated['notes'] ?? null,
                 'quantity_liters' => $validated['quantity_liters'] ,
-                'average_liters' => $validated['quantity_liters']  / $totalLivestocks,
+                'average_liters' => $validated['quantity_liters']  / $milkProductionColonyD->total_livestock,
             ]);
 
             DB::commit();
