@@ -59,4 +59,9 @@ class MilkAnalysisH extends Model
     {
         return $this->hasMany(MilkAnalysisIndividuD::class, 'milk_analysis_h_id');
     }
+
+    public function milkAnalysisColonyD()
+    {
+        return $this->hasMany(MilkAnalysisColonyD::class, 'milk_analysis_h_id');
+    }
 }
