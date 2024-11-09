@@ -260,6 +260,8 @@ Route::group([
                             Route::post('/{farm_id}', 'store');
                             Route::post('/{farm_id}/{dataId}/update', 'update');
                             Route::delete('/{farm_id}/{dataId}', 'destroy');
+                            Route::post('/{farm_id}/{dataId}/{child/id}/young-death', 'youngDeath');
+                            Route::post('/{farm_id}/{dataId}/{child/id}/identification', 'identification');
                         });
                     });
 
