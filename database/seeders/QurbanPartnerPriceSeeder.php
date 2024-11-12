@@ -48,6 +48,7 @@ class QurbanPartnerPriceSeeder extends Seeder
                     'start_weight' => $range[0],
                     'end_weight' => $range[1],
                     'price_per_kg' => $prices[$index],
+                    'previous_price_per_kg' => $prices[$index] - 4000,
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
                 ]);

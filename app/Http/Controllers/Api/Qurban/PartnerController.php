@@ -10,6 +10,7 @@ use App\Http\Resources\Qurban\PartnerPenResource;
 use App\Http\Resources\Qurban\PartnerListResource;
 use App\Http\Resources\Qurban\PartnerPriceResource;
 use App\Http\Resources\Qurban\PartnerDetailResource;
+use App\Http\Resources\Qurban\PartnerPriceEstimationResource;
 
 class PartnerController extends Controller
 {
@@ -95,6 +96,32 @@ class PartnerController extends Controller
         // If farm found, return it using the PartnerResource
         $data = PartnerPriceResource::collection($farm->qurbanPrices);
 
-        return ResponseHelper::success($data, 'Qurban partner pens retrieved successfully');
+        return ResponseHelper::success($data, 'Qurban partner prices retrieved successfully');
+    }
+
+    public function estimationPrice(Request $request, $id)
+    {
+        // Find the Farm by ID
+        $farm = Farm::qurban()->find($id);
+
+        // If farm not found, return error response
+        if (!$farm) {
+            return ResponseHelper::error('Qurban partner not found', 404);
+        }
+
+        // Get the weight from the request
+        $weight = $request->input('weight');
+
+        // Find the appropriate qurban price based on the weight
+        $qurbanPrice = $farm->qurbanPrices()->byWeight($weight)->first();
+
+        // If no qurban price is found, return error response
+        if (!$qurbanPrice) {
+            return ResponseHelper::error('No qurban price found for the given weight', 404);
+        }
+
+        $data = new PartnerPriceEstimationResource($qurbanPrice);
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
     }
 }

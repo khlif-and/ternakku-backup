@@ -37,6 +37,7 @@ Route::group([
             Route::get('{id}', 'detail');
             Route::get('{id}/pen', 'getPen');
             Route::get('{id}/price', 'getPrice');
+            Route::post('{id}/price/estimation', 'estimationPrice');
             Route::get('{id}/breed', 'getBreed');
         });
 
