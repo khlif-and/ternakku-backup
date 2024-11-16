@@ -9,6 +9,7 @@ use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\QurbanSavingRegistration;
+use App\Http\Requests\Qurban\SaveRequest;
 use App\Models\QurbanSavingRegistrationUser;
 use App\Http\Requests\Qurban\FindUserRequest;
 use App\Http\Requests\Qurban\SavingRegisterRequest;
@@ -22,9 +23,10 @@ class SavingController extends Controller
         $user = auth()->user();
 
         $userBankIds = UserBank::where('user_id' , $user->id)->pluck('id');
-        $qurbanSavingRegistrationUserIds = QurbanSavingRegistrationUser::whereIn('user_bank_id' , $userBankIds)->pluck('id');
 
-        $qurbanSavingRegistrations = QurbanSavingRegistration::whereIn('id', $qurbanSavingRegistrationUserIds)
+        $qurbanSavingRegistrationId = QurbanSavingRegistrationUser::whereIn('user_bank_id' , $userBankIds)->pluck('qurban_saving_registration_id');
+
+        $qurbanSavingRegistrations = QurbanSavingRegistration::whereIn('id', $qurbanSavingRegistrationId)
             ->with(['livestockBreed', 'livestockBreed.livestockType', 'farm', 'region'])
             ->get();
 
@@ -96,6 +98,11 @@ class SavingController extends Controller
         })->firstOrFail();
 
         return ResponseHelper::success($user, 'Data retrieved successfully');
+    }
+
+    public function save(SaveRequest $request)
+    {
+        dd($request->all());
     }
 
 }

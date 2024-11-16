@@ -27,4 +27,14 @@ class MutationIndividuD extends Model
     {
         return $this->hasMany(MutationIndividuItem::class, 'mutation_individu_d_id');
     }
+
+    public function penFrom()
+    {
+        return $this->belongsTo(Pen::class, 'from' , 'id');
+    }
+
+    public function penTo()
+    {
+        return $this->belongsTo(Pen::class, 'to' , 'id');
+    }
 }

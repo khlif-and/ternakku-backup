@@ -61,6 +61,7 @@ Route::group([
                 Route::post('/register', 'register');
                 Route::get('/register/{id}', 'detail');
                 Route::post('/find-user', 'findUser');
+                Route::post('/register/{id}/save', 'save');
             });
 
             Route::group(['prefix' => 'contract', 'controller' => App\Http\Controllers\Api\Qurban\ContractController::class], function () {
