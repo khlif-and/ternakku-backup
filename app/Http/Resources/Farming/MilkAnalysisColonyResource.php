@@ -7,7 +7,7 @@ use App\Http\Resources\LivestockResource;
 use App\Http\Resources\Farming\PenResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MilkAnalysisIndividuResource extends JsonResource
+class MilkAnalysisColonyResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

@@ -75,4 +75,9 @@ class Farm extends Model
 
         return implode(', ', $filteredAddressParts);
     }
+
+    public function qurbanPrices()
+    {
+        return $this->hasMany(QurbanPartnerPrice::class, 'farm_id', 'id');
+    }
 }

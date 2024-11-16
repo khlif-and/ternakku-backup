@@ -4,7 +4,7 @@ namespace App\Http\Requests\Farming;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MilkAnalysisColonyStoreRequest extends FormRequest
+class MilkAnalysisColonyUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

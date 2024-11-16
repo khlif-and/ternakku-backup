@@ -79,7 +79,7 @@ class MilkAnalysisColonyController extends Controller
             ]);
 
             $milkAnalysisColonyD = MilkAnalysisColonyD::create([
-                'milk_Analysis_h_id' =>  $milkAnalysisH->id,
+                'milk_analysis_h_id' =>  $milkAnalysisH->id,
                 'pen_id' => $validated['pen_id'],
                 'bj' => $validated['bj'] ?? null,
                 'at' => $validated['at'] ?? null,
@@ -97,7 +97,7 @@ class MilkAnalysisColonyController extends Controller
 
             foreach($livestockLactations as $livestock){
                 MilkAnalysisColonyLivestock::create([
-                    'milk_Analysis_colony_d_id' => $milkAnalysisColonyD->id,
+                    'milk_analysis_colony_d_id' => $milkAnalysisColonyD->id,
                     'livestock_id' => $livestock->id
                 ]);
             }
@@ -158,8 +158,6 @@ class MilkAnalysisColonyController extends Controller
                 'ts' => $validated['ts'] ?? null,
                 'rzn' => $validated['rzn'] ?? null,
                 'notes' => $validated['notes'] ?? null,
-                'quantity_liters' => $validated['quantity_liters'] ,
-                'average_liters' => $validated['quantity_liters']  / $milkAnalysisColonyD->total_livestock,
             ]);
 
             DB::commit();
@@ -187,7 +185,7 @@ class MilkAnalysisColonyController extends Controller
         try {
             DB::beginTransaction();  // Awal transaksional
 
-            MilkAnalysisColonyLivestock::where('milk_Analysis_colony_d_id', $milkAnalysisColonyD->id)->delete();
+            MilkAnalysisColonyLivestock::where('milk_analysis_colony_d_id', $milkAnalysisColonyD->id)->delete();
 
             $milkAnalysisColonyD->delete();
 

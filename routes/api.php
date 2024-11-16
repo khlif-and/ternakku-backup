@@ -36,6 +36,9 @@ Route::group([
             Route::get('/', 'index');
             Route::get('{id}', 'detail');
             Route::get('{id}/pen', 'getPen');
+            Route::get('{id}/price', 'getPrice');
+            Route::post('{id}/price/estimation', 'estimationPrice');
+            Route::get('{id}/breed', 'getBreed');
         });
 
         Route::group(['prefix' => 'breed', 'controller' => App\Http\Controllers\Api\Qurban\BreedController::class], function () {
@@ -72,6 +75,7 @@ Route::group([
             Route::get('type', 'getLivestockType');
             Route::get('sex', 'getLivestockSex');
             Route::get('classification', 'getLivestockClassification');
+            Route::get('bcs', 'getLivestockBcs');
             Route::get('group', 'getLivestockGroup');
             Route::get('breed', 'getLivestockBreed');
             Route::get('disease', 'getLivestockDisease');
@@ -122,6 +126,8 @@ Route::group([
                     });
 
                     Route::post('update-classification/{farm_id}/{data_ud}/update', [App\Http\Controllers\Api\Farming\UpdateClassificationController::class, 'update']);
+
+                    Route::post('update-bcs/{farm_id}/{data_ud}/update', [App\Http\Controllers\Api\Farming\UpdateBcsController::class, 'update']);
 
                     Route::group(['prefix' => 'livestock-reception', 'controller' => App\Http\Controllers\Api\Farming\LivestockReceptionController::class], function () {
                         Route::get('/{farm_id}', 'index');
@@ -260,6 +266,8 @@ Route::group([
                             Route::post('/{farm_id}', 'store');
                             Route::post('/{farm_id}/{dataId}/update', 'update');
                             Route::delete('/{farm_id}/{dataId}', 'destroy');
+                            Route::post('/{farm_id}/{dataId}/{child/id}/young-death', 'youngDeath');
+                            Route::post('/{farm_id}/{dataId}/{child/id}/identification', 'identification');
                         });
                     });
 
