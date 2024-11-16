@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Bcs;
 use App\Models\Bank;
 use App\Models\Module;
 use App\Models\Region;
@@ -40,6 +41,13 @@ class DataMasterController extends Controller
     public function getLivestockClassification()
     {
         $data = LivestockClassification::orderBy('id' , 'asc')->get();
+
+        return ResponseHelper::success($data, 'Data retrieved successfully');
+    }
+
+    public function getLivestockBcs()
+    {
+        $data = Bcs::orderBy('id' , 'asc')->get();
 
         return ResponseHelper::success($data, 'Data retrieved successfully');
     }
