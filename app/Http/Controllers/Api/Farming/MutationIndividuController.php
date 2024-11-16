@@ -217,5 +217,54 @@ class MutationIndividuController extends Controller
         }
     }
 
+    public function destroy($farmId, $mutationIndividuId)
+    {
+
+        $farm = request()->attributes->get('farm');
+
+        $mutationIndividuD = MutationIndividuD::whereHas('mutationH', function ($query) use ($farm) {
+            $query->where('farm_id', $farm->id)->where('type' , 'individu');
+        })->findOrFail($mutationIndividuId);
+
+        $livestock =  $mutationIndividuD->livestock;
+
+        if ($mutationIndividuD->to !== $livestock->pen_id) {
+            return ResponseHelper::error(
+                'Deleting is not allowed because this is an old record.',
+                422
+            );
+        }
+
+        try {
+
+            DB::beginTransaction();
+
+            $livestock->update([
+                'pen_id' =>  $mutationIndividuD->from
+            ]);
+
+            $penHistory = PenHistory::where('livestock_id' , $livestock->id)->orderBy('created_at' , 'desc')->first();
+
+            $penHistory->delete();
+
+            $mutationIndividuD->delete();
+
+            $mutationH = $mutationIndividuD->mutationH;
+            if (!$mutationH->mutationIndividuD()->exists()) {
+                $mutationH->delete();
+            }
+
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Data deleted successfully', 200);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            // Handle exceptions and return an error response
+            return ResponseHelper::error( 'An error occurred while updating the data.', 500);
+        }
+    }
+
 
 }
