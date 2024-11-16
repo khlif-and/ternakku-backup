@@ -22,7 +22,7 @@ class UpdateBcsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bcs_id' => 'required|exists:bcs,id',
+            'bcs_number' => 'required|numeric|min:1|max:5',
         ];
     }
 }
