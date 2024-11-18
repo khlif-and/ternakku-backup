@@ -4,7 +4,7 @@ namespace App\Http\Requests\Farming;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBcsRequest extends FormRequest
+class MutationIndividuStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,10 @@ class UpdateBcsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bcs_number' => 'required|numeric|min:1|max:5',
+            'transaction_date'        => 'required|date',
+            'notes'                   => 'nullable|string',
+            'livestock_id'      => 'required|exists:livestocks,id',
+            'pen_destination'            => 'required|exists:pens,id',
         ];
     }
 }

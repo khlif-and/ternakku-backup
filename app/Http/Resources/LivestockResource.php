@@ -36,6 +36,7 @@ class LivestockResource extends JsonResource
             'livestock_sex_name' => $this->livestockSex->name,
             'livestock_classification_id' => $this->livestock_classification_id,
             'livestock_classifiacation_name' => $this->livestockClassification?->name,
+            'bcs_number' => $this->bcs_number,
             'bcs_id' => $this->bcs_id,
             'bcs_name' => $this->bcs?->name,
             'pen_id' => $this->pen_id,

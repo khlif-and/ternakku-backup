@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Farming;
 
+use App\Models\Bcs;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use Illuminate\Http\JsonResponse;
@@ -22,8 +23,14 @@ class UpdateBcsController extends Controller
             return ResponseHelper::error('Livestock not found.', 404);
         }
 
+        $bcs = Bcs::where('lower_limit', '<=', $validated['bcs_number'])
+            ->where('upper_limit', '>=', $validated['bcs_number'])
+            ->first();
+
+
         $livestock->update([
-            'bcs_id' => $validated['bcs_id']
+            'bcs_number' => $validated['bcs_number'],
+            'bcs_id' => $bcs->id
         ]);
 
         return ResponseHelper::success(new LivestockResource($livestock), 'Data updated successfully', 200);

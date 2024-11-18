@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Farming;
+namespace App\Http\Requests\Qurban;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBcsRequest extends FormRequest
+class SaveRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class UpdateBcsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bcs_number' => 'required|numeric|min:1|max:5',
+            //
         ];
     }
 }

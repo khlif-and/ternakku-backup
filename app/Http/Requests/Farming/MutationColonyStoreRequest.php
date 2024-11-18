@@ -4,14 +4,14 @@ namespace App\Http\Requests\Farming;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateBcsRequest extends FormRequest
+class MutationColonyStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,7 +22,6 @@ class UpdateBcsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'bcs_number' => 'required|numeric|min:1|max:5',
         ];
     }
 }
