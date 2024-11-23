@@ -12,6 +12,7 @@ use App\Events\UserRegistered;
 use Illuminate\Support\Carbon;
 use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
+use App\Events\ForgotPasswordEvent;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -22,6 +23,8 @@ use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\ResendOtpRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\ForgotPasswordRequest;
 
 class AuthController extends Controller
 {
@@ -305,4 +308,105 @@ class AuthController extends Controller
             return ResponseHelper::error('Failed to update profile: ' . $e->getMessage(), 500);
         }
     }
+
+    public function forgotPassword(ForgotPasswordRequest $request)
+    {
+        // Validate the request input
+        $validatedData = $request->validated();
+
+        // Find the user based on the email
+        $user = User::where('phone_number', $validatedData['phone_number'])
+                    ->whereNotNull('email_verified_at')
+                    ->first();
+
+        // Return error if user not found
+        if (!$user) {
+            return ResponseHelper::error('User not found', 404);
+        }
+
+        // Begin database transaction
+        DB::beginTransaction();
+
+        try {
+            // Delete any unused OTPs for the user
+            Otp::where('user_id', $user->id)
+                ->where('is_used', false)
+                ->delete();
+
+            // Generate a new OTP
+            $otp = generateOtp();
+
+            // Save the new OTP to the database
+            Otp::create([
+                'user_id' => $user->id,
+                'code' => $otp,
+                'is_used' => false,
+            ]);
+
+            event(new ForgotPasswordEvent($user, $otp));
+
+            // Commit the transaction
+            DB::commit();
+
+            // Return success response
+            return ResponseHelper::success($user, 'OTP has been resent successfully', 200);
+        } catch (\Exception $e) {
+            // Rollback the transaction if an error occurs
+            DB::rollBack();
+            return ResponseHelper::error('Failed to resend OTP', 500);
+        }
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        // Validate the request input
+        $validatedData = $request->validated();
+
+        // Find the user based on the phone number
+        $user = User::where('phone_number', $validatedData['phone_number'])->first();
+
+        // Return error if user not found
+        if (!$user) {
+            return ResponseHelper::error('User not found', 404);
+        }
+
+        // Find the OTP that matches the user ID and code, and is not used
+        $otp = Otp::where('user_id', $user->id)
+                ->where('code', $validatedData['otp'])
+                ->where('is_used', false)
+                ->first();
+
+        // Return error if OTP is invalid
+        if (!$otp) {
+            return ResponseHelper::error('Invalid OTP', 400);
+        }
+
+        // Begin database transaction
+        DB::beginTransaction();
+
+        try {
+            // Update the user's password
+            $user->password = Hash::make($validatedData['password']);
+            $user->save();
+
+            // Mark the OTP as used
+            $otp->is_used = true;
+            $otp->save();
+
+            // Commit the transaction
+            DB::commit();
+
+            return ResponseHelper::success([
+                'access_token' => auth('api')->login($user),
+                'token_type' => 'bearer',
+                'expires_in' => auth('api')->factory()->getTTL() * 60
+            ], 'Password reset successfully');
+
+        } catch (\Exception $e) {
+            // Rollback the transaction if an error occurs
+            DB::rollBack();
+            return ResponseHelper::error('Failed to reset password', 500);
+        }
+    }
+
 }

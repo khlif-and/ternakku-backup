@@ -23,6 +23,8 @@ Route::group([
         Route::post('verify', 'verify');
         Route::post('resend-otp', 'resendOtp');
         Route::post('login', 'login');
+        Route::post('forgot-password', 'forgotPassword');
+        Route::post('forgot-password/reset', 'resetPassword');
 
         Route::middleware(['auth:api', 'email.verified',])->group(function() {
             Route::get('me', 'me');
