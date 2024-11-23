@@ -51,6 +51,7 @@ class QurbanPartnerPriceSeeder extends Seeder
                     'previous_price_per_kg' => $prices[$index] - 4000,
                     'created_at' => $timestamp,
                     'updated_at' => $timestamp,
+                    'discount_percent' => 7,
                 ]);
                 $order++;
             }

@@ -23,6 +23,8 @@ class PartnerPriceResource extends JsonResource
             'end_weight' => $this->end_weight,
             'price_per_kg' => $this->price_per_kg,
             'previous_price_per_kg' => $this->previous_price_per_kg,
+            'discount_percent' => $this->discount_percent,
+            'price_per_kg_app' => $this->previous_price_per_kg - $this->discount_percent *  $this->previous_price_per_kg / 100,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
