@@ -17,6 +17,8 @@ class PartnerPriceResource extends JsonResource
         return [
             'id' => $this->id,
             'farm_id' => $this->farm_id,
+            'livestock_type_id' => $this->livestock_type_id,
+            'livestock_type' => $this->livestockType->name,
             'order' => $this->order,
             'name' => $this->name,
             'start_weight' => $this->start_weight,

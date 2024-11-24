@@ -43,6 +43,7 @@ class QurbanPartnerPriceSeeder extends Seeder
             foreach ($ranges as $index => $range) {
                 DB::table('qurban_partner_prices')->insert([
                     'farm_id' => $farm,
+                    'livestock_type_id' => 1,
                     'order' => $order,
                     'name' => 'paket' . $order,
                     'start_weight' => $range[0],

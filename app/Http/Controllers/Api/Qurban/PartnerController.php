@@ -83,7 +83,7 @@ class PartnerController extends Controller
         return ResponseHelper::success($data, 'Qurban partner pens retrieved successfully');
     }
 
-    public function getPrice($id)
+    public function getPrice(Request $request, $id)
     {
         // Find the Farm by ID
         $farm = Farm::qurban()->find($id);
@@ -93,8 +93,16 @@ class PartnerController extends Controller
             return ResponseHelper::error('Qurban partner not found', 404);
         }
 
-        // If farm found, return it using the PartnerResource
-        $data = PartnerPriceResource::collection($farm->qurbanPrices);
+        // Get the qurban prices query
+        $qurbanPricesQuery = $farm->qurbanPrices();
+
+        // Apply filter if livestock_type_id is provided
+        if ($request->has('livestock_type_id') && $request->livestock_type_id !== null) {
+            $qurbanPricesQuery->where('livestock_type_id', $request->livestock_type_id);
+        }
+
+        // Get the data and return it using the PartnerResource
+        $data = PartnerPriceResource::collection($qurbanPricesQuery->get());
 
         return ResponseHelper::success($data, 'Qurban partner prices retrieved successfully');
     }
@@ -113,7 +121,7 @@ class PartnerController extends Controller
         $weight = $request->input('weight');
 
         // Find the appropriate qurban price based on the weight
-        $qurbanPrice = $farm->qurbanPrices()->byWeight($weight)->first();
+        $qurbanPrice = $farm->qurbanPrices()->byWeight($weight)->where('livestock_type_id' , $request->livestock_type_id)->first();
 
         // If no qurban price is found, return error response
         if (!$qurbanPrice) {
