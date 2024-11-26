@@ -4,7 +4,7 @@ namespace App\Http\Requests\Farming;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FarmUserStoreRequest extends FormRequest
+class FarmUserRemoveRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,7 +23,6 @@ class FarmUserStoreRequest extends FormRequest
     {
         return [
             'user_id' => 'required|integer|exists:users,id',
-            'farm_role' => 'required|string|in:ABK,ADMIN'
         ];
     }
 }

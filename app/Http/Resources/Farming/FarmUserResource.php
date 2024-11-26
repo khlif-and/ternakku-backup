@@ -20,6 +20,7 @@ class FarmUserResource extends JsonResource
             'name' => $this->user->name,
             'email' => $this->user->email,
             'phone_number' => $this->user->phone_number,
+            'farm_role' => $this->farm_role
         ];
     }
 }

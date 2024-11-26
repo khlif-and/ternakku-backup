@@ -5,7 +5,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\RoleEnum;
-use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
@@ -95,10 +94,9 @@ class User extends Authenticatable implements JWTSubject
 
     public function isFarmer(): bool
     {
-        if($this->roles->where('id' , 2)->first()){
-            return true;
-        }
-        return false;
+        return $this->roles->whereIn('id', [
+            RoleEnum::FARMER->value,
+        ])->isNotEmpty();
     }
 
     public function profile()
