@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Farming;
+namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FarmUserStoreRequest extends FormRequest
+class ForgotPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,7 @@ class FarmUserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
-            'farm_role' => 'required|string|in:ABK,ADMIN'
+            'phone_number' => 'required|string|exists:users,phone_number',
         ];
     }
 }

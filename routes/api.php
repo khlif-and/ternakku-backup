@@ -23,6 +23,8 @@ Route::group([
         Route::post('verify', 'verify');
         Route::post('resend-otp', 'resendOtp');
         Route::post('login', 'login');
+        Route::post('forgot-password', 'forgotPassword');
+        Route::post('forgot-password/reset', 'resetPassword');
 
         Route::middleware(['auth:api', 'email.verified',])->group(function() {
             Route::get('me', 'me');
@@ -107,6 +109,8 @@ Route::group([
                     Route::post('/{farmId}/update', [App\Http\Controllers\Api\FarmController::class, 'update']);
                     Route::delete('/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'destroy']);
                     Route::get('/{farmId}/user-list', [App\Http\Controllers\Api\FarmController::class, 'userList']);
+                    Route::post('/{farmId}/find-user', [App\Http\Controllers\Api\FarmController::class, 'findUser']);
+                    Route::get('/{farmId}/list-user', [App\Http\Controllers\Api\FarmController::class, 'listUser']);
                     Route::post('/{farmId}/add-user', [App\Http\Controllers\Api\FarmController::class, 'addUser']);
                     Route::post('/{farmId}/remove-user', [App\Http\Controllers\Api\FarmController::class, 'removeUser']);
                 });

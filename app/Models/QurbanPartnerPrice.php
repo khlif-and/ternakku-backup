@@ -14,4 +14,9 @@ class QurbanPartnerPrice extends Model
         return $query->where('start_weight', '<=', $weight)
                      ->where('end_weight', '>=', $weight);
     }
+
+    public function livestockType()
+    {
+        return $this->belongsTo(LivestockType::class, 'livestock_type_id');
+    }
 }

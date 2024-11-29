@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Events\UserRegistered;
+use App\Events\ForgotPasswordEvent;
 use App\Listeners\SendOtpWAListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\SendOtpEmailListener;
+use App\Listeners\SendOtpForgotPasswordWAListener;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -25,6 +27,11 @@ class EventServiceProvider extends ServiceProvider
         UserRegistered::class => [
             // SendOtpEmailListener::class,
             SendOtpWAListener::class,
+        ],
+
+        ForgotPasswordEvent::class => [
+            // SendOtpEmailListener::class,
+            SendOtpForgotPasswordWAListener::class,
         ],
     ];
 
