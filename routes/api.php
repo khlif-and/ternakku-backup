@@ -30,6 +30,7 @@ Route::group([
             Route::get('me', 'me');
             Route::post('logout', 'logout');
             Route::post('update-profile', 'updateProfile');
+            Route::post('change-password', 'changePassword');
         });
     });
 

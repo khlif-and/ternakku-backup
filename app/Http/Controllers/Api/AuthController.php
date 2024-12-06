@@ -24,6 +24,7 @@ use App\Http\Requests\ResendOtpRequest;
 use App\Http\Requests\VerifyOtpRequest;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ForgotPasswordRequest;
 
 class AuthController extends Controller
@@ -409,4 +410,36 @@ class AuthController extends Controller
         }
     }
 
+    public function changePassword(ChangePasswordRequest $request)
+    {
+        // Validate the request input
+        $validatedData = $request->validated();
+
+        // Get the currently authenticated user
+        $user = auth()->user();
+
+        // Check if the current password matches
+        if (!Hash::check($validatedData['current_password'], $user->password)) {
+            return ResponseHelper::error('Current password is incorrect', 400);
+        }
+
+        // Begin database transaction
+        DB::beginTransaction();
+
+        try {
+            // Update the user's password
+            $user->password = Hash::make($validatedData['new_password']);
+            $user->save();
+
+            // Commit the transaction
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Password changed successfully', 200);
+
+        } catch (\Exception $e) {
+            // Rollback the transaction if an error occurs
+            DB::rollBack();
+            return ResponseHelper::error('Failed to change password', 500);
+        }
+    }
 }
