@@ -66,6 +66,12 @@ class LivestockSaleWeightController extends Controller
             });
         }
 
+        if ($request->filled('customer')) {
+            $saleWeights->whereHas('livestockSaleWeightH', function ($query) use ($request) {
+                $query->where('customer', 'like', '%' . $request->input('customer') . '%');
+            });
+        }
+
         $data = LivestockSaleWeightResource::collection($saleWeights->get());
 
         $message = $saleWeights->count() > 0 ? 'Livestock Sale Weights retrieved successfully' : 'No Livestock Sale Weights found';

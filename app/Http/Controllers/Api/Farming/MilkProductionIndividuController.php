@@ -65,6 +65,10 @@ class MilkProductionIndividuController extends Controller
             });
         }
 
+        if ($request->filled('livestock_id')) {
+            $milkProductionIndividu->where('livestock_id', $request->input('livestock_id'));
+        }
+
         $data = MilkProductionIndividuResource::collection($milkProductionIndividu->get());
 
         $message = $milkProductionIndividu->count() > 0 ? 'Data retrieved successfully' : 'No Data found';
