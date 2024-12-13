@@ -9,7 +9,6 @@ use App\Services\WhatsAppService;
 use App\Models\InseminationNatural;
 use App\Models\InseminationArtificial;
 use App\Models\TreatmentScheduleIndividu;
-use App\Http\Resources\Farming\PregnantCheckResource;
 
 class SendWhatsAppReminder extends Command
 {
