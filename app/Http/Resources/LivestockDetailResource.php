@@ -45,22 +45,40 @@ class LivestockDetailResource extends JsonResource
             'characteristic' => $this->characteristic,
             'reception_price' => (float) $this->livestockReceptionD->price_per_head,
             'expenses' => LivestockExpenseResource::collection($this->expenses),
+            // 'pedigree' => [
+            //     'mother' => [
+            //         'eartag' => $this->parentRelation?->parent?->eartag_number,
+            //         'breed' =>  $this->parentRelation?->parent?->livestockBreed?->name,
+            //         'mother' => [
+            //             'eartag' =>  $this->parentRelation?->parent?->parentRelation?->parent?->eartag_number,
+            //             'breed' =>   $this->parentRelation?->parent?->parentRelation?->parent?->livestockBreed?->name,
+            //         ],
+            //         'father' => [
+            //             'name' => $this->parentRelation?->parent?->parentRelation?->sire_name,
+            //             'breed' =>  $this->parentRelation?->parent?->parentRelation?->sireBreed?->name,
+            //         ]
+            //     ],
+            //     'father' => [
+            //         'name' =>  $this->parentRelation?->sire_name,
+            //         'breed' => $this->parentRelation?->sireBreed?->name,
+            //     ]
+            // ]
             'pedigree' => [
                 'mother' => [
-                    'eartag' => $this->parentRelation?->parent?->eartag_number,
-                    'breed' =>  $this->parentRelation?->parent?->livestockBreed?->name,
+                    'eartag' => 'D12345',
+                    'breed' =>  'Brahman Angus',
                     'mother' => [
-                        'eartag' =>  $this->parentRelation?->parent?->parentRelation?->parent?->eartag_number,
-                        'breed' =>   $this->parentRelation?->parent?->parentRelation?->parent?->livestockBreed?->name,
+                        'eartag' => 'D12346',
+                        'breed' => 'Brahman Angus',
                     ],
                     'father' => [
-                        'name' => $this->parentRelation?->parent?->parentRelation?->sire_name,
-                        'breed' =>  $this->parentRelation?->parent?->parentRelation?->sireBreed?->name,
+                        'name' => 'Basoka',
+                        'breed' =>  'Brahman Angus',
                     ]
                 ],
                 'father' => [
-                    'name' =>  $this->parentRelation?->sire_name,
-                    'breed' => $this->parentRelation?->sireBreed?->name,
+                    'name' => 'Charlie',
+                    'breed' => 'Brahman',
                 ]
             ]
         ];
