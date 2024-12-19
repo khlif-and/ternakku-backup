@@ -69,7 +69,15 @@ class LivestockDetailResource extends JsonResource
                     'breed' =>  'Brahman Angus',
                     'mother' => [
                         'eartag' => 'D12346',
-                        'breed' => 'Brahman Angus',
+                        'breed' => 'Brahman',
+                        'mother' => [
+                            'eartag' => 'D12347',
+                            'breed' => 'Brahman Angus',
+                        ],
+                        'father' => [
+                            'name' => 'Ken Marcus',
+                            'breed' =>  'Brahman',
+                        ]
                     ],
                     'father' => [
                         'name' => 'Basoka',
