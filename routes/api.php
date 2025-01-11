@@ -74,14 +74,27 @@ Route::group([
         });
 
         Route::group([
-            'prefix' => 'driver/{farm_id}',
-            'controller' => App\Http\Controllers\Api\Qurban\DriverController::class,
             'middleware' => ['auth:api', 'email.verified', 'farmer', 'check.farm.access' , 'subs.basic_farming'],
         ], function () {
-            Route::get('/', 'index');
-            Route::post('/', 'store');
-            Route::get('{id}', 'show');
-            Route::post('{id}', 'update');
+            Route::group([
+                'prefix' => 'driver/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\DriverController::class,
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+            });
+
+            Route::group([
+                'prefix' => 'fleet/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\FleetController::class,
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+            });
         });
     });
 
