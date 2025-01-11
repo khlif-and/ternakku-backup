@@ -79,7 +79,9 @@ Route::group([
             'middleware' => ['auth:api', 'email.verified', 'farmer', 'check.farm.access' , 'subs.basic_farming'],
         ], function () {
             Route::get('/', 'index');
-            Route::post('', 'store');
+            Route::post('/', 'store');
+            Route::get('{id}', 'show');
+            Route::post('{id}', 'update');
         });
     });
 

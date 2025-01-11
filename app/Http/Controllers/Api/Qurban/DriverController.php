@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Qurban\DriverResource;
 use App\Http\Requests\Qurban\DriverStoreRequest;
+use App\Http\Requests\Qurban\DriverUpdateRequest;
 
 class DriverController extends Controller
 {
@@ -50,6 +51,62 @@ class DriverController extends Controller
             DB::rollBack();
 
             return ResponseHelper::error('Failed to create driver: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function show($id)
+    {
+        $driver = QurbanDriver::findOrFail($id);
+
+        return ResponseHelper::success(new DriverResource($driver), 'Driver found', 200);
+    }
+
+    public function index()
+    {
+        $drivers = QurbanDriver::all();
+
+        return ResponseHelper::success(DriverResource::collection($drivers), 'Drivers found', 200);
+    }
+
+    public function update(DriverUpdateRequest $request, $farm_id, $id)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+            $driver = QurbanDriver::findOrFail($id);
+
+            $photo = $driver->photo;
+
+            // Handle logo upload if present
+            if (isset($validated['photo']) && $request->hasFile('photo')) {
+                $file = $validated['photo'];
+                $fileName = time() . '-photo-' . $file->getClientOriginalName();
+                $filePath = 'drivers/photos/';
+                $photo = uploadNeoObject($file, $fileName, $filePath);
+            }
+
+            // Simpan data ke tabel drivers
+            $driver->update([
+                'name'              => $validated['name'],
+                'region_id'    => $validated['region_id'],
+                'postal_code'  => $validated['postal_code'] ?? '',
+                'address_line' => $validated['address_line'],
+                'longitude'    => $validated['longitude'],
+                'latitude'    => $validated['latitude'],
+                'photo'            => $photo,
+            ]);
+
+            // Commit transaksi
+            DB::commit();
+
+            return ResponseHelper::success(new DriverResource($driver), 'Driver updated successfully', 200);
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to update driver: ' . $e->getMessage(), 500);
         }
     }
 }

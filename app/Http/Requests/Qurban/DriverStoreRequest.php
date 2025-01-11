@@ -29,7 +29,7 @@ class DriverStoreRequest extends FormRequest
             'longitude'         => 'nullable|numeric|between:-180,180',
             'latitude'          => 'nullable|numeric|between:-90,90',
             'capacity'          => 'nullable|integer|min:1',
-            'photo'              => 'required|image|mimes:jpg,jpeg,png,gif',
+            'photo'              => 'nullable|image|mimes:jpg,jpeg,png,gif',
         ];
     }
 }
