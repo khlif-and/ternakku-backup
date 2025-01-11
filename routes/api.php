@@ -72,6 +72,15 @@ Route::group([
                 Route::get('/{id}', 'detail');
             });
         });
+
+        Route::group([
+            'prefix' => 'driver/{farm_id}',
+            'controller' => App\Http\Controllers\Api\Qurban\DriverController::class,
+            'middleware' => ['auth:api', 'email.verified', 'farmer', 'check.farm.access' , 'subs.basic_farming'],
+        ], function () {
+            Route::get('/', 'index');
+            Route::post('', 'store');
+        });
     });
 
     Route::group(['prefix' => 'data-master', 'controller' => App\Http\Controllers\Api\DataMasterController::class], function () {
