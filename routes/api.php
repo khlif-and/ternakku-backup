@@ -95,6 +95,16 @@ Route::group([
                 Route::get('{id}', 'show');
                 Route::post('{id}', 'update');
             });
+
+            Route::group([
+                'prefix' => 'customer/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\CustomerController::class,
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+            });
         });
     });
 
