@@ -104,6 +104,15 @@ Route::group([
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
                 Route::post('{id}', 'update');
+
+                Route::group([
+                    'prefix' => '{customer_id}/address',
+                ], function(){
+                    Route::get('/', 'addressIndex');
+                    Route::post('/', 'addressStore');
+                    Route::get('{id}', 'addressShow');
+                    Route::post('{id}', 'addressUpdate');
+                });
             });
         });
     });
