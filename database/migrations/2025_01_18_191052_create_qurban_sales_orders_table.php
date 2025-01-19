@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('order_date');
             $table->foreign('qurban_customer_id')->references('id')->on('qurban_customers')->onDelete('cascade');
             $table->foreign('livestock_id')->references('id')->on('livestocks')->onDelete('cascade');
+            $table->unique(['qurban_customer_id', 'livestock_id']);
             $table->timestamps();
         });
     }
