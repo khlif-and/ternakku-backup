@@ -114,6 +114,17 @@ Route::group([
                     Route::post('{id}', 'addressUpdate');
                 });
             });
+
+            Route::group([
+                'prefix' => 'sales-order/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\SalesOrderController::class,
+            ], function(){
+                Route::get('/available-livestock', 'availableLivestock');
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}/detail', 'show');
+                Route::post('{id}/update', 'update');
+            });
         });
     });
 

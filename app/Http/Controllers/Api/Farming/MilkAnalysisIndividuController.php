@@ -115,7 +115,6 @@ class MilkAnalysisIndividuController extends Controller
             return ResponseHelper::success(new MilkAnalysisIndividuResource($milkAnalysisIndividuD), 'Data created successfully', 200);
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
 
             // Handle exceptions and return an error response
@@ -180,7 +179,6 @@ class MilkAnalysisIndividuController extends Controller
             return ResponseHelper::success(new MilkAnalysisIndividuResource($milkAnalysisIndividuD), 'Data updated successfully', 200);
 
         } catch (\Exception $e) {
-            dd($e);
             DB::rollBack();
 
             // Handle exceptions and return an error response

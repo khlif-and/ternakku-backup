@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Farming;
+namespace App\Http\Requests\Qurban;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FarmUserStoreRequest extends FormRequest
+class SalesOrderUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,9 @@ class FarmUserStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer|exists:users,id',
-            'farm_role' => 'required|string|in:ABK,ADMIN,DRIVER'
+            'order_date'              => 'required|date',
+            'livestock_id'         => 'required|integer|exists:livestocks,id',
+            'customer_id'         => 'required|integer|exists:qurban_customers,id',
         ];
     }
 }
