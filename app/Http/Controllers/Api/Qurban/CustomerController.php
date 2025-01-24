@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\QurbanCustomerAddress;
 use App\Http\Resources\Qurban\CustomerResource;
-use App\Http\Requests\Qurban\customerStoreRequest;
+use App\Http\Requests\Qurban\CustomerStoreRequest;
 use App\Http\Requests\Qurban\CustomerUpdateRequest;
 use App\Http\Resources\Qurban\CustomerAddressResource;
 use App\Http\Requests\Qurban\CustomerAddressStoreRequest;
