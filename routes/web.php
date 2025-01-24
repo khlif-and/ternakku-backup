@@ -24,3 +24,7 @@ Route::group([
     // Route::post('resend-otp', 'resendOtp');
 });
 
+
+Route::get('test' , function(){
+    return view('layouts.admin.index');
+});
