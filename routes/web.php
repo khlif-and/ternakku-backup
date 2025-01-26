@@ -18,13 +18,22 @@ Route::group([
     'controller' => App\Http\Controllers\Admin\AuthController::class
 ], function () {
     Route::get('login', 'showLoginForm');
-    Route::post('login', 'login');
-    Route::get('register', 'showRegisterForm');
-    // Route::post('verify', 'verify');
-    // Route::post('resend-otp', 'resendOtp');
+    Route::post('login', 'login')->name('login');
+    Route::post('/logout', 'logout')->name('logout');
+    // Route::get('register', 'showRegisterForm');
 });
 
 
-Route::get('test' , function(){
-    return view('layouts.admin.index');
+Route::middleware(['auth', 'email.verified'])->group(function() {
+    Route::get('dashboard' , function(){
+        return view('menu.index');
+    });
+
+    Route::group([
+        'prefix' => 'qurban',
+        'controller' => App\Http\Controllers\Admin\Qurban\DashboardController::class
+    ], function () {
+        Route::get('dashboard', 'dashboard');
+        // Route::get('register', 'showRegisterForm');
+    });
 });
