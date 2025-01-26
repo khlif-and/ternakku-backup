@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [HomeController::class, 'index']);
+
 Route::group([
     'prefix' => 'auth',
     'controller' => App\Http\Controllers\Admin\AuthController::class
@@ -20,7 +23,6 @@ Route::group([
     Route::get('login', 'showLoginForm');
     Route::post('login', 'login')->name('login');
     Route::post('/logout', 'logout')->name('logout');
-    // Route::get('register', 'showRegisterForm');
 });
 
 
@@ -34,6 +36,5 @@ Route::middleware(['auth', 'email.verified'])->group(function() {
         'controller' => App\Http\Controllers\Admin\Qurban\DashboardController::class
     ], function () {
         Route::get('dashboard', 'dashboard');
-        // Route::get('register', 'showRegisterForm');
     });
 });
