@@ -33,8 +33,14 @@ Route::middleware(['auth', 'email.verified'])->group(function() {
 
     Route::group([
         'prefix' => 'qurban',
-        'controller' => App\Http\Controllers\Admin\Qurban\DashboardController::class
     ], function () {
-        Route::get('dashboard', 'dashboard');
+        Route::get('dashboard', [App\Http\Controllers\Admin\Qurban\DashboardController::class , 'dashboard']);
+
+        Route::group([
+            'prefix' => 'customer',
+            'controller' => App\Http\Controllers\Admin\Qurban\CustomerController::class
+        ], function () {
+            Route::get('/', 'index');
+        });
     });
 });
