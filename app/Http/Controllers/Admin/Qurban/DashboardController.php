@@ -8,6 +8,6 @@ class DashboardController extends Controller
 {
     public function dashboard()
     {
-        return view('layouts.admin.index');
+        return view('layouts.qurban.index');
     }
 }
