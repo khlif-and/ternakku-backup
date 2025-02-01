@@ -641,6 +641,9 @@
             @include('layouts.qurban.footer')
 		</div>
 	</div>
+
+    @include('layouts.admin.logout_modal')
+
     <!--   Core JS Files   -->
 	<script src="{{ asset('admin/js/core/jquery-3.7.1.min.js') }}"></script>
 	<script src="{{ asset('admin/js/core/popper.min.js') }}"></script>
