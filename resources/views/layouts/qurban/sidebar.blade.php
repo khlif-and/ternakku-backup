@@ -49,7 +49,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="components/gridsystem.html">
+                                <a href="{{ url('qurban/fleet') }}">
                                     <span class="sub-item">Data Armada</span>
                                 </a>
                             </li>

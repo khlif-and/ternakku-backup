@@ -42,5 +42,12 @@ Route::middleware(['auth', 'email.verified'])->group(function() {
         ], function () {
             Route::get('/', 'index');
         });
+
+        Route::group([
+            'prefix' => 'fleet',
+            'controller' => App\Http\Controllers\Admin\Qurban\FleetController::class
+        ], function () {
+            Route::get('/', 'index');
+        });
     });
 });
