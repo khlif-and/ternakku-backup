@@ -17,7 +17,10 @@ class CustomerController extends Controller
 
     public function index()
     {
-        $customers = $this->customerService->getCustomers();
+        //TODO : Get farm id from session
+        $farmId = 1;
+
+        $customers = $this->customerService->getCustomers($farmId);
 
         return view('admin.qurban.customer.index' , compact('customers'));
     }

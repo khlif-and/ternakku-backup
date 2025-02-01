@@ -3,7 +3,7 @@
 @section('content')
 <div class="page-inner">
     <div class="page-header">
-        <h3 class="fw-bold mb-3">DataTables.Net</h3>
+        <h3 class="fw-bold mb-3">Data Pengguna</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home">
                 <a href="#">
@@ -14,13 +14,13 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Tables</a>
+                <a href="#">Data Awal</a>
             </li>
             <li class="separator">
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Datatables</a>
+                <a href="#">Data Pengguna</a>
             </li>
         </ul>
     </div>
@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Customer</h4>
+                        <h4 class="card-title">Data Pengguna</h4>
                         <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
                             <i class="fa fa-plus"></i>
                             Tambah Data

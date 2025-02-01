@@ -60,7 +60,7 @@ class CustomerController extends Controller
 
     public function index($farm_id)
     {
-        $customers = $this->customerService->getCustomers();
+        $customers = $this->customerService->getCustomers($farm_id);
 
         return ResponseHelper::success(CustomerResource::collection($customers), 'customers found', 200);
     }

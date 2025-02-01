@@ -6,9 +6,9 @@ use App\Models\QurbanCustomer;
 
 class CustomerService
 {
-    public function getCustomers()
+    public function getCustomers($farmId)
     {
-        $customers = QurbanCustomer::all();
+        $customers = QurbanCustomer::where('farm_id', $farmId)->get();
 
         return $customers;
     }
