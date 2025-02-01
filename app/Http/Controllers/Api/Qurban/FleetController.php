@@ -102,4 +102,25 @@ class FleetController extends Controller
             return ResponseHelper::error('Failed to update Fleet: ' . $e->getMessage(), 500);
         }
     }
+
+    public function destroy($farm_id, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $fleet = QurbanFleet::findOrFail($id);
+
+            $fleet->delete();
+
+            // Commit transaksi
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Fleet deleted successfully', 200);
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to delete Fleet: ' . $e->getMessage(), 500);
+        }
+    }
 }

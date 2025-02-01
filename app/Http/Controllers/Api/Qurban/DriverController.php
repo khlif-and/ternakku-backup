@@ -109,4 +109,13 @@ class DriverController extends Controller
             return ResponseHelper::error('Failed to update driver: ' . $e->getMessage(), 500);
         }
     }
+
+    public function destroy($farm_id, $id)
+    {
+        $driver = QurbanDriver::findOrFail($id);
+
+        $driver->delete();
+
+        return ResponseHelper::success(null, 'Driver deleted successfully', 200);
+    }
 }

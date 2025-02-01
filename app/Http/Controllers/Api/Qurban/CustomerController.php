@@ -84,6 +84,32 @@ class CustomerController extends Controller
         }
     }
 
+    public function destroy($farm_id, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $customer = QurbanCustomer::findOrFail($id);
+
+            $addresses = QurbanCustomerAddress::where('qurban_customer_id', $id)->get();
+            foreach ($addresses as $address) {
+                $address->delete();
+            }
+
+            $customer->delete();
+
+            // Commit transaksi
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Customer deleted successfully', 200);
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to delete Customer: ' . $e->getMessage(), 500);
+        }
+    }
+
     public function addressStore(CustomerAddressStoreRequest $request, $farm_id, $customer_id)
     {
         $validated = $request->validated();
@@ -123,7 +149,7 @@ class CustomerController extends Controller
 
     public function addressIndex($farm_id, $customer_id)
     {
-        $customers = QurbanCustomerAddress::all();
+        $customers = QurbanCustomerAddress::where('qurban_customer_id', $customer_id)->get();
 
         return ResponseHelper::success(CustomerAddressResource::collection($customers), 'addresses found', 200);
     }
@@ -156,6 +182,27 @@ class CustomerController extends Controller
             DB::rollBack();
 
             return ResponseHelper::error('Failed to update address: ' . $e->getMessage(), 500);
+        }
+    }
+
+    public function addressDestroy($farm_id, $customer_id, $id)
+    {
+        DB::beginTransaction();
+
+        try {
+            $address = QurbanCustomerAddress::findOrFail($id);
+
+            $address->delete();
+
+            // Commit transaksi
+            DB::commit();
+
+            return ResponseHelper::success(null, 'Address deleted successfully', 200);
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to delete address: ' . $e->getMessage(), 500);
         }
     }
 

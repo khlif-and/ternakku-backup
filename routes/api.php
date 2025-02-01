@@ -84,6 +84,7 @@ Route::group([
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
                 Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
             });
 
             Route::group([
@@ -94,6 +95,7 @@ Route::group([
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
                 Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
             });
 
             Route::group([
@@ -104,6 +106,7 @@ Route::group([
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
                 Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
 
                 Route::group([
                     'prefix' => '{customer_id}/address',
@@ -112,6 +115,7 @@ Route::group([
                     Route::post('/', 'addressStore');
                     Route::get('{id}', 'addressShow');
                     Route::post('{id}', 'addressUpdate');
+                    Route::delete('{id}', 'addressDestroy');
                 });
             });
 
