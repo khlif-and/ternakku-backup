@@ -8,7 +8,7 @@
                 kita bakalan ingetin kamu untuk jadwal threatment
                 semua ternak kamu, Dengan ternakKu saatnya peternak
                 rakyat Go digital!!</p>
-            <a href="#" class="btn custom-btn">Jelajahi Sekarang</a>
+            <a href="#" class="btn btn-custom">Jelajahi Sekarang</a>
         </div>
 
         <!-- Bagian gambar -->

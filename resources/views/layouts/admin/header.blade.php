@@ -3,7 +3,7 @@
     <div class="logo-header" data-background-color="dark">
 
         <a href="index.html" class="logo">
-            <img src="{{ asset('admin/img/kaiadmin/logo_light.svg') }}" alt="navbar brand" class="navbar-brand" height="20">
+            <img src="{{ asset('admin/img/kaiadmin/logo_li.svg') }}" alt="navbar brand" class="navbar-brand" height="20">
         </a>
         <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -21,7 +21,7 @@
     <!-- End Logo Header -->
 </div>
 <!-- Navbar Header -->
-<nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom" data-background-color="dark">
+<nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
 
     <div class="container-fluid">
 

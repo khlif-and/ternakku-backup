@@ -79,7 +79,7 @@
 
                 <!-- Tombol Submit -->
                 <div class="form-action mb-3">
-                    <button type="submit" class="btn btn-primary w-100 btn-login">Sign In</button>
+                    <button type="submit" class="btn w-100 btn-login" style="background-color: #6CC3A0">Log In</button>
                 </div>
             </form>
 

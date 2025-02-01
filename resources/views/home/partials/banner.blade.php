@@ -5,7 +5,7 @@
             <small class="text-muted">Ternakku</small>
             <h1 class="display-4 fw-bold">Ternakku : <br>Platform Digital <br>Peternakan Rakyat</h1>
             <p class="lead text-success">Bangun dan kembangkan usaha peternakan lebih efisien <br>bersama TernakKu</p>
-            <a href="#" class="btn custom-btn">Mulai Sekarang</a>
+            <a href="#" class="btn btn-custom">Mulai Sekarang</a>
         </div>
 
         <!-- Bagian gambar -->

@@ -29,7 +29,7 @@
                 </li>
             </ul>
             <div class="d-flex align-items-center">
-                <a href="" class="btn-custom ms-2 cursor-pointer">Daftar TernakKu</a>
+                <a href="{{ url('auth/login') }}" class="btn-custom ms-2 cursor-pointer">Login</a>
             </div>
         </div>
     </div>

@@ -10,7 +10,7 @@
             <small class="text-muted">Ternakku Untuk Indonesia Hebat</small>
             <h1 class="display-4 fw-bold">Mulai Lacak Setiap Ternak Dengan Kemudahan Dari TernakKu</h1>
             <p class="lead text-success">Dengan kemudahan teknologi yang kami hadirkan, setiap peternak bisa dengan mudah melacak, mengontrol, bahkan merawat ternak sapi dengan mudah. Kami ingin setiap peternak memiliki kemudahan akses yang cepat, inovatif, dan membantu.</p>
-            <a href="#" class="btn custom-btn">Mulai Sekarang, Yuk</a>
+            <a href="#" class="btn btn-custom">Mulai Sekarang, Yuk</a>
         </div>
     </div>
     <!-- Garis setelah seluruh konten -->
@@ -21,7 +21,7 @@
 <style>
 /* Pengaturan gambar */
 .banner-image {
-    max-width: 150%;  
+    max-width: 150%;
     height: auto;
     object-fit: cover;
     transform: scale(1.2); /* Ukuran gambar sedikit lebih kecil */
@@ -109,7 +109,7 @@
 /* Responsif untuk layar monitor yang lebih besar */
 @media (min-width: 1600px) {
     .banner-image {
-        max-width: 200%;  
+        max-width: 200%;
         transform: scale(1.5);
     }
 

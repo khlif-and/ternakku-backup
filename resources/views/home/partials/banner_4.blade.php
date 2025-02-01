@@ -4,7 +4,7 @@
         <div class="col-md-6 text-sections" style="padding-top: 0; margin-top: 0;">
             <h1 class="display-4 fw-bold" style="margin-top: 0;">Mulai Perjalanan BeternakMu</h1>
             <p class="lead text-success">Jadilah peternak hebat dan inovatif</p>
-            <a href="#" class="btn custom-btn">Daftar sekarang</a>
+            <a href="#" class="btn btn-custom">Daftar sekarang</a>
         </div>
 
         <!-- Bagian gambar -->
