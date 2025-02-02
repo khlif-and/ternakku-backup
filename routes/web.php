@@ -31,6 +31,9 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
         return view('menu.index');
     });
 
+    Route::get('select-farm' , [App\Http\Controllers\Admin\FarmController::class , 'selectFarm']);
+    Route::post('select-farm' , [App\Http\Controllers\Admin\FarmController::class , 'selectFarmStore']);
+
     Route::group([
         'prefix' => 'qurban',
     ], function () {

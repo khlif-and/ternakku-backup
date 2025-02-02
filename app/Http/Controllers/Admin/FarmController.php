@@ -15,6 +15,20 @@ class FarmController extends Controller
         $this->farmService = $farmService;
     }
 
+    public function selectFarm()
+    {
+        $farms = $this->farmService->getFarmList();
+
+        return view('admin.farm.select_farm', compact('farms'));
+    }
+
+    public function selectFarmStore(Request $request)
+    {
+        session(['selected_farm' => $request->farm_id]);
+
+        return redirect($request->redirect_url);
+    }
+
     public function userList()
     {
         //TODO : Get farm id from session
