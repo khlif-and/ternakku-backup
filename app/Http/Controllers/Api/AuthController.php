@@ -139,9 +139,10 @@ class AuthController extends Controller
         $validatedData = $request->validated();
 
         // Find the user based on the email
-        $user = User::where('email', $validatedData['email'])
-                    ->whereNull('email_verified_at')
-                    ->first();
+        $user = User::where(function ($query) use ($credentials) {
+                $query->where('email', $credentials['username'])
+                    ->orWhere('phone_number', $credentials['username']);
+            })->first();
 
         // Return error if user not found or already verified
         if (!$user) {
