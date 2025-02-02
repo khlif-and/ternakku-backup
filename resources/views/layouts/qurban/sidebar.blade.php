@@ -39,7 +39,7 @@
                     <div class="collapse" id="base">
                         <ul class="nav nav-collapse">
                             <li>
-                                <a href="components/avatars.html">
+                                <a href="{{ url('qurban/farm/user-list') }}">
                                     <span class="sub-item">Data Pengguna</span>
                                 </a>
                             </li>

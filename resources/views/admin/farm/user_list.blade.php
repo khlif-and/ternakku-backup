@@ -3,7 +3,7 @@
 @section('content')
 <div class="page-inner">
     <div class="page-header">
-        <h3 class="fw-bold mb-3">Data Pelanggan</h3>
+        <h3 class="fw-bold mb-3">Data Pengguna</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home">
                 <a href="#">
@@ -20,7 +20,7 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Data Pelanggan</a>
+                <a href="#">Data Pengguna</a>
             </li>
         </ul>
     </div>
@@ -29,7 +29,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Data Pelanggan</h4>
+                        <h4 class="card-title">Data Pengguna</h4>
                         <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
                             <i class="fa fa-plus"></i>
                             Tambah Data
@@ -42,16 +42,20 @@
                             <thead>
                                 <tr>
                                     <th>Nama</th>
+                                    <th>Email</th>
                                     <th>No HP</th>
+                                    <th>Role</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($customers as $customer)
+                                @foreach($users as $user)
                                 <tr>
-                                    <td>{{ $customer->name }}</td>
-                                    <td>{{ $customer->phone_number }}</td>
+                                    <td>{{ $user->user->name }}</td>
+                                    <td>{{ $user->user->email }}</td>
+                                    <td>{{ $user->user->phone_number }}</td>
+                                    <td>{{ $user->farm_role }}</td>
                                     <td></td>
                                 </tr>
                                 @endforeach

@@ -44,8 +44,6 @@ class AuthService
             DB::commit();
 
             return $user;
-            // Return success response
-            return ResponseHelper::success($user, 'User registered successfully', 200);
 
         } catch (\Exception $e) {
 
