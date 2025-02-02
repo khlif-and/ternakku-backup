@@ -66,7 +66,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3">
+						<div class="col-sm-6 col-md-2">
 							<div class="card card-stats card-round">
 								<div class="card-body">
 									<div class="row align-items-center">
@@ -84,7 +84,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-sm-6 col-md-3">
+						<div class="col-sm-6 col-md-2">
 							<div class="card card-stats card-round">
 								<div class="card-body">
 									<div class="row align-items-center">
@@ -95,7 +95,25 @@
 										</div>
 										<div class="col col-stats ms-3 ms-sm-0">
 											<div class="numbers">
-												<p class="card-category">Sales</p>
+												<p class="card-category">Gerai Ternak</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+                        <div class="col-sm-6 col-md-2">
+							<div class="card card-stats card-round">
+								<div class="card-body">
+									<div class="row align-items-center">
+										<div class="col-icon">
+											<div class="icon-big text-center icon-success bubble-shadow-small">
+												<i class="fas fa-luggage-cart"></i>
+											</div>
+										</div>
+										<div class="col col-stats ms-3 ms-sm-0">
+											<div class="numbers">
+												<p class="card-category">Usaha Ternak</p>
 											</div>
 										</div>
 									</div>
@@ -114,7 +132,7 @@
                                             </div>
                                             <div class="col col-stats ms-3 ms-sm-0">
                                                 <div class="numbers">
-                                                    <p class="card-category">Kurban</p>
+                                                    <p class="card-category">Ternak Kurban</p>
                                                 </div>
                                             </div>
                                         </div>

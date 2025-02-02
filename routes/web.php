@@ -49,5 +49,12 @@ Route::middleware(['auth', 'email.verified'])->group(function() {
         ], function () {
             Route::get('/', 'index');
         });
+
+        Route::group([
+            'prefix' => 'driver',
+            'controller' => App\Http\Controllers\Admin\Qurban\DriverController::class
+        ], function () {
+            Route::get('/', 'index');
+        });
     });
 });

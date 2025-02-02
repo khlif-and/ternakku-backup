@@ -54,7 +54,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="components/panels.html">
+                                <a href="{{ url('qurban/driver') }}">
                                     <span class="sub-item">Data Pengemudi</span>
                                 </a>
                             </li>

@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Services\Qurban\DriverService;
 use App\Http\Resources\Qurban\DriverResource;
 use App\Http\Requests\Qurban\DriverStoreRequest;
 use App\Http\Requests\Qurban\DriverUpdateRequest;
 
 class DriverController extends Controller
 {
+    private $driverService;
+
+    public function __construct(DriverService $driverService)
+    {
+        $this->driverService = $driverService;
+    }
+
     public function store(DriverStoreRequest $request, $farm_id)
     {
         $validated = $request->validated();
@@ -54,16 +62,16 @@ class DriverController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($farmId, $id)
     {
         $driver = QurbanDriver::findOrFail($id);
 
         return ResponseHelper::success(new DriverResource($driver), 'Driver found', 200);
     }
 
-    public function index()
+    public function index($farmId)
     {
-        $drivers = QurbanDriver::all();
+        $drivers = $this->driverService->getDrivers($farmId);
 
         return ResponseHelper::success(DriverResource::collection($drivers), 'Drivers found', 200);
     }
