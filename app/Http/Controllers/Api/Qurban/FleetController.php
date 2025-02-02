@@ -10,9 +10,17 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Qurban\FleetResource;
 use App\Http\Requests\Qurban\FleetStoreRequest;
 use App\Http\Requests\Qurban\FleetUpdateRequest;
+use App\Services\Qurban\FleetService;
 
 class FleetController extends Controller
 {
+    private $fleetService;
+
+    public function __construct(FleetService $fleetService)
+    {
+        $this->fleetService = $fleetService;
+    }
+
     public function store(FleetStoreRequest $request, $farm_id)
     {
         $validated = $request->validated();
@@ -58,9 +66,9 @@ class FleetController extends Controller
         return ResponseHelper::success(new FleetResource($fleet), 'Fleet found', 200);
     }
 
-    public function index()
+    public function index($farmId)
     {
-        $fleets = QurbanFleet::all();
+        $fleets = $this->fleetService->getFleets($farmId);
 
         return ResponseHelper::success(FleetResource::collection($fleets), 'Fleets found', 200);
     }

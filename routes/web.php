@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,14 +14,47 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', [HomeController::class, 'index']);
+
 Route::group([
     'prefix' => 'auth',
     'controller' => App\Http\Controllers\Admin\AuthController::class
 ], function () {
     Route::get('login', 'showLoginForm');
-    Route::post('login', 'login');
-    Route::get('register', 'showRegisterForm');
-    // Route::post('verify', 'verify');
-    // Route::post('resend-otp', 'resendOtp');
+    Route::post('login', 'login')->name('login');
+    Route::post('/logout', 'logout')->name('logout');
 });
 
+
+Route::middleware(['auth', 'email.verified'])->group(function() {
+    Route::get('dashboard' , function(){
+        return view('menu.index');
+    });
+
+    Route::group([
+        'prefix' => 'qurban',
+    ], function () {
+        Route::get('dashboard', [App\Http\Controllers\Admin\Qurban\DashboardController::class , 'dashboard']);
+
+        Route::group([
+            'prefix' => 'customer',
+            'controller' => App\Http\Controllers\Admin\Qurban\CustomerController::class
+        ], function () {
+            Route::get('/', 'index');
+        });
+
+        Route::group([
+            'prefix' => 'fleet',
+            'controller' => App\Http\Controllers\Admin\Qurban\FleetController::class
+        ], function () {
+            Route::get('/', 'index');
+        });
+
+        Route::group([
+            'prefix' => 'driver',
+            'controller' => App\Http\Controllers\Admin\Qurban\DriverController::class
+        ], function () {
+            Route::get('/', 'index');
+        });
+    });
+});

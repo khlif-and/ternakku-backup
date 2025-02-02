@@ -8,6 +8,7 @@ use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\QurbanCustomerAddress;
+use App\Services\Qurban\CustomerService;
 use App\Http\Resources\Qurban\CustomerResource;
 use App\Http\Requests\Qurban\CustomerStoreRequest;
 use App\Http\Requests\Qurban\CustomerUpdateRequest;
@@ -17,6 +18,13 @@ use App\Http\Requests\Qurban\CustomerAddressUpdateRequest;
 
 class CustomerController extends Controller
 {
+    private $customerService;
+
+    public function __construct(CustomerService $customerService)
+    {
+        $this->customerService = $customerService;
+    }
+
     public function store(CustomerStoreRequest $request, $farm_id)
     {
         $validated = $request->validated();
@@ -52,7 +60,7 @@ class CustomerController extends Controller
 
     public function index($farm_id)
     {
-        $customers = QurbanCustomer::all();
+        $customers = $this->customerService->getCustomers($farm_id);
 
         return ResponseHelper::success(CustomerResource::collection($customers), 'customers found', 200);
     }

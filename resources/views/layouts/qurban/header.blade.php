@@ -3,7 +3,7 @@
     <div class="logo-header" data-background-color="dark">
 
         <a href="index.html" class="logo">
-            <img src="{{ asset('admin/img/kaiadmin/logo_li.svg') }}" alt="navbar brand" class="navbar-brand" height="20">
+            <img src="{{ asset('admin/img/kaiadmin/logo_light.svg') }}" alt="navbar brand" class="navbar-brand" height="20">
         </a>
         <div class="nav-toggle">
             <button class="btn btn-toggle toggle-sidebar">
@@ -20,13 +20,12 @@
     </div>
     <!-- End Logo Header -->
 </div>
+
 <!-- Navbar Header -->
 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
 
     <div class="container-fluid">
-
         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-
             <li class="nav-item topbar-user dropdown hidden-caret">
                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                     <div class="avatar-sm">
@@ -42,21 +41,15 @@
                             <div class="user-box">
                                 <div class="avatar-lg"><img src="{{ asset('admin/img/profile.jpg') }}" alt="image profile" class="avatar-img rounded"></div>
                                 <div class="u-text">
-                                    <h4 class="text-white">{{ auth()->user()->name }}</h4>
-                                    <p class="text-white">{{ auth()->user()->email }}</p>
+                                    <h4>{{ auth()->user()->name }}</h4>
+                                    <p class="text-muted">{{ auth()->user()->email }}</p>
+                                    <!-- <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a> -->
                                 </div>
                             </div>
                         </li>
                         <li>
-                            <!-- <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">My Profile</a>
-                            <a class="dropdown-item" href="#">My Balance</a>
-                            <a class="dropdown-item" href="#">Inbox</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Account Setting</a>
-                            <div class="dropdown-divider"></div> -->
                             <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
-
                         </li>
                     </div>
                 </ul>
