@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('qurban_sales_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('qurban_customer_id');
-            $table->unsignedBigInteger('livestock_id');
             $table->date('order_date');
+            $table->float('total_weight');
+            $table->integer('qunatity');
+            $table->longText('description')->nullable();
             $table->foreign('qurban_customer_id')->references('id')->on('qurban_customers')->onDelete('cascade');
-            $table->foreign('livestock_id')->references('id')->on('livestocks')->onDelete('cascade');
-            $table->unique(['qurban_customer_id', 'livestock_id']);
             $table->timestamps();
         });
     }

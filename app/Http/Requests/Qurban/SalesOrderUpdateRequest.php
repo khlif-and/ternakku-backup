@@ -22,9 +22,11 @@ class SalesOrderUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_date'              => 'required|date',
-            'livestock_id'         => 'required|integer|exists:livestocks,id',
-            'customer_id'         => 'required|integer|exists:qurban_customers,id',
+            'order_date'            => 'required|date',
+            'total_weight'          => 'required|float',
+            'quantity'              => 'required|integer',
+            'description'              => 'nullable|string',
+            'customer_id'           => 'required|integer|exists:qurban_customers,id',
         ];
     }
 }

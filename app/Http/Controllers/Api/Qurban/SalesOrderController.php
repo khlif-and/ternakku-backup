@@ -47,8 +47,10 @@ class SalesOrderController extends Controller
             // Simpan data ke tabel SalesOrders
             $salesOrder = QurbanSalesOrder::create([
                 'qurban_customer_id'          => $validated['customer_id'],
-                'livestock_id'         => $validated['livestock_id'],
                 'order_date'           => $validated['order_date'],
+                'quantity'           => $validated['quantity'],
+                'total_weight'           => $validated['total_weight'],
+                'description'           => $validated['description'],
             ]);
 
             // Commit transaksi
@@ -89,8 +91,10 @@ class SalesOrderController extends Controller
             // Simpan data ke tabel SalesOrders
             $salesOrder->update([
                 'qurban_customer_id'          => $validated['customer_id'],
-                'livestock_id'         => $validated['livestock_id'],
                 'order_date'           => $validated['order_date'],
+                'quantity'           => $validated['quantity'],
+                'total_weight'           => $validated['total_weight'],
+                'description'           => $validated['description'],
             ]);
 
             // Commit transaksi

@@ -15,9 +15,4 @@ class QurbanSalesOrder extends Model
     {
         return $this->belongsTo(QurbanCustomer::class);
     }
-
-    public function livestock()
-    {
-        return $this->belongsTo(Livestock::class);
-    }
 }
