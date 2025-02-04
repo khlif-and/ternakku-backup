@@ -7,6 +7,17 @@ use App\Models\FarmUser;
 
 class FarmService
 {
+
+    public function getFarmList()
+    {
+        $user = auth()->user();
+
+        // Ambil data farm milik user dan relasi farm-nya
+        $farms = FarmUser::with('farm')->where('user_id', $user->id)->get();
+
+        return $farms;
+    }
+
     public function getUsers($farmId)
     {
         $farm = Farm::findOrFail($farmId);

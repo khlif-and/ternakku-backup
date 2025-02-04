@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Enums\RoleEnum;
 use App\Models\FarmUser;
 use App\Models\FarmDetail;
+use App\Services\FarmService;
 use App\Helpers\ResponseHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -23,14 +24,17 @@ use App\Http\Requests\Farming\FarmUserRemoveRequest;
 
 class FarmController extends Controller
 {
+    private $farmService;
+
+    public function __construct(FarmService $farmService)
+    {
+        $this->farmService = $farmService;
+    }
+
     public function index()
     {
-        $user = auth()->user();
+        $farms = $this->farmService->getFarmList();
 
-        // Ambil data farm milik user dan relasi farm-nya
-        $farms = FarmUser::with('farm')->where('user_id', $user->id)->get();
-
-        // Gunakan FarmDetailResource untuk menyesuaikan data yang akan dikirim
         $data = FarmDetailResource::collection($farms->pluck('farm'));
 
         // Tentukan pesan respons
