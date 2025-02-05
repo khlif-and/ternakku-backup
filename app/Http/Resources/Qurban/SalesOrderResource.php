@@ -19,7 +19,9 @@ class SalesOrderResource extends JsonResource
         return [
             'id' => $this->id,
             'order_date' => $this->order_date,
-            'livestock' => new LivestockResource($this->livestock),
+            'quantity' => $this->quantity,
+            'total_weight' => $this->total_weight,
+            'description' => $this->description,
             'customer' => new CustomerResource($this->qurbanCustomer),
         ];
     }

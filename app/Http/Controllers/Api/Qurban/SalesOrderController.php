@@ -46,6 +46,7 @@ class SalesOrderController extends Controller
         try {
             // Simpan data ke tabel SalesOrders
             $salesOrder = QurbanSalesOrder::create([
+                'farm_id'          => $farm_id,
                 'qurban_customer_id'          => $validated['customer_id'],
                 'order_date'           => $validated['order_date'],
                 'quantity'           => $validated['quantity'],
@@ -72,9 +73,9 @@ class SalesOrderController extends Controller
         return ResponseHelper::success(new SalesOrderResource($salesOrder), 'SalesOrder found', 200);
     }
 
-    public function index()
+    public function index($farmId)
     {
-        $salesOrders = QurbanSalesOrder::all();
+        $salesOrders = QurbanSalesOrder::where('farm_id' , $farmId)->get();
 
         return ResponseHelper::success(SalesOrderResource::collection($salesOrders), 'SalesOrders found', 200);
     }

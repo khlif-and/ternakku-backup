@@ -23,7 +23,7 @@ class SalesOrderStoreRequest extends FormRequest
     {
         return [
             'order_date'            => 'required|date',
-            'total_weight'          => 'required|float',
+            'total_weight'          => 'required|numeric',
             'quantity'              => 'required|integer',
             'description'              => 'nullable|string',
             'customer_id'           => 'required|integer|exists:qurban_customers,id',
