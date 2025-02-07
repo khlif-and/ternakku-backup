@@ -55,8 +55,9 @@
                                     <td>{{ $fleet->police_number }}</td>
                                     <td>
                                         @if($fleet->photo)
-                                        <img src="{{ getNeoObject($fleet->photo) }}" alt="Fleet Photo" style="width: 100px; height: auto;"></td>
+                                        <img src="{{ getNeoObject($fleet->photo) }}" alt="Fleet Photo" style="width: 100px; height: auto;">
                                         @endif
+                                    </td>
                                     <td>
                                         <a href="{{ url('qurban/fleet/' . $fleet->id . '/edit') }}" class="btn btn-warning btn-sm me-2">
                                             <i class="fa fa-edit"></i> Edit

@@ -41,27 +41,28 @@
                         <table id="basic-datatables" class="display table table-striped table-hover" >
                             <thead>
                                 <tr>
-                                    <th>Nama</th>
-                                    <th>No Polisi</th>
-                                    <th>Foto</th>
+                                    <th>Tanggal Order</th>
+                                    <th>Customer</th>
+                                    <th>Kuantitas</th>
+                                    <th>Total Berat</th>
+                                    <th>Deskripsi</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($fleets as $fleet)
+                                @foreach($salesOrders as $salesOrder)
                                 <tr>
-                                    <td>{{ $fleet->name }}</td>
-                                    <td>{{ $fleet->police_number }}</td>
+                                    <td>{{ $salesOrder->order_date }}</td>
+                                    <td>{{ $salesOrder->qurbanCustomer->name }}</td>
+                                    <td>{{ $salesOrder->quantity }}</td>
+                                    <td>{{ $salesOrder->total_weight }}</td>
+                                    <td>{{ $salesOrder->description }}</td>
                                     <td>
-                                        @if($fleet->photo)
-                                        <img src="{{ getNeoObject($fleet->photo) }}" alt="Fleet Photo" style="width: 100px; height: auto;"></td>
-                                        @endif
-                                    <td>
-                                        <a href="{{ url('qurban/fleet/' . $fleet->id . '/edit') }}" class="btn btn-warning btn-sm me-2">
+                                        <a href="{{ url('qurban/sales-order/' . $salesOrder->id . '/edit') }}" class="btn btn-warning btn-sm me-2">
                                             <i class="fa fa-edit"></i> Edit
                                         </a>
-                                        <form action="{{ url('qurban/fleet/' . $fleet->id) }}" method="post" class="d-inline me-2" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                        <form action="{{ url('qurban/sales-order/' . $salesOrder->id) }}" method="post" class="d-inline me-2" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                             @csrf
                                             @method('delete')
                                             <button class="btn btn-danger btn-sm">

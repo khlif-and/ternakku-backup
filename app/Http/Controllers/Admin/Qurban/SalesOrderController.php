@@ -7,14 +7,16 @@ use App\Http\Controllers\Controller;
 use App\Services\Qurban\SalesOrderService;
 use App\Http\Requests\Qurban\SalesOrderStoreRequest;
 use App\Http\Requests\Qurban\SalesOrderUpdateRequest;
+use App\Services\Qurban\CustomerService;
 
 class SalesOrderController extends Controller
 {
-    private $salesOrderService;
+    private $salesOrderService, $customerService;
 
-    public function __construct(SalesOrderService $salesOrderService)
+    public function __construct(SalesOrderService $salesOrderService, CustomerService $customerService)
     {
         $this->salesOrderService = $salesOrderService;
+        $this->customerService = $customerService;
     }
 
     public function index()
@@ -23,12 +25,16 @@ class SalesOrderController extends Controller
 
         $salesOrders = $this->salesOrderService->getSalesOrders($farmId);
 
-        return view('admin.qurban.salesOrder.index' , compact('SalesOrders'));
+        return view('admin.qurban.salesOrder.index' , compact('salesOrders'));
     }
 
     public function create()
     {
-        return view('admin.qurban.salesOrder.create');
+        $farmId = session('selected_farm');
+
+        $customers = $this->customerService->getCustomers($farmId);
+
+        return view('admin.qurban.salesOrder.create' , compact('customers'));
     }
 
     public function store(SalesOrderStoreRequest $request)
@@ -48,9 +54,11 @@ class SalesOrderController extends Controller
     {
         $farmId = session('selected_farm');
 
+        $customers = $this->customerService->getCustomers($farmId);
+
         $salesOrder = $this->salesOrderService->getSalesOrder($farmId, $salesOrderId);
 
-        return view('admin.qurban.salesOrder.edit' , compact('SalesOrder'));
+        return view('admin.qurban.salesOrder.edit' , compact('salesOrder' , 'customers'));
     }
 
     public function update(SalesOrderUpdateRequest $request, $salesOrderId)

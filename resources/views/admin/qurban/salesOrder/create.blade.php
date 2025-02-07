@@ -36,17 +36,30 @@
                     <form action="{{ url('qurban/sales-order') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
-                            <label for="name">Nama</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <label for="order_date">Tanggal Order</label>
+                            <select name="customer_id" id="customer_id" required class="form-control">
+                                @foreach($customers as $customer)
+                                <option value="{{ $customer->id}}">{{ $customer->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
-                            <label for="police_number">Nomor Polisi</label>
-                            <input type="text" class="form-control" id="police_number" name="police_number" required>
+                            <label for="order_date">Tanggal Order</label>
+                            <input type="date" class="form-control" id="order_date" name="order_date" required>
                         </div>
                         <div class="form-group">
-                            <label for="photo">Foto</label>
-                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                            <label for="quantity">Kuantitas</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" required>
                         </div>
+                        <div class="form-group">
+                            <label for="total_weight">Total Berat</label>
+                            <input type="number" class="form-control" id="total_weight" name="total_weight" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Deskripsi</label>
+                            <textarea name="description" id="description" class="form-control" row="4"></textarea>
+                        </div>
+
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
@@ -60,6 +73,8 @@
 
 @section('script')
 <script>
-
+$(document).ready(function() {
+    $('#customer_id').select2();
+});
 </script>
 @endsection

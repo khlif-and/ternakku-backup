@@ -72,7 +72,7 @@
                             <li class="{{ Request::is('qurban/sales-order*') ? 'active' : '' }}">
                                 <a href="{{ url('qurban/sales-order') }}"><span class="sub-item">Sales Order Kurban</span></a>
                             </li>
-                            <li class="{{ Request::is('qurban/sales*') ? 'active' : '' }}">
+                            <li class="{{ Request::is('qurban/sales-livestock*') ? 'active' : '' }}">
                                 <a href="#"><span class="sub-item">Penjualan Ternak Kurban</span></a>
                             </li>
                             <li class="{{ Request::is('qurban/payment*') ? 'active' : '' }}">
