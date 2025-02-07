@@ -67,9 +67,9 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
             Route::get('/', 'indexAddress');
             Route::get('/create', 'createAddress');
             Route::post('/', 'storeAddress');
-            Route::get('/{customerId}/edit', 'editAddress');
-            Route::post('/{customerId}', 'updateAddress');
-            Route::post('/{customerId}', 'updateAddress');
+            Route::get('/{addressId}/edit', 'editAddress');
+            Route::post('/{addressId}', 'updateAddress');
+            Route::post('/{addressId}', 'updateAddress');
         });
 
         Route::group([

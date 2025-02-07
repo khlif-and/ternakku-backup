@@ -119,4 +119,11 @@ class CustomerService
             'error' => $error
         ];
     }
+
+    public function getAddresses($farmId, $customerId)
+    {
+        $addresses = QurbanCustomerAddress::where('qurban_customer_id', $customerId)->get();
+
+        return $addresses;
+    }
 }

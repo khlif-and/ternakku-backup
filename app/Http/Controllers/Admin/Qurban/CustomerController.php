@@ -81,4 +81,18 @@ class CustomerController extends Controller
         return redirect('qurban/customer')->with('success', 'Customer deleted successfully');
     }
 
+    public function indexAddress($customerId)
+    {
+        $farmId = session('selected_farm');
+
+        $addresses = $this->customerService->getAddresses($farmId, $customerId);
+
+        return view('admin.qurban.customer.address.index' , compact('customerId', 'addresses'));
+    }
+
+    public function createAddress($customerId)
+    {
+        return view('admin.qurban.customer.address.create' , compact('customerId'));
+    }
+
 }

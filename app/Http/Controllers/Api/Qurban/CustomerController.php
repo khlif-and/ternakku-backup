@@ -116,9 +116,9 @@ class CustomerController extends Controller
 
     public function addressIndex($farm_id, $customer_id)
     {
-        $customers = QurbanCustomerAddress::where('qurban_customer_id', $customer_id)->get();
+        $response = $this->customerService->getAddresses($farm_id, $customer_id);
 
-        return ResponseHelper::success(CustomerAddressResource::collection($customers), 'addresses found', 200);
+        return ResponseHelper::success(CustomerAddressResource::collection($response), 'addresses found', 200);
     }
 
     public function addressUpdate(CustomerAddressUpdateRequest $request, $farm_id, $customer_id, $id)

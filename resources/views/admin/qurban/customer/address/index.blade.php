@@ -20,7 +20,13 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Data Pelanggan</a>
+                <a href="{{ url('qurban/customer') }}">Data Pelanggan</a>
+            </li>
+            <li class="separator">
+                <i class="icon-arrow-right"></i>
+            </li>
+            <li class="nav-item">
+                <a href="#">Data Alamat</a>
             </li>
         </ul>
     </div>
@@ -29,8 +35,8 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Data Pelanggan</h4>
-                        <a class="btn btn-primary btn-round ms-auto" href="{{ url('qurban/customer/create') }}">
+                        <h4 class="card-title">Data Alamat</h4>
+                        <a class="btn btn-primary btn-round ms-auto" href="{{ url('qurban/customer/address/' . $customerId . '/create') }}">
                             <i class="fa fa-plus"></i>
                             Tambah Data
                         </a>
@@ -42,30 +48,27 @@
                             <thead>
                                 <tr>
                                     <th>Nama</th>
-                                    <th>No HP</th>
+                                    <th>Address</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
 
                             <tbody>
-                                @foreach($customers as $customer)
+                                @foreach($addresses as $address)
                                 <tr>
-                                    <td>{{ $customer->name }}</td>
-                                    <td>{{ $customer->phone_number }}</td>
+                                    <td>{{ $address->name }}</td>
+                                    <td>{{ $address->full_address }}</td>
                                     <td>
-                                        <a href="{{ url('qurban/customer/' . $customer->id . '/edit') }}" class="btn btn-warning btn-sm me-2">
+                                        <a href="{{ url('qurban/customer/address/' . $customerId . '/edit') }}" class="btn btn-warning btn-sm me-2">
                                             <i class="fa fa-edit"></i> Edit
                                         </a>
-                                        <form action="{{ url('qurban/customer/' . $customer->id) }}" method="post" class="d-inline me-2" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                        <form action="{{ url('qurban/customer/address/' . $address->id) }}" method="post" class="d-inline me-2" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
                                             @csrf
                                             @method('delete')
                                             <button class="btn btn-danger btn-sm">
                                                 <i class="fa fa-trash"></i> Hapus
                                             </button>
                                         </form>
-                                        <a href="{{ url('qurban/customer/address/' . $customer->id ) }}" class="btn btn-primary btn-sm me-2">
-                                            <i class="fa fa-address-book"></i> Alamat
-                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach

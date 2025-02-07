@@ -22,6 +22,7 @@ class CustomerAddressStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'name'              => 'required|string|max:255',
             'description'       => 'nullable|string|max:255',
             'region_id'         => 'required|integer|exists:regions,id',
             'postal_code'       => 'required|string|max:10',
