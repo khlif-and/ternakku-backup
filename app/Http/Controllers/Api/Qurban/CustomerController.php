@@ -68,28 +68,13 @@ class CustomerController extends Controller
 
     public function destroy($farm_id, $id)
     {
-        DB::beginTransaction();
+        $response = $this->customerService->deleteCustomer($farm_id, $id);
 
-        try {
-            $customer = QurbanCustomer::findOrFail($id);
-
-            $addresses = QurbanCustomerAddress::where('qurban_customer_id', $id)->get();
-            foreach ($addresses as $address) {
-                $address->delete();
-            }
-
-            $customer->delete();
-
-            // Commit transaksi
-            DB::commit();
-
-            return ResponseHelper::success(null, 'Customer deleted successfully', 200);
-        } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
-            DB::rollBack();
-
-            return ResponseHelper::error('Failed to delete Customer: ' . $e->getMessage(), 500);
+        if($response['error']) {
+            return ResponseHelper::error('Failed to delete Customer', 500);
         }
+
+        return ResponseHelper::success(null, 'Customer deleted successfully', 200);
     }
 
     public function addressStore(CustomerAddressStoreRequest $request, $farm_id, $customer_id)

@@ -53,9 +53,16 @@
                                     <td>{{ $customer->name }}</td>
                                     <td>{{ $customer->phone_number }}</td>
                                     <td>
-                                        <a href="{{ url('qurban/customer/' . $customer->id . '/edit') }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ url('qurban/customer/' . $customer->id . '/edit') }}" class="btn btn-warning btn-sm me-2">
                                             <i class="fa fa-edit"></i> Edit
                                         </a>
+                                        <form action="{{ url('qurban/customer/' . $customer->id) }}" method="post" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                            @csrf
+                                            @method('delete')
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach

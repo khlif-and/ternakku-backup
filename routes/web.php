@@ -57,7 +57,19 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
             Route::get('/create', 'create');
             Route::post('/', 'store');
             Route::get('/{customerId}/edit', 'edit');
-            Route::post('/{customerId}', 'update');
+            Route::delete('/{customerId}', 'destroy');
+        });
+
+        Route::group([
+            'prefix' => 'customer/address/{customerId}',
+            'controller' => App\Http\Controllers\Admin\Qurban\CustomerController::class
+        ], function () {
+            Route::get('/', 'indexAddress');
+            Route::get('/create', 'createAddress');
+            Route::post('/', 'storeAddress');
+            Route::get('/{customerId}/edit', 'editAddress');
+            Route::post('/{customerId}', 'updateAddress');
+            Route::post('/{customerId}', 'updateAddress');
         });
 
         Route::group([

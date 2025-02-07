@@ -68,4 +68,17 @@ class CustomerController extends Controller
         return redirect('qurban/customer')->with('success', 'Customer updated successfully');
     }
 
+    public function destroy($customerId)
+    {
+        $farmId = session('selected_farm');
+
+        $response = $this->customerService->deleteCustomer($farmId, $customerId);
+
+        if ($response['error']) {
+            return redirect()->back()->with('error', 'An error occurred while deleting the customer');
+        }
+
+        return redirect('qurban/customer')->with('success', 'Customer deleted successfully');
+    }
+
 }

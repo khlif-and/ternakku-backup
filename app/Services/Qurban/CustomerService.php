@@ -4,6 +4,7 @@ namespace App\Services\Qurban;
 
 use App\Models\QurbanCustomer;
 use Illuminate\Support\Facades\DB;
+use App\Models\QurbanCustomerAddress;
 
 class CustomerService
 {
@@ -83,6 +84,38 @@ class CustomerService
 
         return [
             'data' => $data,
+            'error' => $error
+        ];
+    }
+
+    public function deleteCustomer($farm_id, $id)
+    {
+        $error = false;
+
+        DB::beginTransaction();
+
+        try {
+            $customer = QurbanCustomer::where('farm_id' , $farm_id)->where('id',$id)->first();
+
+            $addresses = QurbanCustomerAddress::where('qurban_customer_id', $id)->get();
+            foreach ($addresses as $address) {
+                $address->delete();
+            }
+
+            $customer->delete();
+
+            // Commit transaksi
+            DB::commit();
+
+
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            $error = true;
+        }
+
+        return [
             'error' => $error
         ];
     }
