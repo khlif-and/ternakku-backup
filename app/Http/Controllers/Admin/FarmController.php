@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
 use App\Services\FarmService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Farming\FarmUserStoreRequest;
 
 class FarmController extends Controller
 {
@@ -29,10 +30,19 @@ class FarmController extends Controller
         return redirect($request->redirect_url);
     }
 
+    public function findUser()
+    {
+        $username = request('username');
+
+        $user = $this->farmService->findUser($username);
+
+        return response()->json($user);
+    }
+
     public function userList()
     {
         //TODO : Get farm id from session
-        $farmId = 1;
+        $farmId = session('selected_farm');
 
         $response = $this->farmService->getUsers($farmId);
 
@@ -45,5 +55,24 @@ class FarmController extends Controller
         $users = $response['data'];
 
         return view('admin.farm.user_list' , compact('users'));
+    }
+
+    public function userCreate()
+    {
+        return view('admin.farm.user_create');
+    }
+
+    public function addUser(FarmUserStoreRequest $request)
+    {
+        $validated = $request->validated();
+        $farmId = session('selected_farm');
+
+        $response = $this->farmService->addUser($validated, $farmId);
+
+        if ($response['error']) {
+            return redirect()->back()->with('error', 'An error occurred while adding the user');
+        }
+
+        return redirect('qurban/farm/user-list')->with('success', 'User added to the farm successfully');
     }
 }

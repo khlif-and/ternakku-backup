@@ -43,7 +43,10 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
             'prefix' => 'farm',
             'controller' => App\Http\Controllers\Admin\FarmController::class
         ], function () {
+            Route::get('/find-user', 'findUser');
             Route::get('/user-list', 'userList');
+            Route::post('/add-user', 'addUser');
+            Route::get('/user-list/create', 'userCreate');
         });
 
         Route::group([

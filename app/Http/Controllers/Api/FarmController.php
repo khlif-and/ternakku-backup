@@ -265,10 +265,7 @@ class FarmController extends Controller
 
         $validatedData = $request->validated();
 
-        $user = User::verified()->where(function($query) use ($validatedData) {
-            $query->where('email', $validatedData['username'])
-                ->orWhere('phone_number', $validatedData['username']);
-        })->firstOrFail();
+        $user = $this->farmService->findUser($validatedData['username']);
 
         return ResponseHelper::success($user, 'Data retrieved successfully');
     }
@@ -303,41 +300,15 @@ class FarmController extends Controller
 
         $validated = $request->validated();
 
-        $user = User::find($validated['user_id']);
+        $response = $this->farmService->addUser($validated, $farmId);
 
-        // Start transaction
-        DB::beginTransaction();
-
-        try {
-            // First or create FarmUser
-            $farmUser = FarmUser::firstOrCreate([
-                'user_id' => $user->id,
-                'farm_id' => $farm->id,
-                'farm_role' => $validated['farm_role']
-            ]);
-
-            // Sync user roles without detaching existing roles
-            $user->roles()->syncWithoutDetaching([
-                RoleEnum::FARMER->value => [
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-            ]);
-
-            // Commit transaction
-            DB::commit();
-
-            $data = new FarmUserResource($farmUser);
-
-            return ResponseHelper::success($data, 'User added to the farm successfully');
-
-        } catch (\Exception $e) {
-            Log::error($e);
-            // Rollback transaction on failure
-            DB::rollBack();
-
+        if($response['error']){
             return ResponseHelper::error('An error occurred while adding the user', 500);
         }
+
+        $data = new FarmUserResource($response['data']);
+
+        return ResponseHelper::success($data, 'User added to the farm successfully');
     }
 
     public function removeUser(FarmUserRemoveRequest $request, $farmId)
