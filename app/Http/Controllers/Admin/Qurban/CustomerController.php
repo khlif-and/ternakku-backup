@@ -17,11 +17,25 @@ class CustomerController extends Controller
 
     public function index()
     {
-        //TODO : Get farm id from session
-        $farmId = 1;
+        $farmId = session('selected_farm');
 
         $customers = $this->customerService->getCustomers($farmId);
 
         return view('admin.qurban.customer.index' , compact('customers'));
     }
+
+    public function create()
+    {
+        return view('admin.qurban.customer.create');
+    }
+
+    public function store(Request $request)
+    {
+        $farmId = session('selected_farm');
+
+        $response = $this->customerService->storeCustomer($validated, $farm_id);
+
+        return redirect('qurban/customer');
+    }
+
 }

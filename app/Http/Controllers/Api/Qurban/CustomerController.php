@@ -29,26 +29,13 @@ class CustomerController extends Controller
     {
         $validated = $request->validated();
 
-        DB::beginTransaction();
+        $response = $this->customerService->storeCustomer($validated, $farm_id);
 
-        try {
-            // Simpan data ke tabel customers
-            $customer = QurbanCustomer::create([
-                'farm_id'           => $farm_id,
-                'name'              => $validated['name'],
-                'phone_number'      => $validated['phone_number'],
-            ]);
-
-            // Commit transaksi
-            DB::commit();
-
-            return ResponseHelper::success(new CustomerResource($customer), 'Customer created successfully', 200);
-        } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
-            DB::rollBack();
-
-            return ResponseHelper::error('Failed to create Customer: ' . $e->getMessage(), 500);
+        if($response['error']) {
+            return ResponseHelper::error('Failed to create Customer', 500);
         }
+
+        return ResponseHelper::success(new CustomerResource($response['data']), 'Customer created successfully', 200);
     }
 
     public function show($farm_id, $id)

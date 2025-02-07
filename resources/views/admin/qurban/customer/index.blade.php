@@ -30,10 +30,10 @@
                 <div class="card-header">
                     <div class="d-flex align-items-center">
                         <h4 class="card-title">Data Pelanggan</h4>
-                        <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
+                        <a class="btn btn-primary btn-round ms-auto" href="{{ url('qurban/customer/create') }}">
                             <i class="fa fa-plus"></i>
                             Tambah Data
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <div class="card-body">
