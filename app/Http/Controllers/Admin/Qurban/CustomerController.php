@@ -54,7 +54,7 @@ class CustomerController extends Controller
         return view('admin.qurban.customer.edit' , compact('customer'));
     }
 
-    public function update(CustomerStoreRequest $request, $customerId)
+    public function update(CustomerUpdateRequest $request, $customerId)
     {
         $validated = $request->validated();
         $farmId = session('selected_farm');

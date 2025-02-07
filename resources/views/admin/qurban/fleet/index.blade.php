@@ -57,7 +57,18 @@
                                         @if($fleet->photo)
                                         <img src="{{ getNeoObject($fleet->photo) }}" alt="Fleet Photo" style="width: 100px; height: auto;"></td>
                                         @endif
-                                    <td></td>
+                                    <td>
+                                        <a href="{{ url('qurban/fleet/' . $fleet->id . '/edit') }}" class="btn btn-warning btn-sm me-2">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                        <form action="{{ url('qurban/fleet/' . $fleet->id) }}" method="post" class="d-inline me-2" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                            @csrf
+                                            @method('delete')
+                                            <button class="btn btn-danger btn-sm">
+                                                <i class="fa fa-trash"></i> Hapus
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

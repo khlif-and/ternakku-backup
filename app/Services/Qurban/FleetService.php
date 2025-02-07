@@ -79,6 +79,7 @@ class FleetService
         try {
             $fleet = QurbanFleet::where('farm_id' , $farmId)->where('id' , $fleetId)->first();
 
+            $photo = null;
             // Handle logo upload if present
             if (isset($validated['photo']) && $request->hasFile('photo')) {
                 $file = $validated['photo'];
@@ -91,7 +92,6 @@ class FleetService
                 }
             }
 
-            // Simpan data ke tabel Fleets
             $fleet->update([
                 'name'              => $validated['name'],
                 'police_number'     => $validated['police_number'],
@@ -100,7 +100,10 @@ class FleetService
 
             $data = $fleet;
 
+            DB::commit();
+
         } catch (\Exception $e) {
+            dd($e);
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
 

@@ -57,6 +57,7 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
             Route::get('/create', 'create');
             Route::post('/', 'store');
             Route::get('/{customerId}/edit', 'edit');
+            Route::put('/{customerId}', 'update');
             Route::delete('/{customerId}', 'destroy');
         });
 
@@ -78,6 +79,10 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
         ], function () {
             Route::get('/', 'index');
             Route::get('/create', 'create');
+            Route::post('/', 'store');
+            Route::get('/{fleetId}/edit', 'edit');
+            Route::put('/{fleetId}', 'update');
+            Route::delete('/{fleetId}', 'destroy');
         });
 
         Route::group([

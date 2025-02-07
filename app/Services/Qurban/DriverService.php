@@ -82,6 +82,8 @@ class DriverService
         try {
             $driver = QurbanDriver::where('farm_id' , $farmId)->where('id' , $driverId)->first();
 
+            $photo = null;
+
             // Handle logo upload if present
             if (isset($validated['photo']) && $request->hasFile('photo')) {
                 $file = $validated['photo'];
@@ -105,8 +107,10 @@ class DriverService
                 'photo'            => $photo,
             ]);
 
-            $data = $driver;
+            DB::commit();
 
+            $data = $driver;
+            
         } catch (\Exception $e) {
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
