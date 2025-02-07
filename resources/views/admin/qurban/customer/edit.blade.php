@@ -35,6 +35,7 @@
                 <div class="card-body">
                     <form action="{{ url('qurban/customer/' . $customer->id ) }}" method="POST">
                         @csrf
+                        @method('put')
                         <div class="form-group">
                             <label for="name">Nama</label>
                             <input type="text" class="form-control" id="name" name="name" required value="{{ $customer->name }}">

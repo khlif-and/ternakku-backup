@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Qurban\CustomerService;
 use App\Http\Requests\Qurban\CustomerStoreRequest;
+use App\Http\Requests\Qurban\CustomerUpdateRequest;
 
 class CustomerController extends Controller
 {

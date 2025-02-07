@@ -110,7 +110,7 @@ class DriverService
             DB::commit();
 
             $data = $driver;
-            
+
         } catch (\Exception $e) {
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
