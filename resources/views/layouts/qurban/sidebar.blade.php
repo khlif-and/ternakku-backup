@@ -1,139 +1,95 @@
 <style>
-    .sub-item{
+    .sub-item {
         font-size: 12px !important;
     }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Oleo+Script&display=swap" rel="stylesheet">
 
-
-
 <div class="sidebar sidebar-style-2" data-background-color="dark">
     <div class="sidebar-logo">
         <!-- Logo Header -->
         <div class="logo-header" data-background-color="dark">
-
             <a href="{{ url('qurban/dashboard') }}" class="logo">
-            <span class="navbar-brand" style="font: 400 40px 'Oleo Script', Helvetica, sans-serif; color: white; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
-                Ternakku
-            </span>
-
+                <span class="navbar-brand" style="font: 400 40px 'Oleo Script', Helvetica, sans-serif; color: white; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
+                    Ternakku
+                </span>
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">
-                    <i class="gg-menu-right"></i>
+                    <i class="fas fa-bars"></i>
                 </button>
                 <button class="btn btn-toggle sidenav-toggler">
-                    <i class="gg-menu-left"></i>
+                    <i class="fas fa-times"></i>
                 </button>
             </div>
             <button class="topbar-toggler more">
-                <i class="gg-more-vertical-alt"></i>
+                <i class="fas fa-ellipsis-v"></i>
             </button>
-
         </div>
         <!-- End Logo Header -->
     </div>
+
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#base">
+                <!-- Menu Data Awal -->
+                <li class="nav-item {{ Request::is('qurban/farm*', 'qurban/customer*', 'qurban/fleet*', 'qurban/driver*') ? 'active' : '' }}">
+                    <a data-bs-toggle="collapse" href="#dataAwal" class="{{ Request::is('qurban/farm*', 'qurban/customer*', 'qurban/fleet*', 'qurban/driver*') ? '' : 'collapsed' }}">
                         <i class="fas fa-layer-group"></i>
                         <p>Data Awal</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="base">
+                    <div class="collapse {{ Request::is('qurban/farm*', 'qurban/customer*', 'qurban/fleet*', 'qurban/driver*') ? 'show' : '' }}" id="dataAwal">
                         <ul class="nav nav-collapse">
-                            <li>
-                                <a href="{{ url('qurban/farm/user-list') }}">
-                                    <span class="sub-item">Data Pengguna</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/farm/user-list*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/farm/user-list') }}"><span class="sub-item">Data Pengguna</span></a>
                             </li>
-                            <li>
-                                <a href="{{ url('qurban/customer') }}">
-                                    <span class="sub-item">Data Pelanggan & Alamat Kirim</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/customer*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/customer') }}"><span class="sub-item">Data Pelanggan & Alamat Kirim</span></a>
                             </li>
-                            <li>
-                                <a href="{{ url('qurban/fleet') }}">
-                                    <span class="sub-item">Data Armada</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/fleet*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/fleet') }}"><span class="sub-item">Data Armada</span></a>
                             </li>
-                            <li>
-                                <a href="{{ url('qurban/driver') }}">
-                                    <span class="sub-item">Data Pengemudi</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/driver*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/driver') }}"><span class="sub-item">Data Pengemudi</span></a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#base">
-                        <i class="fas fa-layer-group"></i>
+
+                <!-- Menu Aktivitas -->
+                <li class="nav-item {{ Request::is('qurban/sales-order*', 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*') ? 'active' : '' }}">
+                    <a data-bs-toggle="collapse" href="#aktivitas" class="{{ Request::is('qurban/sales-order*', 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*') ? '' : 'collapsed' }}">
+                        <i class="fas fa-tasks"></i>
                         <p>Aktivitas</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse" id="base">
+                    <div class="collapse {{ Request::is('qurban/sales-order*', 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*') ? 'show' : '' }}" id="aktivitas">
                         <ul class="nav nav-collapse">
-                            <li>
-                                <a href="components/avatars.html">
-                                    <span class="sub-item">ReWeight / Timbang Ulang</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/reweight*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/reweight') }}"><span class="sub-item">ReWeight / Timbang Ulang</span></a>
                             </li>
-                            <li>
-                                <a href="components/buttons.html">
-                                    <span class="sub-item">Sales Order Kurban</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/sales-order*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/sales-order') }}"><span class="sub-item">Sales Order Kurban</span></a>
                             </li>
-                            <li>
-                                <a href="components/gridsystem.html">
-                                    <span class="sub-item">Penjualan Ternak Kurban</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/sales*') ? 'active' : '' }}">
+                                <a href="#"><span class="sub-item">Penjualan Ternak Kurban</span></a>
                             </li>
-                            <li>
-                                <a href="components/panels.html">
-                                    <span class="sub-item">Penerimaan Pembayaran</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/payment*') ? 'active' : '' }}">
+                                <a href="#"><span class="sub-item">Penerimaan Pembayaran</span></a>
                             </li>
-                            <li>
-                                <a href="components/panels.html">
-                                    <span class="sub-item">Surat Jalan Ternak</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/delivery/surat-jalan*') ? 'active' : '' }}">
+                                <a href="#"><span class="sub-item">Surat Jalan Ternak</span></a>
                             </li>
-                            <li>
-                                <a href="components/panels.html">
-                                    <span class="sub-item">Pengiriman Ternak Kurban</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/delivery*') ? 'active' : '' }}">
+                                <a href="#"><span class="sub-item">Pengiriman Ternak Kurban</span></a>
                             </li>
-                            <li>
-                                <a href="components/panels.html">
-                                    <span class="sub-item">Lacak Armada Pengiriman</span>
-                                </a>
+                            <li class="{{ Request::is('qurban/delivery/tracking*') ? 'active' : '' }}">
+                                <a href="#"><span class="sub-item">Lacak Armada Pengiriman</span></a>
                             </li>
                         </ul>
                     </div>
                 </li>
-                <!-- <li class="nav-item active submenu">
-                    <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                        <i class="fas fa-th-list"></i>
-                        <p>Sidebar Layouts</p>
-                        <span class="caret"></span>
-                    </a>
-                    <div class="collapse show" id="sidebarLayouts">
-                        <ul class="nav nav-collapse">
-                            <li class="active">
-                                <a href="sidebar-style-2.html">
-                                    <span class="sub-item">Sidebar Style 2</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="icon-menu.html">
-                                    <span class="sub-item">Icon Menu</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li> -->
             </ul>
         </div>
     </div>

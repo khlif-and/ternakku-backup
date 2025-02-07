@@ -92,5 +92,18 @@ Route::middleware(['auth', 'email.verified'])->group(function() {
         ], function () {
             Route::get('/', 'index');
         });
+
+        Route::group([
+            'prefix' => 'sales-order',
+            'controller' => App\Http\Controllers\Admin\Qurban\SalesOrderController::class
+        ], function () {
+            Route::get('/', 'index');
+            Route::get('/create', 'create');
+            Route::post('/', 'store');
+            Route::get('/{salesOrderId}/edit', 'edit');
+            Route::put('/{salesOrderId}', 'update');
+            Route::delete('/{salesOrderId}', 'destroy');
+        });
+
     });
 });
