@@ -55,6 +55,9 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
         ], function () {
             Route::get('/', 'index');
             Route::get('/create', 'create');
+            Route::post('/', 'store');
+            Route::get('/{customerId}/edit', 'edit');
+            Route::post('/{customerId}', 'update');
         });
 
         Route::group([

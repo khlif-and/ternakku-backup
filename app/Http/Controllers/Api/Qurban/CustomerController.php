@@ -40,7 +40,8 @@ class CustomerController extends Controller
 
     public function show($farm_id, $id)
     {
-        $customer = QurbanCustomer::findOrFail($id);
+
+        $customer = $this->customerService->getCustomer($farm_id, $id);
 
         return ResponseHelper::success(new CustomerResource($customer), 'Customer found', 200);
     }
@@ -56,27 +57,13 @@ class CustomerController extends Controller
     {
         $validated = $request->validated();
 
-        DB::beginTransaction();
+        $response = $this->customerService->updateCustomer($validated, $farm_id, $id);
 
-        try {
-            $customer = QurbanCustomer::findOrFail($id);
-
-            // Simpan data ke tabel customers
-            $customer->update([
-                'name'              => $validated['name'],
-                'phone_number'      => $validated['phone_number'],
-            ]);
-
-            // Commit transaksi
-            DB::commit();
-
-            return ResponseHelper::success(new CustomerResource($customer), 'Customer updated successfully', 200);
-        } catch (\Exception $e) {
-            // Rollback transaksi jika terjadi kesalahan
-            DB::rollBack();
-
-            return ResponseHelper::error('Failed to update Customer: ' . $e->getMessage(), 500);
+        if($response['error']) {
+            return ResponseHelper::error('Failed to update Customer', 500);
         }
+
+        return ResponseHelper::success(new CustomerResource($response['data']), 'Customer updated successfully', 200);
     }
 
     public function destroy($farm_id, $id)

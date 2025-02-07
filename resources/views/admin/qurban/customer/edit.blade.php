@@ -29,19 +29,19 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Tambah Data Pelanggan</h4>
+                        <h4 class="card-title">Edit Data Pelanggan</h4>
                     </div>
                 </div>
                 <div class="card-body">
-                    <form action="{{ url('qurban/customer') }}" method="POST">
+                    <form action="{{ url('qurban/customer/' . $customer->id ) }}" method="POST">
                         @csrf
                         <div class="form-group">
                             <label for="name">Nama</label>
-                            <input type="text" class="form-control" id="name" name="name" required>
+                            <input type="text" class="form-control" id="name" name="name" required value="{{ $customer->name }}">
                         </div>
                         <div class="form-group">
                             <label for="phone_number">Nomor Telepon</label>
-                            <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ $customer->phone_number }}" required>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Simpan</button>

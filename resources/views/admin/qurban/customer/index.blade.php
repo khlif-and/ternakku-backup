@@ -52,7 +52,11 @@
                                 <tr>
                                     <td>{{ $customer->name }}</td>
                                     <td>{{ $customer->phone_number }}</td>
-                                    <td></td>
+                                    <td>
+                                        <a href="{{ url('qurban/customer/' . $customer->id . '/edit') }}" class="btn btn-warning btn-sm">
+                                            <i class="fa fa-edit"></i> Edit
+                                        </a>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>

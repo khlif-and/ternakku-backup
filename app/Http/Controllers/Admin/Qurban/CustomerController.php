@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Qurban;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\Qurban\CustomerService;
+use App\Http\Requests\Qurban\CustomerStoreRequest;
 
 class CustomerController extends Controller
 {
@@ -29,13 +30,42 @@ class CustomerController extends Controller
         return view('admin.qurban.customer.create');
     }
 
-    public function store(Request $request)
+    public function store(CustomerStoreRequest $request)
+    {
+        $validated = $request->validated();
+        $farmId = session('selected_farm');
+
+        $response = $this->customerService->storeCustomer($validated, $farmId);
+
+
+        if ($response['error']) {
+            return redirect()->back()->with('error', 'An error occurred while adding the customer');
+        }
+
+        return redirect('qurban/customer')->with('success', 'Customer added to the farm successfully');
+    }
+
+    public function edit($customerId)
     {
         $farmId = session('selected_farm');
 
-        $response = $this->customerService->storeCustomer($validated, $farm_id);
+        $customer = $this->customerService->getCustomer($farmId, $customerId);
 
-        return redirect('qurban/customer');
+        return view('admin.qurban.customer.edit' , compact('customer'));
+    }
+
+    public function update(CustomerStoreRequest $request, $customerId)
+    {
+        $validated = $request->validated();
+        $farmId = session('selected_farm');
+
+        $response = $this->customerService->updateCustomer($validated, $farmId, $customerId);
+
+        if ($response['error']) {
+            return redirect()->back()->with('error', 'An error occurred while updating the customer');
+        }
+
+        return redirect('qurban/customer')->with('success', 'Customer updated successfully');
     }
 
 }

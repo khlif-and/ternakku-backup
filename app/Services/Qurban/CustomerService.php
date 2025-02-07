@@ -46,4 +46,44 @@ class CustomerService
             'error' => $error
         ];
     }
+
+    public function getCustomer($farm_id , $id)
+    {
+        $customer = QurbanCustomer::where('farm_id' , $farm_id)->where('id',$id)->first();
+        return $customer;
+    }
+
+    public function updateCustomer($request, $farmId, $id)
+    {
+        $data = null;
+        $error = false;
+
+        DB::beginTransaction();
+
+        try {
+            $customer = QurbanCustomer::findOrFail($id);
+
+            // Simpan data ke tabel customers
+            $customer->update([
+                'name'              => $request['name'],
+                'phone_number'      => $request['phone_number'],
+            ]);
+
+            // Commit transaksi
+            DB::commit();
+
+            $data = $customer;
+
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            $error = true;
+        }
+
+        return [
+            'data' => $data,
+            'error' => $error
+        ];
+    }
 }
