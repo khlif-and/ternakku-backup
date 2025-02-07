@@ -77,6 +77,7 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
             'controller' => App\Http\Controllers\Admin\Qurban\FleetController::class
         ], function () {
             Route::get('/', 'index');
+            Route::get('/create', 'create');
         });
 
         Route::group([

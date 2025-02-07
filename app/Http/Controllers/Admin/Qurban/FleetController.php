@@ -18,11 +18,20 @@ class FleetController extends Controller
 
     public function index()
     {
-        //TODO : Get farm id from session
-        $farmId = 1;
+        $farmId = session("selected_farm");
 
         $fleets = $this->fleetService->getFleets($farmId);
 
         return view('admin.qurban.fleet.index' , compact('fleets'));
+    }
+
+    public function create()
+    {
+        return view('admin.qurban.fleet.create');
+    }
+
+    public function store()
+    {
+
     }
 }
