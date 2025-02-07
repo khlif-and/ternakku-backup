@@ -26,7 +26,7 @@ Route::group([
 });
 
 
-Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
+Route::middleware(['auth', 'email.verified'])->group(function() {
     Route::get('dashboard' , function(){
         return view('menu.index');
     });
@@ -36,6 +36,7 @@ Route::middleware(['auth', 'email.verified' , 'farmer'])->group(function() {
 
     Route::group([
         'prefix' => 'qurban',
+        'middleware' => ['farmer']
     ], function () {
         Route::get('dashboard', [App\Http\Controllers\Admin\Qurban\DashboardController::class , 'dashboard']);
 

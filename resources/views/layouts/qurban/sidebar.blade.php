@@ -3,6 +3,9 @@
         font-size: 12px !important;
     }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Oleo+Script&display=swap" rel="stylesheet">
+
+
 
 <div class="sidebar sidebar-style-2" data-background-color="dark">
     <div class="sidebar-logo">
@@ -10,7 +13,10 @@
         <div class="logo-header" data-background-color="dark">
 
             <a href="{{ url('qurban/dashboard') }}" class="logo">
-                <img src="{{ asset('admin/img/kaiadmin/logo_light.svg') }}" alt="navbar brand" class="navbar-brand" height="20">
+            <span class="navbar-brand" style="font: 400 40px 'Oleo Script', Helvetica, sans-serif; color: white; text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);">
+                Ternakku
+            </span>
+
             </a>
             <div class="nav-toggle">
                 <button class="btn btn-toggle toggle-sidebar">

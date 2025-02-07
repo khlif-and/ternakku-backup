@@ -20,7 +20,7 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Data Pengguna</a>
+                <a href="{{ url('qurban/farm/user-list') }}">Data Pengguna</a>            
             </li>
         </ul>
     </div>
