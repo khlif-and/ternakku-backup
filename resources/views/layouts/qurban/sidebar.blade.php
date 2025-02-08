@@ -58,13 +58,13 @@
                 </li>
 
                 <!-- Menu Aktivitas -->
-                <li class="nav-item {{ Request::is('qurban/sales-order*', 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*') ? 'active' : '' }}">
+                <li class="nav-item {{ Request::is('qurban/sales-order*', 'qurban/sales-livestock*' , 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*') ? 'active' : '' }}">
                     <a data-bs-toggle="collapse" href="#aktivitas" class="{{ Request::is('qurban/sales-order*', 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*') ? '' : 'collapsed' }}">
                         <i class="fas fa-tasks"></i>
                         <p>Aktivitas</p>
                         <span class="caret"></span>
                     </a>
-                    <div class="collapse {{ Request::is('qurban/sales-order*', 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*') ? 'show' : '' }}" id="aktivitas">
+                    <div class="collapse {{ Request::is('qurban/sales-order*',  'qurban/sales-livestock*' , 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*') ? 'show' : '' }}" id="aktivitas">
                         <ul class="nav nav-collapse">
                             <li class="{{ Request::is('qurban/reweight*') ? 'active' : '' }}">
                                 <a href="{{ url('qurban/reweight') }}"><span class="sub-item">ReWeight / Timbang Ulang</span></a>
@@ -73,7 +73,7 @@
                                 <a href="{{ url('qurban/sales-order') }}"><span class="sub-item">Sales Order Kurban</span></a>
                             </li>
                             <li class="{{ Request::is('qurban/sales-livestock*') ? 'active' : '' }}">
-                                <a href="#"><span class="sub-item">Penjualan Ternak Kurban</span></a>
+                                <a href="{{ url('qurban/sales-livestock') }}"><span class="sub-item">Penjualan Ternak Kurban</span></a>
                             </li>
                             <li class="{{ Request::is('qurban/payment*') ? 'active' : '' }}">
                                 <a href="#"><span class="sub-item">Penerimaan Pembayaran</span></a>

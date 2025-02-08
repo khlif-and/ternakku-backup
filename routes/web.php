@@ -105,5 +105,16 @@ Route::middleware(['auth', 'email.verified'])->group(function() {
             Route::delete('/{salesOrderId}', 'destroy');
         });
 
+        Route::group([
+            'prefix' => 'sales-livestock',
+            'controller' => App\Http\Controllers\Admin\Qurban\SalesLivestockController::class
+        ], function () {
+            Route::get('/', 'index');
+            Route::get('/create', 'create');
+            Route::post('/', 'store');
+            Route::get('/{saleLivestockId}/edit', 'edit');
+            Route::put('/{saleLivestockId}', 'update');
+            Route::delete('/{saleLivestockId}', 'destroy');
+        });
     });
 });
