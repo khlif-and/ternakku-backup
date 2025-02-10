@@ -29,12 +29,13 @@ class FleetController extends Controller
             return ResponseHelper::error('Failed to create Fleet', 500);
         }
 
-        return ResponseHelper::success(new FleetResource($fleet), 'Fleet created successfully', 200);
+        return ResponseHelper::success(new FleetResource($response['data']), 'Fleet created successfully', 200);
     }
 
-    public function show($id)
+    public function show($farmId, $id)
     {
-        $fleet = QurbanFleet::findOrFail($id);
+        $fleet =  $this->fleetService->getFleet($farmId, $id);
+
 
         return ResponseHelper::success(new FleetResource($fleet), 'Fleet found', 200);
     }
@@ -54,12 +55,12 @@ class FleetController extends Controller
             return ResponseHelper::error('Failed to create Fleet', 500);
         }
 
-        return ResponseHelper::success(new FleetResource($fleet), 'Fleet updated successfully', 200);
+        return ResponseHelper::success(new FleetResource($response['data']), 'Fleet updated successfully', 200);
     }
 
     public function destroy($farm_id, $id)
     {
-        $response = $this->customerService->deleteFleet($farm_id, $id);
+        $response = $this->fleetService->deleteFleet($farm_id, $id);
 
         if($response['error']) {
             return ResponseHelper::error('Failed to delete Fleet', 500);

@@ -66,7 +66,7 @@ class SalesOrderController extends Controller
         }
     }
 
-    public function show($id)
+    public function show($farmId, $id)
     {
         $salesOrder = QurbanSalesOrder::findOrFail($id);
 
