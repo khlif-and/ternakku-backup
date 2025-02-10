@@ -12,12 +12,18 @@ class QurbanSaleLivestockH extends Model
     protected $table = 'qurban_sale_livestock_h';
 
     protected $fillable = [
+        'farm_id',
         'qurban_customer_id',
         'qurban_sales_order_id',
         'transaction_number',
         'transaction_date',
         'notes',
     ];
+
+    public function farm()
+    {
+        return $this->belongsTo(Farm::class, 'farm_id');
+    }
 
     /**
      * Relasi ke model QurbanCustomer.

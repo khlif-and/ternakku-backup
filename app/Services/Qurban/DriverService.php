@@ -3,6 +3,7 @@
 namespace App\Services\Qurban;
 
 use App\Models\QurbanDriver;
+use Illuminate\Support\Facades\DB;
 
 
 class DriverService
@@ -21,7 +22,7 @@ class DriverService
         return $driver;
     }
 
-    public function storeDriver($farmId, $request)
+    public function storeDriver($farm_id, $request)
     {
         $data = null;
         $error = false;
@@ -58,6 +59,7 @@ class DriverService
 
             $data = $driver;
         } catch (\Exception $e) {
+
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
 

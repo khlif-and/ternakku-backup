@@ -4,18 +4,18 @@ namespace App\Http\Controllers\Admin\Qurban;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Services\Qurban\SalesOrderService;
-use App\Http\Requests\Qurban\SalesOrderStoreRequest;
-use App\Http\Requests\Qurban\SalesOrderUpdateRequest;
+use App\Services\Qurban\SalesLivestockService;
+use App\Http\Requests\Qurban\SalesLivestockStoreRequest;
+use App\Http\Requests\Qurban\SalesLivestockUpdateRequest;
 use App\Services\Qurban\CustomerService;
 
 class SalesLivestockController extends Controller
 {
-    private $salesOrderService, $customerService;
+    private $salesLivestockService, $customerService;
 
-    public function __construct(SalesOrderService $salesOrderService, CustomerService $customerService)
+    public function __construct(SalesLivestockService $salesLivestockService, CustomerService $customerService)
     {
-        $this->salesOrderService = $salesOrderService;
+        $this->salesLivestockService = $salesLivestockService;
         $this->customerService = $customerService;
     }
 
@@ -23,9 +23,9 @@ class SalesLivestockController extends Controller
     {
         $farmId = session("selected_farm");
 
-        $salesOrders = $this->salesOrderService->getSalesOrders($farmId);
+        $salesLivestocks = $this->salesLivestockService->getSalesLivestocks($farmId);
 
-        return view('admin.qurban.salesOrder.index' , compact('salesOrders'));
+        return view('admin.qurban.salesLivestock.index' , compact('salesLivestocks'));
     }
 
     public function create()
@@ -34,56 +34,56 @@ class SalesLivestockController extends Controller
 
         $customers = $this->customerService->getCustomers($farmId);
 
-        return view('admin.qurban.salesOrder.create' , compact('customers'));
+        return view('admin.qurban.salesLivestock.create' , compact('customers'));
     }
 
     public function store(SalesLivestockStoreRequest $request)
     {
         $farmId = session('selected_farm');
 
-        $response = $this->salesOrderService->storeSalesOrder($farmId,$request);
+        $response = $this->salesLivestockService->storeSalesLivestock($farmId,$request);
 
         if ($response['error']) {
-            return redirect()->back()->with('error', 'An error occurred while adding the SalesOrder');
+            return redirect()->back()->with('error', 'An error occurred while adding the SalesLivestock');
         }
 
-        return redirect('qurban/sales-order')->with('success', 'SalesOrder added to the farm successfully');
+        return redirect('qurban/sales-order')->with('success', 'SalesLivestock added to the farm successfully');
     }
 
-    public function edit($salesOrderId)
+    public function edit($salesLivestockId)
     {
         $farmId = session('selected_farm');
 
         $customers = $this->customerService->getCustomers($farmId);
 
-        $salesOrder = $this->salesOrderService->getSalesOrder($farmId, $salesOrderId);
+        $salesLivestock = $this->salesLivestockService->getSalesLivestock($farmId, $salesLivestockId);
 
-        return view('admin.qurban.salesOrder.edit' , compact('salesOrder' , 'customers'));
+        return view('admin.qurban.salesLivestock.edit' , compact('salesLivestock' , 'customers'));
     }
 
-    public function update(SalesOrderUpdateRequest $request, $salesOrderId)
+    public function update(SalesLivestockUpdateRequest $request, $salesLivestockId)
     {
         $farmId = session('selected_farm');
 
-        $response = $this->salesOrderService->updateSalesOrder($farmId, $salesOrderId, $request);
+        $response = $this->salesLivestockService->updateSalesLivestock($farmId, $salesLivestockId, $request);
 
         if ($response['error']) {
-            return redirect()->back()->with('error', 'An error occurred while updating the SalesOrder');
+            return redirect()->back()->with('error', 'An error occurred while updating the SalesLivestock');
         }
 
-        return redirect('qurban/sales-order')->with('success', 'SalesOrder updated successfully');
+        return redirect('qurban/sales-order')->with('success', 'SalesLivestock updated successfully');
     }
 
-    public function destroy($salesOrderId)
+    public function destroy($salesLivestockId)
     {
         $farmId = session('selected_farm');
 
-        $response = $this->salesOrderService->deleteSalesOrder($farmId, $salesOrderId);
+        $response = $this->salesLivestockService->deleteSalesLivestock($farmId, $salesLivestockId);
 
         if ($response['error']) {
-            return redirect()->back()->with('error', 'An error occurred while deleting the SalesOrder');
+            return redirect()->back()->with('error', 'An error occurred while deleting the SalesLivestock');
         }
 
-        return redirect('qurban/sales-order')->with('success', 'SalesOrder deleted successfully');
+        return redirect('qurban/sales-order')->with('success', 'SalesLivestock deleted successfully');
     }
 }

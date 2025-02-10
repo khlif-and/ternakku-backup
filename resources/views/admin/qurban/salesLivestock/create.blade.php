@@ -44,8 +44,11 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="order_date">Tanggal Order</label>
-                            <input type="date" class="form-control" id="order_date" name="order_date" required>
+                            <label for="transaction_date">Tanggal Order</label>
+                            <input type="date" class="form-control" id="transaction_date" name="transaction_date" required value="{{ date('Y-m-d') }}">
+                        </div>
+                        <div id="">
+
                         </div>
                         <div class="form-group">
                             <label for="quantity">Kuantitas</label>

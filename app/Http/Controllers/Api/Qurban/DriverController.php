@@ -29,12 +29,13 @@ class DriverController extends Controller
             return ResponseHelper::error('Failed to create Driver', 500);
         }
 
-        return ResponseHelper::success(new DriverResource($driver), 'Driver created successfully', 200);
+        return ResponseHelper::success(new DriverResource($response['data']), 'Driver created successfully', 200);
     }
 
-    public function show($id)
+    public function show($farmId, $id)
     {
-        $driver = QurbanDriver::findOrFail($id);
+        $driver = $this->driverService->getDriver($farmId, $id);
+
 
         return ResponseHelper::success(new DriverResource($driver), 'Driver found', 200);
     }
@@ -54,12 +55,12 @@ class DriverController extends Controller
             return ResponseHelper::error('Failed to create Driver', 500);
         }
 
-        return ResponseHelper::success(new DriverResource($driver), 'Driver updated successfully', 200);
+        return ResponseHelper::success(new DriverResource($response['data']), 'Driver updated successfully', 200);
     }
 
     public function destroy($farm_id, $id)
     {
-        $response = $this->customerService->deleteDriver($farm_id, $id);
+        $response = $this->driverService->deleteDriver($farm_id, $id);
 
         if($response['error']) {
             return ResponseHelper::error('Failed to delete Driver', 500);

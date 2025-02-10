@@ -4,7 +4,7 @@ namespace App\Http\Requests\Qurban;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SalesOrderStoreRequest extends FormRequest
+class SalesLivestockUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
