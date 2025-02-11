@@ -127,7 +127,8 @@ Route::group([
                 Route::get('/', 'index');
                 Route::post('/', 'store');
                 Route::get('{id}/detail', 'show');
-                Route::post('{id}/update', 'update');
+                Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
             });
         });
     });

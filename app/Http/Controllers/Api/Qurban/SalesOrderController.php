@@ -10,12 +10,19 @@ use App\Enums\LivestockStatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LivestockResource;
+use App\Services\Qurban\SalesOrderService;
 use App\Http\Resources\Qurban\SalesOrderResource;
 use App\Http\Requests\Qurban\SalesOrderStoreRequest;
 use App\Http\Requests\Qurban\SalesOrderUpdateRequest;
 
 class SalesOrderController extends Controller
 {
+    private $salesOrderService;
+
+    public function __construct(SalesOrderService $salesOrderService)
+    {
+        $this->salesOrderService = $salesOrderService;
+    }
 
     public function availableLivestock(Request $request)
     {
@@ -108,5 +115,16 @@ class SalesOrderController extends Controller
 
             return ResponseHelper::error('Failed to update SalesOrder: ' . $e->getMessage(), 500);
         }
+    }
+
+    public function destroy($farm_id, $id)
+    {
+        $response = $this->salesOrderService->deleteSalesOrder($farm_id, $id);
+
+        if($response['error']) {
+            return ResponseHelper::error('Failed to delete Sales Order', 500);
+        }
+
+        return ResponseHelper::success(null, 'Sales Order deleted successfully', 200);
     }
 }
