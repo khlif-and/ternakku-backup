@@ -46,19 +46,20 @@ class SalesLivestockController extends Controller
         return ResponseHelper::success(new SalesLivestockResource($response['data']), 'Data created successfully', 200);
     }
 
-    // public function show($farmId, $id)
-    // {
-    //     $salesLivestock = QurbanSaleLivestock::findOrFail($id);
+    public function show($farmId , $id)
+    {
+        $data =  $this->salesLivestockService->getSalesLivestock($farmId, $id);
 
-    //     return ResponseHelper::success(new SalesLivestockResource($salesLivestock), 'SalesLivestock found', 200);
-    // }
+        return ResponseHelper::success(new SalesLivestockResource($data), 'Data found', 200);
+    }
 
-    // public function index($farmId)
-    // {
-    //     $salesLivestocks = QurbanSaleLivestock::where('farm_id' , $farmId)->get();
 
-    //     return ResponseHelper::success(SalesLivestockResource::collection($salesLivestocks), 'SalesLivestocks found', 200);
-    // }
+    public function index($farmId)
+    {
+        $data =  $this->salesLivestockService->getSalesLivestocks($farmId);
+
+        return ResponseHelper::success(SalesLivestockResource::collection($data), 'Data found', 200);
+    }
 
     // public function update(SalesLivestockUpdateRequest $request, $farm_id, $id)
     // {

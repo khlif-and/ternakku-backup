@@ -135,9 +135,9 @@ Route::group([
                 'controller' => App\Http\Controllers\Api\Qurban\SalesLivestockController::class,
             ], function(){
                 Route::get('/available-livestock', 'availableLivestock');
-                // Route::get('/', 'index');
+                Route::get('/', 'index');
                 Route::post('/', 'store');
-                // Route::get('{id}/detail', 'show');
+                Route::get('{id}', 'show');
                 // Route::post('{id}', 'update');
                 // Route::delete('{id}', 'destroy');
             });
