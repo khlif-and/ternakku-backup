@@ -13,7 +13,7 @@ class QurbanSaleLivestockD extends Model
 
     protected $fillable = [
         'qurban_sale_livestock_h_id',
-        'customer_address_id',
+        'qurban_customer_address_id',
         'livestock_id',
         'min_weight',
         'max_weight',
@@ -28,7 +28,7 @@ class QurbanSaleLivestockD extends Model
 
     public function qurbanCustomerAddress()
     {
-        return $this->belongsTo(QurbanCustomerAddress::class, 'customer_address_id');
+        return $this->belongsTo(QurbanCustomerAddress::class, 'qurban_customer_address_id');
     }
 
     public function livestock()

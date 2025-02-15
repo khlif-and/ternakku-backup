@@ -2,12 +2,31 @@
 
 namespace App\Services\Qurban;
 
-use App\Models\QurbanSaleLivestockH;
+use App\Models\Farm;
+use App\Enums\LivestockStatusEnum;
 use Illuminate\Support\Facades\DB;
+use App\Models\QurbanSaleLivestockD;
+use App\Models\QurbanSaleLivestockH;
 
 
 class SalesLivestockService
 {
+    public function getAvailableLivestock($farmId)
+    {
+        $farm = Farm::findOrFail($farmId);
+
+        // Ambil semua livestock yang statusnya 'HIDUP'
+        $livestocks = $farm->livestocks()->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)->get();
+
+        // Ambil ID dari sales orders yang sudah ada
+        $salesLivestockIds = QurbanSaleLivestockD::whereIn('livestock_id', $livestocks->pluck('id'))->pluck('livestock_id');
+
+        // Filter livestock yang tidak ada dalam sales orders
+        $livestockAvailable = $livestocks->whereNotIn('id', $salesLivestockIds);
+
+        return $livestockAvailable;
+    }
+
     public function getSalesLivestocks($farmId)
     {
         $salesLivestock = QurbanSaleLivestockH::where('farm_id', $farmId)->get();
@@ -27,27 +46,34 @@ class SalesLivestockService
         $data = null;
         $error = false;
 
-        $validated = $request->validated();
-
         DB::beginTransaction();
 
         try {
-
-            // Simpan data ke tabel SalesLivestocks
-            $salesLivestock = QurbanSaleLivestockH::create([
-                'farm_id'               => $farm_id,
-                'qurban_customer_id'    => $validated['customer_id'],
-                'Livestock_date'            => $validated['Livestock_date'],
-                'quantity'              => $validated['quantity'],
-                'total_weight'          => $validated['total_weight'],
-                'description'           => $validated['description'],
+            $header = QurbanSaleLivestockH::create([
+                'farm_id' => $farm_id,
+                'qurban_customer_id' => $request['customer_id'],
+                'customer_id' => $request['sales_order_id'] ?? null,
+                'transaction_date' => $request['transaction_date']
             ]);
 
-            // Commit transaksi
+            foreach ($request['details'] as $item) {
+                // dd($item);
+                QurbanSaleLivestockD::create([
+                    'qurban_sale_livestock_h_id' => $header->id,
+                    'qurban_customer_address_id' => $item['customer_address_id'],
+                    'livestock_id' => $item['livestock_id'],
+                    'min_weight' => $item['min_weight'],
+                    'max_weight' => $item['max_weight'],
+                    'price_per_kg' => $item['price_per_kg'],
+                    'price_per_head' => $item['price_per_head'],
+                ]);
+            }
+
             DB::commit();
 
-            $data = $salesLivestock;
+            $data = $header;
         } catch (\Exception $e) {
+            dd($e);
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
 
