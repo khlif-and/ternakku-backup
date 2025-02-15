@@ -86,31 +86,43 @@ class SalesLivestockService
         ];
     }
 
-    public function updateSalesLivestock($farmId, $salesLivestockId, $request)
+    public function updateSalesLivestock($farmId, $id, $request)
     {
-        $validated = $request->validated();
-
         $error = false;
         $data = null;
 
         DB::beginTransaction();
 
         try {
-            $salesLivestock = QurbanSaleLivestockH::where('farm_id' , $farmId)->where('id' , $salesLivestockId)->first();
+            $header = QurbanSaleLivestockH::where('farm_id' , $farmId)->where('id' , $id)->first();
 
-            $salesLivestock->update([
-                'qurban_customer_id'    => $validated['customer_id'],
-                'Livestock_date'            => $validated['Livestock_date'],
-                'quantity'              => $validated['quantity'],
-                'total_weight'          => $validated['total_weight'],
-                'description'           => $validated['description'],
+            $header->update([
+                'qurban_customer_id' => $request['customer_id'],
+                'customer_id' => $request['sales_order_id'] ?? null,
+                'transaction_date' => $request['transaction_date']
             ]);
 
-            $data = $salesLivestock;
+            $header->qurbanSaleLivestockD()->delete();
+
+            foreach ($request['details'] as $item) {
+                // dd($item);
+                QurbanSaleLivestockD::create([
+                    'qurban_sale_livestock_h_id' => $header->id,
+                    'qurban_customer_address_id' => $item['customer_address_id'],
+                    'livestock_id' => $item['livestock_id'],
+                    'min_weight' => $item['min_weight'],
+                    'max_weight' => $item['max_weight'],
+                    'price_per_kg' => $item['price_per_kg'],
+                    'price_per_head' => $item['price_per_head'],
+                ]);
+            }
 
             DB::commit();
 
+            $data = $header;
+
         } catch (\Exception $e) {
+            dd($e);
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
 
@@ -123,20 +135,23 @@ class SalesLivestockService
         ];
     }
 
-    public function deleteSalesLivestock($farm_id, $salesLivestockId)
+    public function deleteSalesLivestock($farmId, $id)
     {
         $error = false;
 
         try {
-            $salesLivestock = QurbanSaleLivestockH::where('farm_id' , $farm_id)->where('id',$salesLivestockId)->first();
+            $header = QurbanSaleLivestockH::where('farm_id' , $farmId)->where('id' , $id)->first();
 
-            $salesLivestock->delete();
+            $header->qurbanSaleLivestockD()->delete();
+
+            $header->delete();
 
             // Commit transaksi
             DB::commit();
 
 
         } catch (\Exception $e) {
+            dd($e);
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
 

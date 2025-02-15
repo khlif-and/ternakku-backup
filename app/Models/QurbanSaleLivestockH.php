@@ -80,7 +80,7 @@ class QurbanSaleLivestockH extends Model
         return $this->belongsTo(QurbanSalesOrder::class, 'qurban_sales_order_id');
     }
 
-    public function qurbanSalesLivestockD()
+    public function qurbanSaleLivestockD()
     {
         return $this->hasMany(QurbanSaleLivestockD::class, 'qurban_sale_livestock_h_id');
     }

@@ -26,7 +26,7 @@ class SalesLivestockResource extends JsonResource
             'farm' => new FarmDetailResource($this->farm),
             'customer' => new CustomerResource($this->qurbanCustomer),
             'sales_order' => new SalesOrderResource($this->qurbanSalesOrder),
-            'details' => SalesLivestockDetailResource::collection($this->qurbanSalesLivestockD),
+            'details' => SalesLivestockDetailResource::collection($this->qurbanSaleLivestockD),
         ];
     }
 }

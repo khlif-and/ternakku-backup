@@ -61,44 +61,28 @@ class SalesLivestockController extends Controller
         return ResponseHelper::success(SalesLivestockResource::collection($data), 'Data found', 200);
     }
 
-    // public function update(SalesLivestockUpdateRequest $request, $farm_id, $id)
-    // {
-    //     $validated = $request->validated();
+    public function update(SalesLivestockUpdateRequest $request, $farm_id, $id)
+    {
+        $validated = $request->validated();
 
-    //     DB::beginTransaction();
+        $response =  $this->salesLivestockService->updateSalesLivestock($farm_id, $id, $validated);
 
-    //     try {
-    //         $salesLivestock = QurbanSaleLivestock::findOrFail($id);
+        if($response['error']){
+            return ResponseHelper::error('Failed to update data', 500);
+        }
 
-    //         // Simpan data ke tabel SalesLivestocks
-    //         $salesLivestock->update([
-    //             'qurban_customer_id'          => $validated['customer_id'],
-    //             'order_date'           => $validated['order_date'],
-    //             'quantity'           => $validated['quantity'],
-    //             'total_weight'           => $validated['total_weight'],
-    //             'description'           => $validated['description'],
-    //         ]);
+        return ResponseHelper::success(new SalesLivestockResource($response['data']), 'Data updated successfully', 200);
+    }
 
-    //         // Commit transaksi
-    //         DB::commit();
+    public function destroy($farm_id, $id)
+    {
+        $response =  $this->salesLivestockService->deleteSalesLivestock($farm_id, $id);
 
-    //         return ResponseHelper::success(new SalesLivestockResource($salesLivestock), 'SalesLivestock updated successfully', 200);
-    //     } catch (\Exception $e) {
-    //         // Rollback transaksi jika terjadi kesalahan
-    //         DB::rollBack();
+        if($response['error']){
+            return ResponseHelper::error('Failed to delete data', 500);
+        }
 
-    //         return ResponseHelper::error('Failed to update SalesLivestock: ' . $e->getMessage(), 500);
-    //     }
-    // }
+        return ResponseHelper::success(null, 'Data deleted successfully', 200);
+    }
 
-    // public function destroy($farm_id, $id)
-    // {
-    //     $response = $this->salesLivestockService->deleteSalesLivestock($farm_id, $id);
-
-    //     if($response['error']) {
-    //         return ResponseHelper::error('Failed to delete Sales Order', 500);
-    //     }
-
-    //     return ResponseHelper::success(null, 'Sales Order deleted successfully', 200);
-    // }
 }
