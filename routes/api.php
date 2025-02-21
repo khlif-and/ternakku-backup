@@ -141,6 +141,17 @@ Route::group([
                 Route::post('{id}', 'update');
                 Route::delete('{id}', 'destroy');
             });
+
+            Route::group([
+                'prefix' => 'payment/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\PaymentController::class,
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
+            });
         });
     });
 
