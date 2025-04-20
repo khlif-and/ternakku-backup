@@ -3,10 +3,12 @@
 namespace App\Services\Qurban;
 
 use App\Models\Farm;
+use App\Models\Livestock;
 use App\Enums\LivestockStatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Models\QurbanSaleLivestockD;
 use App\Models\QurbanSaleLivestockH;
+use App\Models\QurbanCustomerAddress;
 
 
 class SalesLivestockService
@@ -57,7 +59,11 @@ class SalesLivestockService
             ]);
 
             foreach ($request['details'] as $item) {
-                // dd($item);
+
+                QurbanCustomerAddress::where('customer_id' , $request['customer_id'])->where('id' , $item['customer_address_id'])->firstOrFail();
+
+                Livestock::where('farm_id' , $farm_id)->where('id' , $item['livestock_id'])->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)->firstOrFail();
+
                 QurbanSaleLivestockD::create([
                     'qurban_sale_livestock_h_id' => $header->id,
                     'qurban_customer_address_id' => $item['customer_address_id'],
@@ -105,7 +111,10 @@ class SalesLivestockService
             $header->qurbanSaleLivestockD()->delete();
 
             foreach ($request['details'] as $item) {
-                // dd($item);
+                QurbanCustomerAddress::where('customer_id' , $request['customer_id'])->where('id' , $item['customer_address_id'])->firstOrFail();
+
+                Livestock::where('farm_id' , $farmId)->where('id' , $item['livestock_id'])->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)->firstOrFail();
+
                 QurbanSaleLivestockD::create([
                     'qurban_sale_livestock_h_id' => $header->id,
                     'qurban_customer_address_id' => $item['customer_address_id'],
