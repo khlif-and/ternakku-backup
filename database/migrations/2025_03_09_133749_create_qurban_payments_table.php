@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('qurban_payments', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('farm_id');
-            $table->date('transaction_date');
-            $table->unsignedBigInteger('qurban_customer_id');
-            $table->unsignedBigInteger('livestock_id');
-            $table->float('amount');
-            $table->foreign('qurban_customer_id')->references('id')->on('qurban_customers')->onDelete('cascade');
-            $table->foreign('livestock_id')->references('id')->on('livestocks')->onDelete('cascade');
-            $table->foreign('farm_id')->references('id')->on('farms')->onDelete('cascade');
-            $table->timestamps();
-        });
+        // Schema::create('qurban_payments', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->unsignedBigInteger('farm_id');
+        //     $table->date('transaction_date');
+        //     $table->unsignedBigInteger('qurban_customer_id');
+        //     $table->unsignedBigInteger('livestock_id');
+        //     $table->float('amount');
+        //     $table->foreign('qurban_customer_id')->references('id')->on('qurban_customers')->onDelete('cascade');
+        //     $table->foreign('livestock_id')->references('id')->on('livestocks')->onDelete('cascade');
+        //     $table->foreign('farm_id')->references('id')->on('farms')->onDelete('cascade');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('qurban_payments');
+        // Schema::dropIfExists('qurban_payments');
     }
 };

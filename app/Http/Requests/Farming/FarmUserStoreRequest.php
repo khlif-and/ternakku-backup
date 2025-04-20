@@ -23,7 +23,7 @@ class FarmUserStoreRequest extends FormRequest
     {
         return [
             'user_id' => 'required|integer|exists:users,id',
-            'farm_role' => 'required|string|in:ABK,ADMIN,DRIVER'
+            'farm_role' => 'required|string|in:ABK,ADMIN,DRIVER,MARKETING'
         ];
     }
 }

@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('qurban_payments', function (Blueprint $table) {
-            $table->id();
-            $table->foreign('qurban_sale_livestock_h_id')->references('id')->on('qurban_sale_livestock_h')->onDelete('cascade');
-            $table->timestamps();
-        });
+        // Schema::table('qurban_payments', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreign('qurban_sale_livestock_h_id')->references('id')->on('qurban_sale_livestock_h')->onDelete('cascade');
+        //     $table->timestamps();
+        // });
     }
 
     /**
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('qurban_payments');
+        // Schema::dropIfExists('qurban_payments');
     }
 };
