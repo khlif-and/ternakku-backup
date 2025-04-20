@@ -74,7 +74,8 @@ Route::group([
         });
 
         Route::group([
-            'middleware' => ['auth:api', 'email.verified', 'farmer', 'subs.basic_farming'],
+            // 'middleware' => ['auth:api', 'email.verified', 'farmer', 'subs.basic_farming'],
+            'middleware' => ['auth:api', 'email.verified', 'farmer'],
         ], function () {
 
             Route::group([
