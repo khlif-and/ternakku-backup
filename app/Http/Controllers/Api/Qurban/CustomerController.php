@@ -8,6 +8,7 @@ use App\Helpers\ResponseHelper;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\QurbanCustomerAddress;
+use App\Http\Requests\RegisterRequest;
 use App\Services\Qurban\CustomerService;
 use App\Http\Resources\Qurban\CustomerResource;
 use App\Http\Requests\Qurban\CustomerStoreRequest;
@@ -53,18 +54,31 @@ class CustomerController extends Controller
         return ResponseHelper::success(CustomerResource::collection($customers), 'customers found', 200);
     }
 
-    public function update(CustomerUpdateRequest $request, $farm_id, $id)
+    public function newUser(RegisterRequest $request, $farm_id)
     {
         $validated = $request->validated();
 
-        $response = $this->customerService->updateCustomer($validated, $farm_id, $id);
+        $customer = $this->customerService->newUser($validated, $farm_id);
 
-        if($response['error']) {
-            return ResponseHelper::error('Failed to update Customer', 500);
+        if($customer['error']) {
+            return ResponseHelper::error('Failed to create Customer', 500);
         }
 
-        return ResponseHelper::success(new CustomerResource($response['data']), 'Customer updated successfully', 200);
+        return ResponseHelper::success(new CustomerResource($customer), 'Customer created successfully', 200);
     }
+
+    // public function update(CustomerUpdateRequest $request, $farm_id, $id)
+    // {
+    //     $validated = $request->validated();
+
+    //     $response = $this->customerService->updateCustomer($validated, $farm_id, $id);
+
+    //     if($response['error']) {
+    //         return ResponseHelper::error('Failed to update Customer', 500);
+    //     }
+
+    //     return ResponseHelper::success(new CustomerResource($response['data']), 'Customer updated successfully', 200);
+    // }
 
     public function destroy($farm_id, $id)
     {
@@ -85,6 +99,7 @@ class CustomerController extends Controller
 
         try {
             $customer = QurbanCustomerAddress::create([
+                'name'               => $validated['name'],
                 'farm_id'               => $farm_id,
                 'qurban_customer_id'           => $customer_id,
                 'description'              => $validated['description'],
@@ -132,6 +147,7 @@ class CustomerController extends Controller
 
             // Simpan data ke tabel customers
             $customer->update([
+                'name'              => $validated['name'],
                 'description'              => $validated['description'],
                 'region_id'      => $validated['region_id'],
                 'postal_code'      => $validated['postal_code'],

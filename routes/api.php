@@ -74,8 +74,31 @@ Route::group([
         });
 
         Route::group([
-            'middleware' => ['auth:api', 'email.verified', 'farmer', 'check.farm.access' , 'subs.basic_farming'],
+            'middleware' => ['auth:api', 'email.verified', 'farmer', 'subs.basic_farming'],
         ], function () {
+
+            Route::group([
+                'prefix' => 'customer/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\CustomerController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN,MARKETING'],
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('new-user', 'newUser');
+                Route::delete('{id}', 'destroy');
+
+                Route::group([
+                    'prefix' => '{customer_id}/address',
+                ], function(){
+                    Route::get('/', 'addressIndex');
+                    Route::post('/', 'addressStore');
+                    Route::get('{id}', 'addressShow');
+                    Route::post('{id}', 'addressUpdate');
+                    Route::delete('{id}', 'addressDestroy');
+                });
+            });
+
             Route::group([
                 'prefix' => 'driver/{farm_id}',
                 'controller' => App\Http\Controllers\Api\Qurban\DriverController::class,
@@ -96,27 +119,6 @@ Route::group([
                 Route::get('{id}', 'show');
                 Route::post('{id}', 'update');
                 Route::delete('{id}', 'destroy');
-            });
-
-            Route::group([
-                'prefix' => 'customer/{farm_id}',
-                'controller' => App\Http\Controllers\Api\Qurban\CustomerController::class,
-            ], function(){
-                Route::get('/', 'index');
-                Route::post('/', 'store');
-                Route::get('{id}', 'show');
-                Route::post('{id}', 'update');
-                Route::delete('{id}', 'destroy');
-
-                Route::group([
-                    'prefix' => '{customer_id}/address',
-                ], function(){
-                    Route::get('/', 'addressIndex');
-                    Route::post('/', 'addressStore');
-                    Route::get('{id}', 'addressShow');
-                    Route::post('{id}', 'addressUpdate');
-                    Route::delete('{id}', 'addressDestroy');
-                });
             });
 
             Route::group([

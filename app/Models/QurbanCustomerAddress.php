@@ -10,6 +10,7 @@ class QurbanCustomerAddress extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
         'qurban_customer_id',
         'description',
         'region_id',

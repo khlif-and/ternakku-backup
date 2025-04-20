@@ -22,8 +22,7 @@ class CustomerStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'              => 'required|string|max:255',
-            'phone_number'              => 'required|string|max:255',
+            'user_id' => 'required|exists:users,id',
         ];
     }
 }
