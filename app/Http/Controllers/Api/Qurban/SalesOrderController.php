@@ -24,26 +24,6 @@ class SalesOrderController extends Controller
         $this->salesOrderService = $salesOrderService;
     }
 
-    public function availableLivestock(Request $request)
-    {
-        $farm = $request->attributes->get('farm');
-
-        // Ambil semua livestock yang statusnya 'HIDUP'
-        $livestocks = $farm->livestocks()->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)->get();
-
-        // Ambil ID dari sales orders yang sudah ada
-        $salesOrderIds = QurbanSalesOrder::whereIn('livestock_id', $livestocks->pluck('id'))->pluck('livestock_id');
-
-        // Filter livestock yang tidak ada dalam sales orders
-        $livestockAvailable = $livestocks->whereNotIn('id', $salesOrderIds);
-
-        // Dapatkan hasil akhir dan koleksi sebagai resource
-        $data = LivestockResource::collection($livestockAvailable);
-
-        return ResponseHelper::success($data, 'Livestocks retrieved successfully');
-
-    }
-
     public function store(SalesOrderStoreRequest $request, $farm_id)
     {
         $validated = $request->validated();
@@ -80,11 +60,16 @@ class SalesOrderController extends Controller
         return ResponseHelper::success(new SalesOrderResource($salesOrder), 'SalesOrder found', 200);
     }
 
-    public function index($farmId)
+    public function index($farmId, Request $request)
     {
-        $salesOrders = QurbanSalesOrder::where('farm_id' , $farmId)->get();
+        $salesOrders = QurbanSalesOrder::where('farm_id', $farmId)
+        ->when($request->qurban_customer_id, function ($query) use ($request) {
+            $query->where('qurban_customer_id', $request->qurban_customer_id);
+        })
+        ->get();
 
         return ResponseHelper::success(SalesOrderResource::collection($salesOrders), 'SalesOrders found', 200);
+
     }
 
     public function update(SalesOrderUpdateRequest $request, $farm_id, $id)
