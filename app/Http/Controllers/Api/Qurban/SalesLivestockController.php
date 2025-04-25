@@ -54,9 +54,9 @@ class SalesLivestockController extends Controller
     }
 
 
-    public function index($farmId)
+    public function index($farmId, Request $request)
     {
-        $data =  $this->salesLivestockService->getSalesLivestocks($farmId);
+        $data =  $this->salesLivestockService->getSalesLivestocks($farmId, $request);
 
         return ResponseHelper::success(SalesLivestockResource::collection($data), 'Data found', 200);
     }

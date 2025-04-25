@@ -29,11 +29,15 @@ class SalesLivestockService
         return $livestockAvailable;
     }
 
-    public function getSalesLivestocks($farmId)
+    public function getSalesLivestocks($farmId, $param)
     {
-        $salesLivestock = QurbanSaleLivestockH::where('farm_id', $farmId)->get();
+        $query = QurbanSaleLivestockH::where('farm_id', $farmId);
 
-        return $salesLivestock;
+        if (!empty($param['qurban_customer_id'])) {
+            $query->where('qurban_customer_id', $param->qurban_customer_id);
+        }
+    
+        return $query->get();    
     }
 
     public function getSalesLivestock($farmId , $salesLivestockId)

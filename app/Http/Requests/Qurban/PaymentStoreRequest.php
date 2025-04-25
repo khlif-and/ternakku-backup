@@ -22,6 +22,7 @@ class PaymentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'qurban_customer_id' => 'required|exists:qurban_customers,id',
             'transaction_date' => 'required|date',
             'livestock_id' => 'required|exists:qurban_sale_livestock_d,livestock_id',
             'amount' => 'required|numeric',

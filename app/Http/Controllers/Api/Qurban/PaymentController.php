@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Api\Qurban;
 use Illuminate\Http\Request;
 use App\Models\QurbanPayment;
 use App\Helpers\ResponseHelper;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\QurbanSaleLivestockD;
+use App\Http\Resources\Qurban\PaymentResource;
 use App\Http\Requests\Qurban\PaymentStoreRequest;
+use App\Http\Requests\Qurban\PaymentUpdateRequest;
 
 class PaymentController extends Controller
 {
@@ -25,12 +28,16 @@ class PaymentController extends Controller
         DB::beginTransaction();
 
         try {
-            $qurbanSaleLivestock = QurbanSaleLivestockD::where('livestock_id', $validated['livestock_id'])->findOrFail();
+            $qurbanSaleLivestock = QurbanSaleLivestockD::where('livestock_id', $validated['livestock_id'])
+                                        ->whereHas('qurbanSaleLivestockH', function ($q) use ($validated) {
+                                            $q->where('qurban_customer_id', $validated['qurban_customer_id']);
+                                        })
+                                        ->firstOrFail();
 
             $payment = QurbanPayment::create([
                 'farm_id'               => $farm_id,
                 'transaction_date'      => $validated['transaction_date'],
-                'qurban_customer_id'    => $qurbanSaleLivestock->qurban_customer_id,
+                'qurban_customer_id'    => $validated['qurban_customer_id'],
                 'livestock_id'          => $validated['livestock_id'],
                 'amount'                => $validated['amount'],
             ]);
@@ -54,7 +61,7 @@ class PaymentController extends Controller
         return ResponseHelper::success(new PaymentResource($payment), 'Payment found', 200);
     }
 
-    public function update(QurbanUpdateRequest $request, $farm_id, $id)
+    public function update(PaymentUpdateRequest $request, $farm_id, $id)
     {
         $validated = $request->validated();
 
@@ -63,16 +70,25 @@ class PaymentController extends Controller
         try {
             $payment = QurbanPayment::findOrFail($id);
 
+            $qurbanSaleLivestock = QurbanSaleLivestockD::where('livestock_id', $validated['livestock_id'])
+                                        ->whereHas('qurbanSaleLivestockH', function ($q) use ($validated) {
+                                            $q->where('qurban_customer_id', $validated['qurban_customer_id']);
+                                        })
+                                        ->firstOrFail();
+
+
             // Simpan data ke tabel Qurbans
             $payment->update([
                 'transaction_date'      => $validated['transaction_date'],
+                'qurban_customer_id'    => $validated['qurban_customer_id'],
+                'livestock_id'          => $validated['livestock_id'],
                 'amount'                => $validated['amount'],
             ]);
 
             // Commit transaksi
             DB::commit();
 
-            return ResponseHelper::success(new QurbanResource($payment), 'Qurban updated successfully', 200);
+            return ResponseHelper::success(new PaymentResource($payment), 'Payment updated successfully', 200);
         } catch (\Exception $e) {
             // Rollback transaksi jika terjadi kesalahan
             DB::rollBack();
@@ -87,11 +103,7 @@ class PaymentController extends Controller
 
         $payment->delete();
 
-        if($response['error']) {
-            return ResponseHelper::error('Failed to delete Sales Order', 500);
-        }
-
-        return ResponseHelper::success(null, 'Sales Order deleted successfully', 200);
+        return ResponseHelper::success(null, 'Payment deleted successfully', 200);
     }
 
 }
