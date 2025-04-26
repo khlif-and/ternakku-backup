@@ -22,7 +22,7 @@ class PaymentResource extends JsonResource
             'transaction_date' => $this->transaction_date,
             'customer' => new CustomerResource($this->qurbanCustomer),
             'livestock' => new LivestockResource($this->livestock),
-            'amount' => $this->amount,
+            'amount' => (float) $this->amount,
         ];
     }
 }
