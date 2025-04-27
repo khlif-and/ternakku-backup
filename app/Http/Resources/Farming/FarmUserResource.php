@@ -20,6 +20,9 @@ class FarmUserResource extends JsonResource
             'name' => $this->user->name,
             'email' => $this->user->email,
             'phone_number' => $this->user->phone_number,
+            'profile' => [
+                'photo' => $this->user->profile && $this->user->profile->photo ? getNeoObject($this->user->profile?->photo) : null,
+            ],
             'farm_role' => $this->farm_role
         ];
     }
