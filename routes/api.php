@@ -198,6 +198,7 @@ Route::group([
                     Route::get('/{farmId}/list-user', [App\Http\Controllers\Api\FarmController::class, 'listUser']);
                     Route::post('/{farmId}/add-user', [App\Http\Controllers\Api\FarmController::class, 'addUser']);
                     Route::post('/{farmId}/remove-user', [App\Http\Controllers\Api\FarmController::class, 'removeUser']);
+                    Route::post('/{farm_id}/update-profile-user', [App\Http\Controllers\Api\FarmController::class, 'updateProfileUser'])->middleware(['check.farm.access:OWNER,ADMIN']);
                 });
 
                 Route::group(['middleware' => ['check.farm.access' , 'subs.basic_farming']], function () {

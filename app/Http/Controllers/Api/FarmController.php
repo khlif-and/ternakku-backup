@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\Farm;
 use App\Models\User;
 use App\Enums\RoleEnum;
+use App\Models\Profile;
 use App\Models\FarmUser;
 use App\Models\FarmDetail;
 use App\Services\FarmService;
@@ -13,14 +14,17 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\FarmListResource;
 use App\Http\Resources\FarmDetailResource;
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\Farming\FindUserRequest;
 use App\Http\Requests\Farming\FarmStoreRequest;
 use App\Http\Requests\Farming\FarmUpdateRequest;
 use App\Http\Resources\Farming\FarmUserResource;
 use App\Http\Requests\Farming\FarmUserStoreRequest;
 use App\Http\Requests\Farming\FarmUserRemoveRequest;
+use App\Http\Requests\Farming\FarmUpdateProfileUserRequest;
 
 class FarmController extends Controller
 {
@@ -373,5 +377,58 @@ class FarmController extends Controller
         }
 
         return $farm;
+    }
+
+    public function updateProfileUser(FarmUpdateProfileUserRequest $request, $farmId)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+
+            $farmUser = FarmUser::where('user_id', $validated['user_id'])
+                ->where('farm_id', $farmId)
+                ->firstOrFail();
+
+            $user = User::findOrFail($validated['user_id']);
+
+            $user->update([
+                'name' => $validated['name'],
+            ]);
+
+            $profile = $user->profile;
+
+            if (isset($validated['photo']) && $request->hasFile('photo')) {
+
+                if ($profile && $profile->photo) {
+                    deleteNeoObject($profile->photo);
+                }
+
+                $file = $validated['photo'];
+                $fileName = time() . '-profile-' . $file->getClientOriginalName();
+                $filePath = 'profile/';
+                $profileData['photo'] = uploadNeoObject($file, $fileName, $filePath);
+
+            }
+
+            if($profile){
+                $profile->update($profileData);
+            }else{
+                $profileData['user_id'] = $user->id;
+                // dd($profileData);
+                Profile::create($profileData);
+            }
+
+            DB::commit();
+
+            return ResponseHelper::success(new UserResource($user), 'Profile updated successfully', 200);
+
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to update profile: ' . $e->getMessage(), 500);
+        }
     }
 }

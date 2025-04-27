@@ -115,7 +115,7 @@ class SalesLivestockService
             $header->qurbanSaleLivestockD()->delete();
 
             foreach ($request['details'] as $item) {
-                QurbanCustomerAddress::where('customer_id' , $request['customer_id'])->where('id' , $item['customer_address_id'])->firstOrFail();
+                QurbanCustomerAddress::where('qurban_customer_id' , $request['customer_id'])->where('id' , $item['customer_address_id'])->firstOrFail();
 
                 Livestock::where('farm_id' , $farmId)->where('id' , $item['livestock_id'])->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)->firstOrFail();
 
