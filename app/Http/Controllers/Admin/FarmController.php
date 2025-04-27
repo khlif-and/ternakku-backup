@@ -49,28 +49,38 @@ class FarmController extends Controller
         return redirect('/dashboard');
     }
 
+
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'farm_name' => 'required|string|max:255',
             'registration_date' => 'required|date',
             'qurban_partner' => 'nullable|boolean',
         ]);
 
         $data = [
-            'name' => $validated['farm_name'],
-            'registration_date' => $validated['registration_date'],
-            'qurban_partner' => $request->has('qurban_partner'),
+            'name' => $request->farm_name,
             'owner_id' => auth()->id(),
+            'registration_date' => $request->registration_date,
+            'qurban_partner' => $request->has('qurban_partner'),
         ];
 
         $farm = $this->farmService->createFarm($data);
 
+        $farmUser = FarmUser::create([
+            'user_id' => auth()->id(),
+            'farm_id' => $farm->id,
+            'farm_role' => 'OWNER',
+        ]);
+
+        $farmUser->load('farm');
 
         session(['selected_farm' => $farm->id]);
 
         return redirect('select-farm')->with('success', 'Farm berhasil dibuat!');
     }
+
 
     public function findUser()
     {

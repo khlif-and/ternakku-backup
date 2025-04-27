@@ -6,7 +6,7 @@
         <h3 class="fw-bold mb-3">Data Pengguna</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home">
-                <a href="#">
+                <a href="
                     <i class="icon-home"></i>
                 </a>
             </li>
@@ -14,13 +14,13 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Data Awal</a>
+                <a href="
             </li>
             <li class="separator">
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ url('qurban/farm/user-list') }}">Data Pengguna</a>            
+                <a href="{{ url('qurban/farm/user-list') }}">Data Pengguna</a>
             </li>
         </ul>
     </div>

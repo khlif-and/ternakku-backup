@@ -38,7 +38,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="basic-datatables" class="display table table-striped table-hover" >
+                        <table id="basic-datatables" class="display table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Nama</th>
@@ -49,17 +49,35 @@
                             </thead>
 
                             <tbody>
-                                @foreach($drivers as $driver)
-                                <tr>
-                                    <td>{{ $driver->name }}</td>
-                                    <td>{{ $driver->fullAddress() }}</td>
-                                    <td>
-                                        @if($driver->photo)
-                                        <img src="{{ getNeoObject($driver->photo) }}" alt="Driver Photo" style="width: 100px; height: auto;"></td>
-                                        @endif
-                                    <td></td>
-                                </tr>
-                                @endforeach
+                                @forelse($drivers as $driver)
+                                    <tr>
+                                        <td>{{ $driver->name }}</td>
+                                        <td>{{ $driver->fullAddress() }}</td>
+                                        <td>
+                                            @if($driver->photo)
+                                                <img src="{{ getNeoObject($driver->photo) }}" alt="Driver Photo" style="width: 100px; height: auto;">
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <!-- Tombol aksi jika mau -->
+                                            <button class="btn btn-sm btn-warning">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Hapus</button>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <!-- Dummy Data -->
+                                    <tr>
+                                        <td>Driver Dummy</td>
+                                        <td>Jl. Contoh No.123, Jakarta</td>
+                                        <td>
+                                            <img src="https://via.placeholder.com/100x80?text=Foto" alt="Dummy Photo" style="width: 100px; height: auto;">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Hapus</button>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -71,10 +89,9 @@
 @endsection
 
 @section('script')
-<script >
+<script>
     $(document).ready(function() {
-        $('#basic-datatables').DataTable({
-        });
+        $('#basic-datatables').DataTable();
     });
 </script>
 @endsection

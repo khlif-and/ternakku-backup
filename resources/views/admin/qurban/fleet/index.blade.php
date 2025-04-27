@@ -38,7 +38,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="basic-datatables" class="display table table-striped table-hover" >
+                        <table id="basic-datatables" class="display table table-striped table-hover">
                             <thead>
                                 <tr>
                                     <th>Nama</th>
@@ -49,29 +49,64 @@
                             </thead>
 
                             <tbody>
-                                @foreach($fleets as $fleet)
-                                <tr>
-                                    <td>{{ $fleet->name }}</td>
-                                    <td>{{ $fleet->police_number }}</td>
-                                    <td>
-                                        @if($fleet->photo)
-                                        <img src="{{ getNeoObject($fleet->photo) }}" alt="Fleet Photo" style="width: 100px; height: auto;">
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <a href="{{ url('qurban/fleet/' . $fleet->id . '/edit') }}" class="btn btn-warning btn-sm me-2">
-                                            <i class="fa fa-edit"></i> Edit
-                                        </a>
-                                        <form action="{{ url('qurban/fleet/' . $fleet->id) }}" method="post" class="d-inline me-2" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
-                                            @csrf
-                                            @method('delete')
-                                            <button class="btn btn-danger btn-sm">
-                                                <i class="fa fa-trash"></i> Hapus
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @endforeach
+                                @forelse($fleets as $fleet)
+                                    <tr>
+                                        <td>{{ $fleet->name }}</td>
+                                        <td>{{ $fleet->police_number }}</td>
+                                        <td>
+                                            @if($fleet->photo)
+                                                <img src="{{ getNeoObject($fleet->photo) }}" alt="Fleet Photo" style="width: 100px; height: auto;">
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a href="{{ url('qurban/fleet/' . $fleet->id . '/edit') }}" class="btn btn-warning btn-sm me-2">
+                                                <i class="fa fa-edit"></i> Edit
+                                            </a>
+                                            <form action="{{ url('qurban/fleet/' . $fleet->id) }}" method="post" class="d-inline me-2" onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                                @csrf
+                                                @method('delete')
+                                                <button class="btn btn-danger btn-sm">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <!-- Dummy Data Armada -->
+                                    <tr>
+                                        <td>Armada Dummy 1</td>
+                                        <td>B 1234 XYZ</td>
+                                        <td>
+                                            <img src="https://via.placeholder.com/100x80?text=Foto" alt="Dummy Photo" style="width: 100px; height: auto;">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Hapus</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Armada Dummy 2</td>
+                                        <td>D 5678 ABC</td>
+                                        <td>
+                                            <img src="https://via.placeholder.com/100x80?text=Foto" alt="Dummy Photo" style="width: 100px; height: auto;">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Hapus</button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Armada Dummy 3</td>
+                                        <td>E 9101 DEF</td>
+                                        <td>
+                                            <img src="https://via.placeholder.com/100x80?text=Foto" alt="Dummy Photo" style="width: 100px; height: auto;">
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-sm btn-warning">Edit</button>
+                                            <button class="btn btn-sm btn-danger">Hapus</button>
+                                        </td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
@@ -83,10 +118,9 @@
 @endsection
 
 @section('script')
-<script >
+<script>
     $(document).ready(function() {
-        $('#basic-datatables').DataTable({
-        });
+        $('#basic-datatables').DataTable();
     });
 </script>
 @endsection
