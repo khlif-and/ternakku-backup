@@ -121,7 +121,7 @@
 							</div>
 						</div>
 						<div class="col-sm-6 col-md-3">
-                            <a href="{{ session('selected_farm') ? url('qurban/dashboard') : url('select-farm/?redirect_url=qurban/dashboard') }}">
+                            <a href="{{ url('select-farm?redirect_url=qurban/dashboard') }}">
                                 <div class="card card-stats card-round">
                                     <div class="card-body">
                                         <div class="row align-items-center">

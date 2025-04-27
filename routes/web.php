@@ -2,119 +2,98 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\FarmController;
+use App\Http\Controllers\Admin\Qurban\DashboardController;
+use App\Http\Controllers\Admin\Qurban\CustomerController;
+use App\Http\Controllers\Admin\Qurban\FleetController;
+use App\Http\Controllers\Admin\Qurban\DriverController;
+use App\Http\Controllers\Admin\Qurban\SalesOrderController;
+use App\Http\Controllers\Admin\Qurban\SalesLivestockController;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 Route::get('/', [HomeController::class, 'index']);
 
-Route::group([
-    'prefix' => 'auth',
-    'controller' => App\Http\Controllers\Admin\AuthController::class
-], function () {
+Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::get('login', 'showLoginForm');
     Route::post('login', 'login')->name('login');
-    Route::post('/logout', 'logout')->name('logout');
+    Route::post('logout', 'logout')->name('logout');
 });
 
-
-Route::middleware(['auth', 'email.verified'])->group(function() {
-    Route::get('dashboard' , function(){
+Route::middleware(['auth', 'email.verified'])->group(function () {
+    Route::get('dashboard', function () {
         return view('menu.index');
     });
 
-    Route::get('select-farm' , [App\Http\Controllers\Admin\FarmController::class , 'selectFarm']);
-    Route::post('select-farm' , [App\Http\Controllers\Admin\FarmController::class , 'selectFarmStore']);
+    // Farm select and create
+    Route::get('select-farm', [FarmController::class, 'selectFarm']);
+    Route::post('select-farm', [FarmController::class, 'selectFarmStore']);
+    Route::get('create-farm', [FarmController::class, 'create'])->name('farm.create');
+    Route::post('create-farm', [FarmController::class, 'store'])->name('farm.store');
 
-    Route::group([
-        'prefix' => 'qurban',
-        'middleware' => ['farmer']
-    ], function () {
-        Route::get('dashboard', [App\Http\Controllers\Admin\Qurban\DashboardController::class , 'dashboard']);
 
-        Route::group([
-            'prefix' => 'farm',
-            'controller' => App\Http\Controllers\Admin\FarmController::class
-        ], function () {
-            Route::get('/find-user', 'findUser');
-            Route::get('/user-list', 'userList');
-            Route::post('/add-user', 'addUser');
-            Route::get('/user-list/create', 'userCreate');
+
+    Route::prefix('qurban')->middleware('farmer')->group(function () {
+        Route::get('dashboard', [DashboardController::class, 'dashboard']);
+
+        Route::prefix('farm')->controller(FarmController::class)->group(function () {
+            Route::get('find-user', 'findUser');
+            Route::get('user-list', 'userList');
+            Route::post('add-user', 'addUser');
+            Route::get('user-list/create', 'userCreate');
         });
 
-        Route::group([
-            'prefix' => 'customer',
-            'controller' => App\Http\Controllers\Admin\Qurban\CustomerController::class
-        ], function () {
+        Route::prefix('customer')->controller(CustomerController::class)->group(function () {
             Route::get('/', 'index');
-            Route::get('/create', 'create');
+            Route::get('create', 'create');
             Route::post('/', 'store');
-            Route::get('/{customerId}/edit', 'edit');
-            Route::put('/{customerId}', 'update');
-            Route::delete('/{customerId}', 'destroy');
+            Route::get('{customerId}/edit', 'edit');
+            Route::put('{customerId}', 'update');
+            Route::delete('{customerId}', 'destroy');
         });
 
-        Route::group([
-            'prefix' => 'customer/address/{customerId}',
-            'controller' => App\Http\Controllers\Admin\Qurban\CustomerController::class
-        ], function () {
+        Route::prefix('customer/address/{customerId}')->controller(CustomerController::class)->group(function () {
             Route::get('/', 'indexAddress');
-            Route::get('/create', 'createAddress');
+            Route::get('create', 'createAddress');
             Route::post('/', 'storeAddress');
-            Route::get('/{addressId}/edit', 'editAddress');
-            Route::post('/{addressId}', 'updateAddress');
-            Route::post('/{addressId}', 'updateAddress');
+            Route::get('{addressId}/edit', 'editAddress');
+            Route::post('{addressId}', 'updateAddress');
         });
 
-        Route::group([
-            'prefix' => 'fleet',
-            'controller' => App\Http\Controllers\Admin\Qurban\FleetController::class
-        ], function () {
+        Route::prefix('fleet')->controller(FleetController::class)->group(function () {
             Route::get('/', 'index');
-            Route::get('/create', 'create');
+            Route::get('create', 'create');
             Route::post('/', 'store');
-            Route::get('/{fleetId}/edit', 'edit');
-            Route::put('/{fleetId}', 'update');
-            Route::delete('/{fleetId}', 'destroy');
+            Route::get('{fleetId}/edit', 'edit');
+            Route::put('{fleetId}', 'update');
+            Route::delete('{fleetId}', 'destroy');
         });
 
-        Route::group([
-            'prefix' => 'driver',
-            'controller' => App\Http\Controllers\Admin\Qurban\DriverController::class
-        ], function () {
+        Route::prefix('driver')->controller(DriverController::class)->group(function () {
             Route::get('/', 'index');
         });
 
-        Route::group([
-            'prefix' => 'sales-order',
-            'controller' => App\Http\Controllers\Admin\Qurban\SalesOrderController::class
-        ], function () {
+        Route::prefix('sales-order')->controller(SalesOrderController::class)->group(function () {
             Route::get('/', 'index');
-            Route::get('/create', 'create');
+            Route::get('create', 'create');
             Route::post('/', 'store');
-            Route::get('/{salesOrderId}/edit', 'edit');
-            Route::put('/{salesOrderId}', 'update');
-            Route::delete('/{salesOrderId}', 'destroy');
+            Route::get('{salesOrderId}/edit', 'edit');
+            Route::put('{salesOrderId}', 'update');
+            Route::delete('{salesOrderId}', 'destroy');
         });
 
-        Route::group([
-            'prefix' => 'sales-livestock',
-            'controller' => App\Http\Controllers\Admin\Qurban\SalesLivestockController::class
-        ], function () {
+        Route::prefix('sales-livestock')->controller(SalesLivestockController::class)->group(function () {
             Route::get('/', 'index');
-            Route::get('/create', 'create');
+            Route::get('create', 'create');
             Route::post('/', 'store');
-            Route::get('/{saleLivestockId}/edit', 'edit');
-            Route::put('/{saleLivestockId}', 'update');
-            Route::delete('/{saleLivestockId}', 'destroy');
+            Route::get('{saleLivestockId}/edit', 'edit');
+            Route::put('{saleLivestockId}', 'update');
+            Route::delete('{saleLivestockId}', 'destroy');
         });
     });
 });

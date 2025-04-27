@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Services\FarmService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Farming\FarmUserStoreRequest;
+use App\Models\Farm;
+use App\Models\FarmUser;
 
 class FarmController extends Controller
 {
@@ -16,9 +18,22 @@ class FarmController extends Controller
         $this->farmService = $farmService;
     }
 
-    public function selectFarm()
+    public function create()
     {
+        return view('admin.farm.create_farm');
+    }
+
+    public function selectFarm(Request $request)
+    {
+        if (session()->has('selected_farm') && $request->has('redirect_url')) {
+            return redirect($request->get('redirect_url'));
+        }
+
         $farms = $this->farmService->getFarmList();
+
+        if ($farms->isEmpty()) {
+            return view('admin.farm.create_farm');
+        }
 
         return view('admin.farm.select_farm', compact('farms'));
     }
@@ -27,21 +42,45 @@ class FarmController extends Controller
     {
         session(['selected_farm' => $request->farm_id]);
 
-        return redirect($request->redirect_url);
+        if ($request->filled('redirect_url')) {
+            return redirect($request->redirect_url);
+        }
+
+        return redirect('/dashboard');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'farm_name' => 'required|string|max:255',
+            'registration_date' => 'required|date',
+            'qurban_partner' => 'nullable|boolean',
+        ]);
+
+        $data = [
+            'name' => $validated['farm_name'],
+            'registration_date' => $validated['registration_date'],
+            'qurban_partner' => $request->has('qurban_partner'),
+            'owner_id' => auth()->id(),
+        ];
+
+        $farm = $this->farmService->createFarm($data);
+
+
+        session(['selected_farm' => $farm->id]);
+
+        return redirect('select-farm')->with('success', 'Farm berhasil dibuat!');
     }
 
     public function findUser()
     {
         $username = request('username');
-
         $user = $this->farmService->findUser($username);
-
         return response()->json($user);
     }
 
     public function userList()
     {
-        //TODO : Get farm id from session
         $farmId = session('selected_farm');
 
         $response = $this->farmService->getUsers($farmId);
@@ -54,7 +93,7 @@ class FarmController extends Controller
 
         $users = $response['data'];
 
-        return view('admin.farm.user_list' , compact('users'));
+        return view('admin.farm.user_list', compact('users'));
     }
 
     public function userCreate()
