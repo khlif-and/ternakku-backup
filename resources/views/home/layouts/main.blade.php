@@ -66,7 +66,7 @@
                             <div class="row gy-4 gy-md-8 pt-9 pt-lg-0">
                                 <div class="col-lg-6 text-center text-lg-start">
                                     <h1 class="fs-2 fs-lg-1 text-white fw-bold mb-2 mb-lg-x1 lh-base mt-3 mt-lg-0">
-                                        Aplikasi Pintar untuk <span class="text-nowrap">Peternak Hebat</span></h1>
+                                        Aplikasi Pintar <span class="text-nowrap">untuk Peternak Hebat</span></h1>
                                     <p class="fs-8 text-white mb-3 mb-lg-4 lh-lg">Ternakku membantu peternak mencatat,
                                         mengelola, dan mengembangkan usaha ternak secara sistematis dan modern.</p>
                                     <div class="d-flex justify-content-center justify-content-lg-start"><a
