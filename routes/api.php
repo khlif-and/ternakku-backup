@@ -103,6 +103,7 @@ Route::group([
             Route::group([
                 'prefix' => 'driver/{farm_id}',
                 'controller' => App\Http\Controllers\Api\Qurban\DriverController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN'],
             ], function(){
                 Route::get('/', 'index');
                 Route::post('/', 'store');
@@ -114,6 +115,7 @@ Route::group([
             Route::group([
                 'prefix' => 'fleet/{farm_id}',
                 'controller' => App\Http\Controllers\Api\Qurban\FleetController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN'],
             ], function(){
                 Route::get('/', 'index');
                 Route::post('/', 'store');
@@ -125,6 +127,7 @@ Route::group([
             Route::group([
                 'prefix' => 'sales-order/{farm_id}',
                 'controller' => App\Http\Controllers\Api\Qurban\SalesOrderController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN,MARKETING'],
             ], function(){
                 Route::get('/', 'index');
                 Route::post('/', 'store');
@@ -136,6 +139,7 @@ Route::group([
             Route::group([
                 'prefix' => 'sales-livestock/{farm_id}',
                 'controller' => App\Http\Controllers\Api\Qurban\SalesLivestockController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN,MARKETING'],
             ], function(){
                 Route::get('/available-livestock', 'availableLivestock');
                 Route::get('/', 'index');
@@ -148,6 +152,7 @@ Route::group([
             Route::group([
                 'prefix' => 'payment/{farm_id}',
                 'controller' => App\Http\Controllers\Api\Qurban\PaymentController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN,MARKETING'],
             ], function(){
                 Route::get('/', 'index');
                 Route::post('/', 'store');
