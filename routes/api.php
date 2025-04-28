@@ -72,6 +72,95 @@ Route::group([
                 Route::get('/{id}', 'detail');
             });
         });
+
+        Route::group([
+            // 'middleware' => ['auth:api', 'email.verified', 'farmer', 'subs.basic_farming'],
+            'middleware' => ['auth:api', 'email.verified', 'farmer'],
+        ], function () {
+
+            Route::group([
+                'prefix' => 'customer/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\CustomerController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN,MARKETING'],
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('new-user', 'newUser');
+                Route::delete('{id}', 'destroy');
+
+                Route::group([
+                    'prefix' => '{customer_id}/address',
+                ], function(){
+                    Route::get('/', 'addressIndex');
+                    Route::post('/', 'addressStore');
+                    Route::get('{id}', 'addressShow');
+                    Route::post('{id}', 'addressUpdate');
+                    Route::delete('{id}', 'addressDestroy');
+                });
+            });
+
+            Route::group([
+                'prefix' => 'driver/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\DriverController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN'],
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
+            });
+
+            Route::group([
+                'prefix' => 'fleet/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\FleetController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN'],
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
+            });
+
+            Route::group([
+                'prefix' => 'sales-order/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\SalesOrderController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN,MARKETING'],
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}/detail', 'show');
+                Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
+            });
+
+            Route::group([
+                'prefix' => 'sales-livestock/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\SalesLivestockController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN,MARKETING'],
+            ], function(){
+                Route::get('/available-livestock', 'availableLivestock');
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
+            });
+
+            Route::group([
+                'prefix' => 'payment/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\PaymentController::class,
+                'middleware' => ['check.farm.access:OWNER,ADMIN,MARKETING'],
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
+            });
+        });
     });
 
     Route::group(['prefix' => 'data-master', 'controller' => App\Http\Controllers\Api\DataMasterController::class], function () {
@@ -114,9 +203,10 @@ Route::group([
                     Route::get('/{farmId}/list-user', [App\Http\Controllers\Api\FarmController::class, 'listUser']);
                     Route::post('/{farmId}/add-user', [App\Http\Controllers\Api\FarmController::class, 'addUser']);
                     Route::post('/{farmId}/remove-user', [App\Http\Controllers\Api\FarmController::class, 'removeUser']);
+                    Route::post('/{farm_id}/update-profile-user', [App\Http\Controllers\Api\FarmController::class, 'updateProfileUser'])->middleware(['check.farm.access:OWNER,ADMIN']);
                 });
 
-                Route::group(['middleware' => ['check.farm.access']], function () {
+                Route::group(['middleware' => ['check.farm.access' , 'subs.basic_farming']], function () {
                     Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
                         Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
                         Route::get('/{farm_id}/livestock', 'getLivestock');
@@ -294,13 +384,13 @@ Route::group([
                         Route::delete('/{farm_id}/{treatmentColonyId}', 'destroy');
                     });
 
-                    Route::group(['prefix' => 'mutation-colony', 'controller' => App\Http\Controllers\Api\Farming\MutationColonyController::class], function () {
-                        Route::get('/{farm_id}', 'index');
-                        Route::get('/{farm_id}/{dataId}', 'show');
-                        Route::post('/{farm_id}', 'store');
-                        Route::post('/{farm_id}/{dataId}/update', 'update');
-                        Route::delete('/{farm_id}/{dataId}', 'destroy');
-                    });
+                    // Route::group(['prefix' => 'mutation-colony', 'controller' => App\Http\Controllers\Api\Farming\MutationColonyController::class], function () {
+                    //     Route::get('/{farm_id}', 'index');
+                    //     Route::get('/{farm_id}/{dataId}', 'show');
+                    //     Route::post('/{farm_id}', 'store');
+                    //     Route::post('/{farm_id}/{dataId}/update', 'update');
+                    //     Route::delete('/{farm_id}/{dataId}', 'destroy');
+                    // });
 
                     Route::group(['prefix' => 'milk-production-colony', 'controller' => App\Http\Controllers\Api\Farming\MilkProductionColonyController::class], function () {
                         Route::get('/{farm_id}', 'index');

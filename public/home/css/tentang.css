@@ -1,0 +1,50 @@
+    /* Menghilangkan jarak antara bagian atas halaman dan konten */
+    .container {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: -70px; /* Menghilangkan jarak atas */
+        padding-bottom: 20px;
+    }
+
+    /* Styling untuk card */
+    .card {
+        border: none;
+        margin-bottom: 20px; /* Tambahkan jarak antar card */
+        padding: 10px;
+    }
+
+    .card-img-placeholder {
+        width: 100%;
+        height: 250px;
+        background-color: #e0e0e0;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    .card-img-placeholder img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Styling untuk teks */
+    .card-text {
+        font-size: 16px;
+        color: #333;
+    }
+
+    /* Styling tambahan untuk teks */
+    .lead {
+        font-size: 18px;
+        color: #666;
+        margin-top: 10px; /* Mengurangi jarak antar elemen */
+    }
+
+    /* Responsif untuk layar kecil */
+    @media (max-width: 768px) {
+        .col-md-6 {
+            max-width: 100%;
+        }
+    }

@@ -63,6 +63,12 @@ class LivestockReceptionController extends Controller
             $receptions->where('pen_id', $request->input('pen_id'));
         }
 
+        if ($request->filled('supplier')) {
+            $receptions->whereHas('livestockReceptionH', function ($query) use ($request) {
+                $query->where('supplier', 'like', '%' . $request->input('supplier') . '%');
+            });
+        }
+
         $data = LivestockReceptionResource::collection($receptions->get());
 
         $message = $receptions->count() > 0 ? 'Livestock Receptions retrieved successfully' : 'No Livestock Receptions found';

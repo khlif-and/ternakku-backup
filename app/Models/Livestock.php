@@ -205,4 +205,9 @@ class Livestock extends Model
         }
         return null;
     }
+
+    public function parentRelation()
+    {
+        return $this->hasOne(LivestockRelationship::class, 'child_id');
+    }
 }

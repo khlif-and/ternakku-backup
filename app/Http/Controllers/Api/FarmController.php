@@ -5,32 +5,40 @@ namespace App\Http\Controllers\Api;
 use App\Models\Farm;
 use App\Models\User;
 use App\Enums\RoleEnum;
+use App\Models\Profile;
 use App\Models\FarmUser;
 use App\Models\FarmDetail;
+use App\Services\FarmService;
 use App\Helpers\ResponseHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use App\Http\Resources\FarmListResource;
 use App\Http\Resources\FarmDetailResource;
+use App\Http\Requests\ProfileUpdateRequest;
 use App\Http\Requests\Farming\FindUserRequest;
 use App\Http\Requests\Farming\FarmStoreRequest;
 use App\Http\Requests\Farming\FarmUpdateRequest;
 use App\Http\Resources\Farming\FarmUserResource;
 use App\Http\Requests\Farming\FarmUserStoreRequest;
 use App\Http\Requests\Farming\FarmUserRemoveRequest;
+use App\Http\Requests\Farming\FarmUpdateProfileUserRequest;
 
 class FarmController extends Controller
 {
+    private $farmService;
+
+    public function __construct(FarmService $farmService)
+    {
+        $this->farmService = $farmService;
+    }
+
     public function index()
     {
-        $user = auth()->user();
+        $farms = $this->farmService->getFarmList();
 
-        // Ambil data farm milik user dan relasi farm-nya
-        $farms = FarmUser::with('farm')->where('user_id', $user->id)->get();
-
-        // Gunakan FarmDetailResource untuk menyesuaikan data yang akan dikirim
         $data = FarmDetailResource::collection($farms->pluck('farm'));
 
         // Tentukan pesan respons
@@ -232,22 +240,29 @@ class FarmController extends Controller
     {
         $farm = Farm::findOrFail($farmId);
 
-        if(!$farm){
-            return ResponseHelper::error('Farm not found', 404);
-        }
-
-        if($farm->owner_id !== auth()->id()){
+        if ($farm->owner_id !== auth()->id()) {
             return ResponseHelper::error("You don't have permission to access this", 403);
         }
 
-        $famUsers = FarmUser::with(['user' , 'farm'])->where('farm_id', $farmId)->get();
+        $query = FarmUser::with(['user', 'farm'])
+            ->where('farm_id', $farmId);
 
-        $data = FarmUserResource::collection($famUsers);
+        // Filter optional berdasarkan user_id
+        if (request()->has('user_id')) {
+            $query->where('user_id', request('user_id'));
+        }
 
-        // Tentukan pesan respons
-        $message = $famUsers->count() > 0 ? 'Data retrieved successfully' : 'Data empty';
+        // Filter optional berdasarkan farm_role
+        if (request()->has('farm_role')) {
+            $query->where('farm_role', request('farm_role'));
+        }
 
-        // Kembalikan respons dengan data dan pesan
+        $farmUsers = $query->get();
+
+        $data = FarmUserResource::collection($farmUsers);
+
+        $message = $farmUsers->count() > 0 ? 'Data retrieved successfully' : 'Data empty';
+
         return ResponseHelper::success($data, $message);
     }
 
@@ -261,10 +276,7 @@ class FarmController extends Controller
 
         $validatedData = $request->validated();
 
-        $user = User::verified()->where(function($query) use ($validatedData) {
-            $query->where('email', $validatedData['username'])
-                ->orWhere('phone_number', $validatedData['username']);
-        })->firstOrFail();
+        $user = $this->farmService->findUser($validatedData['username']);
 
         return ResponseHelper::success($user, 'Data retrieved successfully');
     }
@@ -299,41 +311,15 @@ class FarmController extends Controller
 
         $validated = $request->validated();
 
-        $user = User::find($validated['user_id']);
+        $response = $this->farmService->addUser($validated, $farmId);
 
-        // Start transaction
-        DB::beginTransaction();
-
-        try {
-            // First or create FarmUser
-            $farmUser = FarmUser::firstOrCreate([
-                'user_id' => $user->id,
-                'farm_id' => $farm->id,
-                'farm_role' => $validated['farm_role']
-            ]);
-
-            // Sync user roles without detaching existing roles
-            $user->roles()->syncWithoutDetaching([
-                RoleEnum::FARMER->value => [
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-            ]);
-
-            // Commit transaction
-            DB::commit();
-
-            $data = new FarmUserResource($farmUser);
-
-            return ResponseHelper::success($data, 'User added to the farm successfully');
-
-        } catch (\Exception $e) {
-            Log::error($e);
-            // Rollback transaction on failure
-            DB::rollBack();
-
+        if($response['error']){
             return ResponseHelper::error('An error occurred while adding the user', 500);
         }
+
+        $data = new FarmUserResource($response['data']);
+
+        return ResponseHelper::success($data, 'User added to the farm successfully');
     }
 
     public function removeUser(FarmUserRemoveRequest $request, $farmId)
@@ -398,5 +384,58 @@ class FarmController extends Controller
         }
 
         return $farm;
+    }
+
+    public function updateProfileUser(FarmUpdateProfileUserRequest $request, $farmId)
+    {
+        $validated = $request->validated();
+
+        DB::beginTransaction();
+
+        try {
+
+            $farmUser = FarmUser::where('user_id', $validated['user_id'])
+                ->where('farm_id', $farmId)
+                ->firstOrFail();
+
+            $user = User::findOrFail($validated['user_id']);
+
+            $user->update([
+                'name' => $validated['name'],
+            ]);
+
+            $profile = $user->profile;
+
+            if (isset($validated['photo']) && $request->hasFile('photo')) {
+
+                if ($profile && $profile->photo) {
+                    deleteNeoObject($profile->photo);
+                }
+
+                $file = $validated['photo'];
+                $fileName = time() . '-profile-' . $file->getClientOriginalName();
+                $filePath = 'profile/';
+                $profileData['photo'] = uploadNeoObject($file, $fileName, $filePath);
+
+            }
+
+            if($profile){
+                $profile->update($profileData);
+            }else{
+                $profileData['user_id'] = $user->id;
+                // dd($profileData);
+                Profile::create($profileData);
+            }
+
+            DB::commit();
+
+            return ResponseHelper::success(new UserResource($user), 'Profile updated successfully', 200);
+
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            return ResponseHelper::error('Failed to update profile: ' . $e->getMessage(), 500);
+        }
     }
 }

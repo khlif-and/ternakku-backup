@@ -1,0 +1,160 @@
+    /* Style dasar untuk halaman */
+    body {
+        background-color: #ffffff;
+        color: #000000;
+        transition: background-color 0.3s, color 0.3s;
+    }
+    
+    /* Style untuk tombol */
+    .btn-custom {
+        background-color: #6CC3A0;
+        color: #ffffff;
+        border: 2px solid #6CC3A0;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-size: 14px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+    
+    /* Mengatur kursor pointer pada elemen tertentu */
+    .btn-custom, 
+    #darkModeToggle, 
+    .nav-link, 
+    .icon {
+        cursor: pointer;
+    }
+    
+    /* Styling dasar untuk navbar */
+    .navbar-custom {
+        background-color: #fff;
+        padding: 10px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    /* Styling dasar untuk tombol */
+    .btn-custom {
+        background-color: #6CC3A0;
+        color: #ffffff;
+        border: 2px solid #6CC3A0;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        font-size: 11px;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s ease;
+    }
+    
+    /* Efek hover dengan perubahan warna dan shadow */
+    .btn-custom:hover {
+        background-color: #ffffff;
+        color: #6CC3A0;
+        border: 2px solid #6CC3A0;
+        box-shadow: 0px 4px 15px rgba(108, 195, 160, 0.5);
+    }
+    
+    /* Efek animasi hover dengan pseudo-element */
+    .btn-custom::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 300%;
+        height: 300%;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        transition: all 0.6s ease;
+        transform: translate(-50%, -50%) scale(0);
+        z-index: 1;
+    }
+    
+    .btn-custom:hover::before {
+        transform: translate(-50%, -50%) scale(1);
+    }
+    
+    .btn-custom:hover {
+        z-index: 2;
+    }
+    
+    /* Mengatur ikon agar sejajar */
+    .icon {
+        font-size: 20px;
+        color: #344E41;
+        margin-left: 15px;
+        transition: transform 0.3s ease;
+    }
+    
+    .icon:hover {
+        transform: rotate(360deg);
+    }
+    
+    /* Styling untuk link dan button */
+    .nav-link {
+        color: #000 !important;
+        font-size: 16px;
+        font-weight: 400;
+        transition: background-color 0.3s, color 0.3s; /* Menambahkan transisi untuk efek hover */
+    }
+    
+    .nav-link:hover {
+        background-color: #6CC3A0; /* Warna hijau saat dihover */
+        color: #fff !important; /* Warna teks berubah menjadi putih saat dihover */
+        border-radius: 5px; /* Memberikan sedikit rounded pada link saat dihover */
+        padding: 5px 10px; /* Menambah padding untuk memberi efek "tombol" saat dihover */
+    }
+    
+    /* Mengatur ikon hamburger */
+    .navbar-toggler .hamburger-icon {
+        font-size: 24px;
+        color: #344E41;
+    }
+    
+    /* Mengatur jarak antar item navbar */
+    .navbar-nav {
+        display: flex;
+        gap: 20px; /* Tambahkan jarak antar item */
+        justify-content: center; /* Memusatkan item dalam navbar */
+    }
+    
+    /* Styling untuk profile image */
+    .profile-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #DCDCDC;
+        margin-right: 10px;
+        background-image: url('home/assets/images/logo.jpg'); /* Path gambar logo */
+        background-size: cover; /* Menyesuaikan ukuran gambar agar menutupi elemen */
+        background-position: center; /* Memusatkan gambar dalam elemen */
+    }
+    
+    .profile-info .name {
+        font-size: 20px;
+        font-weight: 600;
+        color: #344E41;
+    }
+    
+    .profile-info .role {
+        font-size: 14px;
+        font-weight: 300;
+        color: #343836;
+    }
+    
+    /* Styling untuk tombol navbar */
+    .navbar-toggler {
+        border: none;
+        outline: none;
+        padding: 0;
+        background: none;
+    }

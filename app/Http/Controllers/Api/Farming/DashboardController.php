@@ -11,8 +11,9 @@ use App\Helpers\ResponseHelper;
 use App\Enums\LivestockTypeEnum;
 use App\Enums\LivestockStatusEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Farming\PenResource;
 use App\Http\Resources\LivestockResource;
+use App\Http\Resources\Farming\PenResource;
+use App\Http\Resources\LivestockDetailResource;
 use App\Http\Resources\Farming\SupplierListResource;
 
 class DashboardController extends Controller
@@ -101,7 +102,7 @@ class DashboardController extends Controller
         }
 
         // Dapatkan hasil akhir sebagai resource tunggal
-        $data = new LivestockResource($livestock);
+        $data = new LivestockDetailResource($livestock);
 
         return ResponseHelper::success($data, 'Livestock retrieved successfully');
     }

@@ -139,9 +139,10 @@ class AuthController extends Controller
         $validatedData = $request->validated();
 
         // Find the user based on the email
-        $user = User::where('email', $validatedData['email'])
-                    ->whereNull('email_verified_at')
-                    ->first();
+        $user = User::where(function ($query) use ($credentials) {
+                $query->where('email', $credentials['username'])
+                    ->orWhere('phone_number', $credentials['username']);
+            })->first();
 
         // Return error if user not found or already verified
         if (!$user) {
@@ -193,34 +194,23 @@ class AuthController extends Controller
      */
     public function login(LoginRequest $request)
     {
-        // Get the credentials from the request
-        $credentials = $request->only('username', 'password');
+        $response = $this->authService->login($request);
 
-        // Attempt to find the user by email or phone number
-        $user = User::where(function($query) use ($credentials) {
-            $query->where('email', $credentials['username'])
-                ->orWhere('phone_number', $credentials['username']);
-        })->first();
-
-        // Return error if user not found or authentication fails
-        if (!$user || !Auth::attempt(['email' => $user->email, 'password' => $credentials['password']])) {
-            return ResponseHelper::error('Incorrect username or password', 401);
+        if ($response['error']) {
+            return ResponseHelper::error($response['message'], $response['http_code']);
         }
 
-        // Check if email is verified
-        if (!$user->hasVerifiedEmail()) {
-            return ResponseHelper::error('Email not verified.', 403);
-        }
+        // Ambil data dari respons
+        $token = $response['data']['token'];
+        $user = $response['data']['user'];
 
-        // Generate a JWT token for the user
-        $token = auth('api')->login($user);
-
-        // Return success response with the token
+        // Return success response
         return ResponseHelper::success([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
-        ], 'Login successful');
+            'expires_in' => auth('api')->factory()->getTTL() * 60,
+        ], $response['message']);
+
     }
 
     /**

@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'email.verified' => \App\Http\Middleware\CheckEmailVerified::class,
         'farmer' => \App\Http\Middleware\FarmerMiddleware::class,
         'check.farm.access' => \App\Http\Middleware\CheckFarmAccessMiddleware::class,
+        'subs.basic_farming' => \App\Http\Middleware\BasicFarmingSubsMiddleware::class,
     ];
 }

@@ -3,7 +3,7 @@
 <html lang="en">
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Login - Ternakku</title>
+    <title>Ternakku</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
     <link rel="icon" href="{{ asset('admin/img/kaiadmin/favicon.ico') }}" type="image/x-icon" />
 
@@ -23,8 +23,13 @@
     <link rel="stylesheet" href="{{ asset('admin/css/bootstrap.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('admin/css/plugins.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('admin/css/kaiadmin.min.css') }}" />
+    <style>
+        .bg-auth{
+            background: #6CC3A0;
+        }
+    </style>
   </head>
-  <body class="login bg-primary">
+  <body class="login bg-auth">
     <div class="wrapper wrapper-login">
         @yield('content')
     </div>
