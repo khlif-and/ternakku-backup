@@ -28,7 +28,7 @@ class SalesLivestockDetailResource extends JsonResource
             'max_weight' => $this->max_weight,
             'price_per_kg' => $this->price_per_kg,
             'price_per_head' => $this->price_per_head,
-
+            'paid_amount' => $this->livestock->qurbanPayments->sum('amount'),
         ];
     }
 }
