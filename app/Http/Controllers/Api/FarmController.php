@@ -240,22 +240,29 @@ class FarmController extends Controller
     {
         $farm = Farm::findOrFail($farmId);
 
-        if(!$farm){
-            return ResponseHelper::error('Farm not found', 404);
-        }
-
-        if($farm->owner_id !== auth()->id()){
+        if ($farm->owner_id !== auth()->id()) {
             return ResponseHelper::error("You don't have permission to access this", 403);
         }
 
-        $famUsers = FarmUser::with(['user' , 'farm'])->where('farm_id', $farmId)->get();
+        $query = FarmUser::with(['user', 'farm'])
+            ->where('farm_id', $farmId);
 
-        $data = FarmUserResource::collection($famUsers);
+        // Filter optional berdasarkan user_id
+        if (request()->has('user_id')) {
+            $query->where('user_id', request('user_id'));
+        }
 
-        // Tentukan pesan respons
-        $message = $famUsers->count() > 0 ? 'Data retrieved successfully' : 'Data empty';
+        // Filter optional berdasarkan farm_role
+        if (request()->has('farm_role')) {
+            $query->where('farm_role', request('farm_role'));
+        }
 
-        // Kembalikan respons dengan data dan pesan
+        $farmUsers = $query->get();
+
+        $data = FarmUserResource::collection($farmUsers);
+
+        $message = $farmUsers->count() > 0 ? 'Data retrieved successfully' : 'Data empty';
+
         return ResponseHelper::success($data, $message);
     }
 
