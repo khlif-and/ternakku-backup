@@ -210,4 +210,9 @@ class Livestock extends Model
     {
         return $this->hasOne(LivestockRelationship::class, 'child_id');
     }
+
+    public function qurbanPayments()
+    {
+        return $this->hasMany(QurbanPayment::class, 'livestock_id');
+    }
 }
