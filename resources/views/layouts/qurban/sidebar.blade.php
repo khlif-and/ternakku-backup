@@ -87,6 +87,18 @@
                             <li class="{{ Request::is('qurban/delivery/tracking*') ? 'active' : '' }}">
                                 <a href="#"><span class="sub-item">Lacak Armada Pengiriman</span></a>
                             </li>
+                            <li class="{{ Request::is('qurban/payment*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/payment') }}"><span class="sub-item">Pembayaran</span></a>
+                            </li>
+                            <li class="{{ Request::is('qurban/qurban-delivery-order-data*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/qurban-delivery-order-data') }}"><span class="sub-item">Surat Jalan Qurban</span></a>
+                            </li>
+                            <li class="{{ Request::is('qurban/sales-qurban*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/sales-qurban') }}"><span class="sub-item">Sales Qurban</span></a>
+                            </li>
+                            <li class="{{ Request::is('qurban/cancelation-qurban*') ? 'active' : '' }}">
+                                <a href="{{ url('qurban/cancelation-qurban') }}"><span class="sub-item">Cancelation Qurban</span></a>
+                            </li>
                         </ul>
                     </div>
                 </li>

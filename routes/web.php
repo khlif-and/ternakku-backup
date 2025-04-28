@@ -10,6 +10,12 @@ use App\Http\Controllers\Admin\Qurban\FleetController;
 use App\Http\Controllers\Admin\Qurban\DriverController;
 use App\Http\Controllers\Admin\Qurban\SalesOrderController;
 use App\Http\Controllers\Admin\Qurban\SalesLivestockController;
+use App\Http\Controllers\Admin\Qurban\ReweightController;
+use App\Http\Controllers\Admin\Qurban\PaymentController;
+use App\Http\Controllers\Admin\Qurban\QurbanDeliveryOrderDataController;
+use App\Http\Controllers\Admin\Qurban\SalesQurbanController;
+use App\Http\Controllers\Admin\Qurban\CancelationQurbanController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -95,5 +101,34 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
             Route::put('{saleLivestockId}', 'update');
             Route::delete('{saleLivestockId}', 'destroy');
         });
+
+        Route::prefix('reweight')->controller(ReweightController::class)->group(function () {
+            Route::get('/', 'index')->name('reweight.index');
+            Route::get('/create', 'create')->name('reweight.create');
+        });
+
+        Route::prefix('payment')->controller(PaymentController::class)->group(function () {
+            Route::get('/', 'index')->name('payment.index');
+            Route::get('/create', 'create')->name('payment.create');
+        });
+
+        Route::prefix('qurban-delivery-order-data')->controller(QurbanDeliveryOrderDataController::class)->group(function () {
+            Route::get('/', 'index')->name('qurban_delivery_order_data.index');
+            Route::get('/create', 'create')->name('qurban_delivery_order_data.create');
+        });
+
+        Route::prefix('sales-qurban')->controller(SalesQurbanController::class)->group(function () {
+            Route::get('/', 'index')->name('sales_qurban.index');
+            Route::get('/create', 'create')->name('sales_qurban.create');
+        });
+
+        Route::prefix('cancelation-qurban')->controller(CancelationQurbanController::class)->group(function () {
+            Route::get('/', 'index')->name('cancelation_qurban.index');
+            Route::get('/create', 'create')->name('cancelation_qurban.create');
+        });
+
+
+
+
     });
 });

@@ -5,18 +5,18 @@ namespace App\Http\Controllers\Admin\Qurban;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class PaymentController extends Controller
+class ReweightController extends Controller
 {
     public function index()
     {
         // Untuk sementara, dummy data dulu
-        $payments = [];
+        $reweights = [];
 
-        return view('admin.qurban.payment.index', compact('payments'));
+        return view('admin.qurban.reweight.index', compact('reweights'));
     }
 
     public function create()
     {
-        return view('admin.qurban.payment.create');
+        return view('admin.qurban.reweight.create');
     }
 }

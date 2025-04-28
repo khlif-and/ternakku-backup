@@ -30,6 +30,7 @@
             </li>
         </ul>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -38,32 +39,54 @@
                         <h4 class="card-title">Tambah Data Alamat</h4>
                     </div>
                 </div>
+
                 <div class="card-body">
                     <form action="{{ url('qurban/customer') }}" method="POST">
                         @csrf
-                        <div class="form-group">
+                        <div class="form-group mb-3">
                             <label for="name">Nama</label>
                             <input type="text" class="form-control" id="name" name="name" required>
                         </div>
-                        <div class="form-group">
+
+                        <div class="form-group mb-3">
                             <label for="address">Alamat</label>
                             <input type="text" class="form-control" id="address" name="address" required>
                         </div>
-                        <div class="form-group">
-                            <label for="address_line">No Rumah</label>
-                            <input type="text" class="form-control" id="address_line" name="address_line" required>
+
+                        <div class="form-group mb-3">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label for="address_line">No Rumah</label>
+                                    <input type="text" class="form-control" id="address_line" name="address_line" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="postal_code">Kode Pos</label>
+                                    <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="postal_code">Kode Pos</label>
-                            <input type="text" class="form-control" id="postal_code" name="postal_code" required>
+
+                        <div class="form-group mb-3">
+                            <label for="location">Lokasi</label>
+                            <select class="form-control" id="location" name="location" required>
+                                <option value="">-- Pilih Lokasi --</option>
+                                <option value="Jakarta Selatan">Jakarta Selatan</option>
+                                <option value="Bandung Barat">Bandung Barat</option>
+                                <option value="Surabaya Pusat">Surabaya Pusat</option>
+                                <option value="Depok">Depok</option>
+                                <option value="Tangerang Selatan">Tangerang Selatan</option>
+                            </select>
                         </div>
-                        <div class="form-group">
+
+                        <div class="form-group mb-3">
                             <label for="description">Deskripsi</label>
-                            <textarea name="description" id="description" class="form-control" row=2></textarea>
+                            <textarea name="description" id="description" class="form-control" rows="2"></textarea>
                         </div>
+
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
+
                     </form>
                 </div>
             </div>
@@ -74,6 +97,8 @@
 
 @section('script')
 <script>
-
+    $(document).ready(function() {
+        // JS tambahan kalau ada
+    });
 </script>
 @endsection

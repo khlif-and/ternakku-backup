@@ -34,7 +34,6 @@
                         <label for="registration_date">Tanggal Registrasi</label>
                     </div>
 
-                    <!-- Input Qurban Partner -->
                     <div class="form-check mb-3">
                         <input
                             class="form-check-input"

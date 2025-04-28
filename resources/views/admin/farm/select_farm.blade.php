@@ -43,13 +43,11 @@
 
                 <input type="hidden" name="redirect_url" value="{{ request()->query('redirect_url') }}">
 
-                <!-- Tombol Submit -->
+
                 <div class="form-action mb-3">
-                    <button type="submit" class="btn w-100 btn-login" style="background-color:
+                    <button type="submit" class="btn w-100 btn-login" style="background-color: #6CC3A0">Submit</button>
                 </div>
             </form>
-
-            <!-- Tambahan Tombol Create Farm -->
             <div class="form-action">
                 <a href="{{ route('farm.create') }}" class="btn w-100 btn-outline-primary">
                     Create New Farm
