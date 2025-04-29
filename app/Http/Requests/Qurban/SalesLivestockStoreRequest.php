@@ -29,10 +29,10 @@ class SalesLivestockStoreRequest extends FormRequest
             'details'                       => 'required|array',
             'details.*.customer_address_id' => 'required|exists:qurban_customer_addresses,id',
             'details.*.livestock_id'        => 'required|exists:livestocks,id',
-            'details.*.min_weight'          => 'required|numeric|min:0',
-            'details.*.max_weight'          => 'required|numeric|min:0',
+            'details.*.weight'          => 'required|numeric|min:0',
             'details.*.price_per_kg'        => 'required|numeric|min:0',
             'details.*.price_per_head'      => 'required|numeric|min:0',
+            'details.*.delivery_plan_date'              => 'required|date',
         ];
     }
 }

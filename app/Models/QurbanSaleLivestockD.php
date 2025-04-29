@@ -15,10 +15,10 @@ class QurbanSaleLivestockD extends Model
         'qurban_sale_livestock_h_id',
         'qurban_customer_address_id',
         'livestock_id',
-        'min_weight',
-        'max_weight',
+        'weight',
         'price_per_kg',
         'price_per_head',
+        'delivery_plan_date',
     ];
 
     public function qurbanSaleLivestockH()
