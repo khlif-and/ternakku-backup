@@ -29,16 +29,16 @@ class CustomerService
 
         try {
 
-            // Cek apakah user ada di table farm_users
-            $farmUser = FarmUser::where('user_id', $request['user_id'])->where('farm_id', $farmId)->first();
+            // // Cek apakah user ada di table farm_users
+            // $farmUser = FarmUser::where('user_id', $request['user_id'])->where('farm_id', $farmId)->first();
 
-            if ($farmUser) {
-                // Jika user tidak ada di farm_users, kembalikan error
-                return [
-                    'data' => null,
-                    'error' => true
-                ];
-            }
+            // if ($farmUser) {
+            //     // Jika user tidak ada di farm_users, kembalikan error
+            //     return [
+            //         'data' => null,
+            //         'error' => true
+            //     ];
+            // }
 
             // Cek apakah user sudah ada di tabel customers
             $existingCustomer = QurbanCustomer::where('user_id', $request['user_id'])->first();
