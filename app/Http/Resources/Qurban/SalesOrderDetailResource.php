@@ -7,7 +7,7 @@ use App\Http\Resources\LivestockResource;
 use App\Http\Resources\Qurban\CustomerResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SalesOrderResource extends JsonResource
+class SalesOrderDetailResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,12 +17,10 @@ class SalesOrderResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'status' => $this->status,
-            'order_date' => $this->order_date,
-            'description' => $this->description,
-            'customer' => new CustomerResource($this->qurbanCustomer),
-            'details' => SalesOrderDetailResource::collection($this->qurbanSalesOrderD)
+            'quantity' => (float) $this->quantity,
+            'total_weight' => (float) $this->total_weight,
+            'livestock_type_id' => $this->livestock_type_id,
+            'livestock_type_name' => $this->livestockType->name,
         ];
     }
 }

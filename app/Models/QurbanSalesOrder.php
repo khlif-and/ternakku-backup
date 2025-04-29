@@ -15,4 +15,9 @@ class QurbanSalesOrder extends Model
     {
         return $this->belongsTo(QurbanCustomer::class);
     }
+
+    public function qurbanSalesOrderD()
+    {
+        return $this->hasMany(QurbanSalesOrderD::class, 'qurban_sales_order_id');
+    }
 }

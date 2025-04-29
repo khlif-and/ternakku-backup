@@ -6,6 +6,7 @@ use App\Models\Livestock;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use App\Models\QurbanSalesOrder;
+use App\Models\QurbanSalesOrderD;
 use App\Enums\LivestockStatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -31,15 +32,23 @@ class SalesOrderController extends Controller
         DB::beginTransaction();
 
         try {
-            // Simpan data ke tabel SalesOrders
+            // Simpan data ke tabel QurbanSalesOrders
             $salesOrder = QurbanSalesOrder::create([
-                'farm_id'          => $farm_id,
-                'qurban_customer_id'          => $validated['customer_id'],
-                'order_date'           => $validated['order_date'],
-                'quantity'           => $validated['quantity'],
-                'total_weight'           => $validated['total_weight'],
-                'description'           => $validated['description'],
+                'farm_id' => $farm_id,
+                'qurban_customer_id' => $validated['customer_id'],
+                'order_date' => $validated['order_date'],
             ]);
+
+            // Loop detail dan simpan ke tabel detail
+            foreach ($validated['details'] as $item) {
+                QurbanSalesOrderD::create([
+                    'qurban_sales_order_id' => $salesOrder->id,
+                    'livestock_type_id'     => $item['livestock_type_id'],
+                    'total_weight'          => $item['total_weight'],
+                    'quantity'              => $item['quantity'],
+                ]);
+            }
+
 
             // Commit transaksi
             DB::commit();
@@ -81,14 +90,25 @@ class SalesOrderController extends Controller
         try {
             $salesOrder = QurbanSalesOrder::findOrFail($id);
 
-            // Simpan data ke tabel SalesOrders
+            // Update data SalesOrder utama
             $salesOrder->update([
-                'qurban_customer_id'          => $validated['customer_id'],
-                'order_date'           => $validated['order_date'],
-                'quantity'           => $validated['quantity'],
-                'total_weight'           => $validated['total_weight'],
-                'description'           => $validated['description'],
+                'qurban_customer_id' => $validated['customer_id'],
+                'order_date'         => $validated['order_date'],
             ]);
+
+            // Hapus semua detail lama
+            $salesOrder->qurbanSalesOrderD()->delete();
+
+            // Loop detail baru dari request
+            foreach ($validated['details'] as $item) {
+                QurbanSalesOrderD::create([
+                    'qurban_sales_order_id' => $salesOrder->id,
+                    'livestock_type_id'     => $item['livestock_type_id'],
+                    'total_weight'          => $item['total_weight'],
+                    'quantity'              => $item['quantity'],
+                ]);
+            }
+
 
             // Commit transaksi
             DB::commit();

@@ -104,6 +104,8 @@ class SalesOrderService
         try {
             $salesOrder = QurbanSalesOrder::where('farm_id' , $farm_id)->where('id',$salesOrderId)->first();
 
+            $salesOrder->qurbanSalesOrderD()->delete();
+
             $salesOrder->delete();
 
             // Commit transaksi
