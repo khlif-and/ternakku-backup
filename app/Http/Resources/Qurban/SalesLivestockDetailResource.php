@@ -24,11 +24,11 @@ class SalesLivestockDetailResource extends JsonResource
             'id' => $this->id,
             'customer_address' => new CustomerAddressResource($this->qurbanCustomerAddress),
             'livestock' => new LivestockResource($this->livestock),
-            'min_weight' => $this->min_weight,
-            'max_weight' => $this->max_weight,
-            'price_per_kg' => $this->price_per_kg,
-            'price_per_head' => $this->price_per_head,
-            'paid_amount' => $this->livestock->qurbanPayments->sum('amount'),
+            'weight' => (float) $this->weight,
+            'price_per_kg' => (float) $this->price_per_kg,
+            'price_per_head' => (float) $this->price_per_head,
+            'delivery_plan_date' => $this->delivery_plan_date,
+            'paid_amount' => (float) $this->livestock->qurbanPayments->sum('amount'),
         ];
     }
 }

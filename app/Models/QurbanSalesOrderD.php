@@ -20,7 +20,7 @@ class QurbanSalesOrderD extends Model
 
     public function livestockType()
     {
-        return $this->belongsTo(livestockType::class, 'livestock_type_id');
+        return $this->belongsTo(LivestockType::class, 'livestock_type_id');
     }
 
 }

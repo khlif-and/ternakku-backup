@@ -72,10 +72,10 @@ class SalesLivestockService
                     'qurban_sale_livestock_h_id' => $header->id,
                     'qurban_customer_address_id' => $item['customer_address_id'],
                     'livestock_id' => $item['livestock_id'],
-                    'min_weight' => $item['min_weight'],
-                    'max_weight' => $item['max_weight'],
+                    'weight' => $item['weight'],
                     'price_per_kg' => $item['price_per_kg'],
                     'price_per_head' => $item['price_per_head'],
+                    'delivery_plan_date' => $item['delivery_plan_date'],
                 ]);
             }
 
@@ -123,10 +123,10 @@ class SalesLivestockService
                     'qurban_sale_livestock_h_id' => $header->id,
                     'qurban_customer_address_id' => $item['customer_address_id'],
                     'livestock_id' => $item['livestock_id'],
-                    'min_weight' => $item['min_weight'],
-                    'max_weight' => $item['max_weight'],
+                    'weight' => $item['weight'],
                     'price_per_kg' => $item['price_per_kg'],
                     'price_per_head' => $item['price_per_head'],
+                    'delivery_plan_date' => $item['delivery_plan_date'],
                 ]);
             }
 
