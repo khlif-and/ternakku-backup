@@ -40,6 +40,7 @@ class PaymentController extends Controller
                 'qurban_customer_id'    => $validated['qurban_customer_id'],
                 'livestock_id'          => $validated['livestock_id'],
                 'amount'                => $validated['amount'],
+                'created_by'           => auth()->user()->id,
             ]);
 
             // Commit transaksi

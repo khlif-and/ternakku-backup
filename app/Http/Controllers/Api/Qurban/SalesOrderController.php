@@ -37,6 +37,7 @@ class SalesOrderController extends Controller
                 'farm_id' => $farm_id,
                 'qurban_customer_id' => $validated['customer_id'],
                 'order_date' => $validated['order_date'],
+                'created_by' => auth()->user()->id,
             ]);
 
             // Loop detail dan simpan ke tabel detail

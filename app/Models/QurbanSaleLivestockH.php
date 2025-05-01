@@ -19,6 +19,7 @@ class QurbanSaleLivestockH extends Model
         'transaction_number',
         'transaction_date',
         'notes',
+        'created_by',
     ];
 
     public static function boot()
