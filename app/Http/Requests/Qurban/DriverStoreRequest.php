@@ -24,7 +24,7 @@ class DriverStoreRequest extends FormRequest
         return [
             'name'              => 'required|string|max:255',
             'region_id'         => 'required|integer|exists:regions,id',
-            'postal_code'       => 'required|string|max:10',
+            'postal_code'       => 'nullable|string|max:10',
             'address_line'      => 'required|string|max:255',
             'longitude'         => 'nullable|numeric|between:-180,180',
             'latitude'          => 'nullable|numeric|between:-90,90',

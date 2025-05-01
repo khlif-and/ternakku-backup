@@ -59,7 +59,8 @@ class SalesLivestockService
                 'farm_id' => $farm_id,
                 'qurban_customer_id' => $request['customer_id'],
                 'customer_id' => $request['sales_order_id'] ?? null,
-                'transaction_date' => $request['transaction_date']
+                'transaction_date' => $request['transaction_date'],
+                'created_by' => auth()->user()->id,
             ]);
 
             foreach ($request['details'] as $item) {

@@ -18,6 +18,18 @@ Route::group([
     'middleware' => 'api',
 ], function () {
 
+    Route::group([
+        'prefix' => 'qurban/price/{farm_id}',
+        'controller' => App\Http\Controllers\Api\Qurban\PriceController::class,
+    ], function(){
+        Route::get('/', 'index');
+        Route::post('/estimation', 'getEstimationPrice');
+        Route::post('/', 'store')->middleware(['auth:api', 'farmer', 'check.farm.access:OWNER,ADMIN']);
+        Route::get('{id}', 'show');
+        Route::post('{id}', 'update')->middleware(['auth:api', 'farmer', 'check.farm.access:OWNER,ADMIN']);
+        Route::delete('{id}', 'destroy')->middleware(['auth:api', 'farmer', 'check.farm.access:OWNER,ADMIN']);
+    });
+
     Route::group(['prefix' => 'auth', 'controller' => App\Http\Controllers\Api\AuthController::class], function () {
         Route::post('register', 'register');
         Route::post('verify', 'verify');
