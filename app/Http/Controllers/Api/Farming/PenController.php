@@ -65,6 +65,11 @@ class PenController extends Controller
 
         $pen = $farm->pens()->findOrFail($penId);
 
+        unset($validated['photo']);
+        
+        $pen->update($validated);
+    
+
         // Handle file upload if present
         if ($request->hasFile('photo')) {
             // Delete old photo if exists
@@ -75,10 +80,9 @@ class PenController extends Controller
             $fileName = time() . '-' . $file->getClientOriginalName();
             $filePath = 'pens/';
             $pen->photo = uploadNeoObject($file, $fileName, $filePath);
+            $pen->save();
         }
 
-        $pen->fill($validated);
-        $pen->save();
 
         return ResponseHelper::success(new PenResource($pen), 'Pen updated successfully');
     }
