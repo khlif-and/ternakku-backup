@@ -51,10 +51,18 @@ class Farm extends Model
         $male = $this->livestocks()->alive()->ofType($typeId)->male()->count();
         $female = $this->livestocks()->alive()->ofType($typeId)->female()->count();
 
+        $qurbanCount = QurbanSaleLivestockD::whereIn('livestock_id', $this->livestocks()->ofType($typeId)->pluck('id'))->count();
+        
+        $salesOrder = $this->qurbanSalesOrder()->whereHas('qurbanSalesOrderD', function ($query) use ($typeId) {
+            $query->where('livestock_type_id', $typeId);
+        })->count();
+
         return [
             'total' => $total,
             'male' => $male,
             'female' => $female,
+            'qurban_sale_count' => $qurbanCount,
+            'sales_order_count' => $salesOrder,
         ];
     }
 
@@ -79,5 +87,10 @@ class Farm extends Model
     public function qurbanPrices()
     {
         return $this->hasMany(QurbanPartnerPrice::class, 'farm_id', 'id');
+    }
+
+    public function qurbanSalesOrder()
+    {
+        return $this->hasMany(QurbanSalesOrder::class, 'farm_id', 'id');
     }
 }
