@@ -15,6 +15,10 @@ class PriceService
         if (request()->has('hijri_year')) {
             $query->where('hijri_year', request()->get('hijri_year'));
         }
+
+        if (request()->has('livestock_type_id')) {
+            $query->where('livestock_type_id', request()->get('livestock_type_id'));
+        }
     
         $prices = $query->orderBy('start_weight')->get();
     
