@@ -18,6 +18,7 @@ class SalesOrderResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'transaction_number' => $this->transaction_number,
             'status' => $this->status,
             'order_date' => $this->order_date,
             'description' => $this->description,

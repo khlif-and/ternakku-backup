@@ -17,11 +17,11 @@ class QurbanPayment extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber($model->type , $model->transaction_date,  $model->farm_id);
+            $model->transaction_number = $model->generateTransactionNumber($model->transaction_date,  $model->farm_id);
         });
     }
 
-    private function generateTransactionNumber($type , $transactionDate, $farmId)
+    private function generateTransactionNumber($transactionDate, $farmId)
     {
         $date = Carbon::parse($transactionDate);
 
