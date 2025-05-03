@@ -20,6 +20,7 @@ class CustomerResource extends JsonResource
             'name' => $this->user->name,
             'phone_number' => $this->user->phone_number,
             'email' => $this->user->email,
+            'has_address' => $this->addresses->count() > 0,
         ];
     }
 }
