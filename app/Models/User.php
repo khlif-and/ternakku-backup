@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Enums\RoleEnum;
+use App\Models\FarmUser;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
@@ -103,5 +104,46 @@ class User extends Authenticatable implements JWTSubject
     public function profile()
     {
         return $this->hasOne(Profile::class, 'user_id');
+    }
+
+    public function customer()
+    {
+        return $this->hasMany(QurbanCustomer::class, 'user_id');
+    }
+
+    public function farmDriver()
+    {
+        return FarmUser::where('farm_role' , 'DRIVER')
+            ->where('user_id', $this->id)
+            ->get();
+    }
+
+    public function farmOwner()
+    {
+        return FarmUser::where('farm_role' , 'OWNER')
+            ->where('user_id', $this->id)
+            ->get();
+    }
+
+
+    public function farmAdmin()
+    {
+        return FarmUser::where('farm_role' , 'ADMIN')
+            ->where('user_id', $this->id)
+            ->get();
+    }
+
+    public function farmAbk()
+    {
+        return FarmUser::where('farm_role' , 'ABK')
+            ->where('user_id', $this->id)
+            ->get();
+    }
+
+    public function farmMarketing()
+    {
+        return FarmUser::where('farm_role' , 'MARKETING')
+            ->where('user_id', $this->id)
+            ->get();
     }
 }
