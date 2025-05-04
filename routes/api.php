@@ -83,6 +83,12 @@ Route::group([
                 Route::post('/', 'contract');
                 Route::get('/{id}', 'detail');
             });
+
+            Route::group(['prefix' => 'for-customer', 'controller' => App\Http\Controllers\Api\Qurban\CustomerController::class], function () {
+                Route::get('/sales-order', 'getSalesOrder');
+                Route::get('/sales-livestock', 'getSalesLivestock');
+                Route::get('/payment', 'getPayment');
+            });
         });
 
         Route::group([
