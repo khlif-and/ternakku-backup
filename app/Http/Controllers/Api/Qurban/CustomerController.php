@@ -3,16 +3,24 @@
 namespace App\Http\Controllers\Api\Qurban;
 
 use Illuminate\Http\Request;
+use App\Models\QurbanPayment;
 use App\Models\QurbanCustomer;
 use App\Helpers\ResponseHelper;
+use App\Models\QurbanSalesOrder;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\QurbanSaleLivestockD;
+use App\Models\QurbanSaleLivestockH;
 use App\Models\QurbanCustomerAddress;
 use App\Http\Requests\RegisterRequest;
 use App\Services\Qurban\CustomerService;
+use App\Services\Qurban\SalesOrderService;
+use App\Http\Resources\Qurban\PaymentResource;
 use App\Http\Resources\Qurban\CustomerResource;
+use App\Http\Resources\Qurban\SalesOrderResource;
 use App\Http\Requests\Qurban\CustomerStoreRequest;
 use App\Http\Requests\Qurban\CustomerUpdateRequest;
+use App\Http\Resources\Qurban\SalesLivestockResource;
 use App\Http\Resources\Qurban\CustomerAddressResource;
 use App\Http\Requests\Qurban\CustomerAddressStoreRequest;
 use App\Http\Requests\Qurban\CustomerAddressUpdateRequest;
@@ -189,4 +197,65 @@ class CustomerController extends Controller
         }
     }
 
+    public function getSalesOrder(Request $request)
+    {
+        $user = auth()->user();
+
+        $customers = QurbanCustomer::where('user_id', $user->id);
+
+        if ($request->has('farm_id')) {
+            $customers = $customers->where('farm_id', $request->input('farm_id'));
+        }
+
+        $customerIds = $customers->pluck('id');
+
+        $salesOrders = QurbanSalesOrder::whereIn('qurban_customer_id', $customerIds)->get();
+
+        return ResponseHelper::success(SalesOrderResource::collection($salesOrders), 'sales orders found', 200);
+    }
+
+    public function getSalesLivestock(Request $request)
+    {
+        $user = auth()->user();
+
+        $customers = QurbanCustomer::where('user_id', $user->id);
+
+        if ($request->has('farm_id')) {
+            $customers = $customers->where('farm_id', $request->input('farm_id'));
+        }
+
+        $customerIds = $customers->pluck('id');
+
+        $salesOrders = QurbanSaleLivestockH::whereIn('qurban_customer_id', $customerIds)->get();
+
+        return ResponseHelper::success(SalesLivestockResource::collection($salesOrders), 'sales livestock found', 200);
+    }
+
+    public function getPayment(Request $request)
+    {
+        $user = auth()->user();
+
+        $customers = QurbanCustomer::where('user_id', $user->id);
+
+        if ($request->has('farm_id')) {
+            $customers = $customers->where('farm_id', $request->input('farm_id'));
+        }
+
+        $customerIds = $customers->pluck('id');
+
+        $salesOrders = QurbanSaleLivestockH::whereIn('qurban_customer_id', $customerIds)->get();
+
+                // Ambil semua ID sales order
+        $salesOrderIds = $salesOrders->pluck('id');
+
+        // Ambil semua livestock_id dari detail
+        $livestockIds = QurbanSaleLivestockD::whereIn('qurban_sale_livestock_h_id', $salesOrderIds)
+                        ->pluck('livestock_id');
+
+        // Ambil payment berdasarkan livestock_id
+        $payments = QurbanPayment::whereIn('livestock_id', $livestockIds)->get();
+
+
+        return ResponseHelper::success(PaymentResource::collection($payments), 'payment found', 200);
+    }
 }
