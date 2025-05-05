@@ -27,6 +27,7 @@ class FarmDetailResource extends JsonResource
             'latitude' => $this->farmDetail?->latitude,
             'capacity' => $this->farmDetail?->capacity,
             'logo' => getNeoObject($this->farmDetail?->logo),
+            'cover_photo' => getNeoObject($this->farmDetail?->cover_photo),
             'description' => $this->farmDetail?->description,
             'owner_name' => $this->owner?->name,
         ];
