@@ -17,7 +17,7 @@ class QurbanSalesOrder extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber($model->transaction_date,  $model->farm_id);
+            $model->transaction_number = $model->generateTransactionNumber($model->order_date,  $model->farm_id);
         });
     }
 
@@ -31,8 +31,8 @@ class QurbanSalesOrder extends Model
         $prefix = "$year$month-$code-";
 
         // Get the last transaction number for the current month and year
-        $lastTransaction = self::whereYear('transaction_date', $date->year)
-            ->whereMonth('transaction_date', $date->month)
+        $lastTransaction = self::whereYear('order_date', $date->year)
+            ->whereMonth('order_date', $date->month)
             ->where('farm_id' , $farmId)
             ->where('transaction_number' , 'like' , "%$code%")
             ->orderBy('transaction_number', 'desc')
