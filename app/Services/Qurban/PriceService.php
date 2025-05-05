@@ -43,6 +43,27 @@ class PriceService
 
         try {
 
+            $overlap = QurbanPrice::where('farm_id', $farmId)
+                ->where('hijri_year', $validated['hijri_year'])
+                ->where('livestock_type_id', $validated['livestock_type_id'])
+                ->where(function ($query) use ($validated) {
+                    $query->whereBetween('start_weight', [$validated['start_weight'], $validated['end_weight']])
+                        ->orWhereBetween('end_weight', [$validated['start_weight'], $validated['end_weight']])
+                        ->orWhere(function ($query2) use ($validated) {
+                            $query2->where('start_weight', '<=', $validated['start_weight'])
+                                    ->where('end_weight', '>=', $validated['end_weight']);
+                        });
+                })
+                ->exists();
+
+            if ($overlap) {
+                return [
+                    'data' => null,
+                    'error' => true,
+                    'message' => 'Rentang berat sudah digunakan oleh harga lain.',
+                ];
+            }
+
             // Simpan data ke tabel Prices
             $price = QurbanPrice::create([
                 'name'              => $validated['name'],
@@ -82,6 +103,29 @@ class PriceService
         DB::beginTransaction();
 
         try {
+            $overlap = QurbanPrice::where('farm_id', $farmId)
+                ->where('id', '!=', $priceId) // abaikan data yang sedang diupdate
+                ->where('hijri_year', $validated['hijri_year'])
+                ->where('livestock_type_id', $validated['livestock_type_id'])
+                ->where(function ($query) use ($validated) {
+                    $query->whereBetween('start_weight', [$validated['start_weight'], $validated['end_weight']])
+                        ->orWhereBetween('end_weight', [$validated['start_weight'], $validated['end_weight']])
+                        ->orWhere(function ($query2) use ($validated) {
+                            $query2->where('start_weight', '<=', $validated['start_weight'])
+                                    ->where('end_weight', '>=', $validated['end_weight']);
+                        });
+                })
+                ->exists();
+
+            if ($overlap) {
+                return [
+                    'data' => null,
+                    'error' => true,
+                    'message' => 'Rentang berat bertabrakan dengan harga lain.',
+                ];
+            }
+
+
             $price = QurbanPrice::where('farm_id' , $farmId)->where('id' , $priceId)->first();
 
 

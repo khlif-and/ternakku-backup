@@ -27,7 +27,7 @@ class PriceController extends Controller
         $response = $this->priceService->storePrice($farm_id , $request);
 
         if($response['error']){
-            return ResponseHelper::error('Failed to create Price', 500);
+            return ResponseHelper::error($response['message'], 400);
         }
 
         return ResponseHelper::success(new PriceResource($response['data']), 'Price created successfully', 200);
@@ -52,7 +52,7 @@ class PriceController extends Controller
         $response = $this->priceService->updatePrice($farm_id , $id, $request);
 
         if($response['error']){
-            return ResponseHelper::error('Failed to create Price', 500);
+            return ResponseHelper::error($response['message'], 400);
         }
 
         return ResponseHelper::success(new PriceResource($response['data']), 'Price updated successfully', 200);
