@@ -236,16 +236,16 @@ class FarmController extends Controller
         }
     }
 
-    public function userList($farmId)
+    public function userList($farm_id)
     {
-        $farm = Farm::findOrFail($farmId);
+        $farm = Farm::findOrFail($farm_id);
 
         if ($farm->owner_id !== auth()->id()) {
             return ResponseHelper::error("You don't have permission to access this", 403);
         }
 
         $query = FarmUser::with(['user', 'farm'])
-            ->where('farm_id', $farmId);
+            ->where('farm_id', $farm_id);
 
         // Filter optional berdasarkan user_id
         if (request()->has('user_id')) {
@@ -266,14 +266,8 @@ class FarmController extends Controller
         return ResponseHelper::success($data, $message);
     }
 
-    public function findUser(FindUserRequest $request, $farmId)
+    public function findUser(FindUserRequest $request, $farm_id)
     {
-        $farm = $this->checkOwnership($farmId);
-
-        if ($farm instanceof JsonResponse) {
-            return $farm;
-        }
-
         $validatedData = $request->validated();
 
         $user = $this->farmService->findUser($validatedData['username']);
@@ -282,13 +276,9 @@ class FarmController extends Controller
     }
 
 
-    public function listUser($farmId)
+    public function listUser($farm_id)
     {
-        $farm = $this->checkOwnership($farmId);
-
-        if ($farm instanceof JsonResponse) {
-            return $farm;
-        }
+        $farm = $request->attributes->get('farm');
 
         $farmUsers = FarmUser::where('farm_id' , $farm->id)->get();
 
@@ -301,17 +291,13 @@ class FarmController extends Controller
 
 
 
-    public function addUser(FarmUserStoreRequest $request, $farmId)
+    public function addUser(FarmUserStoreRequest $request, $farm_id)
     {
-        $farm = $this->checkOwnership($farmId);
-
-        if ($farm instanceof JsonResponse) {
-            return $farm;
-        }
+        $farm = $request->attributes->get('farm');
 
         $validated = $request->validated();
 
-        $response = $this->farmService->addUser($validated, $farmId);
+        $response = $this->farmService->addUser($validated, $farm_id);
 
         if($response['error']){
             return ResponseHelper::error('An error occurred while adding the user', 500);
@@ -322,13 +308,9 @@ class FarmController extends Controller
         return ResponseHelper::success($data, 'User added to the farm successfully');
     }
 
-    public function removeUser(FarmUserRemoveRequest $request, $farmId)
+    public function removeUser(FarmUserRemoveRequest $request, $farm_id)
     {
-        $farm = $this->checkOwnership($farmId);
-
-        if ($farm instanceof JsonResponse) {
-            return $farm;
-        }
+        $farm = $request->attributes->get('farm');
 
         $validated = $request->validated();
 
@@ -351,7 +333,7 @@ class FarmController extends Controller
             if ($farmUser) {
                 $farmUser->delete();
             } else {
-                return ResponseHelper::error('User is not part of this farm', 404);
+                return ResponseHelper::error('User is owner or not part of this farm', 404);
             }
 
             if(!FarmUser::where('user_id', $user->id)->where('farm_id', $farm->id)->exists()){
@@ -371,22 +353,7 @@ class FarmController extends Controller
         }
     }
 
-    private function checkOwnership($farmId)
-    {
-        $farm = Farm::find($farmId);
-
-        if (!$farm) {
-            return ResponseHelper::error('Farm not found', 404);
-        }
-
-        if ($farm->owner_id !== auth()->id()) {
-            return ResponseHelper::error("You don't have permission to access this", 403);
-        }
-
-        return $farm;
-    }
-
-    public function updateProfileUser(FarmUpdateProfileUserRequest $request, $farmId)
+    public function updateProfileUser(FarmUpdateProfileUserRequest $request, $farm_id)
     {
         $validated = $request->validated();
 
@@ -395,7 +362,7 @@ class FarmController extends Controller
         try {
 
             $farmUser = FarmUser::where('user_id', $validated['user_id'])
-                ->where('farm_id', $farmId)
+                ->where('farm_id', $farm_id)
                 ->firstOrFail();
 
             $user = User::findOrFail($validated['user_id']);
