@@ -15,7 +15,7 @@ class CustomerService
 {
     public function getCustomers($farmId)
     {
-        $customers = QurbanCustomer::where('farm_id', $farmId)->filerMarketing($farmId)->get();
+        $customers = QurbanCustomer::where('farm_id', $farmId)->filterMarketing($farmId)->get();
 
         return $customers;
     }
