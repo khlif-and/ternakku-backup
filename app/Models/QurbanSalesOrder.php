@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\FarmUser;
 use Illuminate\Support\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,6 +49,20 @@ class QurbanSalesOrder extends Model
         }
 
         return $prefix . $newNumber;
+    }
+
+    public function scopeFilterMarketing($query, $farmId)
+    {
+        $cek = FarmUser::where('user_id', $this->user_id)
+            ->where('farm_id', $farmId)
+            ->whereIn('role', ['OWNER', 'ADMIN'])
+            ->get();
+
+        if ($cek->empty()) {
+            return $query->where('created_by', auth()->user()->id);
+        }
+
+        return $query;
     }
 
     public function qurbanCustomer()

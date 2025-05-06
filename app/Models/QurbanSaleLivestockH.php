@@ -31,6 +31,20 @@ class QurbanSaleLivestockH extends Model
         });
     }
 
+    public function scopeFilterMarketing($query, $farmId)
+    {
+        $cek = FarmUser::where('user_id', $this->user_id)
+            ->where('farm_id', $farmId)
+            ->whereIn('role', ['OWNER', 'ADMIN'])
+            ->get();
+
+        if ($cek->empty()) {
+            return $query->where('created_by', auth()->user()->id);
+        }
+
+        return $query;
+    }
+
     private function generateTransactionNumber($type , $transactionDate, $farmId)
     {
         $date = Carbon::parse($transactionDate);

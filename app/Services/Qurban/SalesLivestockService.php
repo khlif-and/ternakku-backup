@@ -31,7 +31,7 @@ class SalesLivestockService
 
     public function getSalesLivestocks($farmId, $param)
     {
-        $query = QurbanSaleLivestockH::where('farm_id', $farmId);
+        $query = QurbanSaleLivestockH::where('farm_id', $farmId)->filerMarketing($farmId);
 
         if (!empty($param['qurban_customer_id'])) {
             $query->where('qurban_customer_id', $param->qurban_customer_id);
