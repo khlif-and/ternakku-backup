@@ -15,7 +15,7 @@ class CustomerService
 {
     public function getCustomers($farmId)
     {
-        $customers = QurbanCustomer::where('farm_id', $farmId)->get();
+        $customers = QurbanCustomer::where('farm_id', $farmId)->filterMarketing($farmId)->get();
 
         return $customers;
     }
@@ -55,6 +55,7 @@ class CustomerService
             $customer = QurbanCustomer::create([
                 'farm_id'           => $farmId,
                 'user_id'           => $request['user_id'],
+                'created_by'        => auth()->user()->id,
             ]);
 
             // Commit transaksi

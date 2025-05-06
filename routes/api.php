@@ -213,14 +213,14 @@ Route::group([
             Route::group(['middleware' => ['farmer']] ,  function(){
                 Route::group(['prefix' => 'farm'], function(){
                     Route::get('/', [App\Http\Controllers\Api\FarmController::class, 'index']);
-                    Route::get('/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
-                    Route::post('/{farmId}/update', [App\Http\Controllers\Api\FarmController::class, 'update']);
-                    Route::delete('/{farmId}', [App\Http\Controllers\Api\FarmController::class, 'destroy']);
-                    Route::get('/{farmId}/user-list', [App\Http\Controllers\Api\FarmController::class, 'userList']);
-                    Route::post('/{farmId}/find-user', [App\Http\Controllers\Api\FarmController::class, 'findUser']);
-                    Route::get('/{farmId}/list-user', [App\Http\Controllers\Api\FarmController::class, 'listUser']);
-                    Route::post('/{farmId}/add-user', [App\Http\Controllers\Api\FarmController::class, 'addUser']);
-                    Route::post('/{farmId}/remove-user', [App\Http\Controllers\Api\FarmController::class, 'removeUser']);
+                    Route::get('/{farm_id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
+                    Route::post('/{farm_id}/update', [App\Http\Controllers\Api\FarmController::class, 'update'])->middleware(['check.farm.access:OWNER']);
+                    Route::delete('/{farm_id}', [App\Http\Controllers\Api\FarmController::class, 'destroy'])->middleware(['check.farm.access:OWNER']);
+                    Route::get('/{farm_id}/user-list', [App\Http\Controllers\Api\FarmController::class, 'userList'])->middleware(['check.farm.access:OWNER,ADMIN']);
+                    Route::post('/{farm_id}/find-user', [App\Http\Controllers\Api\FarmController::class, 'findUser']);
+                    // Route::get('/{farm_id}/list-user', [App\Http\Controllers\Api\FarmController::class, 'listUser'])->middleware(['check.farm.access:OWNER,ADMIN']);
+                    Route::post('/{farm_id}/add-user', [App\Http\Controllers\Api\FarmController::class, 'addUser'])->middleware(['check.farm.access:OWNER,ADMIN']);
+                    Route::post('/{farm_id}/remove-user', [App\Http\Controllers\Api\FarmController::class, 'removeUser'])->middleware(['check.farm.access:OWNER,ADMIN']);
                     Route::post('/{farm_id}/update-profile-user', [App\Http\Controllers\Api\FarmController::class, 'updateProfileUser'])->middleware(['check.farm.access:OWNER,ADMIN']);
                 });
 

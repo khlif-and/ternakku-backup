@@ -76,6 +76,7 @@ class SalesOrderController extends Controller
         ->when($request->qurban_customer_id, function ($query) use ($request) {
             $query->where('qurban_customer_id', $request->qurban_customer_id);
         })
+        ->filterMarketing($farmId)
         ->get();
 
         return ResponseHelper::success(SalesOrderResource::collection($salesOrders), 'SalesOrders found', 200);
