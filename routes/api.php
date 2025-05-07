@@ -249,15 +249,16 @@ Route::group([
                         Route::get('/{farm_id}/livestock/{id}', 'getDetailLivestock');
                     });
 
-                    Route::group(['prefix' => 'pen','controller' => App\Http\Controllers\Api\Farming\PenController::class], function () {
-                        Route::get('/{farm_id}', 'index');
-                        Route::get('/{farm_id}/{pen_id}', 'show');
-                        Route::post('/{farm_id}', 'store');
-                        Route::post('/{farm_id}/{pen_id}/update', 'update');
-                        Route::delete('/{farm_id}/{pen_id}', 'destroy');
-                    });
-
                     Route::group(['middleware' => ['subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])]], function () {
+
+                        Route::group(['prefix' => 'pen','controller' => App\Http\Controllers\Api\Farming\PenController::class], function () {
+                            Route::get('/{farm_id}', 'index');
+                            Route::get('/{farm_id}/{pen_id}', 'show');
+                            Route::post('/{farm_id}', 'store');
+                            Route::post('/{farm_id}/{pen_id}/update', 'update');
+                            Route::delete('/{farm_id}/{pen_id}', 'destroy');
+                        });
+
                         Route::post('update-classification/{farm_id}/{data_ud}/update', [App\Http\Controllers\Api\Farming\UpdateClassificationController::class, 'update']);
 
                         Route::post('update-bcs/{farm_id}/{data_ud}/update', [App\Http\Controllers\Api\Farming\UpdateBcsController::class, 'update']);
