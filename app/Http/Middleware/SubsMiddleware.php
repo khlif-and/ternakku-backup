@@ -18,6 +18,10 @@ class SubsMiddleware
      */
     public function handle(Request $request, Closure $next,  ...$subIds): Response
     {
+        if ($request->method() === 'GET') {
+            return $next($request);
+        }
+    
         $user = auth()->user();
         $farmId = $request->route('farm_id');
 
