@@ -23,6 +23,7 @@ class PaymentResource extends JsonResource
             'customer' => new CustomerResource($this->qurbanCustomer),
             'livestock' => new LivestockResource($this->livestock),
             'amount' => (float) $this->amount,
+            'paid_amount' => (float) $this->livestock->qurbanPayments->sum('amount'),
         ];
     }
 }
