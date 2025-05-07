@@ -45,13 +45,8 @@ class LivestockResource extends JsonResource
             'current_photo' => $this->current_photo,
             'characteristic' => $this->characteristic,
             'reception_price' => (float) $this->livestockReceptionD->price_per_head,
-            'sold_on_qurban' => $this->sold_on_qurban($this->id),
+            'sold_on_qurban' => $this->qurbanSaleLivestockD()->exists(),
             'expenses' => LivestockExpenseResource::collection($this->expenses),
         ];
-    }
-
-    private function sold_on_qurban($livestockId)
-    {
-        return QurbanSaleLivestockD::where('livestock_id', $livestockId)->exists();
     }
 }

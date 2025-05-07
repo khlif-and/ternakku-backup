@@ -39,7 +39,10 @@ class DashboardController extends Controller
         $farm = $request->attributes->get('farm');
 
         // Mulai query builder dengan livestock milik farm
-        $query = $farm->livestocks()->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value);
+        $query = $farm->livestocks()
+            ->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)
+            ->withExists(['qurbanSaleLivestockD']) // tambahkan ini
+            ->orderBy('qurban_sale_livestock_d_exists'); // false (0) di atas, true (1) di bawah
 
         // Terapkan filter jika ada
         if ($request->filled('eartag_number')) {
