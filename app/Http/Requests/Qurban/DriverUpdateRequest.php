@@ -26,8 +26,8 @@ class DriverUpdateRequest extends FormRequest
             'region_id'         => 'required|integer|exists:regions,id',
             'postal_code'       => 'nullable|string|max:10',
             'address_line'      => 'required|string|max:255',
-            'longitude'         => 'nullable|numeric|between:-180,180',
-            'latitude'          => 'nullable|numeric|between:-90,90',
+            'longitude'         => 'nullable|numeric',
+            'latitude'          => 'nullable|numeric',
             'capacity'          => 'nullable|integer|min:1',
             'photo'              => 'nullable|image|mimes:jpg,jpeg,png,gif',
         ];
