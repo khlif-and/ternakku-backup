@@ -10,4 +10,9 @@ class SubscriptionFarm extends Model
     use HasFactory;
 
     protected $table = 'subscription_farm';
+
+    public function farm()
+    {
+        return $this->belongsTo(Farm::class, 'farm_id');
+    }
 }
