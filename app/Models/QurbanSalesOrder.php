@@ -53,12 +53,12 @@ class QurbanSalesOrder extends Model
 
     public function scopeFilterMarketing($query, $farmId)
     {
-        $cek = FarmUser::where('user_id', $this->user_id)
+        $cek = FarmUser::where('user_id', auth()->user()->id)
             ->where('farm_id', $farmId)
-            ->whereIn('role', ['OWNER', 'ADMIN'])
+            ->whereIn('farm_role', ['OWNER', 'ADMIN'])
             ->get();
 
-        if ($cek->empty()) {
+        if ($cek->isEmpty()) {
             return $query->where('created_by', auth()->user()->id);
         }
 

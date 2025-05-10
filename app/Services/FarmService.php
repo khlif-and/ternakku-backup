@@ -17,9 +17,14 @@ class FarmService
         $user = auth()->user();
 
         // Ambil data farm milik user dan relasi farm-nya
-        $farms = FarmUser::with('farm')->where('user_id', $user->id)->get();
+        $farmUsers = FarmUser::with('farm')
+            ->where('user_id', $user->id)
+            ->get()
+            ->unique('farm_id') // hilangkan duplikat berdasarkan farm_id
+            ->values(); // reset indeks agar rapih
 
-        return $farms;
+        return $farmUsers;
+
     }
 
     public function findUser($username)

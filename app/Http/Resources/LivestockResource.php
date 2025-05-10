@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
+use App\Models\QurbanSaleLivestockD;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\Farming\LivestockExpenseResource;
 
@@ -44,6 +45,7 @@ class LivestockResource extends JsonResource
             'current_photo' => $this->current_photo,
             'characteristic' => $this->characteristic,
             'reception_price' => (float) $this->livestockReceptionD->price_per_head,
+            'sold_on_qurban' => $this->qurbanSaleLivestockD()->exists(),
             'expenses' => LivestockExpenseResource::collection($this->expenses),
         ];
     }
