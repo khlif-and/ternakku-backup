@@ -453,7 +453,7 @@ Route::group([
 
     Route::group(['prefix' => 'livestock-outlet', 'controller' => App\Http\Controllers\Api\LivestockOutletController::class], function () {
         Route::get('/livestock', 'livestockIndex');
-        Route::get('/livetock/{id}', 'livestockDetail');
+        Route::get('/livestock/{id}', 'livestockDetail');
         Route::get('/farm', 'farmIndex');
         Route::get('/farm/{id}', 'farmDetail');
     });
