@@ -29,7 +29,12 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::get('login', 'showLoginForm');
     Route::post('login', 'login')->name('login');
     Route::post('logout', 'logout')->name('logout');
+
+    // Tambahan untuk register
+    Route::get('register', 'showRegisterForm')->name('register.form');
+    Route::post('register', 'register')->name('register');
 });
+
 
 Route::middleware(['auth', 'email.verified'])->group(function () {
     Route::get('dashboard', function () {
@@ -126,9 +131,5 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
             Route::get('/', 'index')->name('cancelation_qurban.index');
             Route::get('/create', 'create')->name('cancelation_qurban.create');
         });
-
-
-
-
     });
 });
