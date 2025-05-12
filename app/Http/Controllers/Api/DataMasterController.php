@@ -76,11 +76,13 @@ class DataMasterController extends Controller
 
     public function getRegion(Request $request)
     {
-        // Mengatur default page jika tidak ada parameter page
+        // Mengatur default page dan per_page jika tidak ada parameter
         $page = $request->input('page', 1);
+        $perPage = $request->input('per_page', 10);
 
         // Melakukan query dengan paginasi dan halaman tertentu
-        $data = Region::where('name', 'like', '%' . $request->name . '%')->paginate(10, ['*'], 'page', $page);
+        $data = Region::where('name', 'like', '%' . $request->name . '%')
+            ->paginate($perPage, ['*'], 'page', $page);
 
         return ResponseHelper::success($data, 'Data retrieved successfully');
     }
