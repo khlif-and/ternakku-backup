@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Enums\SubscriptionEnum;
 use App\Helpers\ResponseHelper;
 use App\Models\SubscriptionFarm;
+use App\Enums\LivestockStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\LivestockResource;
 use App\Http\Resources\FarmDetailResource;
@@ -91,6 +92,7 @@ class LivestockOutletController extends Controller
             ->pluck('farm_id');
     
         $livestockQuery = Livestock::whereIn('farm_id', $farmIds)
+            ->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)
             ->with(['farm.farmDetail.region']); // Eager load region melalui farmDetail
     
         // Filter berdasarkan farm_id (jika ada)
