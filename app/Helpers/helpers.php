@@ -1,6 +1,7 @@
 <?php
 
 use Aws\S3\S3Client;
+use App\Models\QurbanPrice;
 use Illuminate\Support\Carbon;
 use App\Enums\LivestockTypeEnum;
 
@@ -135,5 +136,20 @@ if (!function_exists('getEstimatedBirthDate')) {
         }
 
         return $tglEstimasi;
+    }
+}
+
+if (!function_exists('getEstimationQurbanPrice')) {
+    function getEstimationQurbanPrice($farmId, $livestockTypeId, $hijriYear = 1446, $weight)
+    {
+        $price = QurbanPrice::where('farm_id', $farmId)
+            ->where('livestock_type_id', $livestockTypeId)
+            ->where('hijri_year', $hijriYear)
+            ->where('start_weight', '<=', $weight)
+            ->where('end_weight', '>=', $weight)
+            ->orderBy('start_weight')
+            ->first();
+
+        return $price ? $price * $weight : null;
     }
 }

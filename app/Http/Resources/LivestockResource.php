@@ -44,7 +44,8 @@ class LivestockResource extends JsonResource
             'pen_name' => $this->pen->name,
             'current_photo' => $this->current_photo,
             'characteristic' => $this->characteristic,
-            'qurban_price' => (float) $this->livestockReceptionD?->price_per_head,
+            'reception_price' => (float) $this->livestockReceptionD->price_per_head,
+            'qurban_price' => (float) getEstimationQurbanPrice($this->farm_id, $this->livestock_type_id, 1446, $this->last_weight),
             'sold_on_qurban' => $this->qurbanSaleLivestockD()->exists(),
             'expenses' => LivestockExpenseResource::collection($this->expenses),
         ];
