@@ -150,6 +150,6 @@ if (!function_exists('getEstimationQurbanPrice')) {
             ->orderBy('start_weight')
             ->first();
 
-        return $price ? $price * $weight : null;
+        return $price ? $price->price_per_kg * $weight : null;
     }
 }
