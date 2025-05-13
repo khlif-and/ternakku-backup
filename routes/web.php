@@ -12,7 +12,12 @@ use App\Http\Controllers\Admin\Qurban\SalesOrderController;
 use App\Http\Controllers\Admin\Qurban\SalesLivestockController;
 use App\Http\Controllers\Admin\Qurban\ReweightController;
 use App\Http\Controllers\Admin\Qurban\PaymentController;
+use App\Http\Controllers\Admin\Qurban\QurbanDeliveryController;
+use App\Http\Controllers\Admin\Qurban\FleetTrackingController;
+use App\Http\Controllers\Admin\Qurban\LiveestockDeliveryNoteController;
 use App\Http\Controllers\Admin\Qurban\QurbanDeliveryOrderDataController;
+use App\Http\Controllers\Admin\Qurban\PopulationReportController;
+
 use App\Http\Controllers\Admin\Qurban\SalesQurbanController;
 use App\Http\Controllers\Admin\Qurban\CancelationQurbanController;
 
@@ -117,10 +122,32 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
             Route::get('/create', 'create')->name('payment.create');
         });
 
-        Route::prefix('qurban-delivery-order-data')->controller(QurbanDeliveryOrderDataController::class)->group(function () {
-            Route::get('/', 'index')->name('qurban_delivery_order_data.index');
-            Route::get('/create', 'create')->name('qurban_delivery_order_data.create');
+        Route::prefix('delivery')->controller(QurbanDeliveryController::class)->group(function () {
+            Route::get('/', 'index')->name('delivery.index');
+            Route::get('/create', 'create')->name('delivery.create');
         });
+
+        Route::prefix('fleet-tracking')->controller(FleetTrackingController::class)->group(function () {
+            Route::get('/', 'index')->name('fleet-tracking.index');
+            Route::get('/create', 'create')->name('fleet-tracking.create');
+        });
+
+        Route::prefix('livestock-delivery-note')->controller(LiveestockDeliveryNoteController::class)->group(function () {
+            Route::get('/', 'index')->name('livestock-delivery-note.index');
+            Route::get('/create', 'create')->name('livestock-delivery-note.create');
+        });
+
+        Route::prefix('qurban-delivery-order-data')->controller(QurbanDeliveryOrderDataController::class)->group(function () {
+            Route::get('/', 'index')->name('qurban-delivery-order-data.index');
+            Route::get('/create', 'create')->name('qurban-delivery-order-data.create');
+        });
+
+Route::prefix('population-report')->controller(PopulationReportController::class)->group(function () {
+    Route::get('/', 'index')->name('population-report.index');
+    Route::get('/create', 'create')->name('population-report.create');
+});
+
+
 
         Route::prefix('sales-qurban')->controller(SalesQurbanController::class)->group(function () {
             Route::get('/', 'index')->name('sales_qurban.index');

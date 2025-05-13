@@ -3,10 +3,10 @@
 @section('content')
 <div class="page-inner">
     <div class="page-header">
-        <h3 class="fw-bold mb-3">Qurban Delivery Order Data</h3>
+        <h3 class="fw-bold mb-3">Surat Jalan Qurban</h3>
         <ul class="breadcrumbs mb-3">
             <li class="nav-home">
-                <a href="{{ url('/') }}">
+                <a href="#">
                     <i class="icon-home"></i>
                 </a>
             </li>
@@ -20,7 +20,7 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ url('qurban/qurban-delivery-order-data') }}">Qurban Delivery Order Data</a>
+                <a href="{{ url('qurban/qurban-delivery-order-data') }}">Surat Jalan Qurban</a>
             </li>
         </ul>
     </div>
@@ -30,50 +30,45 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Tambah Qurban Delivery Order</h4>
+                        <h4 class="card-title">Tambah Surat Jalan Qurban</h4>
                     </div>
                 </div>
 
                 <div class="card-body">
-                    <form method="POST" enctype="multipart/form-data">
+                    <form action="{{ url('qurban/qurban-delivery-order-data') }}" method="POST">
                         @csrf
 
                         <div class="form-group mb-3">
-                            <label for="number">Delivery Order Number</label>
-                            <input type="text" class="form-control" id="number" name="number" required>
+                            <label for="recipient_name">Nama Penerima</label>
+                            <input type="text" class="form-control" id="recipient_name" name="recipient_name" required placeholder="Masukkan nama penerima">
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="date">Date</label>
-                            <input type="date" class="form-control" id="date" name="date" required>
+                            <label for="livestock_type">Jenis Ternak</label>
+                            <input type="text" class="form-control" id="livestock_type" name="livestock_type" required placeholder="Contoh: Sapi, Kambing">
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="farmer_name">Farmer Name</label>
-                            <input type="text" class="form-control" id="farmer_name" name="farmer_name" required>
+                            <label for="quantity">Jumlah Ternak</label>
+                            <input type="number" class="form-control" id="quantity" name="quantity" min="1" required placeholder="Masukkan jumlah ekor">
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="destination">Destination</label>
-                            <input type="text" class="form-control" id="destination" name="destination" required>
+                            <label for="delivery_date">Tanggal Pengiriman</label>
+                            <input type="date" class="form-control" id="delivery_date" name="delivery_date" required>
                         </div>
 
                         <div class="form-group mb-3">
-                            <label for="animal_count">Animal Count</label>
-                            <input type="number" class="form-control" id="animal_count" name="animal_count" required>
-                        </div>
-
-                        <div class="form-group mb-3">
-                            <label for="note">Note</label>
-                            <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                            <label for="notes">Catatan Tambahan</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Contoh: Pengiriman pagi sebelum jam 10..."></textarea>
                         </div>
 
                         <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Simpan Surat Jalan</button>
                         </div>
-
                     </form>
                 </div>
+
             </div>
         </div>
     </div>
@@ -83,7 +78,7 @@
 @section('script')
 <script>
     $(document).ready(function() {
-        // Script tambahan kalau nanti butuh
+        // Tambahkan jika ada script khusus nanti
     });
 </script>
 @endsection

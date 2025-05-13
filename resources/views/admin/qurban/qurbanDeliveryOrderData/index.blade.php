@@ -3,7 +3,7 @@
 @section('content')
     <div class="page-inner">
         <div class="page-header">
-            <h3 class="fw-bold mb-3">Pelacakan Armada</h3>
+            <h3 class="fw-bold mb-3">Surat Jalan Qurban</h3>
             <ul class="breadcrumbs mb-3">
                 <li class="nav-home">
                     <a href="#">
@@ -20,7 +20,7 @@
                     <i class="icon-arrow-right"></i>
                 </li>
                 <li class="nav-item">
-                    <a href="#">Fleet Tracking</a>
+                    <a href="#">Surat Jalan Qurban</a>
                 </li>
             </ul>
         </div>
@@ -30,10 +30,10 @@
                 <div class="card">
                     <div class="card-header">
                         <div class="d-flex align-items-center">
-                            <h4 class="card-title">Data Pelacakan Armada</h4>
-                            <a href="{{ route('fleet-tracking.create') }}" class="btn btn-primary btn-round ms-auto">
+                            <h4 class="card-title">Data Surat Jalan Qurban</h4>
+                            <a href="{{ route('qurban-delivery-order-data.create') }}" class="btn btn-primary btn-round ms-auto">
                                 <i class="fa fa-plus"></i>
-                                Tambah Data Pelacakan
+                                Tambah Surat Jalan
                             </a>
                         </div>
                     </div>
@@ -43,43 +43,42 @@
                             <table id="basic-datatables" class="display table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Pelanggan</th>
-                                        <th>Ternak</th>
+                                        <th>Penerima</th>
+                                        <th>Jenis Ternak</th>
                                         <th>Jumlah</th>
                                         <th>Tanggal Pengiriman</th>
+                                        <th>Catatan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    @forelse($fleetTrackings as $fleet)
+                                    @forelse($qurbanDeliveryOrderData as $data)
                                         <tr>
-                                            <td>{{ $fleet->pelanggan }}</td>
-                                            <td>{{ $fleet->ternak }}</td>
-                                            <td>{{ $fleet->jumlah }} Ekor</td>
-                                            <td>{{ $fleet->tanggal }}</td>
+                                            <td>{{ $data->recipient_name ?? '-' }}</td>
+                                            <td>{{ $data->livestock_type ?? '-' }}</td>
+                                            <td>{{ $data->quantity }} Ekor</td>
+                                            <td>{{ \Carbon\Carbon::parse($data->delivery_date)->format('d M Y') }}</td>
+                                            <td>{{ $data->notes ?? '-' }}</td>
                                             <td>
-                                                <button class="btn btn-sm btn-warning">Ubah</button>
-                                                <button class="btn btn-sm btn-danger">Hapus</button>
+                                                <a href="{{ route('qurban-delivery-order-data.edit', $data->id) }}" class="btn btn-sm btn-warning">Ubah</a>
+                                                <form action="{{ route('qurban-delivery-order-data.destroy', $data->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td>Pelanggan 1</td>
-                                            <td>Sapi 1</td>
-                                            <td>2 Ekor</td>
-                                            <td>2025-04-28</td>
-                                            <td>
-                                                <button class="btn btn-sm btn-warning">Ubah</button>
-                                                <button class="btn btn-sm btn-danger">Hapus</button>
-                                            </td>
+                                            <td colspan="6" class="text-center">Belum ada data surat jalan qurban.</td>
                                         </tr>
                                     @endforelse
-
                                 </tbody>
                             </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
@@ -88,7 +87,7 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#basic-datatables').DataTable();
         });
     </script>

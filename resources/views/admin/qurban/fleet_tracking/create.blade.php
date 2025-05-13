@@ -20,10 +20,11 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ url('fleet-tracking') }}">Pelacakan Armada</a>
+                <a href="{{ url('qurban/fleet-tracking') }}">Fleet Tracking</a>
             </li>
         </ul>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -32,54 +33,49 @@
                         <h4 class="card-title">Tambah Data Pelacakan Armada</h4>
                     </div>
                 </div>
+
                 <div class="card-body">
-                    <form action="{{ url('fleet-tracking') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ url('qurban/fleet-tracking') }}" method="POST">
                         @csrf
 
-                        <div class="form-group">
-                            <label for="driver_name">Nama Pengemudi</label>
-                            <input type="text" class="form-control" id="driver_name" name="driver_name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="vehicle">Nama Kendaraan</label>
-                            <input type="text" class="form-control" id="vehicle" name="vehicle" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="departure_time">Waktu Keberangkatan</label>
-                            <input type="datetime-local" class="form-control" id="departure_time" name="departure_time" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="last_location">Lokasi Terakhir Diketahui</label>
-                            <textarea class="form-control" id="last_location" name="last_location" rows="3"></textarea>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="tracking_date">Tanggal Pelacakan</label>
-                            <input type="date" class="form-control" id="tracking_date" name="tracking_date" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="status">Status Armada</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="">Pilih Status</option>
-                                <option value="on_the_way">Dalam Perjalanan</option>
-                                <option value="delivered">Terkirim</option>
-                                <option value="delayed">Tertunda</option>
+                        <div class="form-group mb-3">
+                            <label for="pelanggan">Pelanggan</label>
+                            <select class="form-control" id="pelanggan" name="pelanggan" required>
+                                <option value="">Pilih Pelanggan</option>
+                                <option value="1">Pelanggan 1</option>
+                                <option value="2">Pelanggan 2</option>
+                                <option value="3">Pelanggan 3</option>
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label for="photo">Unggah Foto</label>
-                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                        <div class="form-group mb-3">
+                            <label for="ternak">Jenis Ternak</label>
+                            <select class="form-control" id="ternak" name="ternak" required>
+                                <option value="">Pilih Ternak</option>
+                                <option value="1">Sapi 1</option>
+                                <option value="2">Sapi 2</option>
+                                <option value="3">Kambing 1</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="jumlah">Jumlah Ternak</label>
+                            <select class="form-control" id="jumlah" name="jumlah" required>
+                                <option value="">Pilih Jumlah</option>
+                                <option value="1">1 Ekor</option>
+                                <option value="2">2 Ekor</option>
+                                <option value="3">3 Ekor</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="tanggal">Tanggal Pengiriman</label>
+                            <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                         </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -90,6 +86,8 @@
 
 @section('script')
 <script>
-
+    $(document).ready(function() {
+        // Tambahkan jika ada script khusus nanti
+    });
 </script>
 @endsection

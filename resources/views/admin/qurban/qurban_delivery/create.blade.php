@@ -14,75 +14,68 @@
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="#">Aktifitas</a>
+                <a href="#">Aktivitas</a>
             </li>
             <li class="separator">
                 <i class="icon-arrow-right"></i>
             </li>
             <li class="nav-item">
-                <a href="{{ url('qurban-delivery') }}">Pengiriman Qurban</a>
+                <a href="{{ url('qurban/delivery') }}">Pengiriman Qurban</a>
             </li>
         </ul>
     </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h4 class="card-title">Tambah Qurban Delivery</h4>
+                        <h4 class="card-title">Tambah Data Pengiriman</h4>
                     </div>
                 </div>
+
                 <div class="card-body">
-                    <form action="{{ url('qurban-delivery') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ url('qurban/delivery') }}" method="POST">
                         @csrf
 
-                        <div class="form-group">
-                            <label for="animal_number">Nomor Hewan</label>
-                            <input type="text" class="form-control" id="animal_number" name="animal_number" required>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="driver_name">Nama Driver</label>
-                            <input type="text" class="form-control" id="driver_name" name="driver_name" required>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label for="departure_time">Waktu Berangkat</label>
-                                    <input type="datetime-local" class="form-control" id="departure_time" name="departure_time" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="arrival_time">Waktu Sampai</label>
-                                    <input type="datetime-local" class="form-control" id="arrival_time" name="arrival_time">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="status">Status Pengiriman</label>
-                            <select class="form-control" id="status" name="status" required>
-                                <option value="">-- Pilih Status --</option>
-                                <option value="pending">Pending</option>
-                                <option value="delivered">Delivered</option>
-                                <option value="canceled">Canceled</option>
+                        <div class="form-group mb-3">
+                            <label for="pelanggan">Pelanggan</label>
+                            <select class="form-control" id="pelanggan" name="pelanggan" required>
+                                <option value="">Pilih Pelanggan</option>
+                                <option value="1">Pelanggan 1</option>
+                                <option value="2">Pelanggan 2</option>
+                                <option value="3">Pelanggan 3</option>
                             </select>
                         </div>
 
-                        <div class="form-group">
-                            <label for="note">Catatan</label>
-                            <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                        <div class="form-group mb-3">
+                            <label for="ternak">Jenis Ternak</label>
+                            <select class="form-control" id="ternak" name="ternak" required>
+                                <option value="">Pilih Ternak</option>
+                                <option value="1">Sapi 1</option>
+                                <option value="2">Sapi 2</option>
+                                <option value="3">Kambing 1</option>
+                            </select>
                         </div>
 
-                        <div class="form-group">
-                            <label for="photo">Unggah Bukti Foto (Opsional)</label>
-                            <input type="file" class="form-control" id="photo" name="photo" accept="image/*">
+                        <div class="form-group mb-3">
+                            <label for="jumlah">Jumlah Ternak</label>
+                            <select class="form-control" id="jumlah" name="jumlah" required>
+                                <option value="">Pilih Jumlah</option>
+                                <option value="1">1 Ekor</option>
+                                <option value="2">2 Ekor</option>
+                                <option value="3">3 Ekor</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group mb-3">
+                            <label for="tanggal">Tanggal Pengiriman</label>
+                            <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                         </div>
 
                         <div class="form-group">
                             <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -93,6 +86,8 @@
 
 @section('script')
 <script>
-
+    $(document).ready(function() {
+        // Tambahkan jika ada script khusus nanti
+    });
 </script>
 @endsection
