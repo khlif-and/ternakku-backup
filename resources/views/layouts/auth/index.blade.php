@@ -1,42 +1,36 @@
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Ternakku</title>
-    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Ternakku</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{{ asset('admin/img/kaiadmin/favicon.ico') }}" type="image/x-icon" />
 
-    <!-- Fonts and icons -->
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
     <script src="{{ asset('admin/js/plugin/webfont/webfont.min.js') }}"></script>
     <script>
-		WebFont.load({
-			google: {"families":["Public Sans:300,400,500,600,700"]},
-			custom: {"families":["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"], urls: ['admin/css/fonts.min.css']},
-			active: function() {
-				sessionStorage.fonts = true;
-			}
-		});
-	</script>
+        WebFont.load({
+            google: { "families": ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                "families": ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
+                urls: ['{{ asset('admin/css/fonts.min.css') }}']
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+</head>
+<body class="antialiased font-sans">
 
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="{{ asset('admin/css/bootstrap.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/css/plugins.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('admin/css/kaiadmin.min.css') }}" />
-    <style>
-        .bg-auth{
-            background: #6CC3A0;
-        }
-    </style>
-  </head>
-  <body class="login bg-auth">
-    <div class="wrapper wrapper-login">
-        @yield('content')
-    </div>
+    @yield('content')
+
+    <!-- Optional JS -->
     <script src="{{ asset('admin/js/core/jquery-3.7.1.min.js') }}"></script>
-
     <script src="{{ asset('admin/js/core/popper.min.js') }}"></script>
-    <script src="{{ asset('admin/js/core/bootstrap.min.js') }}"></script>
     <script src="{{ asset('admin/js/kaiadmin.min.js') }}"></script>
-  </body>
+</body>
 </html>

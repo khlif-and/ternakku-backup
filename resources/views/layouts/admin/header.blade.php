@@ -1,60 +1,62 @@
-<div class="main-header-logo">
-    <!-- Logo Header -->
-    <div class="logo-header" data-background-color="dark">
-
-        <a href="{{ url('dashboard') }}" class="logo">
-            <img src="{{ asset('admin/img/kaiadmin/logo_light.svg') }}" alt="navbar brand" class="navbar-brand" height="20">
+<header class="bg-white px-4 lg:px-6 py-3 flex items-center justify-between shadow-lg">
+    <!-- Logo & Sidebar Toggle -->
+    <div class="flex items-center space-x-2">
+        <!-- Sidebar Toggle (mobile) -->
+        <button class="block lg:hidden p-2 rounded hover:bg-gray-100 transition" aria-label="Toggle Sidebar">
+            <svg class="w-6 h-6 text-gray-900" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+        </button>
+        <!-- Ternakku Brand -->
+        <a href="{{ url('dashboard') }}" class="flex items-center space-x-2">
+            <span class="text-2xl font-extrabold tracking-tight text-orange-600 select-none">Ternakku</span>
         </a>
-        <div class="nav-toggle">
-            <button class="btn btn-toggle toggle-sidebar">
-                <i class="gg-menu-right"></i>
-            </button>
-            <button class="btn btn-toggle sidenav-toggler">
-                <i class="gg-menu-left"></i>
+    </div>
+    <!-- Right (profile & menu) -->
+    <div class="flex items-center space-x-3">
+        <!-- Topbar Toggle (optional) -->
+        <button class="p-2 rounded hover:bg-gray-100 transition hidden lg:block" aria-label="Topbar More">
+            <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="6" r="1.5"/>
+                <circle cx="12" cy="12" r="1.5"/>
+                <circle cx="12" cy="18" r="1.5"/>
+            </svg>
+        </button>
+        <!-- Profile Dropdown -->
+<!-- Profile Dropdown -->
+<div class="relative">
+    <button id="profileDropdownBtn" class="flex items-center space-x-2 focus:outline-none" aria-haspopup="true" type="button">
+        <img src="{{ asset('admin/img/profile.jpg') }}" alt="Profile" class="w-8 h-8 rounded-full border-2 border-gray-200" />
+        <span class="hidden sm:inline-block text-gray-900">
+            <span class="opacity-70">Hi,</span>
+            <span class="font-semibold">{{ explode(' ', auth()->user()->name)[0] }}</span>
+        </span>
+        <svg class="w-4 h-4 text-gray-600 opacity-60 ml-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
+        </svg>
+    </button>
+    <!-- Dropdown menu -->
+    <div id="profileDropdown" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-100 z-40 hidden">
+        <div class="px-5 py-4 border-b border-gray-100 flex items-center space-x-3">
+            <img src="{{ asset('admin/img/profile.jpg') }}" alt="Profile" class="w-12 h-12 rounded-full border-2 border-gray-200" />
+            <div>
+                <div class="font-semibold text-gray-900 text-base leading-tight">
+                    {{ auth()->user()->name }}
+                </div>
+                <div class="text-xs text-gray-500">{{ auth()->user()->email }}</div>
+            </div>
+        </div>
+        <div>
+            <button
+                id="logoutBtn"
+                type="button"
+                class="w-full px-5 py-3 text-left text-gray-700 hover:bg-orange-50 rounded-b-xl transition"
+            >
+                Logout
             </button>
         </div>
-        <button class="topbar-toggler more">
-            <i class="gg-more-vertical-alt"></i>
-        </button>
-
     </div>
-    <!-- End Logo Header -->
 </div>
 
-<!-- Navbar Header -->
-<nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
-
-    <div class="container-fluid">
-        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-            <li class="nav-item topbar-user dropdown hidden-caret">
-                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
-                    <div class="avatar-sm">
-                        <img src="{{ asset('admin/img/profile.jpg') }}" alt="..." class="avatar-img rounded-circle">
-                    </div>
-                    <span class="profile-username">
-                        <span class="op-7">Hi,</span> <span class="fw-bold">{{ explode(' ', auth()->user()->name)[0] }}</span>
-                    </span>
-                </a>
-                <ul class="dropdown-menu dropdown-user animated fadeIn">
-                    <div class="dropdown-user-scroll scrollbar-outer">
-                        <li>
-                            <div class="user-box">
-                                <div class="avatar-lg"><img src="{{ asset('admin/img/profile.jpg') }}" alt="image profile" class="avatar-img rounded"></div>
-                                <div class="u-text">
-                                    <h4>{{ auth()->user()->name }}</h4>
-                                    <p class="text-muted">{{ auth()->user()->email }}</p>
-                                    <!-- <a href="profile.html" class="btn btn-xs btn-secondary btn-sm">View Profile</a> -->
-                                </div>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
-                        </li>
-                    </div>
-                </ul>
-            </li>
-        </ul>
     </div>
-</nav>
-<!-- End Navbar -->
+</header>

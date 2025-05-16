@@ -1,115 +1,33 @@
-@extends('layouts.qurban.index')
-
-@section('content')
-<div class="page-inner">
-    <div class="page-header">
-        <h3 class="fw-bold mb-3">Data Pengguna</h3>
-        <ul class="breadcrumbs mb-3">
-            <li class="nav-home">
-                <a href="
-                    <i class="icon-home"></i>
-                </a>
-            </li>
-            <li class="separator">
-                <i class="icon-arrow-right"></i>
-            </li>
-            <li class="nav-item">
-                <a href="
-            </li>
-            <li class="separator">
-                <i class="icon-arrow-right"></i>
-            </li>
-            <li class="nav-item">
-                <a href="{{ url('qurban/farm/user-list') }}">Data Pengguna</a>
-            </li>
-        </ul>
+<div class="bg-white shadow-md rounded-lg mt-8 p-6">
+    <div class="flex items-center justify-between mb-4">
+        <h4 class="font-semibold text-lg">Data Pengguna</h4>
+        <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tambah Data</a>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex align-items-center">
-                        <h4 class="card-title">Tambah Data Pengguna</h4>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <form action="{{ url('qurban/farm/add-user') }}" method="POST">
-                        @csrf
 
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="string" class="form-control" id="username" name="username" required>
-                        </div>
-
-                        <div id="user-info" class="d-none">
-                            <div class="form-group">
-                                <label for="name">Name</label>
-                                <input type="string" class="form-control" id="name" name="name" readonly value="">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone_number">No HP</label>
-                                <input type="string" class="form-control" id="phone_number" name="phone_number" readonly value="">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email</label>
-                                <input type="string" class="form-control" id="email" name="email" readonly value="">
-                            </div>
-                            <input type="hidden" id="user_id" name="user_id" value="">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="farm_role">Role</label>
-                            <select class="form-control" id="farm_role" name="farm_role" required>
-                                <option value="ADMIN">Admin</option>
-                                <option value="ABK">ABK</option>
-                                <option value="DRIVER">driver</option>
-                            </select>
-                        </div>
-                        <div class="form-group mt-3">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 text-sm">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="px-6 py-3 text-left font-semibold text-gray-600">Nama</th>
+                    <th class="px-6 py-3 text-left font-semibold text-gray-600">Email</th>
+                    <th class="px-6 py-3 text-left font-semibold text-gray-600">No HP</th>
+                    <th class="px-6 py-3 text-left font-semibold text-gray-600">Role</th>
+                    <th class="px-6 py-3 text-left font-semibold text-gray-600">Aksi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                @foreach($users as $user)
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $user->name }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $user->email }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $user->phone_number }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">{{ $user->role }}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Hapus</button>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 </div>
-@endsection
-
-@section('script')
-<script>
-$(document).ready(function() {
-    var timer;
-
-    $('#username').on('keyup', function() {
-        clearTimeout(timer);
-
-        var phoneNumber = $(this).val();
-
-        timer = setTimeout(function() {
-            $.ajax({
-                url: '/qurban/farm/find-user',
-                type: 'get',
-                data: { username: phoneNumber },
-                success: function(response) {
-
-                    let data = response
-
-                    $('#user-info').removeClass('d-none');
-                    $('#name').val(data.name);
-                    $('#phone_number').val(data.phone_number);
-                    $('#email').val(data.email);
-                    $('#user_id').val(data.id);
-
-                    $('#.user-info').addClass('d-none');
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                }
-            });
-        }, 1000);
-    });
-});
-
-</script>
-@endsection

@@ -92,6 +92,7 @@ class FarmController extends Controller
     public function userList()
     {
         $farmId = session('selected_farm');
+        $farm = \App\Models\Farm::find($farmId);
 
         $response = $this->farmService->getUsers($farmId);
 
@@ -102,8 +103,7 @@ class FarmController extends Controller
         }
 
         $users = $response['data'];
-
-        return view('admin.farm.user_list', compact('users'));
+        return view('admin.farm.user_list', compact('users', 'farm'));
     }
 
     public function userCreate()

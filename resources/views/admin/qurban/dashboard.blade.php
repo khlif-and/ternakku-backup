@@ -1,80 +1,68 @@
 @extends('layouts.qurban.index')
 
 @section('content')
-    <div class="page-inner">
-        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
-            <div>
-                <h3 class="fw-bold mb-3">Ternak Kurban Dashboard</h3>
-                {{-- <h6 class="op-7 mb-2">{{ $farm->name }}</h6> --}}
-            </div>
-            <!-- <div class="ms-md-auto py-2 py-md-0">
-                <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
-                <a href="#" class="btn btn-primary btn-round">Add Customer</a>
-            </div> -->
+<div class="px-2 sm:px-4 md:px-8 py-4">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between pt-2 pb-4 gap-2">
+        <div>
+            <h3 class="font-bold text-2xl mb-3">Ternak Kurban Dashboard</h3>
+            {{-- <h6 class="text-gray-400 mb-2">{{ $farm->name }}</h6> --}}
         </div>
-        <div class="row row-card-no-pd">
-            <div class="col-12 col-sm-6 col-md-6 col-xl-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h6><b>Sales Order</b></h6>
-                                <p class="text-muted">Completed</p>
-                            </div>
-                            <h4 class="text-info fw-bold">80</h4>
-                        </div>
-                        <div class="progress progress-sm">
-                            <div class="progress-bar bg-info w-75" role="progressbar" aria-valuenow="75" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-2">
-                            <!-- <p class="text-muted mb-0">Change</p> -->
-                            <p class="text-muted mb-0">75%</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-6 col-xl-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h6><b>Penjualan Ternak</b></h6>
-                                <p class="text-muted">Terjual</p>
-                            </div>
-                            <h4 class="text-success fw-bold">120</h4>
-                        </div>
-                        <div class="progress progress-sm">
-                            <div class="progress-bar bg-success w-25" role="progressbar" aria-valuenow="25"
-                                aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-2">
-                            <p class="text-muted mb-0">25%</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-md-6 col-xl-4">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h6><b>Pengiriman</b></h6>
-                                <p class="text-muted">Terkirim</p>
-                            </div>
-                            <h4 class="text-danger fw-bold">15</h4>
-                        </div>
-                        <div class="progress progress-sm">
-                            <div class="progress-bar bg-danger w-50" role="progressbar" aria-valuenow="50" aria-valuemin="0"
-                                aria-valuemax="100"></div>
-                        </div>
-                        <div class="d-flex justify-content-between mt-2">
-                            <p class="text-muted mb-0">50%</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!--
+        <div class="flex gap-2">
+            <a href="#" class="btn btn-label-info btn-round me-2">Manage</a>
+            <a href="#" class="btn btn-primary btn-round">Add Customer</a>
         </div>
-
+        -->
     </div>
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-3">
+        <!-- Card 1 -->
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between min-h-[170px]">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h6 class="font-bold text-base mb-0">Sales Order</h6>
+                    <p class="text-gray-500 text-sm">Completed</p>
+                </div>
+                <h4 class="text-sky-500 font-extrabold text-2xl">80</h4>
+            </div>
+            <div class="w-full bg-gray-200 h-2 rounded mt-4">
+                <div class="bg-sky-400 h-2 rounded" style="width:75%"></div>
+            </div>
+            <div class="flex justify-end mt-2">
+                <p class="text-gray-400 text-sm mb-0">75%</p>
+            </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between min-h-[170px]">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h6 class="font-bold text-base mb-0">Penjualan Ternak</h6>
+                    <p class="text-gray-500 text-sm">Terjual</p>
+                </div>
+                <h4 class="text-green-500 font-extrabold text-2xl">120</h4>
+            </div>
+            <div class="w-full bg-gray-200 h-2 rounded mt-4">
+                <div class="bg-green-400 h-2 rounded" style="width:25%"></div>
+            </div>
+            <div class="flex justify-end mt-2">
+                <p class="text-gray-400 text-sm mb-0">25%</p>
+            </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="bg-white rounded-xl shadow p-6 flex flex-col justify-between min-h-[170px]">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h6 class="font-bold text-base mb-0">Pengiriman</h6>
+                    <p class="text-gray-500 text-sm">Terkirim</p>
+                </div>
+                <h4 class="text-red-500 font-extrabold text-2xl">15</h4>
+            </div>
+            <div class="w-full bg-gray-200 h-2 rounded mt-4">
+                <div class="bg-red-400 h-2 rounded" style="width:50%"></div>
+            </div>
+            <div class="flex justify-end mt-2">
+                <p class="text-gray-400 text-sm mb-0">50%</p>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

@@ -1,78 +1,101 @@
 @extends('layouts.auth.index')
 
 @section('content')
-    <div class="container container-signup animated fadeIn d-block">
-        <h3 class="text-center">Sign Up</h3>
-        <div class="login-form">
-          <div class="form-sub">
-            <div class="form-floating form-floating-custom mb-3">
-              <input
-                id="fullname"
-                name="fullname"
-                type="text"
-                class="form-control"
-				placeholder="fullname"
-                required
-              />
-              <label for="fullname">Fullname</label>
+    <div class="w-screen h-screen grid grid-cols-1 md:grid-cols-5 bg-white overflow-hidden">
+
+
+        <div class="col-span-5 md:col-span-3 flex flex-col justify-center px-10 md:px-20">
+            <div class="mb-10">
+                <span class="text-sm text-[#255F38] font-semibold">Ternakku</span>
             </div>
-            <div class="form-floating form-floating-custom mb-3">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                class="form-control"
-				placeholder="email"
-                required
-              />
-              <label for="email">Email</label>
+
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Daftar Akun Ternakku</h2>
+            <p class="text-gray-500 mb-6">Silahkan, isi data diri untuk membuat akun baru di Ternakku</p>
+
+            <form method="POST" action="{{ url('auth/register') }}" class="space-y-4">
+                @csrf
+
+                <input type="text" name="fullname" placeholder="Nama Lengkap"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#255F38] outline-none"
+                    required value="{{ old('fullname') }}">
+
+                <input type="email" name="email" placeholder="Email"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#255F38] outline-none"
+                    required value="{{ old('email') }}">
+
+
+                <div class="relative">
+                    <input id="passwordsignin" type="password" name="passwordsignin" placeholder="Password"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:ring-2 focus:ring-[#255F38] outline-none"
+                        required>
+                    <button type="button" id="togglePasswordSignin"
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        <svg id="eyeIconSignin" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
+                                c4.478 0 8.268 2.943 9.542 7
+                                -1.274 4.057-5.064 7-9.542 7
+                                -4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="relative">
+                    <input id="confirmpassword" type="password" name="confirmpassword" placeholder="Konfirmasi Password"
+                        class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:ring-2 focus:ring-[#255F38] outline-none"
+                        required>
+                    <button type="button" id="toggleConfirmPassword"
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                        <svg id="eyeIconConfirm" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                            viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
+                                c4.478 0 8.268 2.943 9.542 7
+                                -1.274 4.057-5.064 7-9.542 7
+                                -4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                    </button>
+                </div>
+                <button type="submit"
+                    class="w-full bg-[#255F38] hover:bg-[#1d4c2d] text-white font-medium py-2 rounded-lg transition duration-200">
+                    Sign Up
+                </button>
+            </form>
+            <div class="mt-6 text-sm text-center">
+                <span class="text-gray-600">Sudah punya akun?</span>
+                <a href="{{ url('auth/login') }}" class="text-[#255F38] hover:underline font-medium">Sign In</a>
             </div>
-            <div class="form-floating form-floating-custom mb-3">
-              <input
-                id="passwordsignin"
-                name="passwordsignin"
-                type="password"
-                class="form-control"
-				placeholder="passwordsignin"
-                required
-              />
-              <label for="passwordsignin">Password</label>
-              <div class="show-password">
-                <i class="icon-eye"></i>
-              </div>
-            </div>
-            <div class="form-floating form-floating-custom mb-3">
-              <input
-                id="confirmpassword"
-                name="confirmpassword"
-                type="password"
-                class="form-control"
-				placeholder="confirmpassword"
-                required
-              />
-              <label for="confirmpassword">Confirm Password</label>
-              <div class="show-password">
-                <i class="icon-eye"></i>
-              </div>
-            </div>
-          </div>
-          <!-- <div class="row form-sub m-0">
-            <div class="form-check">
-              <input type="checkbox" class="form-check-input" name="agree" id="agree" />
-              <label class="form-check-label" for="agree"
-                >I Agree the terms and conditions.</label
-              >
-            </div>
-          </div> -->
-          <div class="form-action">
-            <!-- <a href="#" id="show-signin" class="btn btn-danger btn-link btn-login me-3">Cancel</a> -->
-            <a href="#" class="btn btn-primary btn-login w-100">Sign Up</a>
-          </div>
-          <div class="login-account">
-                <span class="msg">Sudah punya akun ?</span>
-                <a href="{{ url('auth/login') }}" id="show-signup" class="link">Sign In</a>
-            <!-- <a href="#" id="show-signup" class="link">Sign Up</a> -->
+        </div>
+        <div class="hidden md:flex col-span-2 items-center justify-center p-6 overflow-hidden">
+            <div
+                class="bg-white rounded-3xl overflow-hidden
+                    w-full max-w-[460px] aspect-[4/5]
+                    xl:w-[230%] xl:h-[78vh] xl:max-w-none xl:aspect-auto">
+                <img src="{{ asset('home/assets/img/download.jpeg') }}" alt="Register Illustration"
+                    class="w-full h-full object-cover rounded-2xl">
             </div>
         </div>
     </div>
+
+    <script>
+        const togglePasswordSignin = document.getElementById('togglePasswordSignin');
+        const passwordSignin = document.getElementById('passwordsignin');
+        const eyeIconSignin = document.getElementById('eyeIconSignin');
+
+        togglePasswordSignin.addEventListener('click', () => {
+            const type = passwordSignin.type === 'password' ? 'text' : 'password';
+            passwordSignin.type = type;
+        });
+
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPassword = document.getElementById('confirmpassword');
+        const eyeIconConfirm = document.getElementById('eyeIconConfirm');
+
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = confirmPassword.type === 'password' ? 'text' : 'password';
+            confirmPassword.type = type;
+        });
+    </script>
 @endsection

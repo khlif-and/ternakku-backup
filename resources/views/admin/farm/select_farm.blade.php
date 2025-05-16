@@ -1,58 +1,59 @@
 @extends('layouts.auth.index')
 
 @section('content')
-    <div class="container container-login animated fadeIn d-block">
-        <h3 class="text-center">Select Farm</h3>
-
-        <!-- Menampilkan pesan sukses -->
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <!-- Menampilkan pesan error -->
-        @if ($errors->any())
-            @foreach ($errors->all() as $error)
-                <div class="mb-4 d-flex justify-content-center">
-                    <button type="button" class="btn btn-danger" id="alert_demo_3_2"> {{ $error }}</button>
+    <div class="min-h-screen flex flex-col items-center justify-center bg-gray-100 pt-10">
+        <h2 class="text-xl sm:text-2xl font-bold text-center mb-6">Pilih Farm terlebih dahulu</h2>
+        <div
+            class="w-full max-w-lg bg-white rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.10)] px-7 py-10 flex flex-col items-center">
+            @if (session('success'))
+                <div class="mb-4 px-4 py-3 rounded-lg bg-green-50 text-green-800 border border-green-200 text-sm">
+                    {{ session('success') }}
                 </div>
-            @endforeach
-        @endif
+            @endif
 
-        <div class="login-form">
-            <form action="{{ url('select-farm') }}" method="POST">
-                @csrf
-                <div class="form-sub">
-                    <!-- Input Farm -->
-                    <div class="form-floating form-floating-custom mb-3">
-                        <select id="farm_id" required name="farm_id"
-                            class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}">
-                            <option value="" selected disabled>Select Farm</option>
-                            @foreach ($farms as $farm)
-                                <option value="{{ $farm->farm_id }}">{{ $farm->farm->name }}</option>
-                            @endforeach
-                        </select>
 
-                        <label for="farm_id">Select Farm</label>
-                        @error('username')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <div class="mb-4 flex justify-center">
+                        <span
+                            class="px-4 py-2 bg-red-100 text-red-700 rounded-lg text-sm font-medium shadow">{{ $error }}</span>
                     </div>
+                @endforeach
+            @endif
+
+            <form action="{{ url('select-farm') }}" method="POST" class="w-full flex flex-col items-center">
+                @csrf
+
+
+                <div class="w-full mb-8">
+                    <select id="farm_id" name="farm_id" required
+                        class="block w-full rounded-xl border-0 bg-gray-100 py-6 px-6 text-gray-900 text-lg shadow-lg font-semibold focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition
+                    @error('username') border-red-400 @enderror">
+                        <option value="" selected disabled>Pilih Farm</option>
+                        @foreach ($farms as $farm)
+                            <option value="{{ $farm->farm_id }}">{{ $farm->farm->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('username')
+                        <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <input type="hidden" name="redirect_url" value="{{ request()->query('redirect_url') }}">
 
-
-                <div class="form-action mb-3">
-                    <button type="submit" class="btn w-100 btn-login" style="background-color: #6CC3A0">Submit</button>
-                </div>
+                <button type="submit"
+                    class="w-full py-3 rounded-full border-2 border-black text-black font-semibold text-lg mb-4 transition-all hover:bg-gray-100 focus:outline-none">
+                    pilih farm
+                </button>
             </form>
-            <div class="form-action">
-                <a href="{{ route('farm.create') }}" class="btn w-100 btn-outline-primary">
-                    Create New Farm
-                </a>
+
+            <div class="text-center font-semibold mb-2">
+                belum punya farm?
             </div>
+            <a href="{{ route('farm.create') }}"
+                class="w-full block py-3 rounded-full bg-[#6CCF8A] hover:bg-[#5ec678] text-white text-lg font-semibold text-center shadow transition">
+                pilih farm
+            </a>
         </div>
     </div>
 @endsection

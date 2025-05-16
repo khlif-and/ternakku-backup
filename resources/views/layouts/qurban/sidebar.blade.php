@@ -1,297 +1,206 @@
-<style>
-    .sub-item {
-        font-size: 12px !important;
-    }
-</style>
-<link href="https://fonts.googleapis.com/css2?family=Oleo+Script&display=swap" rel="stylesheet">
+<aside class="sidebar min-h-screen flex flex-col transition-all duration-300 overflow-x-hidden hidden xl:flex">
 
-<div class="sidebar sidebar-style-2">
-    <div class="sidebar-logo">
-        <div class="logo-header">
-            <div class="logo-container">
-                <a href="{{ url('qurban/dashboard') }}" class="logo">
-                    <span class="navbar-brand">{{ $farm->name }}</span>
-                </a>
-            </div>
 
-            <!-- Divider Full Width Paksa -->
-            <div class="divider-force"></div>
+    <div class="flex items-center justify-center px-4 pt-6 pb-2 bg-[#255F38]">
+        <a href="#" class="flex justify-center w-full">
+            <span
+                class="font-bold text-white text-lg font-[Oleo_Script,cursive] navbar-brand tracking-wide sidebar-label text-center block"
+                style="font-family:'Oleo Script',cursive;">
+                {{ $farm->name ?? 'halo' }}
+            </span>
+        </a>
+    </div>
+    <div class="sidebar-divider h-px bg-white/10 my-3 mx-4"></div>
 
-            <!-- Tombol opsional -->
-            <div class="nav-toggle d-lg-none">
-                <button class="btn btn-toggle toggle-sidebar">
-                    <i class="fas fa-bars"></i>
+    <nav class="flex-1 overflow-y-auto">
+        <ul class="space-y-1 text-white">
+
+            <li>
+                <button type="button"
+                    class="flex w-full items-center justify-between rounded-lg px-4 py-2 text-left font-semibold hover:bg-white/10 transition submenu-btn {{ Request::is('qurban/farm*') || Request::is('qurban/customer*') || Request::is('qurban/fleet*') || Request::is('qurban/driver*') ? 'bg-white/10' : '' }}"
+                    data-target="submenu1">
+                    <span class="sidebar-label">Data Awal</span>
+                    <svg class="w-4 h-4 ml-2 transition-transform duration-200 arrow {{ Request::is('qurban/farm*') || Request::is('qurban/customer*') || Request::is('qurban/fleet*') || Request::is('qurban/driver*') ? 'rotate-180' : '' }}"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
                 </button>
-                <button class="btn btn-toggle sidenav-toggler">
-                    <i class="fas fa-times"></i>
+                <div class="submenu-container transition-all duration-300 overflow-hidden {{ Request::is('qurban/farm*') || Request::is('qurban/customer*') || Request::is('qurban/fleet*') || Request::is('qurban/driver*') ? '' : 'max-h-0' }}"
+                    id="submenu1">
+                    <ul class="bg-white rounded-lg mt-2 p-2 space-y-1 shadow mx-3">
+                        <li>
+                            <a href="{{ url('qurban/farm/user-list') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">
+                                Data Pengguna
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/customer') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">
+                                Data Pelanggan & Alamat Kirim
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/fleet') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">
+                                Data Armada
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/driver') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">
+                                Data Pengemudi
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- AKTIVITAS -->
+            <li>
+                <button type="button"
+                    class="flex w-full items-center justify-between rounded-lg px-4 py-2 text-left font-semibold hover:bg-white/10 transition submenu-btn {{ Request::is('qurban/sales-order*') || Request::is('qurban/sales-livestock*') || Request::is('qurban/reweight*') || Request::is('qurban/payment*') || Request::is('qurban/delivery*') || Request::is('qurban/fleet-tracking*') || Request::is('qurban/livestock-delivery-note*') || Request::is('qurban/qurban-delivery-order-data*') ? 'bg-white/10' : '' }}"
+                    data-target="submenu2">
+                    <span class="sidebar-label">Aktivitas</span>
+                    <svg class="w-4 h-4 ml-2 transition-transform duration-200 arrow {{ Request::is('qurban/sales-order*') || Request::is('qurban/sales-livestock*') || Request::is('qurban/reweight*') || Request::is('qurban/payment*') || Request::is('qurban/delivery*') || Request::is('qurban/fleet-tracking*') || Request::is('qurban/livestock-delivery-note*') || Request::is('qurban/qurban-delivery-order-data*') ? 'rotate-180' : '' }}"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
                 </button>
-            </div>
-            <button class="topbar-toggler more">
-                <i class="fas fa-ellipsis-v"></i>
+                <div class="submenu-container transition-all duration-300 overflow-hidden {{ Request::is('qurban/sales-order*') || Request::is('qurban/sales-livestock*') || Request::is('qurban/reweight*') || Request::is('qurban/payment*') || Request::is('qurban/delivery*') || Request::is('qurban/fleet-tracking*') || Request::is('qurban/livestock-delivery-note*') || Request::is('qurban/qurban-delivery-order-data*') ? '' : 'max-h-0' }}"
+                    id="submenu2">
+                    <ul class="bg-white rounded-lg mt-2 p-2 space-y-1 shadow mx-3">
+                        <li>
+                            <a href="{{ url('qurban/reweight') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">ReWeight
+                                / Timbang Ulang</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/sales-order') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Sales
+                                Order Kurban</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/sales-livestock') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Penjualan
+                                Ternak Kurban</a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Penerimaan
+                                Pembayaran</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/livestock-delivery-note') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Surat
+                                Jalan Ternak Kurban</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/delivery') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Pengiriman
+                                Ternak Kurban</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/fleet-tracking') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Pelacakan
+                                Armada</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/payment') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Pembayaran</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/qurban-delivery-order-data') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Surat
+                                Jalan Qurban</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/sales-qurban') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Sales
+                                Qurban</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/cancelation-qurban') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Cancelation
+                                Qurban</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <!-- LAPORAN -->
+            <li>
+                <button type="button"
+                    class="flex w-full items-center justify-between rounded-lg px-4 py-2 text-left font-semibold hover:bg-white/10 transition submenu-btn {{ Request::is('qurban/report*') ? 'bg-white/10' : '' }}"
+                    data-target="submenu3">
+                    <span class="sidebar-label">Laporan</span>
+                    <svg class="w-4 h-4 ml-2 transition-transform duration-200 arrow {{ Request::is('qurban/report*') ? 'rotate-180' : '' }}"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="submenu-container transition-all duration-300 overflow-hidden {{ Request::is('qurban/report*') ? '' : 'max-h-0' }}"
+                    id="submenu3">
+                    <ul class="bg-white rounded-lg mt-2 p-2 space-y-1 shadow mx-3">
+                        <li>
+                            <a href="{{ url('qurban/population-report') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Laporan
+                                Populasi</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/report/sales-order') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Daftar
+                                Sales Order</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/report/sales-livestock') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Daftar
+                                Penjualan Hewan Kurban</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/report/payment') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Daftar
+                                Penerimaan Pembayaran</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/report/cancelation') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Daftar
+                                Pembatalan Penjualan</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/report/surat-jalan') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Daftar
+                                Surat Jalan</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/report/delivery') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Daftar
+                                Pengiriman Hewan Kurban</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/report/antar') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Daftar
+                                Pengantaran Hewan Kurban</a>
+                        </li>
+                        <li>
+                            <a href="{{ url('qurban/report/penerimaan') }}"
+                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Daftar
+                                Penerimaan Hewan Kurban</a>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+        <div class="sidebar-divider h-px bg-white/10 my-3 mx-4"></div>
+        <div class="flex justify-center mt-8 mb-4">
+            <button id="closeSidebarBtn2"
+                class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition group"
+                aria-label="Collapse Sidebar">
+                <svg class="w-5 h-5 text-white group-hover:text-orange-500 transition-transform duration-300 sidebar-toggle-arrow"
+                    fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
             </button>
         </div>
-    </div>
-
-
-
-    <div class="sidebar-wrapper scrollbar scrollbar-inner">
-        <div class="sidebar-content">
-            <ul class="nav nav-secondary">
-                <!-- Menu Data Awal -->
-                <li
-                    class="nav-item {{ Request::is('qurban/farm*') || Request::is('qurban/customer*') || Request::is('qurban/fleet') || Request::is('qurban/fleet/*') || Request::is('qurban/driver*') ? 'active' : '' }}">
-                    <a data-bs-toggle="collapse" href="#dataAwal"
-                        class="{{ Request::is('qurban/farm*') || Request::is('qurban/customer*') || Request::is('qurban/fleet') || Request::is('qurban/fleet/*') || Request::is('qurban/driver*') ? '' : 'collapsed' }}"
-                        style="color: white !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                        <p style="color: white !important;">Data Awal</p>
-                        <span class="caret" style="color: white !important;"></span>
-                    </a>
-
-                    <div class="collapse {{ Request::is('qurban/farm*', 'qurban/customer*', 'qurban/fleet*', 'qurban/driver*') ? 'show' : '' }}"
-                        id="dataAwal">
-
-                        <!-- Sub-menu box putih -->
-                        <ul class="nav nav-collapse"
-                            style="background-color: white; border-radius: 8px; padding: 10px; margin-top: 8px; list-style: none; padding-left: 0; text-align: left;">
-                            <li style="list-style-type: none;">
-                                <a href="{{ url('qurban/farm/user-list') }}"
-                                    style="color: black !important; background-color: transparent !important; border: none !important; box-shadow: none !important; text-align: left !important;">
-                                    <span class="sub-item"
-                                        style="color: black !important; text-align: left !important;">Data
-                                        Pengguna</span>
-                                </a>
-                            </li>
-                            <li style="list-style-type: none;">
-                                <a href="{{ url('qurban/customer') }}"
-                                    style="color: black !important; background-color: transparent !important; border: none !important; box-shadow: none !important; text-align: left !important;">
-                                    <span class="sub-item"
-                                        style="color: black !important; text-align: left !important;">Data Pelanggan &
-                                        Alamat Kirim</span>
-                                </a>
-                            </li>
-                            <li style="list-style-type: none;">
-                                <a href="{{ url('qurban/fleet') }}"
-                                    style="color: black !important; background-color: transparent !important; border: none !important; box-shadow: none !important; text-align: left !important;">
-                                    <span class="sub-item"
-                                        style="color: black !important; text-align: left !important;">Data Armada</span>
-                                </a>
-                            </li>
-                            <li style="list-style-type: none;">
-                                <a href="{{ url('qurban/driver') }}"
-                                    style="color: black !important; background-color: transparent !important; border: none !important; box-shadow: none !important; text-align: left !important;">
-                                    <span class="sub-item"
-                                        style="color: black !important; text-align: left !important;">Data
-                                        Pengemudi</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <!-- Menu Aktivitas -->
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#aktivitas"
-                        class="{{ Request::is('qurban/sales-order') || Request::is('qurban/sales-order/*') || Request::is('qurban/sales-livestock') || Request::is('qurban/sales-livestock/*') || Request::is('qurban/reweight') || Request::is('qurban/reweight/*') || Request::is('qurban/payment') || Request::is('qurban/payment/*') || Request::is('qurban/delivery') || Request::is('qurban/delivery/*') || Request::is('qurban/fleet-tracking') || Request::is('qurban/livestock-delivery-note*') || Request::is('qurban/fleet-tracking/*') || Request::is('qurban/qurban-delivery-order-data*') ? '' : 'collapsed' }}"
-                        style="color: white !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                        <p style="color: white !important;">Aktivitas</p>
-                        <span class="caret" style="color: white !important;"></span>
-                    </a>
-
-                    <div class="collapse {{ Request::is('qurban/sales-order*', 'qurban/sales-livestock*', 'qurban/reweight*', 'qurban/payment*', 'qurban/delivery*', 'qurban/fleet-tracking*') ? 'show' : '' }}"
-                        id="aktivitas">
-                        <!-- Sub-menu dibungkus kotak putih -->
-                        <ul class="nav nav-collapse"
-                            style="background-color: white; border-radius: 8px; padding: 10px; margin-top: 8px;">
-                            <li>
-                                <a href="{{ url('qurban/reweight') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">ReWeight / Timbang
-                                        Ulang</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/sales-order') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Sales Order Kurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/sales-livestock') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Penjualan Ternak
-                                        Kurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Penerimaan Pembayaran</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/livestock-delivery-note') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Surat Jalan Ternak
-                                        Kurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/delivery') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Pengiriman Ternak
-                                        Kurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/fleet-tracking') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Pelacakan Armada</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/payment') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Pembayaran</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/qurban-delivery-order-data') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Surat Jalan Qurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/sales-qurban') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Sales Qurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/cancelation-qurban') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Cancelation Qurban</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <!-- Menu Laporan -->
-                <li class="nav-item">
-                    <a data-bs-toggle="collapse" href="#laporanQurban"
-                        class="{{ Request::is('qurban/report*') ? '' : 'collapsed' }}"
-                        style="color: white !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                        <p style="color: white !important;">Laporan</p>
-                        <span class="caret" style="color: white !important;"></span>
-                    </a>
-
-                    <div class="collapse {{ Request::is('qurban/report*') ? 'show' : '' }}" id="laporanQurban">
-                        <!-- Kotak putih untuk submenu -->
-                        <ul class="nav nav-collapse"
-                            style="background-color: white; border-radius: 8px; padding: 10px; margin-top: 8px;">
-                            <li>
-                                <a href="{{ url('qurban/population-report') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Laporan Populasi</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/report/sales-order') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Daftar Sales Order</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/report/sales-livestock') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Daftar Penjualan Hewan
-                                        Kurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/report/payment') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Daftar Penerimaan
-                                        Pembayaran</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/report/cancelation') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Daftar Pembatalan
-                                        Penjualan</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/report/surat-jalan') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Daftar Surat Jalan</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/report/delivery') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Daftar Pengiriman Hewan
-                                        Kurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/report/antar') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Daftar Pengantaran Hewan
-                                        Kurban</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="{{ url('qurban/report/penerimaan') }}"
-                                    style="color: black !important; background-color: transparent !important; box-shadow: none !important; border: none !important;">
-                                    <span class="sub-item" style="color: black !important;">Daftar Penerimaan Hewan
-                                        Kurban</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-
-                <!-- ✅ Divider setelah Menu Laporan -->
-                <div class="divider-force"></div>
-
-
-                <!-- ✅ Tombol Panah dalam Lingkaran -->
-                <div style="display: flex; justify-content: center; margin: 32px 0 16px 0;">
-                    <button id="closeSidebarBtn"
-                        style="
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.15);
-        border: none;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    ">
-                        <i class="fas fa-chevron-left" style="color: rgba(255, 255, 255, 0.7); font-size: 14px;"></i>
-                    </button>
-                </div>
-            </ul>
-        </div>
-    </div>
-</div>
-
-
-<script>
-    const toggleBtn = document.getElementById('closeSidebarBtn');
-    const sidebar = document.querySelector('.sidebar');
-    const body = document.body;
-    const icon = toggleBtn.querySelector('i');
-
-toggleBtn.addEventListener('click', () => {
-    sidebar.classList.toggle('closed');
-    body.classList.toggle('sidebar-closed');
-    body.classList.toggle('sidebar-open'); // <-- tambahkan ini
-    icon.classList.toggle('fa-chevron-left');
-    icon.classList.toggle('fa-chevron-right');
-});
-
-</script>
+    </nav>
+</aside>
