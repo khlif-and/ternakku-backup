@@ -140,7 +140,7 @@ if (!function_exists('getEstimatedBirthDate')) {
 }
 
 if (!function_exists('getEstimationQurbanPrice')) {
-    function getEstimationQurbanPrice($farmId, $livestockTypeId, $hijriYear = 1446, $weight)
+    function getEstimationQurbanPrice($farmId, $livestockTypeId, $weight, $hijriYear = 1446)
     {
         $price = QurbanPrice::where('farm_id', $farmId)
             ->where('livestock_type_id', $livestockTypeId)
