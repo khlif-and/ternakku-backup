@@ -29,6 +29,8 @@ class SalesLivestockDetailResource extends JsonResource
             'price_per_head' => (float) $this->price_per_head,
             'delivery_plan_date' => $this->delivery_plan_date,
             'paid_amount' => (float) $this->livestock->qurbanPayments->sum('amount'),
+            'delivery_order_id' => $this->livestock->qurbanDeliveryOrderD ?  $this->livestock->qurbanDeliveryOrderD->qurbanDeliveryOrderH->id : null,
+            'delivery_schedule' =>  $this->livestock->qurbanDeliveryOrderD ?  $this->livestock->qurbanDeliveryOrderD->qurbanDeliveryOrderH->delivery_schedule : null,
         ];
     }
 }

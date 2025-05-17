@@ -220,4 +220,9 @@ class Livestock extends Model
     {
         return $this->hasOne(QurbanSaleLivestockD::class, 'livestock_id');
     }
+
+    public function qurbanDeliveryOrderD()
+    {
+        return $this->hasOne(QurbanDeliveryOrderD::class, 'livestock_id');
+    }
 }

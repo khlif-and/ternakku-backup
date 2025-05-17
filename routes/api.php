@@ -209,6 +209,7 @@ Route::group([
                 Route::post('/', 'store');
                 // Route::get('{id}', 'show');
                 Route::post('{id}/send-wa', 'sendWA');
+                Route::post('{id}/delivery-schedule', 'deliverySchedule');
                 // Route::delete('{id}', 'destroy');
             });
         });

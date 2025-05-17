@@ -22,6 +22,7 @@ class DeliveryOrderResource extends JsonResource
             'transaction_number' => $this->transaction_number,
             'transaction_date' => $this->transaction_date,
             'file' => getNeoObject($this->file),
+            'delivery_schedule' => $this->delivery_schedule,
             'farm' => new FarmDetailResource($this->farm),
             'customer' => new CustomerResource($this->qurbanCustomerAddress->qurbanCustomer),
             'address' => new CustomerAddressResource($this->qurbanCustomerAddress),

@@ -7,6 +7,7 @@ use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Services\Qurban\DeliveryOrderService;
 use App\Http\Resources\Qurban\DeliveryOrderResource;
+use App\Http\Requests\Qurban\DeliveryScheduleRequest;
 use App\Http\Requests\Qurban\DeliveryOrderStoreRequest;
 
 class DeliveryOrderController extends Controller
@@ -43,6 +44,24 @@ class DeliveryOrderController extends Controller
             200
         );
     }
+
+    public function deliverySchedule(DeliveryScheduleRequest $request, $farm_id, $id)
+    {
+        $validated = $request->validated();
+
+        $response = $this->deliveryOrderService->setDeliverySchedule($farm_id, $id, $validated['delivery_schedule']);
+
+        if ($response['error']) {
+            return ResponseHelper::error('Failed to set delivery schedule', 500);
+        }
+
+        return ResponseHelper::success(
+            new DeliveryOrderResource($response['data']),
+            'Delivery schedule set successfully',
+            200
+        );
+    }
+
 
     public function sendWA($farm_id, $id)
     {

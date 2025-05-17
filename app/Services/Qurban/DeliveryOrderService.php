@@ -134,6 +134,29 @@ class DeliveryOrderService
         return $query->get();
     }
 
+    public function setDeliverySchedule($farmId, $id, $schedule)
+    {
+        $error = false;
+        $data = null;
+
+        try {
+            $deliveryOrder = QurbanDeliveryOrderH::where('farm_id' , $farmId)->findOrFail($id);
+            $deliveryOrder->delivery_schedule = $schedule;
+            $deliveryOrder->save();
+
+            $data = $deliveryOrder;
+        } catch (\Exception $e) {
+            \Log::error('Gagal set jadwal pengiriman: ' . $e->getMessage());
+            $error = true;
+        }
+
+        return [
+            'data' => $data,
+            'error' => $error,
+        ];
+    }
+
+
     // public function getAvailableLivestock($farmId)
     // {
     //     $farm = Farm::findOrFail($farmId);
