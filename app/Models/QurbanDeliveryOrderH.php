@@ -18,6 +18,7 @@ class QurbanDeliveryOrderH extends Model
         'transaction_date',
         'qurban_customer_address_id',
         'qurban_sale_livestock_h_id',
+        'file'
     ];
 
     public static function boot()

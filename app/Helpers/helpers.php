@@ -4,6 +4,9 @@ use Aws\S3\S3Client;
 use App\Models\QurbanPrice;
 use Illuminate\Support\Carbon;
 use App\Enums\LivestockTypeEnum;
+use Aws\S3\Exception\S3Exception;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\File;
 
 if (!function_exists('generateOtp')) {
     /**
@@ -41,22 +44,33 @@ if (!function_exists('uploadNeoObject')) {
         ]);
 
         try {
-
             $fullName = $pathName . $fileName;
+
+            // Tentukan ContentType dan SourceFile
+            if (is_string($file)) {
+                // Jika file adalah path string
+                $contentType = File::mimeType($file);
+                $sourceFile = $file;
+            } elseif ($file instanceof \Illuminate\Http\UploadedFile || $file instanceof \Illuminate\Http\File) {
+                // Jika file adalah UploadedFile / File instance
+                $contentType = $file->getClientMimeType();
+                $sourceFile = $file->getRealPath();
+            } else {
+                throw new \Exception('uploadNeoObject hanya mendukung string path atau instance File/UploadedFile');
+            }
 
             $client->putObject([
                 'Bucket'      => config('filesystems.disks.neo.bucket'),
                 'Key'         => $fullName,
-                'ContentType' => $file->getClientMimeType(),
-                'SourceFile'  => $file->getRealPath(),
+                'ContentType' => $contentType,
+                'SourceFile'  => $sourceFile,
                 'ACL'         => 'public-read',
             ]);
 
             return $fullName;
 
         } catch (S3Exception $e) {
-            // Tangani pengecualian khusus S3.
-            \Log::error('S3 Upload Error: ' . $e->getMessage());
+            Log::error('S3 Upload Error: ' . $e->getMessage());
             return null;
         }
     }

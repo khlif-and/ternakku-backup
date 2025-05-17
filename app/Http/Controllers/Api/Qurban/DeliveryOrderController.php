@@ -43,4 +43,9 @@ class DeliveryOrderController extends Controller
             200
         );
     }
+
+    public function sendWA($farm_id, $id)
+    {
+        
+    }
 }
