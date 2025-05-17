@@ -8,21 +8,18 @@
                 <li><a href="/" class="hover:text-blue-600"><i class="icon-home"></i></a></li>
                 <li><i class="icon-arrow-right"></i></li>
                 <li><i class="icon-arrow-right"></i></li>
-                <li>
-                    <a href="{{ url('qurban/farm/user-list') }}" class="text-blue-600 font-semibold">
-                        Data Pengguna
-                    </a>
-                </li>
             </ul>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-lg overflow-hidden min-h-[550px] w-full">
-            <div class="bg-gray-300 w-full flex items-center justify-end px-8 h-[90px]">
-                <a href="#"
+        <div id="user-list-container"
+            class="bg-white rounded-2xl shadow-lg overflow-hidden min-h-[550px] w-full opacity-0 translate-y-4 transition-all duration-700">
+            <div class="w-full flex items-center justify-end px-8 h-[90px] bg-white border-b border-gray-200">
+                <a href="{{ url('qurban/farm/user-list/create') }}"
                     class="bg-green-400 hover:bg-green-500 text-white font-semibold rounded-xl px-5 py-2 text-base shadow text-right transition-all font-sans">
                     tambah data Pengguna
                 </a>
             </div>
+
             <div class="flex flex-col md:flex-row md:items-center md:justify-between px-8 py-6 gap-4">
                 <div class="flex items-center flex-shrink-0">
                     <span class="mr-2 text-base font-medium text-gray-700">Show</span>
@@ -45,8 +42,8 @@
                                 stroke-width="2" />
                         </svg>
                     </span>
-                    <input type="text"
-                        class="pl-10 pr-4 py-2 border-2 border-black rounded-xl w-full text-base outline-none"
+                    <input type="text" id="search-input"
+                        class="pl-10 pr-4 py-2 border-2 rounded-xl w-full text-base outline-none transition-all duration-200 search-input-custom"
                         placeholder="Cari Data Disini...." />
                 </div>
             </div>
@@ -82,18 +79,45 @@
                                 <td class="py-6 pl-6 border border-black text-left">{{ $user->user->email }}</td>
                                 <td class="py-6 pl-6 border border-black text-left">{{ $user->user->phone_number }}</td>
                                 <td class="py-6 pl-6 border border-black text-left">{{ $user->farm_role }}</td>
-                                <td class="py-6 pl-6 border border-black text-left"></td>
+                                <td class="py-6 pl-6 border border-black text-left">
+                                    <div class="flex space-x-2">
+                                        {{-- EDIT --}}
+                                        <a href="{{ url('qurban/farm/user-list/' . $user->id . '/edit') }}"
+                                            class="inline-flex items-center px-3 py-1.5 bg-[#22C55E]/10 hover:bg-[#22C55E]/20 text-[#22C55E] rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:scale-105 group"
+                                            style="border:1.5px solid #22C55E;">
+                                            <svg class="h-4 w-4 mr-1 group-hover:rotate-6 transition-all" fill="none"
+                                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M15.232 5.232l3.536 3.536M16.5 3.5a2.121 2.121 0 113 3L7 19.5 3 21l1.5-4L16.5 3.5z" />
+                                            </svg>
+                                            Edit
+                                        </a>
+                                        {{-- Tombol delete di kolom aksi --}}
+                                        <button type="button"
+                                            onclick="openDeleteUserModal('{{ url('qurban/farm/user-list/' . $user->id) }}', '{{ $user->user->name }}')"
+                                            class="inline-flex items-center px-3 py-1.5 bg-[#F87171]/10 hover:bg-[#F87171]/20 text-[#F87171] rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:scale-105 group"
+                                            style="border:1.5px solid #F87171;">
+                                            <svg class="h-4 w-4 mr-1 group-hover:rotate-[12deg] transition-all"
+                                                fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M3 6h18M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2m-7 0v12a2 2 0 002 2h4a2 2 0 002-2V6" />
+                                                <line x1="10" y1="11" x2="10" y2="17" />
+                                                <line x1="14" y1="11" x2="14" y2="17" />
+                                            </svg>
+                                            Hapus
+                                        </button>
+
+                                    </div>
+                                </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="py-6 border border-black text-center text-gray-500">Tidak ada data
+                                <td colspan="5" class="py-6 border border-black text-center text-gray-500">Tidak ada
+                                    data
                                     pengguna</td>
                             </tr>
                         @endforelse
                     </tbody>
-
-
-
                     <thead>
                         <tr>
                             @foreach (['Nama', 'Email', 'No HP', 'Role', 'Aksi'] as $header)
@@ -107,17 +131,14 @@
                     </thead>
                 </table>
 
-
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between pt-4">
-
                     <div class="pl-2 pb-2 md:pb-0">
                         <span class="text-gray-500 text-base">
                             Showing <span class="font-medium text-gray-700">1</span> to <span
-                                class="font-medium text-gray-700">2</span> of <span
-                                class="font-medium text-gray-700">2</span> entries
+                                class="font-medium text-gray-700">{{ $users->count() }}</span> of <span
+                                class="font-medium text-gray-700">{{ $users->count() }}</span> entries
                         </span>
                     </div>
-
                     <div class="flex justify-start md:justify-end">
                         <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
                             <a href="#"
@@ -130,6 +151,44 @@
                     </div>
                 </div>
             </div>
-
         </div>
-    @endsection
+    </div>
+    {{-- Modal Delete --}}
+    @include('admin.farm.modal_delete_user')
+@endsection
+
+@section('script')
+    <style>
+        .search-input-custom {
+            border-color: rgba(0, 0, 0, 0.24) !important;
+            background-color: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input-custom:focus {
+            border-color: #28c76f !important;
+            box-shadow: 0 0 0 2px #28c76f44;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            // Animasi fade-in + slide-up saat load
+            setTimeout(function() {
+                $('#user-list-container').removeClass('opacity-0 translate-y-4')
+                    .addClass('opacity-100 translate-y-0');
+            }, 100);
+        });
+
+        // Modal Delete Handler
+        function openDeleteUserModal(deleteUrl, userName) {
+            $('#deleteUserModal').fadeIn(150).css('opacity', 1).css('pointer-events', 'auto');
+            $('#deleteUserModal input[name="delete_url"]').val(deleteUrl);
+            $('#deleteUserModal .modal-username').text(userName);
+            $('#deleteUserModal form').attr('action', deleteUrl);
+        }
+
+        function closeDeleteUserModal() {
+            $('#deleteUserModal').fadeOut(150).css('opacity', 0).css('pointer-events', 'none');
+        }
+    </script>
+@endsection

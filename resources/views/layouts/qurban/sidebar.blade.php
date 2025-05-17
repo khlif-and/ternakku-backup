@@ -2,7 +2,7 @@
 
 
     <div class="flex items-center justify-center px-4 pt-6 pb-2 bg-[#255F38]">
-        <a href="#" class="flex justify-center w-full">
+        <a href="{{ url('qurban/dashboard') }}" class="flex justify-center w-full">
             <span
                 class="font-bold text-white text-lg font-[Oleo_Script,cursive] navbar-brand tracking-wide sidebar-label text-center block"
                 style="font-family:'Oleo Script',cursive;">

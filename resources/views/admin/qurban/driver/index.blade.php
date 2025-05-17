@@ -1,97 +1,197 @@
 @extends('layouts.qurban.index')
 
 @section('content')
-<div class="page-inner">
-    <div class="page-header">
-        <h3 class="fw-bold mb-3">Data Pengemudi</h3>
-        <ul class="breadcrumbs mb-3">
-            <li class="nav-home">
-                <a href="#">
-                    <i class="icon-home"></i>
+    <div class="p-6">
+        <div class="mb-6">
+            <p class="text-gray-700 text-lg mb-3 font-semibold">[ Data Pengemudi ]</p>
+            <ul class="flex items-center text-sm space-x-2 text-gray-500 mb-4">
+                <li><a href="/" class="hover:text-blue-600"><i class="icon-home"></i></a></li>
+                <li><i class="icon-arrow-right"></i></li>
+                <li>Data Awal</li>
+                <li><i class="icon-arrow-right"></i></li>
+                <li>Data Pengemudi</li>
+            </ul>
+        </div>
+
+        <div id="driver-list-container"
+            class="bg-white rounded-2xl shadow-lg overflow-hidden min-h-[550px] w-full opacity-0 translate-y-4 transition-all duration-700">
+            <div class="w-full flex items-center justify-end px-8 h-[90px] bg-white border-b border-gray-200">
+                <a href="{{ url('qurban/driver/create') }}"
+                    class="bg-green-400 hover:bg-green-500 text-white font-semibold rounded-xl px-5 py-2 text-base shadow text-right transition-all font-sans">
+                    tambah data Pengemudi
                 </a>
-            </li>
-            <li class="separator">
-                <i class="icon-arrow-right"></i>
-            </li>
-            <li class="nav-item">
-                <a href="#">Data Awal</a>
-            </li>
-            <li class="separator">
-                <i class="icon-arrow-right"></i>
-            </li>
-            <li class="nav-item">
-                <a href="#">Data Pengemudi</a>
-            </li>
-        </ul>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex align-items-center">
-                        <h4 class="card-title">Data Pengemudi</h4>
-                        <button class="btn btn-primary btn-round ms-auto" data-bs-toggle="modal" data-bs-target="#addRowModal">
-                            <i class="fa fa-plus"></i>
-                            Tambah Data
-                        </button>
+            </div>
+
+            {{-- Pesan sukses dari session flash --}}
+            @if (session('success'))
+                <div class="px-8 py-4">
+                    <div class="mb-4 px-4 py-3 rounded bg-green-100 border border-green-400 text-green-700 font-semibold">
+                        {{ session('success') }}
                     </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table id="basic-datatables" class="display table table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Nama</th>
-                                    <th>Alamat</th>
-                                    <th>Foto</th>
-                                    <th>Aksi</th>
-                                </tr>
-                            </thead>
+            @endif
 
-                            <tbody>
-                                @forelse($drivers as $driver)
-                                    <tr>
-                                        <td>{{ $driver->name }}</td>
-                                        <td>{{ $driver->fullAddress() }}</td>
-                                        <td>
-                                            @if($driver->photo)
-                                                <img src="{{ getNeoObject($driver->photo) }}" alt="Driver Photo" style="width: 100px; height: auto;">
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <!-- Tombol aksi jika mau -->
-                                            <button class="btn btn-sm btn-warning">Edit</button>
-                                            <button class="btn btn-sm btn-danger">Hapus</button>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <!-- Dummy Data -->
-                                    <tr>
-                                        <td>Driver Dummy</td>
-                                        <td>Jl. Contoh No.123, Jakarta</td>
-                                        <td>
-                                            <img src="https://via.placeholder.com/100x80?text=Foto" alt="Dummy Photo" style="width: 100px; height: auto;">
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-sm btn-warning">Edit</button>
-                                            <button class="btn btn-sm btn-danger">Hapus</button>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between px-8 py-6 gap-4">
+                <div class="flex items-center flex-shrink-0">
+                    <span class="mr-2 text-base font-medium text-gray-700">Show</span>
+                    <select
+                        class="border border-gray-400 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-300 w-16">
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                        <option>100</option>
+                    </select>
+                    <span class="ml-2 text-base font-medium text-gray-700">Entries</span>
+                </div>
+                <div class="relative w-full md:w-[250px]">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"
+                                fill="none" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor"
+                                stroke-width="2" />
+                        </svg>
+                    </span>
+                    <input type="text" id="search-input"
+                        class="pl-10 pr-4 py-2 border-2 rounded-xl w-full text-base outline-none transition-all duration-200 search-input-custom"
+                        placeholder="Cari Data Disini...." />
+                </div>
+            </div>
+            <div class="overflow-x-auto mt-6 px-8 pb-8">
+                <table class="w-full text-center rounded-xl border border-black border-collapse">
+                    <thead>
+                        <tr>
+                            @foreach (['Nama', 'Alamat', 'Foto', 'Aksi'] as $header)
+                                <th class="py-4 px-4 border border-black font-medium text-base">
+                                    <div class="flex items-center justify-between w-full">
+                                        <span>{{ $header }}</span>
+                                        @if($header !== 'Aksi' && $header !== 'Foto')
+                                        <span class="flex flex-col items-center ml-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mb-[-2px]" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path d="M8 14l4-4 4 4" stroke-width="2" stroke="currentColor"
+                                                    stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                            </svg>
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mt-[-2px]" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path d="M16 10l-4 4-4-4" stroke-width="2" stroke="currentColor"
+                                                    stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                                            </svg>
+                                        </span>
+                                        @endif
+                                    </div>
+                                </th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($drivers as $driver)
+                            <tr>
+                                <td class="py-6 pl-6 border border-black text-left">{{ $driver->name }}</td>
+                                <td class="py-6 pl-6 border border-black text-left">{{ $driver->fullAddress() }}</td>
+                                <td class="py-6 pl-6 border border-black text-left">
+                                    @if($driver->photo)
+                                        <img src="{{ getNeoObject($driver->photo) }}" alt="Driver Photo" class="rounded-lg shadow" style="width: 100px; height: auto;">
+                                    @endif
+                                </td>
+                                <td class="py-6 pl-6 border border-black text-left">
+                                    <div class="flex space-x-2">
+                                        {{-- EDIT --}}
+                                        <a href="{{ url('qurban/driver/' . $driver->id . '/edit') }}"
+                                            class="inline-flex items-center px-3 py-1.5 bg-[#22C55E]/10 hover:bg-[#22C55E]/20 text-[#22C55E] rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:scale-105 group"
+                                            style="border:1.5px solid #22C55E;">
+                                            <svg class="h-4 w-4 mr-1 group-hover:rotate-6 transition-all" fill="none"
+                                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                <path
+                                                    d="M15.232 5.232l3.536 3.536M16.5 3.5a2.121 2.121 0 113 3L7 19.5 3 21l1.5-4L16.5 3.5z" />
+                                            </svg>
+                                            Edit
+                                        </a>
+                                        {{-- DELETE --}}
+                                        <form action="{{ url('qurban/driver/' . $driver->id) }}" method="post" class="d-inline"
+                                            onsubmit="return confirm('Yakin ingin menghapus data ini?')">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit"
+                                                class="inline-flex items-center px-3 py-1.5 bg-[#F87171]/10 hover:bg-[#F87171]/20 text-[#F87171] rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:scale-105 group"
+                                                style="border:1.5px solid #F87171;">
+                                                <svg class="h-4 w-4 mr-1 group-hover:rotate-[12deg] transition-all"
+                                                    fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                    <path
+                                                        d="M3 6h18M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2m-7 0v12a2 2 0 002 2h4a2 2 0 002-2V6" />
+                                                    <line x1="10" y1="11" x2="10" y2="17" />
+                                                    <line x1="14" y1="11" x2="14" y2="17" />
+                                                </svg>
+                                                Hapus
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="4" class="py-6 border border-black text-center text-gray-500">Tidak ada data pengemudi</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                    <thead>
+                        <tr>
+                            @foreach (['Nama', 'Alamat', 'Foto', 'Aksi'] as $header)
+                                <th class="py-4 px-4 border border-black font-medium text-base">
+                                    <div class="flex items-center justify-between w-full">
+                                        <span>{{ $header }}</span>
+                                    </div>
+                                </th>
+                            @endforeach
+                        </tr>
+                    </thead>
+                </table>
+
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between pt-4">
+                    <div class="pl-2 pb-2 md:pb-0">
+                        <span class="text-gray-500 text-base">
+                            Showing <span class="font-medium text-gray-700">1</span> to <span
+                                class="font-medium text-gray-700">{{ $drivers->count() }}</span> of <span
+                                class="font-medium text-gray-700">{{ $drivers->count() }}</span> entries
+                        </span>
+                    </div>
+                    <div class="flex justify-start md:justify-end">
+                        <nav class="inline-flex rounded-md shadow-sm" aria-label="Pagination">
+                            <a href="#"
+                                class="px-4 py-2 border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 text-base rounded-l-md transition">Previous</a>
+                            <a href="#"
+                                class="px-4 py-2 border-t border-b border-gray-300 text-white bg-blue-500 font-medium text-base transition">1</a>
+                            <a href="#"
+                                class="px-4 py-2 border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 text-base rounded-r-md transition">Next</a>
+                        </nav>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 @endsection
 
 @section('script')
-<script>
-    $(document).ready(function() {
-        $('#basic-datatables').DataTable();
-    });
-</script>
+    <style>
+        .search-input-custom {
+            border-color: rgba(0, 0, 0, 0.24) !important;
+            background-color: white;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-input-custom:focus {
+            border-color: #28c76f !important;
+            box-shadow: 0 0 0 2px #28c76f44;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            // Animasi fade-in + slide-up saat load
+            setTimeout(function() {
+                $('#driver-list-container').removeClass('opacity-0 translate-y-4')
+                    .addClass('opacity-100 translate-y-0');
+            }, 100);
+        });
+    </script>
 @endsection
