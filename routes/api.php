@@ -90,6 +90,11 @@ Route::group([
                 Route::get('/sales-livestock', 'getSalesLivestock');
                 Route::get('/payment', 'getPayment');
             });
+
+            Route::group(['prefix' => 'for-driver', 'controller' => App\Http\Controllers\Api\Qurban\DriverController::class], function () {
+                Route::get('/delivery-instruction', 'getDeliveryInstruction');
+                // Route::get('/delivery-instruction', 'deliveryInstruction');
+            });
         });
 
         Route::group([

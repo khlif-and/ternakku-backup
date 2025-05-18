@@ -86,4 +86,30 @@ class DeliveryInstructionService
             ->find($id);
     }
 
+    public function getDeliveryInstructionForDriver($user_id, array $params)
+    {
+        $query = QurbanDeliveryInstructionH::where('driver_id' , $user_id);
+
+        if (!empty($params['status'])) {
+            $query->where('status', $params['status']);
+        }
+
+        if (!empty($params['farm_id'])) {
+            $query->where('farm_id', $params['farm_id']);
+        }
+
+        if (!empty($params['fleet_id'])) {
+            $query->where('fleet_id', $params['fleet_id']);
+        }
+
+        if (!empty($params['delivery_date_start'])) {
+            $query->whereDate('delivery_date', '>=', $params['delivery_date_start']);
+        }
+
+        if (!empty($params['delivery_date_end'])) {
+            $query->whereDate('delivery_date', '<=', $params['delivery_date_end']);
+        }
+
+        return $query->latest()->get();
+    }
 }

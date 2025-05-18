@@ -11,14 +11,17 @@ use App\Services\Qurban\DriverService;
 use App\Http\Resources\Qurban\DriverResource;
 use App\Http\Requests\Qurban\DriverStoreRequest;
 use App\Http\Requests\Qurban\DriverUpdateRequest;
+use App\Services\Qurban\DeliveryInstructionService;
+use App\Http\Resources\Qurban\DeliveryInstructionResource;
 
 class DriverController extends Controller
 {
-    private $driverService;
+    private $driverService, $deliveryInstructionService;
 
-    public function __construct(DriverService $driverService)
+    public function __construct(DriverService $driverService, DeliveryInstructionService $deliveryInstructionService)
     {
         $this->driverService = $driverService;
+        $this->deliveryInstructionService = $deliveryInstructionService;
     }
 
     public function store(DriverStoreRequest $request, $farm_id)
@@ -67,5 +70,20 @@ class DriverController extends Controller
         }
 
         return ResponseHelper::success(null, 'Driver deleted successfully', 200);
+    }
+
+    public function getDeliveryInstruction(Request $request)
+    {
+        $param = $request->all();
+
+        $user_id = auth()->user()->id;
+
+        $result = $this->deliveryInstructionService->getDeliveryInstructionForDriver($user_id, $param);
+
+        return ResponseHelper::success(
+            DeliveryInstructionResource::collection($result),
+            'Delivery instructions retrieved successfully',
+            200
+        );
     }
 }
