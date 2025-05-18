@@ -93,7 +93,8 @@ Route::group([
 
             Route::group(['prefix' => 'for-driver', 'controller' => App\Http\Controllers\Api\Qurban\DriverController::class], function () {
                 Route::get('/delivery-instruction', 'getDeliveryInstruction');
-                // Route::get('/delivery-instruction', 'deliveryInstruction');
+                Route::post('/delivery-instruction/{id}/in-delivery', 'setToInDelivery');
+                Route::post('/delivery-instruction/{id}/delivered', 'setToDelivered');
             });
         });
 

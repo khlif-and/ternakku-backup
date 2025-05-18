@@ -112,4 +112,34 @@ class DeliveryInstructionService
 
         return $query->latest()->get();
     }
+
+    public function setToInDelivery($driverId, $id)
+    {
+        $instruction = QurbanDeliveryInstructionH::where('driver_id', $driverId)->findOrFail($id);
+
+        if ($instruction->status !== 'ready_to_deliver') {
+            throw new \Exception("Only ready_to_deliver instructions can be updated to in_delivery");
+        }
+
+        $instruction->status = 'in_delivery';
+
+        $instruction->save();
+
+        return $instruction;
+    }
+
+    public function setToDelivered($driverId, $id)
+    {
+        $instruction = QurbanDeliveryInstructionH::where('driver_id', $driverId)->findOrFail($id);
+
+        if ($instruction->status !== 'in_delivery') {
+            throw new \Exception("Only in_delivery instructions can be updated to delivered");
+        }
+
+        $instruction->status = 'delivered';
+        
+        $instruction->save();
+
+        return $instruction;
+    }
 }

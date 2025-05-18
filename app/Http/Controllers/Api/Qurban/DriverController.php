@@ -86,4 +86,28 @@ class DriverController extends Controller
             200
         );
     }
+
+    public function setToInDelivery($id)
+    {
+        $user_id = auth()->user()->id;
+
+        $deliveryInstruction = $this->deliveryInstructionService->setToInDelivery($user_id, $id);
+
+        return ResponseHelper::success(
+            new DeliveryInstructionResource($deliveryInstruction),
+            'Delivery instruction set to in delivery'
+        );
+    }
+
+    public function setToDelivered($id)
+    {
+        $user_id = auth()->user()->id;
+
+        $deliveryInstruction = $this->deliveryInstructionService->setToDelivered($user_id, $id);
+
+        return ResponseHelper::success(
+            new DeliveryInstructionResource($deliveryInstruction),
+            'Delivery instruction set to delivered'
+        );
+    }
 }
