@@ -223,6 +223,7 @@ Route::group([
             ], function(){
                 Route::post('/', 'store');
                 Route::get('/', 'index');
+                Route::post('/{id}/ready-to-deliver', 'setReadyToDeliver');
             });
         });
     });

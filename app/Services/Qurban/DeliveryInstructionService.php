@@ -64,4 +64,19 @@ class DeliveryInstructionService
 
         return $query->latest()->get();
     }
+
+    public function setToReadyToDeliver($farmId, $id)
+    {
+        $instruction = QurbanDeliveryInstructionH::where('farm_id', $farmId)->findOrFail($id);
+
+        if ($instruction->status !== 'scheduled') {
+            throw new \Exception("Only scheduled instructions can be updated to ready_to_deliver");
+        }
+
+        $instruction->status = 'ready_to_deliver';
+        $instruction->save();
+
+        return $instruction;
+    }
+
 }

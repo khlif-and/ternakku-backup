@@ -49,4 +49,15 @@ class DeliveryInstructionController extends Controller
         );
     }
 
+    public function setReadyToDeliver(Request $request, $farm_id, $id)
+    {
+        $deliveryInstruction = $this->deliveryInstructionService->setToReadyToDeliver($farm_id, $id);
+
+        return ResponseHelper::success(
+            new DeliveryInstructionResource($deliveryInstruction),
+            'Delivery instruction set to ready to deliver'
+        );
+    }
+
+
 }
