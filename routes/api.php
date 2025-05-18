@@ -212,6 +212,18 @@ Route::group([
                 Route::post('{id}/delivery-schedule', 'deliverySchedule');
                 // Route::delete('{id}', 'destroy');
             });
+
+            Route::group([
+                'prefix' => 'delivery-instruction/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\DeliveryInstructionController::class,
+                'middleware' => [
+                    'check.farm.access:OWNER,ADMIN',
+                    'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
+                ],
+            ], function(){
+                Route::post('/', 'store');
+                Route::get('/', 'index');
+            });
         });
     });
 
