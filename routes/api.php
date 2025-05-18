@@ -207,7 +207,7 @@ Route::group([
             ], function(){
                 Route::get('/', 'index');
                 Route::post('/', 'store');
-                // Route::get('{id}', 'show');
+                Route::get('{id}', 'show');
                 Route::post('{id}/send-wa', 'sendWA');
                 Route::post('{id}/delivery-schedule', 'deliverySchedule');
                 // Route::delete('{id}', 'destroy');
@@ -223,6 +223,7 @@ Route::group([
             ], function(){
                 Route::post('/', 'store');
                 Route::get('/', 'index');
+                Route::get('/{id}', 'show');
                 Route::post('/{id}/ready-to-deliver', 'setReadyToDeliver');
             });
         });

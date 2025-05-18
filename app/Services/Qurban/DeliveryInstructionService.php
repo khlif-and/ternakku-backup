@@ -79,4 +79,11 @@ class DeliveryInstructionService
         return $instruction;
     }
 
+    public function getById($farm_id, $id)
+    {
+        return QurbanDeliveryInstructionH::with(['fleet', 'driver', 'qurbanDeliveryInstructionD.qurbanDeliveryOrderH'])
+            ->where('farm_id', $farm_id)
+            ->find($id);
+    }
+
 }

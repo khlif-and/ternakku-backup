@@ -62,6 +62,22 @@ class DeliveryOrderController extends Controller
         );
     }
 
+    public function show($farm_id, $id)
+    {
+        $deliveryOrder = $this->deliveryOrderService->getById($farm_id, $id);
+
+        if (!$deliveryOrder) {
+            return ResponseHelper::error('Delivery order not found', 404);
+        }
+
+        return ResponseHelper::success(
+            new DeliveryOrderResource($deliveryOrder),
+            'Delivery order retrieved successfully',
+            200
+        );
+    }
+
+
 
     public function sendWA($farm_id, $id)
     {

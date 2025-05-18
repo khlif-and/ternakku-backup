@@ -59,5 +59,18 @@ class DeliveryInstructionController extends Controller
         );
     }
 
-
+    public function show($farm_id, $id): JsonResponse
+    {
+        $deliveryInstruction = $this->deliveryInstructionService->getById($farm_id, $id);
+    
+        if (!$deliveryInstruction) {
+            return ResponseHelper::error('Delivery instruction not found', 404);
+        }
+    
+        return ResponseHelper::success(
+            new DeliveryInstructionResource($deliveryInstruction),
+            'Delivery instruction retrieved successfully'
+        );
+    }
+    
 }

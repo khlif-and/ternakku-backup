@@ -156,6 +156,14 @@ class DeliveryOrderService
         ];
     }
 
+    public function getById($farm_id, $id)
+    {
+        return QurbanDeliveryOrderH
+            ::where('farm_id', $farm_id)
+            ->find($id);
+    }
+
+
 
     // public function getAvailableLivestock($farmId)
     // {
