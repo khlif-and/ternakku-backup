@@ -83,7 +83,9 @@ class LivestockOutletController extends Controller
         $filterTypeId = $request->get('livestock_type_id');
         $minWeight = $request->get('min_weight');
         $maxWeight = $request->get('max_weight');
-    
+        $minPrice = $request->get('min_price');
+        $maxPrice = $request->get('max_price');
+
     
         // Ambil semua farm_id dari subscription yang valid
         $farmIds = SubscriptionFarm::where('subscription_id', SubscriptionEnum::QURBAN_1446->value)
@@ -92,55 +94,73 @@ class LivestockOutletController extends Controller
             ->pluck('farm_id');
     
         $livestockQuery = Livestock::whereIn('farm_id', $farmIds)
-            ->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)
-            ->with(['farm.farmDetail.region']); // Eager load region melalui farmDetail
+            ->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
+            ->with(['farm.farmDetail.region']);
     
-        // Filter berdasarkan farm_id (jika ada)
         if ($filterFarmId && $farmIds->contains($filterFarmId)) {
             $livestockQuery->where('farm_id', $filterFarmId);
         }
     
-        // Filter berdasarkan search parameter
         if ($search) {
             $livestockQuery->where(function ($query) use ($search) {
                 $query->where('eartag_number', 'like', "%$search%")
                     ->orWhereHas('farm.farmDetail', function ($q) use ($search) {
                         $q->where('name', 'like', "%$search%")
-                          ->orWhereHas('region', function ($q) use ($search) {
-                              $q->where('name', 'like', "%$search%"); // Pencarian berdasarkan region.name
-                          });
+                            ->orWhereHas('region', function ($q) use ($search) {
+                                $q->where('name', 'like', "%$search%");
+                            });
                     });
             });
         }
-
-        // Filter berdasarkan livestock_sex_id
+    
         if ($filterSexId) {
             $livestockQuery->where('livestock_sex_id', $filterSexId);
         }
-
-        // Filter berdasarkan livestock_breed_id
+    
         if ($filterBreedId) {
             $livestockQuery->where('livestock_breed_id', $filterBreedId);
         }
-
-        // Filter berdasarkan livestock_type_id
+    
         if ($filterTypeId) {
             $livestockQuery->where('livestock_type_id', $filterTypeId);
         }
-
-        // Filter berdasarkan min_weight
+    
         if ($minWeight) {
             $livestockQuery->where('last_weight', '>=', $minWeight);
         }
-
-        // Filter berdasarkan max_weight
+    
         if ($maxWeight) {
             $livestockQuery->where('last_weight', '<=', $maxWeight);
         }
-
     
-        // Ambil data dan shuffle
-        $livestocks = $livestockQuery->get()->shuffle();
+        // Ambil data
+        $livestocks = $livestockQuery->get();
+    
+        // Hitung dan filter berdasarkan qurban_price
+        $livestocks = $livestocks->filter(function ($item) use ($minPrice, $maxPrice) {
+            $price = getEstimationQurbanPrice($item->farm_id, $item->livestock_type_id, $item->last_weight, 1446);
+            if ($minPrice !== null && $price < $minPrice) {
+                return false;
+            }
+            if ($maxPrice !== null && $price > $maxPrice) {
+                return false;
+            }
+            // Simpan price ke property sementara (untuk sorting nanti)
+            $item->calculated_qurban_price = $price;
+            return true;
+        })->values();
+    
+        // Sorting
+        $sortBy = $request->get('sort_by');
+        $sortOrder = strtolower($request->get('sort_order', 'asc'));
+    
+        if ($sortBy === 'weight') {
+            $livestocks = $livestocks->sortBy('last_weight', SORT_REGULAR, $sortOrder === 'desc')->values();
+        } elseif ($sortBy === 'price') {
+            $livestocks = $livestocks->sortBy('calculated_qurban_price', SORT_REGULAR, $sortOrder === 'desc')->values();
+        } else {
+            $livestocks = $livestocks->shuffle();
+        }
     
         // Paginasi manual
         $currentItems = $livestocks->slice(($currentPage - 1) * $perPage, $perPage)->values();
@@ -156,6 +176,7 @@ class LivestockOutletController extends Controller
     
         return ResponseHelper::success($paginated, $message);
     }
+    
     
     public function livestockDetail($id)
     {
