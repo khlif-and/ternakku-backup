@@ -12,6 +12,8 @@ use App\Http\Resources\Qurban\DriverResource;
 use App\Http\Requests\Qurban\DriverStoreRequest;
 use App\Http\Requests\Qurban\DriverUpdateRequest;
 use App\Services\Qurban\DeliveryInstructionService;
+use App\Http\Requests\Qurban\DeliveryLocationRequest;
+use App\Http\Resources\Qurban\DeliveryLocationResource;
 use App\Http\Resources\Qurban\DeliveryInstructionResource;
 
 class DriverController extends Controller
@@ -96,6 +98,22 @@ class DriverController extends Controller
         return ResponseHelper::success(
             new DeliveryInstructionResource($deliveryInstruction),
             'Delivery instruction set to in delivery'
+        );
+    }
+
+    public function storeLocation(DeliveryLocationRequest $request, $id)
+    {
+        $user_id = auth()->user()->id;
+
+        $response = $this->deliveryInstructionService->storeDriverLocation($user_id, $id, $request->validated());
+
+        if ($response['error']) {
+            return ResponseHelper::error('Failed to store location', 500);
+        }
+
+        return ResponseHelper::success(
+            DeliveryLocationResource::collection($response['data']),
+            'Location stored and list retrieved successfully'
         );
     }
 

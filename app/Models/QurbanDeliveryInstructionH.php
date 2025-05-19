@@ -83,4 +83,9 @@ class QurbanDeliveryInstructionH extends Model
             'qurban_delivery_order_h_id'
         );
     }
+
+    public function qurbanDeliveryLocations()
+    {
+        return $this->hasMany(QurbanDeliveryLocation::class, 'qurban_delivery_instruction_h_id');
+    }
 }

@@ -2,10 +2,11 @@
 
 namespace App\Services\Qurban;
 
-use App\Models\QurbanDeliveryInstructionH;
-use App\Models\QurbanDeliveryInstructionD;
-use Illuminate\Support\Facades\DB;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use App\Models\QurbanDeliveryLocation;
+use App\Models\QurbanDeliveryInstructionD;
+use App\Models\QurbanDeliveryInstructionH;
 
 class DeliveryInstructionService
 {
@@ -141,5 +142,33 @@ class DeliveryInstructionService
         $instruction->save();
 
         return $instruction;
+    }
+
+    public function storeDriverLocation($user_id, $id, $data)
+    {
+        try {
+            $instruction = QurbanDeliveryInstructionH::where('id', $id)
+                ->where('driver_id', $user_id)
+                ->firstOrFail();
+
+            QurbanDeliveryLocation::create([
+                'qurban_delivery_instruction_h_id' => $instruction->id,
+                'longitude' => $data['longitude'],
+                'latitude' => $data['latitude'],
+            ]);
+
+            $locations = $instruction->qurbanDeliveryLocations()->latest('created_at')->get();
+
+            return [
+                'error' => false,
+                'data' => $locations,
+            ];
+        } catch (\Exception $e) {
+            dd($e);
+            return [
+                'error' => true,
+                'message' => $e->getMessage(),
+            ];
+        }
     }
 }
