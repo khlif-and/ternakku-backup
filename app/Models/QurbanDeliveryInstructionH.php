@@ -40,8 +40,8 @@ class QurbanDeliveryInstructionH extends Model
         $prefix = "$year$month-$code-";
 
         // Get the last transaction number for the current month and year
-        $lastTransaction = self::whereYear('transaction_date', $date->year)
-            ->whereMonth('transaction_date', $date->month)
+        $lastTransaction = self::whereYear('delivery_date', $date->year)
+            ->whereMonth('delivery_date', $date->month)
             ->where('farm_id' , $farmId)
             ->where('transaction_number' , 'like' , "%$code%")
             ->orderBy('transaction_number', 'desc')
