@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Qurban;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DeliveryInstructionResource extends JsonResource
@@ -13,8 +14,8 @@ class DeliveryInstructionResource extends JsonResource
             'id' => $this->id,
             'transaction_number' => $this->transaction_number,
             'delivery_date' => $this->delivery_date,
-            'driver_id' => $this->driver_id,
-            'fleet_id' => $this->fleet_id,
+            'driver' => new UserResource($this->driver),
+            'fleet' => new FleetResource($this->fleet),
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
