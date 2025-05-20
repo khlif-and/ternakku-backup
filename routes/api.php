@@ -98,6 +98,7 @@ Route::group([
                 Route::post('/delivery-instruction/{id}/in-delivery', 'setToInDelivery');
                 Route::post('/delivery-instruction/{id}/location', 'storeLocation');
                 Route::post('/delivery-instruction/{id}/delivered', 'setToDelivered');
+                Route::post('/delivery-order/{id}/photo', 'uploadReceiptPhoto');
             });
         });
 

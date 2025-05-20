@@ -74,6 +74,13 @@ class DeliveryInstructionService
             throw new \Exception("Only scheduled instructions can be updated to ready_to_deliver");
         }
 
+        $deliveryOrders = $instruction->deliveryOrders;
+
+        foreach ($deliveryOrders as $order) {
+            $order->status = 'ready_to_deliver';
+            $order->save();
+        }
+
         $instruction->status = 'ready_to_deliver';
         $instruction->save();
 
@@ -124,6 +131,13 @@ class DeliveryInstructionService
 
         $instruction->status = 'in_delivery';
 
+        $deliveryOrders = $instruction->deliveryOrders;
+
+        foreach ($deliveryOrders as $order) {
+            $order->status = 'in_delivery';
+            $order->save();
+        }
+
         $instruction->save();
 
         return $instruction;
@@ -139,6 +153,13 @@ class DeliveryInstructionService
 
         $instruction->status = 'delivered';
         
+        $deliveryOrders = $instruction->deliveryOrders;
+
+        foreach ($deliveryOrders as $order) {
+            $order->status = 'delivered';
+            $order->save();
+        }
+
         $instruction->save();
 
         return $instruction;

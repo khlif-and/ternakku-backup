@@ -13,6 +13,7 @@ use App\Models\QurbanSaleLivestockD;
 use App\Models\QurbanSaleLivestockH;
 use Illuminate\Support\Facades\File;
 use App\Models\QurbanCustomerAddress;
+use App\Models\QurbanDeliveryInstructionH;
 
 class DeliveryOrderService
 {
@@ -163,6 +164,37 @@ class DeliveryOrderService
             ->find($id);
     }
 
+    public function uploadReceiptPhoto($driverId, $deliveryOrderId, $file)
+    {
+        $error = false;
+        $data = null;
+
+        try {
+            $deliveryOrder = QurbanDeliveryOrderH::findOrFail($deliveryOrderId);
+
+            //VALIDASI: Apakah driver ini memiliki akses ke surat jalan ini?
+
+            $fileName = now()->format('YmdHis') . '-receipt-' . $deliveryOrder->id . '.jpg';
+            $s3Path = 'qurban/receipt_photos/';
+            $s3Url = uploadNeoObject($file, $fileName, $s3Path);
+
+            // Simpan ke database
+            $deliveryOrder->receipt_photo = $s3Url;
+            $deliveryOrder->status = 'delivered';
+            $deliveryOrder->receipt_at = now()->format('Y-m-d H:i:s');
+            $deliveryOrder->save();
+
+            $data = $deliveryOrder;
+        } catch (\Exception $e) {
+            \Log::error('Gagal upload foto tanda terima: ' . $e->getMessage());
+            $error = true;
+        }
+
+        return [
+            'data' => $data,
+            'error' => $error,
+        ];
+    }
 
 
     // public function getAvailableLivestock($farmId)

@@ -9,21 +9,24 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Services\Qurban\DriverService;
 use App\Http\Resources\Qurban\DriverResource;
+use App\Services\Qurban\DeliveryOrderService;
 use App\Http\Requests\Qurban\DriverStoreRequest;
 use App\Http\Requests\Qurban\DriverUpdateRequest;
 use App\Services\Qurban\DeliveryInstructionService;
+use App\Http\Resources\Qurban\DeliveryOrderResource;
 use App\Http\Requests\Qurban\DeliveryLocationRequest;
 use App\Http\Resources\Qurban\DeliveryLocationResource;
 use App\Http\Resources\Qurban\DeliveryInstructionResource;
 
 class DriverController extends Controller
 {
-    private $driverService, $deliveryInstructionService;
+    private $driverService, $deliveryInstructionService, $deliveryOrderService;
 
-    public function __construct(DriverService $driverService, DeliveryInstructionService $deliveryInstructionService)
+    public function __construct(DriverService $driverService, DeliveryInstructionService $deliveryInstructionService, DeliveryOrderService $deliveryOrderService)
     {
         $this->driverService = $driverService;
         $this->deliveryInstructionService = $deliveryInstructionService;
+        $this->deliveryOrderService = $deliveryOrderService;
     }
 
     public function store(DriverStoreRequest $request, $farm_id)
@@ -126,6 +129,22 @@ class DriverController extends Controller
         return ResponseHelper::success(
             new DeliveryInstructionResource($deliveryInstruction),
             'Delivery instruction set to delivered'
+        );
+    }
+
+    public function uploadReceiptPhoto(Request $request, $id)
+    {
+        $request->validate([
+            'receipt_photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user_id = auth()->user()->id;
+
+        $deliveryInstruction = $this->deliveryOrderService->uploadReceiptPhoto($user_id, $id, $request->receipt_photo);
+
+        return ResponseHelper::success(
+            new DeliveryOrderResource($deliveryInstruction['data']),
+            'Delivery order set to delivered'
         );
     }
 }
