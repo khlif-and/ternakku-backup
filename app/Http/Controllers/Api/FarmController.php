@@ -240,9 +240,9 @@ class FarmController extends Controller
     {
         $farm = Farm::findOrFail($farm_id);
 
-        if ($farm->owner_id !== auth()->id()) {
-            return ResponseHelper::error("You don't have permission to access this", 403);
-        }
+        // if ($farm->owner_id !== auth()->id()) {
+        //     return ResponseHelper::error("You don't have permission to access this", 403);
+        // }
 
         $query = FarmUser::with(['user', 'farm'])
             ->where('farm_id', $farm_id);
