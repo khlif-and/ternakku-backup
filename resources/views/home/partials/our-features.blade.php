@@ -1,86 +1,106 @@
 <section class="w-full bg-white py-24 px-6">
-    <div class="max-w-4xl mx-auto text-center mb-16" data-aos="fade-up">
-        <!-- Badge / Label kecil -->
-        <div class="inline-block bg-gray-100 text-gray-600 text-xs font-medium px-3 py-1 rounded-full uppercase tracking-wide mb-4">
-            Fitur Unggulan
-        </div>
-
-        <!-- Heading besar -->
-        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
-            Kurban Jadi Mudah, Cepat, dan Transparan
+    <!-- JUDUL UTAMA -->
+    <div class="max-w-2xl mx-auto text-center mb-20">
+        <p class="text-gray-400 text-sm uppercase mb-2">Our Services</p>
+        <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Include Expert Interior Design Solutions.
         </h2>
-
-        <!-- Subheading -->
         <p class="text-gray-600 text-base md:text-lg leading-relaxed">
-            Membantu kamu meraih ibadah kurban yang berkah dengan proses yang
-            <span class="font-semibold">fleksibel</span>,
-            <span class="font-semibold">transparan</span>, dan
-            <span class="font-semibold">bebas repot</span> langsung dari genggaman.
+            A very comfortable house is a house that is integrated with nature around it.
         </p>
     </div>
 
-    <!-- 3 Fitur Utama -->
-    <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mb-20">
-        @php
-            $features = [
-                ['icon' => 'location-marker', 'title' => 'Lacak Ternak', 'desc' => 'untuk melacak setiap pengiriman ternak, jadi kamu tidak perlu khawatir'],
-                ['icon' => 'clipboard-check', 'title' => 'Laporan Digital', 'desc' => 'semua proses terekam dan terdokumentasi otomatis'],
-                ['icon' => 'shield-check', 'title' => 'Transparansi Proses', 'desc' => 'pantau mulai dari pemilihan, penyembelihan hingga distribusi']
-            ];
-        @endphp
-
-        @foreach ($features as $index => $item)
-        <div class="border border-gray-200 rounded-xl px-6 py-8 text-center shadow-sm transition hover:shadow-md bg-white"
-             data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
-            <div class="w-14 h-14 flex items-center justify-center mx-auto mb-5 rounded-lg border border-gray-100 bg-gray-50">
-                @if ($item['icon'] === 'location-marker')
-                    <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6c0 4.5 6 10 6 10s6-5.5 6-10a6 6 0 00-6-6zm0 8a2 2 0 110-4 2 2 0 010 4z" clip-rule="evenodd" />
-                    </svg>
-                @elseif ($item['icon'] === 'clipboard-check')
-                    <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2l4 -4M12 4H8a2 2 0 00-2 2v14a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2h-4z" />
-                    </svg>
-                @elseif ($item['icon'] === 'shield-check')
-                    <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                    </svg>
-                @endif
+    <!-- GRID KONTEN BAWAH -->
+    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- KIRI ATAS -->
+        <div
+            class="relative group bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center justify-center transition-transform duration-300 hover:scale-[1.03]">
+            <!-- Gradient Background on Hover -->
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-blue-100 via-white to-transparent opacity-0 group-hover:opacity-100 transition duration-300 rounded-2xl -z-10">
             </div>
-            <h4 class="text-green-700 font-semibold text-base mb-2">{{ $item['title'] }}</h4>
-            <p class="text-gray-600 text-sm">{{ $item['desc'] }}</p>
+            <img src="{{ asset('home/assets/img/logo.png') }}" class="w-24 h-24 mb-6" alt="Ternakku Logo" />
+            <h1 class="text-3xl font-bold text-blue-600">Ternakku</h1>
         </div>
-        @endforeach
-    </div>
 
-    <!-- Horizontal 2 Cards Besar -->
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-        @for ($i = 0; $i < 2; $i++)
-        <div class="flex flex-col sm:flex-row items-center sm:items-start gap-6 border border-gray-200 rounded-2xl px-8 py-8 shadow-md hover:shadow-lg transition bg-white"
-             data-aos="fade-up" data-aos-delay="{{ 200 + ($i * 100) }}">
-            <!-- Icon area -->
-            <div class="w-24 h-24 flex items-center justify-center bg-gray-50 rounded-xl border border-gray-100 shrink-0">
-                <svg class="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M10 2a6 6 0 00-6 6c0 4.5 6 10 6 10s6-5.5 6-10a6 6 0 00-6-6zm0 8a2 2 0 110-4 2 2 0 010 4z" clip-rule="evenodd" />
-                </svg>
+        <!-- KIRI BAWAH -->
+        <div
+            class="relative group bg-gradient-to-br from-white to-[#ECFAE5] text-gray-900 rounded-2xl shadow-xl p-10 flex flex-col justify-between overflow-hidden transition-transform duration-300 hover:scale-[1.03]">
+            <div>
+                <h2 class="text-2xl font-bold leading-snug mb-4">Pendamping Digital Peternak Unggul</h2>
+                <p class="text-gray-700 text-sm">
+                    Ternakku adalah aplikasi pintar untuk memantau kesehatan ternak, mencatat aktivitas harian, dan
+                    memastikan perawatan secara efisien. Satu platform terpadu untuk kemajuan peternakan modern.
+                </p>
             </div>
-            <!-- Text content -->
-            <div class="text-center sm:text-left">
-                <h4 class="text-green-700 text-lg font-semibold mb-2">Lacak Ternak</h4>
-                <p class="text-gray-700 text-base font-medium leading-relaxed">
-                    untuk melacak setiap pengiriman ternak, jadi kamu tidak perlu khawatir
+            <div class="mt-6">
+                <a href="#"
+                    class="inline-block bg-blue-600 text-white font-semibold px-5 py-2 rounded-full shadow hover:bg-blue-700 transition">
+                    Mulai Sekarang
+                </a>
+            </div>
+            <!-- Diagonal Accent -->
+            <div class="absolute -top-20 -right-20 w-64 h-64 bg-white/20 rotate-45 rounded-xl"></div>
+        </div>
+
+        <!-- POSTER -->
+        <div
+            class="relative group rounded-2xl overflow-hidden shadow-2xl lg:row-span-2 min-h-[560px] transition-transform duration-300 hover:scale-[1.03]">
+            <!-- Gradient Hover Layer -->
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-blue-100 to-white opacity-0 group-hover:opacity-100 transition duration-500 z-0">
+            </div>
+            <img src="{{ asset('home/assets/img/poster.jpg') }}" alt="Hero Poster"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105 z-0" />
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-600/70 to-blue-700/80 z-0"></div>
+            <div class="relative z-10 p-10 h-full flex flex-col justify-end">
+                <h3 class="text-white text-2xl font-semibold mb-3">Kelola Ternak Lebih Mudah & Terpadu</h3>
+                <p class="text-white text-lg leading-relaxed">
+                    Dari monitoring kondisi ternak, pencatatan rutin, hingga perawatan harian — semua dalam satu
+                    aplikasi yang membantu peternak makin unggul dan efisien.
                 </p>
             </div>
         </div>
-        @endfor
+
+        <!-- KIRI BAWAH -->
+        <div
+            class="relative group bg-gradient-to-br from-white to-[#DDF6D2] text-gray-900 rounded-2xl p-10 flex flex-col justify-between overflow-hidden transition-transform duration-300 hover:scale-[1.03]">
+            <div>
+                <h2 class="text-2xl font-bold leading-snug mb-4">Kurban Digital yang Praktis & Terpercaya</h2>
+                <p class="text-gray-700 text-sm">
+                    Pantau seluruh proses kurban — mulai dari pemilihan hewan, perawatan, hingga distribusi — dalam satu
+                    aplikasi yang transparan, aman, dan mudah digunakan.
+                </p>
+            </div>
+            <div class="mt-6">
+                <a href="#"
+                    class="inline-block bg-white text-black font-semibold px-5 py-2 rounded-full hover:bg-blue-700 transition">
+                    Mulai Sekarang
+                </a>
+            </div>
+            <!-- Diagonal Accent -->
+            <div class="absolute -top-20 -right-20 w-64 h-64 bg-white/20 rotate-45 rounded-xl"></div>
+        </div>
+
+        <!-- POSTER -->
+        <div
+            class="relative group rounded-2xl overflow-hidden shadow-2xl lg:row-span-2 min-h-[560px] transition-transform duration-300 hover:scale-[1.03] bg-gradient-to-br from-white to-[#ECFAE5]">
+            <!-- Gradient Hover Layer -->
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-white to-[#ECFAE5] opacity-0 group-hover:opacity-100 transition duration-500 z-0">
+            </div>
+            <img src="{{ asset('home/assets/img/poster.jpg') }}" alt="Hero Poster"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-300 hover:scale-105 z-0 mix-blend-overlay" />
+            <!-- Remove blue overlay, use light layer to preserve visibility -->
+            <div class="absolute inset-0 bg-white/20 z-0"></div>
+            <!-- Text content -->
+            <div class="relative z-10 p-10 h-full flex flex-col justify-end">
+                <h3 class="text-gray-900 text-2xl font-semibold mb-3">Kurban Aman & Bersih</h3>
+                <p class="text-gray-700 text-lg leading-relaxed">
+                    Mendukung peternak lokal & transparansi distribusi kurban secara digital.
+                </p>
+            </div>
+        </div>
+
     </div>
 </section>
-
-<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-<script>
-    AOS.init({
-        once: true,
-        duration: 700,
-        offset: 60,
-    });
-</script>
