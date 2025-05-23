@@ -27,7 +27,7 @@ class CheckEmailVerified
                     return response()->json(['error' => 'Email not verified.'], 403);
                 } else {
                     // Return view for web requests
-                    return response()->view('auth.verify-email');
+                    return response()->view('admin.auth.verify-email');
                 }
             }
         }

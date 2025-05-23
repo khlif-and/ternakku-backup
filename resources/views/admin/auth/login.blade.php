@@ -51,7 +51,10 @@
 
             <div class="mt-6 text-sm text-center">
                 <span class="text-gray-600">Don’t have an account?</span>
-                <a href="{{ url('auth/register') }}" class="text-[#255F38] hover:underline font-medium">Sign Up</a>
+<a href="{{ url('auth/register') }}" class="text-[#255F38] hover:underline font-medium">Sign Up</a>
+
+
+
             </div>
         </div>
         <div class="hidden md:flex col-span-2 items-center justify-center p-6 overflow-hidden">
@@ -59,7 +62,7 @@
                 class="bg-white rounded-3xl overflow-hidden
                     w-full max-w-[460px] aspect-[4/5]
                     xl:w-[230%] xl:h-[78vh] xl:max-w-none xl:aspect-auto">
-                <img src="{{ asset('home/assets/img/download.jpeg') }}" alt="Login Illustration"
+                <img src="{{ asset('home/assets/img/auth_bg.png') }}" alt="Login Illustration"
                     class="w-full h-full object-cover rounded-2xl">
             </div>
         </div>

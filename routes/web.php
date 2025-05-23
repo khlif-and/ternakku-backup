@@ -35,10 +35,22 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('login', 'login')->name('login');
     Route::post('logout', 'logout')->name('logout');
 
-    // Tambahan untuk register
+    // Register
     Route::get('register', 'showRegisterForm')->name('register.form');
     Route::post('register', 'register')->name('register');
+
+    // OTP Phone
+    Route::get('verify-phone', function () {
+        return view('admin.auth.verify-phone');
+    })->name('verify.phone');
+
+    Route::post('verify-otp', 'verifyOtp')->name('otp.verify'); // ✅ untuk submit OTP
+    Route::post('resend-otp', [AuthController::class, 'resendOtp'])->name('otp.resend');
+
+
 });
+
+
 
 
 Route::middleware(['auth', 'email.verified'])->group(function () {
