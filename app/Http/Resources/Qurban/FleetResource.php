@@ -19,6 +19,12 @@ class FleetResource extends JsonResource
             'name' => $this->name,
             'police_number' => $this->police_number,
             'photo' => getNeoObject($this->photo),
+            'latest_position' => $this->whenLoaded('latestPosition', function () {
+                return [
+                    'latitude' => $this->latestPosition->latitude ?? null,
+                    'longitude' => $this->latestPosition->longitude ?? null,
+                ];
+            }),
         ];
     }
 }

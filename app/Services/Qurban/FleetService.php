@@ -10,14 +10,15 @@ class FleetService
 {
     public function getFleets($farmId)
     {
-        $fleet = QurbanFleet::where('farm_id', $farmId)->get();
+        $fleet = QurbanFleet::with('latestPosition')
+            ->where('farm_id', $farmId)->get();
 
         return $fleet;
     }
 
     public function getFleet($farmId , $fleetId)
     {
-        $fleet = QurbanFleet::where('farm_id', $farmId)->where('id' , $fleetId)->first();
+        $fleet = QurbanFleet::with('latestPosition')->where('farm_id', $farmId)->where('id' , $fleetId)->first();
 
         return $fleet;
     }

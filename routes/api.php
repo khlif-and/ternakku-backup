@@ -65,6 +65,7 @@ Route::group([
         Route::group(['prefix' => 'livestock', 'controller' => App\Http\Controllers\Api\Qurban\LivestockController::class], function () {
             Route::get('/', 'index');
             Route::get('{id}', 'detail');
+            Route::post('/{farm_id}/{id}/vaccine-skkh', 'updateVaccineSkkh')->middleware(['auth:api', 'email.verified', 'farmer', 'check.farm.access:OWNER,ADMIN']);
         });
 
         Route::group(['prefix' => 'blog', 'controller' => App\Http\Controllers\Api\Qurban\BlogController::class], function () {

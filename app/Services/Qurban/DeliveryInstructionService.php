@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\QurbanDeliveryLocation;
 use App\Models\QurbanDeliveryInstructionD;
 use App\Models\QurbanDeliveryInstructionH;
+use App\Models\QurbanFleetPosition;
 
 class DeliveryInstructionService
 {
@@ -174,6 +175,12 @@ class DeliveryInstructionService
 
             QurbanDeliveryLocation::create([
                 'qurban_delivery_instruction_h_id' => $instruction->id,
+                'longitude' => $data['longitude'],
+                'latitude' => $data['latitude'],
+            ]);
+
+            QurbanFleetPosition::create([
+                'qurban_fleet_id' => $instruction->fleet_id,
                 'longitude' => $data['longitude'],
                 'latitude' => $data['latitude'],
             ]);

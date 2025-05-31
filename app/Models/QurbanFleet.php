@@ -20,4 +20,14 @@ class QurbanFleet extends Model
     {
         return $this->belongsTo(Farm::class);
     }
+
+    public function positions()
+    {
+        return $this->hasMany(QurbanFleetPosition::class);
+    }
+
+    public function latestPosition()
+    {
+        return $this->hasOne(QurbanFleetPosition::class)->latestOfMany();
+    }
 }
