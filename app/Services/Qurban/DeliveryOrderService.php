@@ -132,6 +132,10 @@ class DeliveryOrderService
             });
         });
 
+        $query->when($param['status'], function ($q, $name) {
+            $q->where('status', $name);
+        });
+
         return $query->get();
     }
 
