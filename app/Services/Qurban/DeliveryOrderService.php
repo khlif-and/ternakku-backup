@@ -132,7 +132,7 @@ class DeliveryOrderService
             });
         });
 
-        $query->when($param['status'], function ($q, $name) {
+        $query->when($param['status'] ?? null, function ($q, $name) {
             $q->where('status', $name);
         });
 
