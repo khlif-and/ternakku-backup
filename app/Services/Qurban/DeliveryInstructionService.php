@@ -3,14 +3,23 @@
 namespace App\Services\Qurban;
 
 use Exception;
+use App\Services\WhatsAppService;
 use Illuminate\Support\Facades\DB;
+use App\Models\QurbanFleetPosition;
+use Illuminate\Support\Facades\Log;
 use App\Models\QurbanDeliveryLocation;
 use App\Models\QurbanDeliveryInstructionD;
 use App\Models\QurbanDeliveryInstructionH;
-use App\Models\QurbanFleetPosition;
 
 class DeliveryInstructionService
 {
+    protected $whatsAppService;
+
+    public function __construct(WhatsAppService $whatsAppService)
+    {
+        $this->whatsAppService = $whatsAppService;
+    }
+
     public function storeDeliveryInstruction($farm_id, array $data): array
     {
         DB::beginTransaction();
@@ -85,6 +94,17 @@ class DeliveryInstructionService
         $instruction->status = 'ready_to_deliver';
         $instruction->save();
 
+        // Send WhatsApp notification to the driver
+        $user = $instruction->driver;
+        $message = "Halo {$user->name},\n\n" .
+            "Instruksi pengiriman dengan nomer {$instruction->transaction_number} dari peternak {$instruction->farm->name}.\n" .
+            "Tanggal pengiriman: {$instruction->delivery_date}\n" .
+            "Dengan menggunakan armada: {$instruction->fleet->name} Nopol  {$instruction->fleet->police_number}\n" .
+            "Silakan cek aplikasi untuk detail lebih lanjut.\n\n" .
+            "Terima kasih.";
+            
+        $this->whatsAppService->sendMessage($user->phone_number, $message);
+
         return $instruction;
     }
 
@@ -137,6 +157,35 @@ class DeliveryInstructionService
         foreach ($deliveryOrders as $order) {
             $order->status = 'in_delivery';
             $order->save();
+
+            $address = $order->qurbanCustomerAddress;
+            $customer = $address->qurbanCustomer;
+            $user = $customer->user;
+            $farm = $instruction->farm;
+
+            $details = $order->qurbanDeliveryOrderD;
+
+            // Bangun daftar hewan kurban
+            $livestockList = '';
+            foreach ($details as $detail) {
+                $livestock = $detail->livestock;
+                $typeName = $livestock->livestockType->name ?? '-';
+                $breedName = $livestock->livestockBreed->name ?? '-';
+                $livestockList .= "- {$typeName} {$breedName} (Eartag: {$livestock->eartag_number})\n";
+            }
+
+            // Susun pesan
+            $message = "Halo {$user->name},\n\n" .
+                "Hewan kurban dari peternak {$farm->name} sedang dikirim.\n" .
+                "Tanggal pengiriman: {$instruction->delivery_date}\n" .
+                "Armada: {$instruction->fleet->name} (Nopol: {$instruction->fleet->police_number})\n" .
+                "Pengemudi: {$instruction->driver->name}.\n\n" .
+                "Daftar hewan kurban:\n" .
+                $livestockList .
+                "\nSilakan cek aplikasi untuk detail lebih lanjut.\n\n" .
+                "Terima kasih.";
+
+            $this->whatsAppService->sendMessage($user->phone_number, $message);
         }
 
         $instruction->save();
