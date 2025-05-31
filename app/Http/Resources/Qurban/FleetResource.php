@@ -21,8 +21,8 @@ class FleetResource extends JsonResource
             'photo' => getNeoObject($this->photo),
             'latest_position' => $this->whenLoaded('latestPosition', function () {
                 return [
-                    'latitude' => $this->latestPosition->latitude ?? null,
-                    'longitude' => $this->latestPosition->longitude ?? null,
+                    'latitude' => (float) $this->latestPosition->latitude ?? null,
+                    'longitude' => (float) $this->latestPosition->longitude ?? null,
                 ];
             }),
         ];
