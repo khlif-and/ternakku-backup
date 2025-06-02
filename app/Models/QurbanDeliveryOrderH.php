@@ -82,4 +82,9 @@ class QurbanDeliveryOrderH extends Model
     {
         return $this->belongsTo(Farm::class, 'farm_id');
     }
+
+    public function qurbanDeliveryInstructionD()
+    {
+        return $this->hasOne(QurbanDeliveryInstructionD::class, 'qurban_delivery_order_h_id');
+    }
 }
