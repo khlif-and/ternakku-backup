@@ -30,7 +30,7 @@ class QurbanCustomerAddress extends Model
         return $this->belongsTo(Region::class);
     }
 
-     public function fullAddress()
+    public function fullAddress()
     {
         return $this->address_line . ', ' .
             $this->region->village_name . ', ' .
