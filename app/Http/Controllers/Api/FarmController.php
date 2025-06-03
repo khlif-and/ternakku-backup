@@ -327,7 +327,7 @@ class FarmController extends Controller
             // Find and delete FarmUser
             $farmUser = FarmUser::where('user_id', $user->id)
                 ->where('farm_id', $farm->id)
-                ->whereIn('farm_role' , ['ABK' , 'ADMIN'])
+                ->whereIn('farm_role' , ['ABK' , 'ADMIN', 'DRIVER'])
                 ->first();
 
             if ($farmUser) {
