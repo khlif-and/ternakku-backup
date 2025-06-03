@@ -8,6 +8,7 @@ use App\Models\FarmUser;
 use App\Models\QurbanCustomer;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\QurbanCustomerAddress;
 
@@ -55,7 +56,7 @@ class CustomerService
             $customer = QurbanCustomer::create([
                 'farm_id'           => $farmId,
                 'user_id'           => $request['user_id'],
-                'created_by'        => auth()->user()->id,
+                'created_by'        => Auth::user()->id
             ]);
 
             // Commit transaksi
