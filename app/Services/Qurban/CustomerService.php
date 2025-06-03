@@ -41,7 +41,7 @@ class CustomerService
             // }
 
             // Cek apakah user sudah ada di tabel customers
-            $existingCustomer = QurbanCustomer::where('user_id', $request['user_id'])->first();
+            $existingCustomer = QurbanCustomer::where('user_id', $request['user_id'])->where('farm_id' , $farmId)->first();
 
             if ($existingCustomer) {
                 // Jika sudah ada, kembalikan data yang sudah ada
