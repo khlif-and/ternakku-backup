@@ -9,11 +9,7 @@ class QurbanCustomer extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'farm_id',
-        'created_by',
-    ];
+    protected $guarded = [];
 
     public function farm()
     {
