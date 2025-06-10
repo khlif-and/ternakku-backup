@@ -290,7 +290,7 @@ Route::group([
                         Route::get('/{farm_id}/livestock/{id}', 'getDetailLivestock');
                     });
 
-                    Route::group(['middleware' => ['subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])]], function () {
+                    Route::group(['middleware' => ['subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value, SubscriptionEnum::FARMING_BASIC->value])]], function () {
 
                         Route::group(['prefix' => 'pen','controller' => App\Http\Controllers\Api\Farming\PenController::class], function () {
                             Route::get('/{farm_id}', 'index');
