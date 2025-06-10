@@ -13,6 +13,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        DB::table('subscriptions')->firstOrCreate(
+            ['id' => 1], // Attributes to search by
+            [
+                'module' => 'farming',
+                'name' => 'basic',
+            ] // Attributes to create if not found
+        );
         $farms = DB::table('farms')->get();
 
         // Loop melalui setiap farm dan masukkan ke tabel 'subscription_farm'
