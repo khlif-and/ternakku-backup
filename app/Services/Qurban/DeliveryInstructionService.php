@@ -4,6 +4,7 @@ namespace App\Services\Qurban;
 
 use Exception;
 use App\Services\WhatsAppService;
+use App\Enums\LivestockStatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Models\QurbanFleetPosition;
 use Illuminate\Support\Facades\Log;
@@ -86,9 +87,18 @@ class DeliveryInstructionService
 
         $deliveryOrders = $instruction->deliveryOrders;
 
+
         foreach ($deliveryOrders as $order) {
             $order->status = 'ready_to_deliver';
             $order->save();
+
+            $details = $order->qurbanDeliveryOrderD;
+
+            foreach ($details as $detail) {
+                $livestock = $detail->livestock;
+                $livestock->livestock_status_id = LivestockStatusEnum::TERJUAL->value;
+                $livestock->save();
+            }
         }
 
         $instruction->status = 'ready_to_deliver';
