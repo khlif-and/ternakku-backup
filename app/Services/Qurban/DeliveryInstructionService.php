@@ -80,7 +80,7 @@ class DeliveryInstructionService
     {
         $instruction = QurbanDeliveryInstructionH::where('farm_id', $farmId)->findOrFail($id);
 
-        if ($instruction->status !== 'scheduled') {
+        if (!in_array($instruction->status, ['scheduled' , 'ready_to_deliver'])) {
             throw new \Exception("Only scheduled instructions can be updated to ready_to_deliver");
         }
 
@@ -146,8 +146,8 @@ class DeliveryInstructionService
     {
         $instruction = QurbanDeliveryInstructionH::where('driver_id', $driverId)->findOrFail($id);
 
-        if ($instruction->status !== 'ready_to_deliver') {
-            throw new \Exception("Only ready_to_deliver instructions can be updated to in_delivery");
+        if (!in_array($instruction->status, ['ready_to_deliver', 'in_delivery'])) {
+            throw new \Exception("Only ready_to_deliver or in_delivery instructions can be updated to in_delivery");
         }
 
         $instruction->status = 'in_delivery';
@@ -197,7 +197,7 @@ class DeliveryInstructionService
     {
         $instruction = QurbanDeliveryInstructionH::where('driver_id', $driverId)->findOrFail($id);
 
-        if ($instruction->status !== 'in_delivery') {
+        if (!in_array($instruction->status, ['in_delivery' , 'delivered'])) {
             throw new \Exception("Only in_delivery instructions can be updated to delivered");
         }
 

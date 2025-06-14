@@ -209,6 +209,21 @@ Route::group([
             });
 
             Route::group([
+                'prefix' => 'v2/payment/{farm_id}',
+                'controller' => App\Http\Controllers\Api\Qurban\V2\PaymentController::class,
+                'middleware' => [
+                    'check.farm.access:OWNER,ADMIN',
+                    'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
+                ],
+            ], function(){
+                Route::get('/', 'index');
+                Route::post('/', 'store');
+                Route::get('{id}', 'show');
+                Route::post('{id}', 'update');
+                Route::delete('{id}', 'destroy');
+            });
+
+            Route::group([
                 'prefix' => 'delivery-order/{farm_id}',
                 'controller' => App\Http\Controllers\Api\Qurban\DeliveryOrderController::class,
                 'middleware' => [
