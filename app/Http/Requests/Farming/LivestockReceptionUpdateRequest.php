@@ -42,6 +42,18 @@ class LivestockReceptionUpdateRequest extends FormRequest
             'characteristics' => 'nullable|string|max:255',
             'supplier'             => 'nullable|string',
             'transaction_date'        => 'required|date',
+
+                        // Phenotype data (nullable)
+            'height' => 'nullable|numeric|min:0',
+            'body_length' => 'nullable|numeric|min:0',
+            'hip_height' => 'nullable|numeric|min:0',
+            'hip_width' => 'nullable|numeric|min:0',
+            'chest_width' => 'nullable|numeric|min:0',
+            'head_length' => 'nullable|numeric|min:0',
+            'head_width' => 'nullable|numeric|min:0',
+            'ear_length' => 'nullable|numeric|min:0',
+            'body_weight' => 'nullable|numeric|min:0',
+
         ];
     }
 }

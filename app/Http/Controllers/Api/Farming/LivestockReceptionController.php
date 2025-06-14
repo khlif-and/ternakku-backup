@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api\Farming;
 
+use App\Models\Livestock;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
 use Illuminate\Http\JsonResponse;
+use App\Enums\LivestockStatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Models\LivestockReceptionD;
 use App\Models\LivestockReceptionH;
@@ -93,21 +95,32 @@ class LivestockReceptionController extends Controller
             DB::beginTransaction();
             // Simpan data header LivestockReceptionH
             $livestockReceptionH = LivestockReceptionH::create([
-                'farm_id'          => $farm->id,
-                'transaction_date' => $validated['transaction_date'],
-                'supplier'      => $validated['supplier'] ?? '',
-                'notes'            => $validated['notes'],
+                'farm_id'           => $farm->id,
+                'transaction_date'  => $validated['transaction_date'],
+                'supplier'          => $validated['supplier'] ?? '',
+                'notes'             => $validated['notes'],
             ]);
 
-            // Siapkan data untuk LivestockReception
-            $receptionData = $validated;
-            $receptionData['livestock_reception_h_id'] = $livestockReceptionH->id;
+            $receptionData = [
+                'livestock_reception_h_id' => $livestockReceptionH->id,
+                'eartag_number'            => $validated['eartag_number'],
+                'rfid_number'              => $validated['rfid_number'] ?? null,
+                'livestock_type_id'        => $validated['livestock_type_id'],
+                'livestock_group_id'       => $validated['livestock_group_id'],
+                'livestock_breed_id'       => $validated['livestock_breed_id'],
+                'livestock_sex_id'         => $validated['livestock_sex_id'],
+                'livestock_classification_id' => $validated['livestock_classification_id'],
+                'pen_id'                   => $validated['pen_id'],
+                'age_years'                => $validated['age_years'],
+                'age_months'               => $validated['age_months'],
+                'weight'                   => $validated['weight'],
+                'price_per_kg'             => $validated['price_per_kg'],
+                'price_per_head'            => $validated['price_per_head'],
+                'notes'                    => $validated['notes'] ?? null,
+                'characteristics'          => $validated['characteristics'] ?? null,
+            ];
 
-            // Hapus supplier dari $receptionData karena tidak ada di tabel LivestockReception
-            unset($receptionData['supplier']);
-            unset($receptionData['transaction_date']);
-
-            // Handle file upload if present
+            // 3. Upload foto jika ada
             if (isset($validated['photo']) && request()->hasFile('photo')) {
                 $file = $validated['photo'];
                 $fileName = time() . '-' . $file->getClientOriginalName();
@@ -115,8 +128,38 @@ class LivestockReceptionController extends Controller
                 $receptionData['photo'] = uploadNeoObject($file, $fileName, $filePath);
             }
 
-            // Simpan LivestockReception dengan data yang telah di-assign
+            // 4. Simpan reception detail
             $reception = LivestockReceptionD::create($receptionData);
+
+            // 5. Simpan ke tabel Livestock
+            $livestock = Livestock::create([
+                'farm_id' => $livestockReceptionH->farm_id,
+                'livestock_reception_d_id' => $reception->id,
+                'livestock_status_id' => LivestockStatusEnum::HIDUP->value,
+                'eartag_number' => $reception->eartag_number,
+                'rfid_number' => $reception->rfid_number,
+                'livestock_type_id' => $reception->livestock_type_id,
+                'livestock_group_id' => $reception->livestock_group_id,
+                'livestock_breed_id' => $reception->livestock_breed_id,
+                'livestock_sex_id' => $reception->livestock_sex_id,
+                'livestock_classification_id' => $reception->livestock_classification_id,
+                'pen_id' => $reception->pen_id,
+                'start_age_years' => $reception->age_years,
+                'start_age_months' => $reception->age_months,
+                'last_weight' => $reception->weight,
+                'photo' => $reception->photo,
+                'characteristics' => $reception->characteristics,
+            ]);
+
+             // 4. Simpan Phenotype (jika ada input)
+            $phenotypeData = collect($validated)->only([
+                'height', 'body_length', 'hip_height', 'hip_width',
+                'chest_width', 'head_length', 'head_width', 'ear_length', 'body_weight'
+            ])->filter(); // filter() agar hanya menyimpan data yang tidak null
+
+            if ($phenotypeData->isNotEmpty()) {
+                $livestock->livestockPhenotype()->create($phenotypeData->toArray());
+            }
 
             DB::commit();
 
@@ -157,53 +200,93 @@ class LivestockReceptionController extends Controller
      * @param  int  $receptionId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(LivestockReceptionUpdateRequest $request, $farmId , $receptionId): JsonResponse
+    public function update(LivestockReceptionUpdateRequest $request, $farmId, $receptionId): JsonResponse
     {
         $validated = $request->validated();
         $farm = request()->attributes->get('farm');
+
         $reception = LivestockReceptionD::whereHas('livestockReceptionH', function ($query) use ($farm) {
             $query->where('farm_id', $farm->id);
         })->findOrFail($receptionId);
 
         DB::transaction(function () use ($validated, $reception, $farm) {
-            // Update data header LivestockReceptionH
-            $livestockReceptionH = $reception->livestockReceptionH;
-
-            $livestockReceptionH->update([
+            // Update LivestockReceptionH (header)
+            $reception->livestockReceptionH->update([
                 'transaction_date' => $validated['transaction_date'],
-                'supplier'      => $validated['supplier'] ?? '',
-                'notes'            => $validated['notes'],
+                'supplier'         => $validated['supplier'] ?? '',
+                'notes'            => $validated['notes'] ?? null,
             ]);
 
-            // Siapkan data untuk update LivestockReceptionD
-            $receptionData = $validated;
-            $receptionData['livestock_reception_h_id'] = $livestockReceptionH->id;
+            // Persiapkan data untuk update reception detail
+            $receptionData = [
+                'livestock_reception_h_id'   => $reception->livestockReceptionH->id,
+                'eartag_number'              => $validated['eartag_number'],
+                'rfid_number'                => $validated['rfid_number'] ?? null,
+                'livestock_type_id'          => $validated['livestock_type_id'],
+                'livestock_group_id'         => $validated['livestock_group_id'],
+                'livestock_breed_id'         => $validated['livestock_breed_id'],
+                'livestock_sex_id'           => $validated['livestock_sex_id'],
+                'livestock_classification_id'=> $validated['livestock_classification_id'],
+                'pen_id'                     => $validated['pen_id'],
+                'age_years'                  => $validated['age_years'],
+                'age_months'                 => $validated['age_months'],
+                'weight'                     => $validated['weight'],
+                'price_per_kg'               => $validated['price_per_kg'],
+                'price_per_head'             => $validated['price_per_head'],
+                'notes'                      => $validated['notes'] ?? null,
+                'characteristics'            => $validated['characteristics'] ?? null,
+            ];
 
-            // Hapus supplier dan transaction_date dari $receptionData karena tidak ada di tabel LivestockReceptionD
-            unset($receptionData['supplier']);
-            unset($receptionData['transaction_date']);
-
-            // Handle file upload if present
+            // Handle photo upload (replace old)
             if (isset($validated['photo']) && request()->hasFile('photo')) {
                 $file = $validated['photo'];
                 $fileName = time() . '-' . $file->getClientOriginalName();
                 $filePath = 'receptions/';
 
-                // Delete the old photo if it exists
                 if ($reception->photo) {
                     deleteNeoObject($reception->photo);
                 }
 
-                // Upload new photo
                 $receptionData['photo'] = uploadNeoObject($file, $fileName, $filePath);
             }
 
-            // Update LivestockReceptionD
+            // Update reception detail
             $reception->update($receptionData);
+
+            // Update Livestock (sinkronisasi)
+            $livestock = $reception->livestock;
+
+            $livestock->update([
+                'livestock_status_id'         => LivestockStatusEnum::HIDUP->value,
+                'eartag_number'               => $reception->eartag_number,
+                'rfid_number'                 => $reception->rfid_number,
+                'livestock_type_id'           => $reception->livestock_type_id,
+                'livestock_group_id'          => $reception->livestock_group_id,
+                'livestock_breed_id'          => $reception->livestock_breed_id,
+                'livestock_sex_id'            => $reception->livestock_sex_id,
+                'livestock_classification_id' => $reception->livestock_classification_id,
+                'pen_id'                      => $reception->pen_id,
+                'start_age_years'             => $reception->age_years,
+                'start_age_months'            => $reception->age_months,
+                'last_weight'                 => $reception->weight,
+                'photo'                       => $reception->photo,
+                'characteristics'             => $reception->characteristics,
+            ]);
+
+            // Update atau buat phenotype
+            $phenotypeData = collect($validated)->only([
+                'height', 'body_length', 'hip_height', 'hip_width',
+                'chest_width', 'head_length', 'head_width', 'ear_length', 'body_weight'
+            ])->filter();
+
+            if ($phenotypeData->isNotEmpty()) {
+                $livestock->livestockPhenotype()->updateOrCreate([], $phenotypeData->toArray());
+            }
         });
 
-        return ResponseHelper::success(new LivestockReceptionResource($reception), 'Livestock Reception updated successfully');
+        return ResponseHelper::success(new LivestockReceptionResource($reception->fresh()), 'Livestock Reception updated successfully');
     }
+
 
     /**
      * Remove the specified livestock reception from storage.

@@ -45,6 +45,7 @@ class LivestockReceptionResource extends JsonResource
             'photo_url'             => $this->photo ? getNeoObject($this->photo) : null,
             'created_at'            => $this->created_at->toDateTimeString(),
             'updated_at'            => $this->updated_at->toDateTimeString(),
+            'phenotype'             => $this->livestock->livestockPhenotype 
         ];
     }
 }
