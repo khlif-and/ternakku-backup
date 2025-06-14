@@ -2,18 +2,13 @@
 
 namespace App\Services\Qurban;
 
-use App\Models\Farm;
-use App\Models\Livestock;
 use Barryvdh\DomPDF\Facade\Pdf;
-use App\Enums\LivestockStatusEnum;
 use Illuminate\Support\Facades\DB;
 use App\Models\QurbanDeliveryOrderD;
 use App\Models\QurbanDeliveryOrderH;
-use App\Models\QurbanSaleLivestockD;
 use App\Models\QurbanSaleLivestockH;
 use Illuminate\Support\Facades\File;
-use App\Models\QurbanCustomerAddress;
-use App\Models\QurbanDeliveryInstructionH;
+use App\Models\QurbanDeliveryInstructionD;
 
 class DeliveryOrderService
 {
@@ -200,119 +195,50 @@ class DeliveryOrderService
         ];
     }
 
+    public function deleteDeliveryOrder($farmId, $id)
+    {
+        $error = false;
 
-    // public function getAvailableLivestock($farmId)
-    // {
-    //     $farm = Farm::findOrFail($farmId);
+        try {
+            DB::beginTransaction();
+            $deliveryOrder = QurbanDeliveryOrderH::where('farm_id', $farmId)->findOrFail($id);
 
-    //     // Ambil semua livestock yang statusnya 'HIDUP'
-    //     $livestocks = $farm->livestocks()->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)->get();
-
-    //     // Ambil ID dari sales orders yang sudah ada
-    //     $DeliveryOrderIds = QurbanSaleLivestockD::whereIn('livestock_id', $livestocks->pluck('id'))->pluck('livestock_id');
-
-    //     // Filter livestock yang tidak ada dalam sales orders
-    //     $livestockAvailable = $livestocks->whereNotIn('id', $DeliveryOrderIds);
-
-    //     return $livestockAvailable;
-    // }
-
-    // public function getDeliveryOrders($farmId, $param)
-    // {
-    //     $query = QurbanSaleLivestockH::where('farm_id', $farmId)->filterMarketing($farmId);
-
-    //     if (!empty($param['qurban_customer_id'])) {
-    //         $query->where('qurban_customer_id', $param->qurban_customer_id);
-    //     }
-
-    //     return $query->get();
-    // }
-
-    // public function getDeliveryOrder($farmId , $DeliveryOrderId)
-    // {
-    //     $DeliveryOrder = QurbanSaleLivestockH::where('farm_id', $farmId)->where('id' , $DeliveryOrderId)->first();
-
-    //     return $DeliveryOrder;
-    // }
-
-    // public function updateDeliveryOrder($farmId, $id, $request)
-    // {
-    //     $error = false;
-    //     $data = null;
-
-    //     DB::beginTransaction();
-
-    //     try {
-    //         $header = QurbanSaleLivestockH::where('farm_id' , $farmId)->where('id' , $id)->first();
-
-    //         $header->update([
-    //             'qurban_customer_id' => $request['customer_id'],
-    //             'customer_id' => $request['sales_order_id'] ?? null,
-    //             'transaction_date' => $request['transaction_date']
-    //         ]);
-
-    //         $header->qurbanSaleLivestockD()->delete();
-
-    //         foreach ($request['details'] as $item) {
-    //             QurbanCustomerAddress::where('qurban_customer_id' , $request['customer_id'])->where('id' , $item['customer_address_id'])->firstOrFail();
-
-    //             Livestock::where('farm_id' , $farmId)->where('id' , $item['livestock_id'])->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)->firstOrFail();
-
-    //             QurbanSaleLivestockD::create([
-    //                 'qurban_sale_livestock_h_id' => $header->id,
-    //                 'qurban_customer_address_id' => $item['customer_address_id'],
-    //                 'livestock_id' => $item['livestock_id'],
-    //                 'weight' => $item['weight'],
-    //                 'price_per_kg' => $item['price_per_kg'],
-    //                 'price_per_head' => $item['price_per_head'],
-    //                 'delivery_plan_date' => $item['delivery_plan_date'],
-    //             ]);
-    //         }
-
-    //         DB::commit();
-
-    //         $data = $header;
-
-    //     } catch (\Exception $e) {
-    //         dd($e);
-    //         // Rollback transaksi jika terjadi kesalahan
-    //         DB::rollBack();
-
-    //         $error = true;
-    //     }
-
-    //     return [
-    //         'data' => $data,
-    //         'error' => $error
-    //     ];
-    // }
-
-    // public function deleteDeliveryOrder($farmId, $id)
-    // {
-    //     $error = false;
-
-    //     try {
-    //         $header = QurbanSaleLivestockH::where('farm_id' , $farmId)->where('id' , $id)->first();
-
-    //         $header->qurbanSaleLivestockD()->delete();
-
-    //         $header->delete();
-
-    //         // Commit transaksi
-    //         DB::commit();
+            $deliveryInstructionD = QurbanDeliveryInstructionD::where('qurban_delivery_order_h_id', $deliveryOrder->id)->first();
 
 
-    //     } catch (\Exception $e) {
-    //         dd($e);
-    //         // Rollback transaksi jika terjadi kesalahan
-    //         DB::rollBack();
+            if ($deliveryInstructionD) {
 
-    //         $error = true;
-    //     }
+                $deliveryInstruction = $deliveryInstructionD->qurbanDeliveryInstructionH;
 
-    //     return [
-    //         'error' => $error
-    //     ];
-    // }
+                if ($deliveryInstruction->status == 'in_delivery' || $deliveryInstruction->status == 'delivered') {
+                    throw new \Exception("Cannot delete delivery order that is in delivery or delivered");
+                }
+
+                // Hapus instruksi pengiriman terkait
+                $deliveryInstructionD->delete();
+            }
+
+            foreach ($deliveryOrder->qurbanDeliveryOrderD as $detail) {
+                // Hapus detail surat jalan
+                $detail->delete();
+            }
+
+            $deliveryOrder->delete();
+
+            // Commit transaksi
+            DB::commit();
+
+
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+
+            $error = true;
+        }
+
+        return [
+            'error' => $error
+        ];
+    }
 
 }

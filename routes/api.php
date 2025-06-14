@@ -250,6 +250,7 @@ Route::group([
                 Route::get('/', 'index');
                 Route::get('/{id}', 'show');
                 Route::post('/{id}/ready-to-deliver', 'setReadyToDeliver');
+                Route::delete('{id}', 'destroy');
             });
         });
     });

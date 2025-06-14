@@ -76,4 +76,15 @@ class DeliveryOrderController extends Controller
             200
         );
     }
+
+    public function destroy($farm_id, $id)
+    {
+        $response = $this->deliveryOrderService->deleteDeliveryOrder($farm_id, $id);
+
+        if ($response['error']) {
+            return ResponseHelper::error('Failed to delete delivery order', 500);
+        }
+
+        return ResponseHelper::success(null, 'Delivery order deleted successfully', 200);
+    }
 }

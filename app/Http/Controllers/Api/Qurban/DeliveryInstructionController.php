@@ -73,4 +73,14 @@ class DeliveryInstructionController extends Controller
         );
     }
     
+    public function destroy($farm_id, $id): JsonResponse
+    {
+        $deleted = $this->deliveryInstructionService->deleteDeliveryInstruction($farm_id, $id);
+    
+        if (!$deleted) {
+            return ResponseHelper::error('Failed to delete delivery instruction', 500);
+        }
+    
+        return ResponseHelper::success(null, 'Delivery instruction deleted successfully');
+    }
 }

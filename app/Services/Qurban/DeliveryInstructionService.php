@@ -258,4 +258,34 @@ class DeliveryInstructionService
             ];
         }
     }
+
+    public function deleteDeliveryInstruction($farmId, $id)
+    {
+        $error = false;
+
+        try {
+            DB::beginTransaction();
+            $instruction = QurbanDeliveryInstructionH::where('farm_id', $farmId)->findOrFail($id);
+
+            if ($instruction->status == 'in_delivery' || $instruction->status == 'delivered') {
+                throw new \Exception("Cannot delete delivery instruction that is in delivery or already delivered");
+            }
+            
+            // Hapus semua detail instruksi pengiriman
+            $instruction->qurbanDeliveryInstructionD()->delete();
+
+            // Hapus instruksi pengiriman itu sendiri
+            $instruction->delete();
+            // Commit transaksi
+            DB::commit();
+        } catch (\Exception $e) {
+            // Rollback transaksi jika terjadi kesalahan
+            DB::rollBack();
+            Log::error('Gagal menghapus instruksi pengiriman: ' . $e->getMessage());
+            $error = true;
+        }
+        return [
+            'error' => $error
+        ];  
+    }
 }
