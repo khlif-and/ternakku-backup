@@ -9,16 +9,21 @@
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Fonts -->
-    <script src="{{ asset('admin/js/plugin/webfont/webfont.min.js') }}"></script>
+    <!-- Google & Icon Fonts via WebFont Loader (CDN) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/webfont/1.6.28/webfontloader.js"></script>
     <script>
         WebFont.load({
-            google: { "families": ["Public Sans:300,400,500,600,700"] },
+            google: { families: ["Public Sans:300,400,500,600,700"] },
             custom: {
-                "families": ["Font Awesome 5 Solid", "Font Awesome 5 Regular", "Font Awesome 5 Brands", "simple-line-icons"],
-                urls: ['{{ asset('admin/css/fonts.min.css') }}']
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons"
+                ],
+                urls: ["https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"]
             },
-            active: function () {
+            active() {
                 sessionStorage.fonts = true;
             }
         });
@@ -26,11 +31,13 @@
 </head>
 <body class="antialiased font-sans">
 
-    @yield('content')
+@yield('content')
 
-    <!-- Optional JS -->
-    <script src="{{ asset('admin/js/core/jquery-3.7.1.min.js') }}"></script>
-    <script src="{{ asset('admin/js/core/popper.min.js') }}"></script>
-    <script src="{{ asset('admin/js/kaiadmin.min.js') }}"></script>
+<!-- Core JS from CDN -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+<!-- If you still need kaiadmin.min.js, place it in public/admin/js/ and uncomment next line -->
+{{-- <script src="{{ asset('admin/js/kaiadmin.min.js') }}"></script> --}}
+
 </body>
 </html>

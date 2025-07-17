@@ -115,11 +115,6 @@
                                 Jalan Qurban</a>
                         </li>
                         <li>
-                            <a href="{{ url('qurban/sales-qurban') }}"
-                                class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Sales
-                                Qurban</a>
-                        </li>
-                        <li>
                             <a href="{{ url('qurban/cancelation-qurban') }}"
                                 class="block px-3 py-2 text-sm text-gray-900 rounded-md hover:bg-orange-50 font-medium transition">Cancelation
                                 Qurban</a>

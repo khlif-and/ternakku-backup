@@ -1,0 +1,12 @@
+[90m= [39m[34;4mApp\Models\User[39;24m {#5778
+    [34mid[39m: [35m4[39m,
+    [34mname[39m: "[32mDeni[39m",
+    [34memail[39m: "[32mDeni@gmail.com[39m",
+    [34mphone_number[39m: "[32m6281229836542[39m",
+    [34memail_verified_at[39m: "[32m2025-05-23 09:20:07[39m",
+    #[33mpassword[39m: "[32m$2y$12$S2krsxI507pHAsNw3f90DO850ieWsGhRtjVjeyuWEfxG4P8hemO2C[39m",
+    #[33mremember_token[39m: [36mnull[39m,
+    [34mcreated_at[39m: "[32m2025-05-23 09:19:48[39m",
+    [34mupdated_at[39m: "[32m2025-05-23 09:20:07[39m",
+  }
+

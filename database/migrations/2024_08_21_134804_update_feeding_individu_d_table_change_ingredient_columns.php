@@ -9,17 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('feeding_individu_d', function (Blueprint $table) {
-            // Mengganti nama kolom ingredient menjadi feed_material
-            $table->renameColumn('ingredient_name', 'feed_material_name');
-            $table->renameColumn('ingredient_qty_kg', 'feed_material_qty_kg');
-            $table->renameColumn('ingredient_price_kg', 'feed_material_price_kg');
-            $table->renameColumn('ingredient_total', 'feed_material_total');
-        });
+public function up(): void
+{
+    Schema::table('feeding_individu_d', function (Blueprint $table) {
+        $table->string('feed_material_name')->nullable()->after('livestock_id');
+        $table->decimal('feed_material_qty_kg', 10, 2)->nullable();
+        $table->decimal('feed_material_price_kg', 10, 2)->nullable();
+        $table->decimal('feed_material_total', 10, 2)->nullable();
+    });
+}
 
-    }
 
     /**
      * Reverse the migrations.

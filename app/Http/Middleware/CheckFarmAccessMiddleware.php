@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\Models\Farm;
 use App\Models\FarmUser;
 use Illuminate\Http\Request;
 use App\Helpers\ResponseHelper;
@@ -26,14 +25,20 @@ class CheckFarmAccessMiddleware
             ->get();
 
         if ($farmUsers->isEmpty()) {
-            return ResponseHelper::error('You do not have access to this farm or the farm does not exist', 404);
+            if ($request->expectsJson()) {
+                return ResponseHelper::error('You do not have access to this farm or the farm does not exist', 404);
+            }
+            abort(403, 'You do not have access to this farm or the farm does not exist.');
         }
 
         if (!empty($roles) && !$farmUsers->contains(fn($record) => in_array($record->farm_role, $roles))) {
-            return ResponseHelper::error('You do not have permission to perform this action', 403);
+            if ($request->expectsJson()) {
+                return ResponseHelper::error('You do not have permission to perform this action', 403);
+            }
+            abort(403, 'You do not have permission to perform this action.');
         }
 
-        // Simpan farm instance ke request (gunakan dari relasi salah satu record)
+        // Simpan farm instance ke request
         $request->attributes->set('farm', $farmUsers->first()->farm);
 
         return $next($request);

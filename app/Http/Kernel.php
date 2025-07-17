@@ -69,5 +69,6 @@ class Kernel extends HttpKernel
         'check.farm.access' => \App\Http\Middleware\CheckFarmAccessMiddleware::class,
         'subs.basic_farming' => \App\Http\Middleware\BasicFarmingSubsMiddleware::class,
         'subs' => \App\Http\Middleware\SubsMiddleware::class,
+        'jwt.web' => \App\Http\Middleware\JwtWebGuard::class,
     ];
 }

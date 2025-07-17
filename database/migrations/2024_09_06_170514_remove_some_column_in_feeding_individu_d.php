@@ -9,16 +9,23 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
-        Schema::table('feeding_individu_d', function (Blueprint $table) {
-            $table->dropColumn([
-                'forage_name' , 'forage_qty_kg' , 'forage_price_kg' , 'forage_total',
-                'concentrate_name' , 'concentrate_qty_kg' , 'concentrate_price_kg' , 'concentrate_total',
-                'feed_material_name' , 'feed_material_qty_kg' , 'feed_material_price_kg' , 'feed_material_total',
-            ]);
-        });
-    }
+public function up(): void
+{
+    Schema::table('feeding_individu_d', function (Blueprint $table) {
+        $columns = [
+            'forage_name', 'forage_qty_kg', 'forage_price_kg', 'forage_total',
+            'concentrate_name', 'concentrate_qty_kg', 'concentrate_price_kg', 'concentrate_total',
+            'feed_material_name', 'feed_material_qty_kg', 'feed_material_price_kg', 'feed_material_total',
+        ];
+
+        foreach ($columns as $col) {
+            if (Schema::hasColumn('feeding_individu_d', $col)) {
+                $table->dropColumn($col);
+            }
+        }
+    });
+}
+
 
     /**
      * Reverse the migrations.

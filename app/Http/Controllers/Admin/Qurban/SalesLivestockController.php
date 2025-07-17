@@ -19,14 +19,15 @@ class SalesLivestockController extends Controller
         $this->customerService = $customerService;
     }
 
-    public function index()
-    {
-        $farmId = session("selected_farm");
+public function index(Request $request)
+{
+    $farmId = session("selected_farm");
 
-        $salesLivestocks = $this->salesLivestockService->getSalesLivestocks($farmId);
+    $salesLivestocks = $this->salesLivestockService->getSalesLivestocks($farmId, $request);
 
-        return view('admin.qurban.salesLivestock.index' , compact('salesLivestocks'));
-    }
+    return view('admin.qurban.salesLivestock.index' , compact('salesLivestocks'));
+}
+
 
     public function create()
     {
