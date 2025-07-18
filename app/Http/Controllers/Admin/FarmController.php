@@ -181,7 +181,9 @@ public function selectFarmStore(Request $request)
 
         session(['selected_farm' => $farm->id]);
 
-        return redirect('select-farm')->with('success', 'Farm berhasil dibuat!');
+        return redirect('/dashboard')->with('success', 'Farm berhasil dibuat!');
+
+
     }
 
     public function findUser()

@@ -17,7 +17,7 @@
             <li>
                 <button @click="submenuOpen = !submenuOpen" type="button"
                     class="w-full flex items-center justify-between px-4 py-2 font-medium hover:bg-white/10 transition">
-                    <span class="sidebar-label">Care Livestock</span>
+                    <span class="sidebar-label">Pelihara Ternak</span>
                     <svg :class="{ 'rotate-180': submenuOpen }" class="w-4 h-4 arrow-icon" fill="none"
                         stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
@@ -33,22 +33,30 @@
                         class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
                         Registrasi Ternak
                     </a>
-<a
-    href="{{ route('admin.care-livestock.livestock-sale-weight.index', $farm->id) }}"
-    class="block hover:bg-gray-100 px-3 py-1 rounded text-sm"
->
-    Penjualan Ternak
-</a>
+                    <a href="{{ route('admin.care-livestock.livestock-sale-weight.index', $farm->id) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Penjualan Ternak
+                    </a>
 
-<a
-    href="{{ route('admin.care-livestock.livestock-death.index', $farm->id) }}"
-    class="block hover:bg-gray-100 px-3 py-1 rounded text-sm"
->
-    Kematian Ternak
-</a>
+                    <a href="{{ route('admin.care-livestock.livestock-death.index', $farm->id) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Kematian Ternak
+                    </a>
 
+                    <a href="{{ route('admin.care-livestock.feed-medicine-purchase.index', $farm->id) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Pembelian Pakan / Obat
+                    </a>
 
+                    <a href="{{ route('admin.care-livestock.milk-production-global.index', $farm->id) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Produksi Susu Global
+                    </a>
 
+                    <a href="{{ route('admin.care-livestock.milk-analysis-global.index', $farm->id) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Analisis Susu Global
+                    </a>
 
                 </div>
             </li>

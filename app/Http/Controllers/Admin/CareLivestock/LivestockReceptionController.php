@@ -51,7 +51,7 @@ public function index($farmId)
         })
         ->latest()
         ->paginate($perPage)
-        ->appends(request()->query()); // Pertahankan query string saat paginate
+        ->appends(request()->query());
 
     $livestocks = Livestock::with([
             'livestockType',

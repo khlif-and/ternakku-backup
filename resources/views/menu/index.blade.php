@@ -35,8 +35,6 @@
                     🐄 Kandang Aktif: <span class="font-bold text-slate-800">{{ \App\Models\Farm::find(session('selected_farm'))?->name ?? 'Belum dipilih' }}</span>
                 </div>
             </div>
-
-            {{-- Blueprint untuk kartu menu harus diterapkan di dalam file ini --}}
             @include('layouts.admin.menu_cards')
 
             <hr class="my-12 border-slate-200">
@@ -70,51 +68,23 @@
                             </a>
                             <a href="#" class="flex items-center p-3 rounded-lg font-semibold bg-indigo-100 text-indigo-800 hover:bg-indigo-700 hover:text-white transition-all duration-200 transform hover:scale-103">
                                <ion-icon name="document-text-outline" class="text-xl mr-3"></ion-icon>
-                                Buat Laporan Penjualan
+                                Tambah Penjualan Ternak
                             </a>
                             <a href="#" class="flex items-center p-3 rounded-lg font-semibold bg-indigo-100 text-indigo-800 hover:bg-indigo-700 hover:text-white transition-all duration-200 transform hover:scale-103">
                                 <ion-icon name="calendar-outline" class="text-xl mr-3"></ion-icon>
-                                Lihat Kalender Vaksinasi
+                                Produksi Susu
                             </a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <section class="mt-12">
-                 <h2 class="text-2xl font-bold text-slate-800 mb-6">Aktivitas Terkini</h2>
-                 <div class="p-6 rounded-2xl shadow-lg bg-white/70 backdrop-blur-lg border border-black/5">
-                    <ul class="space-y-4">
-                        <li class="flex items-center space-x-4">
-                             <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-green-100 text-green-700 rounded-full">
-                                <ion-icon name="checkmark-done-outline" class="text-xl"></ion-icon>
-                            </div>
-                            <p class="text-slate-600 text-sm flex-grow">Penjualan <span class="font-semibold text-slate-900">5 ekor kambing</span> berhasil dicatat oleh Admin.</p>
-                            <span class="text-xs text-slate-400 ml-auto flex-shrink-0">5 menit lalu</span>
-                        </li>
-                         <li class="flex items-center space-x-4">
-                            <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-700 rounded-full">
-                               <ion-icon name="medkit-outline" class="text-xl"></ion-icon>
-                            </div>
-                            <p class="text-slate-600 text-sm flex-grow">Jadwal vaksinasi untuk <span class="font-semibold text-slate-900">Sapi #S012</span> telah diperbarui.</p>
-                            <span class="text-xs text-slate-400 ml-auto flex-shrink-0">1 jam lalu</span>
-                        </li>
-                        <li class="flex items-center space-x-4">
-                             <div class="flex-shrink-0 w-10 h-10 flex items-center justify-center bg-yellow-100 text-yellow-700 rounded-full">
-                                <ion-icon name="warning-outline" class="text-xl"></ion-icon>
-                            </div>
-                            <p class="text-slate-600 text-sm flex-grow">Stok <span class="font-semibold text-slate-900">Pakan Konsentrat</span> menipis.</p>
-                            <span class="text-xs text-slate-400 ml-auto flex-shrink-0">3 jam lalu</span>
-                        </li>
-                    </ul>
-                </div>
-            </section>
+            @include('menu.partials.activity_card', ['recentActivities' => $recentActivities])
         </main>
     </div>
 
     @include('layouts.admin.logout_modal')
 
-    {{-- SCRIPT LENGKAP DAN TIDAK DIPOTONG --}}
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const cards = document.querySelectorAll('.card-container');
@@ -125,14 +95,12 @@
                     const x = e.clientX - rect.left;
                     const y = e.clientY - rect.top;
 
-                    // Efek 3D Tilt
-                    const rotateX = (y - rect.height / 2) / -15; // Miring atas-bawah
-                    const rotateY = (x - rect.width / 2) / 15;   // Miring kiri-kanan
+                    const rotateX = (y - rect.height / 2) / -15;
+                    const rotateY = (x - rect.width / 2) / 15;
                     card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
                 });
 
                 card.addEventListener('mouseleave', () => {
-                    // Reset ke posisi semula
                     card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
                 });
             });
@@ -179,7 +147,7 @@
                 setTimeout(() => {
                     modal.style.display = 'none';
                     modal.classList.add('pointer-events-none');
-                }, 300); // Durasi transisi diperpanjang sedikit
+                }, 300);
             }
         }
 

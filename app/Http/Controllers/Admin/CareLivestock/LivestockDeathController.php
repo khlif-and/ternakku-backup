@@ -63,16 +63,10 @@ public function create($farmId)
 {
     $farm = request()->attributes->get('farm');
     if (!$farm) abort(404, 'Farm tidak ditemukan');
-
-    // Hanya ternak hidup yang bisa dipilih
     $livestocks = \App\Models\Livestock::where('farm_id', $farm->id)
         ->where('livestock_status_id', \App\Enums\LivestockStatusEnum::HIDUP->value)
         ->get();
-
-    // Siapkan data penyakit, dsb jika butuh dropdown
-    $diseases = DB::table('diseases')->pluck('name', 'id'); // Atur sesuai kebutuhan
-
-    // CUMA RETURN SEKALI, setelah semua variable ADA
+    $diseases = DB::table('diseases')->pluck('name', 'id');
     return view('admin.care_livestock.livestock_death.create', compact('farm', 'livestocks', 'diseases'));
 }
 
@@ -91,11 +85,8 @@ public function store(LivestockDeathStoreRequest $request, $farmId)
         if (!$livestock || $livestock->livestock_status_id !== LivestockStatusEnum::HIDUP->value) {
             return redirect()->back()->withErrors(['livestock_id' => 'Ternak tidak ditemukan atau sudah mati.']);
         }
-
-        // Hapus otomatis semua data penjualan ternak ini (jika ada)
         \App\Models\LivestockSaleWeightD::where('livestock_id', $livestock->id)->delete();
 
-        // Input data kematian ternak
         LivestockDeath::create([
             'farm_id'        => $farm->id,
             'transaction_date' => $validated['transaction_date'],
@@ -134,7 +125,6 @@ public function store(LivestockDeathStoreRequest $request, $farmId)
 
         $death = LivestockDeath::with('livestock')->where('farm_id', $farm->id)->findOrFail($id);
 
-        // Semua ternak (boleh juga hanya yang status HIDUP atau MATI saja)
         $livestocks = Livestock::where('farm_id', $farm->id)->get();
 
         $diseases = DB::table('diseases')->pluck('name', 'id');
@@ -162,7 +152,7 @@ public function store(LivestockDeathStoreRequest $request, $farmId)
                 'notes'            => $validated['notes'] ?? null,
             ]);
 
-            // Update status ternak jika id berubah
+
             if ($oldLivestockId && $oldLivestockId != $validated['livestock_id']) {
                 $old = Livestock::find($oldLivestockId);
                 if ($old && $old->livestock_status_id == LivestockStatusEnum::MATI->value) {

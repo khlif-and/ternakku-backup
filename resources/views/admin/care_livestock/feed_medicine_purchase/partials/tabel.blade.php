@@ -1,17 +1,17 @@
 <div class="flex flex-col sm:flex-row items-center justify-between px-8 py-4 gap-4">
     <div>
-        <h1 class="text-xl font-bold text-gray-800">Kematian Ternak</h1>
-        <p class="mt-1 text-sm text-gray-500">Daftar semua data kematian ternak di peternakan.</p>
+        <h1 class="text-xl font-bold text-gray-800">Pembelian Pakan / Obat</h1>
+        <p class="mt-1 text-sm text-gray-500">Daftar semua data Pembelian Pakan / Obat ternak di peternakan.</p>
     </div>
     <div class="flex-shrink-0">
-        <a href="{{ route('admin.care-livestock.livestock-death.create', $farm->id) }}"
+        <a href="{{ route('admin.care-livestock.feed-medicine-purchase.create', $farm->id) }}"
             class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg px-4 py-2 text-sm shadow-sm transition-all">
             <svg xmlns="http:
                 <path fill-rule="evenodd"
                 d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
                 clip-rule="evenodd" />
             </svg>
-            Tambah Kematian Ternak
+            Tambah Pembelian Pakan / Obat
         </a>
     </div>
 </div>
@@ -25,7 +25,7 @@
 @endif
 
 <div class="px-8 py-4">
-    <form method="GET" action="{{ route('admin.care-livestock.livestock-death.index', $farm->id) }}"
+    <form method="GET" action="{{ route('admin.care-livestock.feed-medicine-purchase.index', $farm->id) }}"
         class="relative w-full max-w-xs">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg class="h-5 w-5 text-gray-400" xmlns="http:
@@ -35,7 +35,7 @@
         </div>
         <input type="text" name="search" id="search-input" value="{{ request('search') }}"
             class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 placeholder-gray-500 focus:ring-2 focus:ring-red-500 focus:border-red-500 focus:outline-none transition"
-            placeholder="Cari berdasarkan eartag, jenis...">
+            placeholder="Cari berdasarkan supplier, catatan...">
     </form>
 </div>
 
@@ -50,12 +50,9 @@
                                 $headers = [
                                     'No',
                                     'Tanggal',
-                                    'Eartag',
-                                    'Nama Ternak',
-                                    'Jenis',
-                                    'Ras',
-                                    'Penyakit',
-                                    'Indikasi',
+                                    'Supplier',
+                                    'Total Item',
+                                    'Total Harga',
                                     'Catatan',
                                     'Aksi',
                                 ];
@@ -69,38 +66,29 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y divide-gray-200">
-                        @forelse($deaths as $index => $death)
+                        @forelse($data as $index => $purchase)
                             <tr class="hover:bg-gray-50 transition-colors duration-150">
                                 <td class="px-6 py-4 text-sm text-gray-500">
-                                    {{ $deaths->firstItem() + $index }}
+                                    {{ $index + 1 }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-800">
-                                    {{ \Carbon\Carbon::parse($death->transaction_date)->format('d M Y') ?? '-' }}
+                                    {{ \Carbon\Carbon::parse($purchase->transaction_date)->format('d M Y') ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-800">
-                                    {{ $death->livestock->eartag ?? '-' }}
+                                    {{ $purchase->supplier ?? '-' }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-800">
-                                    {{ $death->livestock->name ?? '-' }}
+                                    {{ $purchase->feedMedicinePurchaseItem->count() }}
                                 </td>
                                 <td class="px-6 py-4 text-sm text-gray-800">
-                                    {{ $death->livestock->livestockType->name ?? '-' }}
+                                    Rp{{ number_format($purchase->total_amount, 0, ',', '.') }}
                                 </td>
-                                <td class="px-6 py-4 text-sm text-gray-800">
-                                    {{ $death->livestock->livestockBreed->name ?? '-' }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-800">
-                                    {{ $death->disease->name ?? '-' }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-800">
-                                    {{ $death->indication ?? '-' }}
-                                </td>
-                                <td class="px-6 py-4 text-sm text-gray-800" title="{{ $death->notes }}">
-                                    {{ \Illuminate\Support\Str::limit($death->notes, 20, '...') }}
+                                <td class="px-6 py-4 text-sm text-gray-800" title="{{ $purchase->notes }}">
+                                    {{ \Illuminate\Support\Str::limit($purchase->notes, 20, '...') }}
                                 </td>
                                 <td class="px-6 py-4 text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('admin.care-livestock.livestock-death.edit', [$farm->id, $death->id]) }}"
+                                        <a href="{{ route('admin.care-livestock.feed-medicine-purchase.edit', [$farm->id, $purchase->id]) }}"
                                             class="text-red-600 hover:text-red-900 p-2 hover:bg-gray-100 rounded-full"
                                             title="Edit">
                                             <svg xmlns="http:
@@ -114,7 +102,7 @@
                                             </svg>
                                         </a>
                                         <form
-                                            action="{{ route('admin.care-livestock.livestock-death.destroy', [$farm->id, $death->id]) }}"
+                                            action="{{ route('admin.care-livestock.feed-medicine-purchase.destroy', [$farm->id, $purchase->id]) }}"
                                             method="POST"
                                             onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                             @csrf
@@ -136,31 +124,14 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="11" class="text-center py-10 text-gray-500">
-                                    Belum ada data kematian ternak.
+                                <td colspan="7" class="text-center py-10 text-gray-500">
+                                    Belum ada data pembelian pakan/obat.
                                 </td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-8 py-4">
-    <div class="text-sm text-gray-700">
-        Menampilkan
-        <span class="font-medium">{{ $deaths->firstItem() }}</span>
-        sampai
-        <span class="font-medium">{{ $deaths->lastItem() }}</span>
-        dari
-        <span class="font-medium">{{ $deaths->total() }}</span>
-        hasil
-    </div>
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-8 py-4">
-        <div class="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto">
-            {{ $deaths->links('vendor.pagination.modern-pagination') }}
         </div>
     </div>
 </div>

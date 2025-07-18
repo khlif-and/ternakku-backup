@@ -58,7 +58,6 @@ class LivestockSaleWeightController extends Controller
     public function create(Request $request)
     {
         $farm = $request->attributes->get('farm');
-        // HANYA ternak HIDUP yang tampil di dropdown
         $livestockSaleWeight = Livestock::with(['livestockType', 'livestockBreed'])
             ->where('farm_id', $farm->id)
             ->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
@@ -77,7 +76,6 @@ class LivestockSaleWeightController extends Controller
         try {
             $livestock = Livestock::find($validated['livestock_id']);
 
-            // CEK STATUS HIDUP
             if (!$livestock || $livestock->livestock_status_id !== LivestockStatusEnum::HIDUP->value) {
                 return redirect()->back()->withErrors(['livestock_id' => 'Ternak tidak ditemukan atau sudah tidak hidup.']);
             }
@@ -102,7 +100,6 @@ class LivestockSaleWeightController extends Controller
 
             LivestockSaleWeightD::create($detailData);
 
-            // SET TERJUAL
             $livestock->update(['livestock_status_id' => LivestockStatusEnum::TERJUAL->value]);
 
             DB::commit();
@@ -129,7 +126,6 @@ class LivestockSaleWeightController extends Controller
 
         $saleWeight = LivestockSaleWeightD::whereHas('livestockSaleWeightH', fn($q) => $q->where('farm_id', $farm->id))->findOrFail($id);
 
-        // KASIH PILIHAN TERNak yang masih hidup atau memang TERNak ini (biar edit bisa, meski status sudah TERJUAL)
         $livestockSaleWeight = Livestock::where('farm_id', $farm->id)
             ->where(function ($q) use ($saleWeight) {
                 $q->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
@@ -153,7 +149,6 @@ class LivestockSaleWeightController extends Controller
 
             $oldLivestockId = $saleWeight->livestock_id;
 
-            // Kalau ganti ternak, pastikan yg baru status HIDUP
             if ($validated['livestock_id'] != $oldLivestockId) {
                 $newLivestock = Livestock::find($validated['livestock_id']);
                 if (!$newLivestock || $newLivestock->livestock_status_id !== LivestockStatusEnum::HIDUP->value) {
@@ -186,7 +181,6 @@ class LivestockSaleWeightController extends Controller
                 $saleWeight->save();
             }
 
-            // Update status lama
             if ($oldLivestockId !== $validated['livestock_id']) {
                 $old = Livestock::find($oldLivestockId);
                 if ($old && $old->livestock_status_id === LivestockStatusEnum::TERJUAL->value) {
