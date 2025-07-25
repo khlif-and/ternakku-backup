@@ -1,6 +1,4 @@
 @php
-    // Data sudah HARUS collection/array of milk production model dari controller!
-    // Example: $milkProductionData = App\Models\MilkProductionGlobal::latest()->take(10)->get();
     $labelDates = $milkProductionData->pluck('transaction_date')->map(fn($d) => \Carbon\Carbon::parse($d)->format('d M'))->values();
     $quantityData = $milkProductionData->pluck('quantity_liters')->values();
 @endphp

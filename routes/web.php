@@ -26,6 +26,9 @@ use App\Http\Controllers\Admin\CareLivestock\FeedMedicinePurchaseController;
 use App\Http\Controllers\Admin\CareLivestock\MilkProductionGlobalController;
 use App\Http\Controllers\Admin\CareLivestock\MilkAnalysisColonyController;
 use App\Http\Controllers\Admin\CareLivestock\MilkAnalysisGlobalController;
+use App\Http\Controllers\Admin\CareLivestock\ColonyLivestock\FeedingColonyController;
+use App\Http\Controllers\Admin\CareLivestock\ColonyLivestock\TreatmentColonyController;
+
 
 
 
@@ -156,9 +159,11 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
         Route::get('/create', [PenController::class, 'create'])->name('admin.care-livestock.pens.create');
         Route::post('/', [PenController::class, 'store'])->name('admin.care-livestock.pens.store');
         Route::get('{pen_id}/edit', [PenController::class, 'edit'])->name('admin.care-livestock.pens.edit');
+        Route::get('{pen_id}', [PenController::class, 'show'])->name('admin.care-livestock.pens.show'); // <--- Tambahan ini!
         Route::put('{pen_id}', [PenController::class, 'update'])->name('admin.care-livestock.pens.update');
         Route::delete('{pen_id}', [PenController::class, 'destroy'])->name('admin.care-livestock.pens.destroy');
     });
+
 
     Route::prefix('care-livestock/{farm_id}/livestock-reception')->middleware('check.farm.access')->group(function () {
         Route::get('/', [LivestockReceptionController::class, 'index'])->name('admin.care-livestock.livestock-reception.index');
@@ -179,114 +184,143 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
         Route::delete('/{id}', [SalesLivestockController::class, 'destroy'])->name('admin.care-livestock.sales-livestock.destroy');
     });
 
-Route::prefix('care-livestock/{farm_id}/livestock-sale-weight')->middleware('check.farm.access')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'index'])
-        ->name('admin.care-livestock.livestock-sale-weight.index');
-    Route::get('/create', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'create'])
-        ->name('admin.care-livestock.livestock-sale-weight.create');
-    Route::post('/', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'store'])
-        ->name('admin.care-livestock.livestock-sale-weight.store');
-    Route::get('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'show'])
-        ->name('admin.care-livestock.livestock-sale-weight.show');
-    Route::get('/{id}/edit', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'edit'])
-        ->name('admin.care-livestock.livestock-sale-weight.edit');
-    Route::put('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'update'])
-        ->name('admin.care-livestock.livestock-sale-weight.update');
-    Route::delete('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'destroy'])
-        ->name('admin.care-livestock.livestock-sale-weight.destroy');
-});
-
-Route::prefix('care-livestock/{farm_id}/livestock-death')->middleware('check.farm.access')->group(function () {
-    Route::get('/', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'index'])
-        ->name('admin.care-livestock.livestock-death.index');
-    Route::get('/create', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'create'])
-        ->name('admin.care-livestock.livestock-death.create');
-    Route::post('/', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'store'])
-        ->name('admin.care-livestock.livestock-death.store');
-    Route::get('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'show'])
-        ->name('admin.care-livestock.livestock-death.show');
-    Route::get('/{id}/edit', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'edit'])
-        ->name('admin.care-livestock.livestock-death.edit');
-    Route::put('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'update'])
-        ->name('admin.care-livestock.livestock-death.update');
-    Route::delete('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'destroy'])
-        ->name('admin.care-livestock.livestock-death.destroy');
-});
-
-Route::prefix('care-livestock/{farm_id}/feed-medicine-purchase')->middleware('check.farm.access')->group(function () {
-    Route::get('/', [FeedMedicinePurchaseController::class, 'index'])
-        ->name('admin.care-livestock.feed-medicine-purchase.index');
-    Route::get('/create', [FeedMedicinePurchaseController::class, 'create'])
-        ->name('admin.care-livestock.feed-medicine-purchase.create');
-    Route::post('/', [FeedMedicinePurchaseController::class, 'store'])
-        ->name('admin.care-livestock.feed-medicine-purchase.store');
-    Route::get('/{id}', [FeedMedicinePurchaseController::class, 'show'])
-        ->name('admin.care-livestock.feed-medicine-purchase.show');
-    Route::get('/{id}/edit', [FeedMedicinePurchaseController::class, 'edit'])
-        ->name('admin.care-livestock.feed-medicine-purchase.edit');
-    Route::put('/{id}', [FeedMedicinePurchaseController::class, 'update'])
-        ->name('admin.care-livestock.feed-medicine-purchase.update');
-    Route::delete('/{id}', [FeedMedicinePurchaseController::class, 'destroy'])
-        ->name('admin.care-livestock.feed-medicine-purchase.destroy');
-});
-
-Route::prefix('care-livestock/{farm_id}/milk-production-global')
-    ->middleware('check.farm.access')
-    ->group(function () {
-        Route::get('/', [MilkProductionGlobalController::class, 'index'])
-            ->name('admin.care-livestock.milk-production-global.index');
-        Route::get('/create', [MilkProductionGlobalController::class, 'create'])
-            ->name('admin.care-livestock.milk-production-global.create');
-        Route::post('/', [MilkProductionGlobalController::class, 'store'])
-            ->name('admin.care-livestock.milk-production-global.store');
-        Route::get('/{id}', [MilkProductionGlobalController::class, 'show'])
-            ->name('admin.care-livestock.milk-production-global.show');
-        Route::get('/{id}/edit', [MilkProductionGlobalController::class, 'edit'])
-            ->name('admin.care-livestock.milk-production-global.edit');
-        Route::put('/{id}', [MilkProductionGlobalController::class, 'update'])
-            ->name('admin.care-livestock.milk-production-global.update');
-        Route::delete('/{id}', [MilkProductionGlobalController::class, 'destroy'])
-            ->name('admin.care-livestock.milk-production-global.destroy');
+    Route::prefix('care-livestock/{farm_id}/livestock-sale-weight')->middleware('check.farm.access')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'index'])
+            ->name('admin.care-livestock.livestock-sale-weight.index');
+        Route::get('/create', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'create'])
+            ->name('admin.care-livestock.livestock-sale-weight.create');
+        Route::post('/', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'store'])
+            ->name('admin.care-livestock.livestock-sale-weight.store');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'show'])
+            ->name('admin.care-livestock.livestock-sale-weight.show');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'edit'])
+            ->name('admin.care-livestock.livestock-sale-weight.edit');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'update'])
+            ->name('admin.care-livestock.livestock-sale-weight.update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockSaleWeightController::class, 'destroy'])
+            ->name('admin.care-livestock.livestock-sale-weight.destroy');
     });
+
+    Route::prefix('care-livestock/{farm_id}/livestock-death')->middleware('check.farm.access')->group(function () {
+        Route::get('/', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'index'])
+            ->name('admin.care-livestock.livestock-death.index');
+        Route::get('/create', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'create'])
+            ->name('admin.care-livestock.livestock-death.create');
+        Route::post('/', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'store'])
+            ->name('admin.care-livestock.livestock-death.store');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'show'])
+            ->name('admin.care-livestock.livestock-death.show');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'edit'])
+            ->name('admin.care-livestock.livestock-death.edit');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'update'])
+            ->name('admin.care-livestock.livestock-death.update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\CareLivestock\LivestockDeathController::class, 'destroy'])
+            ->name('admin.care-livestock.livestock-death.destroy');
+    });
+
+    Route::prefix('care-livestock/{farm_id}/feed-medicine-purchase')->middleware('check.farm.access')->group(function () {
+        Route::get('/', [FeedMedicinePurchaseController::class, 'index'])
+            ->name('admin.care-livestock.feed-medicine-purchase.index');
+        Route::get('/create', [FeedMedicinePurchaseController::class, 'create'])
+            ->name('admin.care-livestock.feed-medicine-purchase.create');
+        Route::post('/', [FeedMedicinePurchaseController::class, 'store'])
+            ->name('admin.care-livestock.feed-medicine-purchase.store');
+        Route::get('/{id}', [FeedMedicinePurchaseController::class, 'show'])
+            ->name('admin.care-livestock.feed-medicine-purchase.show');
+        Route::get('/{id}/edit', [FeedMedicinePurchaseController::class, 'edit'])
+            ->name('admin.care-livestock.feed-medicine-purchase.edit');
+        Route::put('/{id}', [FeedMedicinePurchaseController::class, 'update'])
+            ->name('admin.care-livestock.feed-medicine-purchase.update');
+        Route::delete('/{id}', [FeedMedicinePurchaseController::class, 'destroy'])
+            ->name('admin.care-livestock.feed-medicine-purchase.destroy');
+    });
+
+    Route::prefix('care-livestock/{farm_id}/milk-production-global')
+        ->middleware('check.farm.access')
+        ->group(function () {
+            Route::get('/', [MilkProductionGlobalController::class, 'index'])
+                ->name('admin.care-livestock.milk-production-global.index');
+            Route::get('/create', [MilkProductionGlobalController::class, 'create'])
+                ->name('admin.care-livestock.milk-production-global.create');
+            Route::post('/', [MilkProductionGlobalController::class, 'store'])
+                ->name('admin.care-livestock.milk-production-global.store');
+            Route::get('/{id}', [MilkProductionGlobalController::class, 'show'])
+                ->name('admin.care-livestock.milk-production-global.show');
+            Route::get('/{id}/edit', [MilkProductionGlobalController::class, 'edit'])
+                ->name('admin.care-livestock.milk-production-global.edit');
+            Route::put('/{id}', [MilkProductionGlobalController::class, 'update'])
+                ->name('admin.care-livestock.milk-production-global.update');
+            Route::delete('/{id}', [MilkProductionGlobalController::class, 'destroy'])
+                ->name('admin.care-livestock.milk-production-global.destroy');
+        });
 
     Route::prefix('care-livestock/{farm_id}/milk-analysis-colony')
-    ->middleware('check.farm.access')
-    ->group(function () {
-        Route::get('/', [MilkAnalysisColonyController::class, 'index'])
-            ->name('admin.care-livestock.milk-analysis-colony.index');
-        Route::get('/create', [MilkAnalysisColonyController::class, 'create'])
-            ->name('admin.care-livestock.milk-analysis-colony.create');
-        Route::post('/', [MilkAnalysisColonyController::class, 'store'])
-            ->name('admin.care-livestock.milk-analysis-colony.store');
-        Route::get('/{id}', [MilkAnalysisColonyController::class, 'show'])
-            ->name('admin.care-livestock.milk-analysis-colony.show');
-        Route::get('/{id}/edit', [MilkAnalysisColonyController::class, 'edit'])
-            ->name('admin.care-livestock.milk-analysis-colony.edit');
-        Route::put('/{id}', [MilkAnalysisColonyController::class, 'update'])
-            ->name('admin.care-livestock.milk-analysis-colony.update');
-        Route::delete('/{id}', [MilkAnalysisColonyController::class, 'destroy'])
-            ->name('admin.care-livestock.milk-analysis-colony.destroy');
-    });
+        ->middleware('check.farm.access')
+        ->group(function () {
+            Route::get('/', [MilkAnalysisColonyController::class, 'index'])
+                ->name('admin.care-livestock.milk-analysis-colony.index');
+            Route::get('/create', [MilkAnalysisColonyController::class, 'create'])
+                ->name('admin.care-livestock.milk-analysis-colony.create');
+            Route::post('/', [MilkAnalysisColonyController::class, 'store'])
+                ->name('admin.care-livestock.milk-analysis-colony.store');
+            Route::get('/{id}', [MilkAnalysisColonyController::class, 'show'])
+                ->name('admin.care-livestock.milk-analysis-colony.show');
+            Route::get('/{id}/edit', [MilkAnalysisColonyController::class, 'edit'])
+                ->name('admin.care-livestock.milk-analysis-colony.edit');
+            Route::put('/{id}', [MilkAnalysisColonyController::class, 'update'])
+                ->name('admin.care-livestock.milk-analysis-colony.update');
+            Route::delete('/{id}', [MilkAnalysisColonyController::class, 'destroy'])
+                ->name('admin.care-livestock.milk-analysis-colony.destroy');
+        });
 
     Route::prefix('care-livestock/{farm_id}/milk-analysis-global')
+        ->middleware('check.farm.access')
+        ->group(function () {
+            Route::get('/', [MilkAnalysisGlobalController::class, 'index'])
+                ->name('admin.care-livestock.milk-analysis-global.index');
+            Route::get('/create', [MilkAnalysisGlobalController::class, 'create'])
+                ->name('admin.care-livestock.milk-analysis-global.create');
+            Route::post('/', [MilkAnalysisGlobalController::class, 'store'])
+                ->name('admin.care-livestock.milk-analysis-global.store');
+            Route::get('/{id}', [MilkAnalysisGlobalController::class, 'show'])
+                ->name('admin.care-livestock.milk-analysis-global.show');
+            Route::get('/{id}/edit', [MilkAnalysisGlobalController::class, 'edit'])
+                ->name('admin.care-livestock.milk-analysis-global.edit');
+            Route::put('/{id}', [MilkAnalysisGlobalController::class, 'update'])
+                ->name('admin.care-livestock.milk-analysis-global.update');
+            Route::delete('/{id}', [MilkAnalysisGlobalController::class, 'destroy'])
+                ->name('admin.care-livestock.milk-analysis-global.destroy');
+        });
+
+
+Route::prefix('care-livestock/{farm_id}/feeding-colony')
     ->middleware('check.farm.access')
     ->group(function () {
-        Route::get('/', [MilkAnalysisGlobalController::class, 'index'])
-            ->name('admin.care-livestock.milk-analysis-global.index');
-        Route::get('/create', [MilkAnalysisGlobalController::class, 'create'])
-            ->name('admin.care-livestock.milk-analysis-global.create');
-        Route::post('/', [MilkAnalysisGlobalController::class, 'store'])
-            ->name('admin.care-livestock.milk-analysis-global.store');
-        Route::get('/{id}', [MilkAnalysisGlobalController::class, 'show'])
-            ->name('admin.care-livestock.milk-analysis-global.show');
-        Route::get('/{id}/edit', [MilkAnalysisGlobalController::class, 'edit'])
-            ->name('admin.care-livestock.milk-analysis-global.edit');
-        Route::put('/{id}', [MilkAnalysisGlobalController::class, 'update'])
-            ->name('admin.care-livestock.milk-analysis-global.update');
-        Route::delete('/{id}', [MilkAnalysisGlobalController::class, 'destroy'])
-            ->name('admin.care-livestock.milk-analysis-global.destroy');
+        Route::get('/', [FeedingColonyController::class, 'index'])->name('admin.care-livestock.feeding-colony.index');
+        Route::get('/create', [FeedingColonyController::class, 'create'])->name('admin.care-livestock.feeding-colony.create');
+        Route::post('/', [FeedingColonyController::class, 'store'])->name('admin.care-livestock.feeding-colony.store');
+        Route::get('/{id}', [FeedingColonyController::class, 'show'])->name('admin.care-livestock.feeding-colony.show');
+        Route::get('/{id}/edit', [FeedingColonyController::class, 'edit'])->name('admin.care-livestock.feeding-colony.edit');
+        Route::put('/{id}', [FeedingColonyController::class, 'update'])->name('admin.care-livestock.feeding-colony.update');
+        Route::delete('/{id}', [FeedingColonyController::class, 'destroy'])->name('admin.care-livestock.feeding-colony.destroy');
     });
 
-
-
+    Route::prefix('care-livestock/{farm_id}/treatment-colony')
+    ->middleware('check.farm.access')
+    ->group(function () {
+        Route::get('/', [TreatmentColonyController::class, 'index'])
+            ->name('admin.care-livestock.treatment-colony.index');
+        Route::get('/create', [TreatmentColonyController::class, 'create'])
+            ->name('admin.care-livestock.treatment-colony.create');
+        Route::post('/', [TreatmentColonyController::class, 'store'])
+            ->name('admin.care-livestock.treatment-colony.store');
+        Route::get('/{id}', [TreatmentColonyController::class, 'show'])
+            ->name('admin.care-livestock.treatment-colony.show');
+        Route::get('/{id}/edit', [TreatmentColonyController::class, 'edit'])
+            ->name('admin.care-livestock.treatment-colony.edit');
+        Route::put('/{id}', [TreatmentColonyController::class, 'update'])
+            ->name('admin.care-livestock.treatment-colony.update');
+        Route::delete('/{id}', [TreatmentColonyController::class, 'destroy'])
+            ->name('admin.care-livestock.treatment-colony.destroy');
+    });
 });

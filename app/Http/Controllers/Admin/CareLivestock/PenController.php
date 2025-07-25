@@ -61,6 +61,16 @@ class PenController extends Controller
         }
     }
 
+    public function show($farmId, $penId)
+{
+    $farm = request()->attributes->get('farm');
+    $pen = $farm->pens()->findOrFail($penId);
+
+    // Bisa tambahkan data lain sesuai kebutuhan ke view
+    return view('admin.care_livestock.pens.show', compact('farm', 'pen'));
+}
+
+
     public function edit($farmId, $penId)
     {
         $farm = request()->attributes->get('farm');

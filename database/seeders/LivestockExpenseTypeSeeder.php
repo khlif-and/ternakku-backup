@@ -21,7 +21,7 @@ class LivestockExpenseTypeSeeder extends Seeder
         ];
 
         foreach ($expenseTypes as $type) {
-            LivestockExpenseType::create($type);
+            LivestockExpenseType::firstOrCreate(['name' => $type['name']]);
         }
     }
 }
