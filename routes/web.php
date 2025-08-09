@@ -26,8 +26,14 @@ use App\Http\Controllers\Admin\CareLivestock\FeedMedicinePurchaseController;
 use App\Http\Controllers\Admin\CareLivestock\MilkProductionGlobalController;
 use App\Http\Controllers\Admin\CareLivestock\MilkAnalysisColonyController;
 use App\Http\Controllers\Admin\CareLivestock\MilkAnalysisGlobalController;
-use App\Http\Controllers\Admin\CareLivestock\ColonyLivestock\FeedingColonyController;
-use App\Http\Controllers\Admin\CareLivestock\ColonyLivestock\TreatmentColonyController;
+use App\Http\Controllers\Admin\CareLivestock\FeedingLivestock\FeedingIndividuController;
+use App\Http\Controllers\Admin\CareLivestock\FeedingLivestock\FeedingColonyController;
+use App\Http\Controllers\Admin\CareLivestock\TreatmentLivestock\TreatmentIndividuController;
+use App\Http\Controllers\Admin\CareLivestock\TreatmentLivestock\TreatmentColonyController;
+use App\Http\Controllers\Admin\CareLivestock\TreatmentSchedule\TreatmentScheduleIndividuController;
+use App\Http\Controllers\Admin\CareLivestock\MutationLivestock\MutationIndividuController;
+use App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi\ArtificialInseminasiController;
+
 
 
 
@@ -293,16 +299,67 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
         });
 
 
-Route::prefix('care-livestock/{farm_id}/feeding-colony')
+    Route::prefix('care-livestock/{farm_id}/feeding-individu')
+        ->middleware('check.farm.access')
+        ->group(function () {
+            Route::get('/', [FeedingIndividuController::class, 'index'])
+                ->name('admin.care-livestock.feeding-individu.index');
+            Route::get('/create', [FeedingIndividuController::class, 'create'])
+                ->name('admin.care-livestock.feeding-individu.create');
+            Route::post('/', [FeedingIndividuController::class, 'store'])
+                ->name('admin.care-livestock.feeding-individu.store');
+            Route::get('/{id}', [FeedingIndividuController::class, 'show'])
+                ->name('admin.care-livestock.feeding-individu.show');
+            Route::get('/{id}/edit', [FeedingIndividuController::class, 'edit'])
+                ->name('admin.care-livestock.feeding-individu.edit');
+            Route::put('/{id}', [FeedingIndividuController::class, 'update'])
+                ->name('admin.care-livestock.feeding-individu.update');
+            Route::delete('/{id}', [FeedingIndividuController::class, 'destroy'])
+                ->name('admin.care-livestock.feeding-individu.destroy');
+        });
+
+    Route::prefix('care-livestock/{farm_id}/feeding-colony')
+        ->middleware('check.farm.access')
+        ->group(function () {
+            Route::get('/', [FeedingColonyController::class, 'index'])
+                ->name('admin.care-livestock.feeding-colony.index');
+            Route::get('/create', [FeedingColonyController::class, 'create'])
+                ->name('admin.care-livestock.feeding-colony.create');
+            Route::post('/', [FeedingColonyController::class, 'store'])
+                ->name('admin.care-livestock.feeding-colony.store');
+            Route::get('/{id}', [FeedingColonyController::class, 'show'])
+                ->name('admin.care-livestock.feeding-colony.show');
+            Route::get('/{id}/edit', [FeedingColonyController::class, 'edit'])
+                ->name('admin.care-livestock.feeding-colony.edit');
+            Route::put('/{id}', [FeedingColonyController::class, 'update'])
+                ->name('admin.care-livestock.feeding-colony.update');
+            Route::delete('/{id}', [FeedingColonyController::class, 'destroy'])
+                ->name('admin.care-livestock.feeding-colony.destroy');
+        });
+
+Route::prefix('care-livestock/{farm_id}/treatment-individu')
     ->middleware('check.farm.access')
     ->group(function () {
-        Route::get('/', [FeedingColonyController::class, 'index'])->name('admin.care-livestock.feeding-colony.index');
-        Route::get('/create', [FeedingColonyController::class, 'create'])->name('admin.care-livestock.feeding-colony.create');
-        Route::post('/', [FeedingColonyController::class, 'store'])->name('admin.care-livestock.feeding-colony.store');
-        Route::get('/{id}', [FeedingColonyController::class, 'show'])->name('admin.care-livestock.feeding-colony.show');
-        Route::get('/{id}/edit', [FeedingColonyController::class, 'edit'])->name('admin.care-livestock.feeding-colony.edit');
-        Route::put('/{id}', [FeedingColonyController::class, 'update'])->name('admin.care-livestock.feeding-colony.update');
-        Route::delete('/{id}', [FeedingColonyController::class, 'destroy'])->name('admin.care-livestock.feeding-colony.destroy');
+        Route::get('/', [TreatmentIndividuController::class, 'index'])
+            ->name('admin.care-livestock.treatment-individu.index');
+
+        Route::get('/create', [TreatmentIndividuController::class, 'create'])
+            ->name('admin.care-livestock.treatment-individu.create');
+
+        Route::post('/', [TreatmentIndividuController::class, 'store'])
+            ->name('admin.care-livestock.treatment-individu.store');
+
+        Route::get('/{id}', [TreatmentIndividuController::class, 'show'])
+            ->name('admin.care-livestock.treatment-individu.show');
+
+        Route::get('/{id}/edit', [TreatmentIndividuController::class, 'edit'])
+            ->name('admin.care-livestock.treatment-individu.edit');
+
+        Route::put('/{id}', [TreatmentIndividuController::class, 'update'])
+            ->name('admin.care-livestock.treatment-individu.update');
+
+        Route::delete('/{id}', [TreatmentIndividuController::class, 'destroy'])
+            ->name('admin.care-livestock.treatment-individu.destroy');
     });
 
     Route::prefix('care-livestock/{farm_id}/treatment-colony')
@@ -310,17 +367,87 @@ Route::prefix('care-livestock/{farm_id}/feeding-colony')
     ->group(function () {
         Route::get('/', [TreatmentColonyController::class, 'index'])
             ->name('admin.care-livestock.treatment-colony.index');
+
         Route::get('/create', [TreatmentColonyController::class, 'create'])
             ->name('admin.care-livestock.treatment-colony.create');
+
         Route::post('/', [TreatmentColonyController::class, 'store'])
             ->name('admin.care-livestock.treatment-colony.store');
+
         Route::get('/{id}', [TreatmentColonyController::class, 'show'])
             ->name('admin.care-livestock.treatment-colony.show');
+
         Route::get('/{id}/edit', [TreatmentColonyController::class, 'edit'])
             ->name('admin.care-livestock.treatment-colony.edit');
+
         Route::put('/{id}', [TreatmentColonyController::class, 'update'])
             ->name('admin.care-livestock.treatment-colony.update');
+
         Route::delete('/{id}', [TreatmentColonyController::class, 'destroy'])
             ->name('admin.care-livestock.treatment-colony.destroy');
     });
+
+    Route::prefix('care-livestock/{farm_id}/treatment-schedule-individu')
+    ->middleware('check.farm.access')
+    ->group(function () {
+        Route::get('/', [TreatmentScheduleIndividuController::class, 'index'])
+            ->name('admin.care-livestock.treatment-schedule-individu.index');
+
+        Route::get('/create', [TreatmentScheduleIndividuController::class, 'create'])
+            ->name('admin.care-livestock.treatment-schedule-individu.create');
+
+        Route::post('/', [TreatmentScheduleIndividuController::class, 'store'])
+            ->name('admin.care-livestock.treatment-schedule-individu.store');
+
+        Route::get('/{id}', [TreatmentScheduleIndividuController::class, 'show'])
+            ->name('admin.care-livestock.treatment-schedule-individu.show');
+
+        Route::get('/{id}/edit', [TreatmentScheduleIndividuController::class, 'edit'])
+            ->name('admin.care-livestock.treatment-schedule-individu.edit');
+
+        Route::put('/{id}', [TreatmentScheduleIndividuController::class, 'update'])
+            ->name('admin.care-livestock.treatment-schedule-individu.update');
+
+        Route::delete('/{id}', [TreatmentScheduleIndividuController::class, 'destroy'])
+            ->name('admin.care-livestock.treatment-schedule-individu.destroy');
+    });
+
+Route::prefix('care-livestock/{farm_id}/mutation-individu')
+    ->middleware('check.farm.access')
+    ->group(function () {
+        Route::get('/', [MutationIndividuController::class, 'index'])
+            ->name('admin.care-livestock.mutation-individu.index');
+
+        Route::get('/create', [MutationIndividuController::class, 'create'])
+            ->name('admin.care-livestock.mutation-individu.create');
+
+        Route::post('/', [MutationIndividuController::class, 'store'])
+            ->name('admin.care-livestock.mutation-individu.store');
+
+        Route::get('/{id}', [MutationIndividuController::class, 'show'])
+            ->name('admin.care-livestock.mutation-individu.show');
+
+        Route::get('/{id}/edit', [MutationIndividuController::class, 'edit'])
+            ->name('admin.care-livestock.mutation-individu.edit');
+
+        Route::put('/{id}', [MutationIndividuController::class, 'update'])
+            ->name('admin.care-livestock.mutation-individu.update');
+
+        Route::delete('/{id}', [MutationIndividuController::class, 'destroy'])
+            ->name('admin.care-livestock.mutation-individu.destroy');
+    });
+
+Route::prefix('care-livestock/{farm_id}/artificial-inseminasi')
+    ->middleware('check.farm.access')
+    ->name('admin.care_livestock.artificial_inseminasi.')
+    ->group(function () {
+        Route::get('/',        [ArtificialInseminasiController::class, 'index'])->name('index');
+        Route::get('/create',  [ArtificialInseminasiController::class, 'create'])->name('create');
+        Route::post('/',       [ArtificialInseminasiController::class, 'store'])->name('store');
+        Route::get('/{id}',    [ArtificialInseminasiController::class, 'show'])->name('show');
+        Route::get('/{id}/edit',[ArtificialInseminasiController::class, 'edit'])->name('edit');
+        Route::put('/{id}',    [ArtificialInseminasiController::class, 'update'])->name('update');
+        Route::delete('/{id}', [ArtificialInseminasiController::class, 'destroy'])->name('destroy');
+    });
+
 });

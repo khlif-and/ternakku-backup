@@ -8,13 +8,10 @@
     <link rel="icon" href="{{ asset('admin/img/kaiadmin/favicon.ico') }}" type="image/x-icon" />
 
     <script src="https://cdn.tailwindcss.com"></script>
-
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
@@ -60,6 +57,12 @@
 
 <body class="bg-gray-100 min-h-screen" x-data="{ sidebarCollapsed: false, submenuOpen: false, logoutModal: false }">
     <div class="flex h-screen overflow-hidden">
+
+        @php
+            // Fallback untuk menghindari Undefined variable $farm
+            $farm = $farm ?? request()->attributes->get('farm');
+        @endphp
+
         @include('layouts.care_livestock.sidebar', ['farm' => $farm])
 
         <div class="flex flex-col flex-1 min-w-0 h-screen overflow-y-auto">

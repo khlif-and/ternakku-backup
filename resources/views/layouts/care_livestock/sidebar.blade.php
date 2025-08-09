@@ -1,14 +1,11 @@
-<aside
-    x-data="{
-        sidebarCollapsed: false,
-        peliharaOpen: false,
-        koloniOpen: false
-    }"
-    :class="{ 'closed': sidebarCollapsed }"
-    class="sidebar text-white relative z-30"
->
+<aside x-data="{
+    sidebarCollapsed: false,
+    peliharaOpen: false,
+    koloniOpen: false
+}" :class="{ 'closed': sidebarCollapsed }" class="sidebar text-white relative z-30">
     <div class="px-4 pt-6 pb-2 text-center">
-        <a href="{{ route('admin.care-livestock.dashboard', ['farm_id' => $farm->id]) }}" class="flex justify-center w-full">
+        <a href="{{ route('admin.care-livestock.dashboard', ['farm_id' => $farm->id]) }}"
+            class="flex justify-center w-full">
             <span
                 class="font-bold text-white text-base font-[Oleo_Script,cursive] navbar-brand tracking-wide sidebar-label text-center block"
                 style="font-family:'Oleo Script',cursive;">
@@ -75,24 +72,57 @@
                 </button>
                 <div x-show="koloniOpen" x-transition
                     class="mt-2 bg-white rounded-md shadow px-3 py-2 text-gray-800 space-y-1">
-<a href="{{ route('admin.care-livestock.feeding-colony.index', $farm->id) }}"
-   class="block hover:bg-gray-100 px-3 py-1 rounded text-sm {{ request()->routeIs('admin.care-livestock.feeding-colony.*') ? 'font-semibold text-green-700 bg-green-50' : 'text-gray-700' }}">
-    Pemberian Pakan Koloni
-</a>
+                    <a href="{{ route('admin.care-livestock.feeding-colony.index', $farm->id) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm {{ request()->routeIs('admin.care-livestock.feeding-colony.*') ? 'font-semibold text-green-700 bg-green-50' : 'text-gray-700' }}">
+                        Pemberian Pakan Koloni
+                    </a>
 
-<a href="{{ route('admin.care-livestock.treatment-colony.index', $farm->id) }}"
-    class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-    Perawatan Pengobatan Koloni
-</a>
-
-                                        <a href="#"
+                    <a href="{{ route('admin.care-livestock.treatment-colony.index', $farm->id) }}"
                         class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Perawatan Pengobatan Koloni
+                    </a>
+
+                    <a href="#" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
                         Produksi Susu
                     </a>
-                                        <a href="#"
-                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                    <a href="#" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
                         Analisis Susu
                     </a>
+                    <a href="{{ route('admin.care-livestock.feeding-individu.index', ['farm_id' => $farm->id]) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Pemberian Pakan Individu
+                    </a>
+                    <a href="{{ route('admin.care-livestock.feeding-colony.index', ['farm_id' => $farm->id]) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Pemberian Pakan Koloni
+                    </a>
+                    <a href="{{ route('admin.care-livestock.treatment-individu.index', ['farm_id' => $farm->id]) }}"
+                        class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                        Treatment Individu
+                    </a>
+<a href="{{ route('admin.care-livestock.treatment-colony.index', ['farm_id' => $farm->id]) }}"
+   class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+    Treatment Koloni
+</a>
+<a href="{{ route('admin.care-livestock.treatment-schedule-individu.index', ['farm_id' => $farm->id]) }}"
+   class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+    Jadwal Treatment Individu
+</a>
+<a href="{{ route('admin.care-livestock.mutation-individu.index', ['farm_id' => $farm->id]) }}"
+   class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+    Mutasi Individu
+</a>
+<a href="{{ route('admin.care_livestock.artificial_inseminasi.index', ['farm_id' => $farm->id]) }}"
+   class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+    Artificial Inseminasi
+</a>
+
+
+
+
+
+
+
                 </div>
             </li>
         </ul>
