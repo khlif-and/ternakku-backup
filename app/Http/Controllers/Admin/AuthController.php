@@ -65,33 +65,47 @@ class AuthController extends Controller
         return redirect()->route('dashboard')->with('success', $response['message']);
     }
 
-    public function register(RegisterRequest $request)
-    {
+public function register(RegisterRequest $request)
+{
+    $user = null;
+
+    try {
+        $existingUser = User::where('email', $request->email)->first();
+        if ($existingUser && is_null($existingUser->email_verified_at)) {
+            session(['pending_verify_email' => $existingUser->email]);
+            return $this->redirectToVerify($request, $existingUser);
+        }
+
+        $user = $this->authService->register($request->validated());
+
+        // Assign role: kalau gagal, cuma warning, jangan batalkan flow
         try {
-            $existingUser = User::where('email', $request->email)->first();
-
-            if ($existingUser && is_null($existingUser->email_verified_at)) {
-                return $this->redirectToVerify($request, $existingUser);
-            }
-
-            $user = $this->authService->register($request->validated());
-
             $user->roles()->syncWithoutDetaching([
                 \App\Enums\RoleEnum::FARMER->value => [
                     'created_at' => now(),
                     'updated_at' => now(),
                 ],
             ]);
-
-            session(['pending_verify_email' => $user->email]);
-
-            return $this->redirectToVerify($request, $user);
-        } catch (\Throwable $e) {
-            return back()
-                ->withErrors(['register_error' => 'Registrasi gagal: ' . $e->getMessage()])
-                ->withInput();
+        } catch (\Throwable $roleEx) {
+            \Log::warning('ROLE SYNC FAIL', ['user_id' => $user->id, 'msg' => $roleEx->getMessage()]);
         }
+
+        session(['pending_verify_email' => $user->email]);
+
+        // Redirect ke verify SELALU jalan walau WA gagal
+        return $this->redirectToVerify($request, $user);
+
+    } catch (\Throwable $e) {
+        \Log::error('REGISTER FAIL', [
+            'user_id' => $user?->id,
+            'msg'     => $e->getMessage(),
+        ]);
+        return back()
+            ->withErrors(['register_error' => 'Registrasi gagal: ' . $e->getMessage()])
+            ->withInput();
     }
+}
+
 
     public function verifyOtp(VerifyOtpRequest $request)
     {

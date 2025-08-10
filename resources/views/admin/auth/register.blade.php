@@ -10,63 +10,113 @@
         <h2 class="text-3xl font-bold text-gray-900 mb-2">Daftar Akun Ternakku</h2>
         <p class="text-gray-500 mb-6">Silahkan, isi data diri untuk membuat akun baru di Ternakku</p>
 
+        {{-- Error umum dari controller (misal kirim OTP gagal, role sync gagal, dll) --}}
+        @if ($errors->has('register_error'))
+            <div class="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                {{ $errors->first('register_error') }}
+            </div>
+        @endif
+
         <form method="POST" action="{{ url('auth/register') }}" class="space-y-4">
             @csrf
 
-            <input type="text" name="name" placeholder="Nama Lengkap"
+            <input
+                type="text"
+                name="name"
+                placeholder="Nama Lengkap"
                 class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#255F38] outline-none"
-                required value="{{ old('name') }}">
-            @error('name') <p class="text-sm text-red-500">{{ $message }}</p> @enderror
+                required
+                value="{{ old('name') }}"
+            >
+            @error('name')
+                <p class="text-sm text-red-500">{{ $message }}</p>
+            @enderror
 
-            <input type="email" name="email" placeholder="Email"
+            <input
+                type="email"
+                name="email"
+                placeholder="Email"
                 class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#255F38] outline-none"
-                required value="{{ old('email') }}">
-            @error('email') <p class="text-sm text-red-500">{{ $message }}</p> @enderror
+                required
+                value="{{ old('email') }}"
+            >
+            @error('email')
+                <p class="text-sm text-red-500">{{ $message }}</p>
+            @enderror
 
-            <input type="text" name="phone_number" placeholder="Nomor HP (contoh: 6281234567890)"
+            <input
+                type="text"
+                name="phone_number"
+                placeholder="Nomor HP (contoh: 6281234567890)"
                 class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#255F38] outline-none"
-                required value="{{ old('phone_number') }}">
-            @error('phone_number') <p class="text-sm text-red-500">{{ $message }}</p> @enderror
+                required
+                value="{{ old('phone_number') }}"
+            >
+            @error('phone_number')
+                <p class="text-sm text-red-500">{{ $message }}</p>
+            @enderror
 
             <div class="relative">
-                <input id="passwordsignin" type="password" name="password" placeholder="Password"
+                <input
+                    id="passwordsignin"
+                    type="password"
+                    name="password"
+                    placeholder="Password"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:ring-2 focus:ring-[#255F38] outline-none"
-                    required>
-                <button type="button" id="togglePasswordSignin"
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                    required
+                >
+                <button
+                    type="button"
+                    id="togglePasswordSignin"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
                     <svg id="eyeIconSignin" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
+                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
-                            c4.478 0 8.268 2.943 9.542 7
-                            -1.274 4.057-5.064 7-9.542 7
-                            -4.477 0-8.268-2.943-9.542-7z" />
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5
+                                 c4.478 0 8.268 2.943 9.542 7
+                                 -1.274 4.057-5.064 7-9.542 7
+                                 -4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                 </button>
             </div>
-            @error('password') <p class="text-sm text-red-500">{{ $message }}</p> @enderror
+            @error('password')
+                <p class="text-sm text-red-500">{{ $message }}</p>
+            @enderror
 
             <div class="relative">
-                <input id="confirmpassword" type="password" name="password_confirmation" placeholder="Konfirmasi Password"
+                <input
+                    id="confirmpassword"
+                    type="password"
+                    name="password_confirmation"
+                    placeholder="Konfirmasi Password"
                     class="w-full border border-gray-300 rounded-lg px-4 py-2 pr-10 focus:ring-2 focus:ring-[#255F38] outline-none"
-                    required>
-                <button type="button" id="toggleConfirmPassword"
-                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+                    required
+                >
+                <button
+                    type="button"
+                    id="toggleConfirmPassword"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                >
                     <svg id="eyeIconConfirm" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor">
+                         viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5
-                            c4.478 0 8.268 2.943 9.542 7
-                            -1.274 4.057-5.064 7-9.542 7
-                            -4.477 0-8.268-2.943-9.542-7z" />
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5
+                                 c4.478 0 8.268 2.943 9.542 7
+                                 -1.274 4.057-5.064 7-9.542 7
+                                 -4.477 0-8.268-2.943-9.542-7z" />
                     </svg>
                 </button>
             </div>
 
-            <button type="submit"
-                class="w-full bg-[#255F38] hover:bg-[#1d4c2d] text-white font-medium py-2 rounded-lg transition duration-200">
+            <button
+                type="submit"
+                class="w-full bg-[#255F38] hover:bg-[#1d4c2d] text-white font-medium py-2 rounded-lg transition duration-200"
+            >
                 Sign Up
             </button>
         </form>
@@ -80,7 +130,7 @@
     <div class="hidden md:flex col-span-2 items-center justify-center p-6 overflow-hidden">
         <div class="bg-white rounded-3xl overflow-hidden w-full max-w-[460px] aspect-[4/5] xl:w-[230%] xl:h-[78vh] xl:max-w-none xl:aspect-auto">
             <img src="{{ asset('home/assets/img/auth_bg.png') }}" alt="Register Illustration"
-                class="w-full h-full object-cover rounded-2xl">
+                 class="w-full h-full object-cover rounded-2xl">
         </div>
     </div>
 </div>
