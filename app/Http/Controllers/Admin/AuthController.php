@@ -168,22 +168,20 @@ class AuthController extends Controller
     /**
      * Bangun URL OTP verify yang aman untuk prod + dukung AJAX.
      */
-    private function redirectToVerify(Request $request, User $user)
-    {
-        $next = route('verify.phone', [
-            'email' => $user->email,
-            'phone' => $user->phone_number,
-        ]);
+private function redirectToVerify(Request $request, User $user)
+{
+    $next = route('verify.phone', [
+        'email' => $user->email,
+        'phone' => $user->phone_number,
+    ]);
 
-        // Jika request expect JSON (AJAX/fetch), kembalikan payload supaya client yang navigate.
-        if ($request->expectsJson()) {
-            return response()->json([
-                'ok'   => true,
-                'next' => $next,
-            ], 200);
-        }
-
-        // Otherwise, redirect biasa (302) pakai URL absolut dari APP_URL.
-        return redirect()->to($next);
+    // Kalau benar-benar submit via AJAX, baru kasih JSON.
+    if ($request->ajax()) {
+        return response()->json(['ok' => true, 'next' => $next], 200);
     }
+
+    // Default: redirect biasa (302)
+    return redirect()->to($next);
+}
+
 }
