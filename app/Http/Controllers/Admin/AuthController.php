@@ -166,22 +166,21 @@ class AuthController extends Controller
     }
 
     /**
-     * Bangun URL OTP verify yang aman untuk prod + dukung AJAX.
+     * Halaman form verifikasi OTP.
      */
-private function redirectToVerify(Request $request, User $user)
-{
-    $next = route('verify.phone', [
-        'email' => $user->email,
-        'phone' => $user->phone_number,
-    ]);
-
-    // Kalau benar-benar submit via AJAX, baru kasih JSON.
-    if ($request->ajax()) {
-        return response()->json(['ok' => true, 'next' => $next], 200);
+    public function showVerifyForm(Request $request)
+    {
+        return view('admin.auth.verify-phone');
     }
 
-    // Default: redirect biasa (302)
-    return redirect()->to($next);
-}
-
+    /**
+     * Redirect ke halaman verifikasi OTP (selalu 302).
+     */
+    private function redirectToVerify(Request $request, User $user)
+    {
+        return redirect()->route('verify.phone', [
+            'email' => $user->email,
+            'phone' => $user->phone_number,
+        ]);
+    }
 }
