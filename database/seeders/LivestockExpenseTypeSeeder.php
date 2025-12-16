@@ -14,11 +14,14 @@ class LivestockExpenseTypeSeeder extends Seeder
     public function run(): void
     {
         $expenseTypes = [
-            ['name' => 'Treatment'],
-            ['name' => 'Feeding'],
-            ['name' => 'Artificial Insemination'],
-            ['name' => 'Natural Insemination'],
+            ['id' => 1, 'name' => 'Treatment'],
+            ['id' => 2, 'name' => 'Feeding'],
+            ['id' => 3, 'name' => 'Artificial Insemination'],
+            ['id' => 4, 'name' => 'Natural Insemination'],
+            ['id' => 5, 'name' => 'Pregnant Check'],
+            ['id' => 6, 'name' => 'Birth'],
         ];
+
 
         foreach ($expenseTypes as $type) {
             LivestockExpenseType::firstOrCreate(['name' => $type['name']]);

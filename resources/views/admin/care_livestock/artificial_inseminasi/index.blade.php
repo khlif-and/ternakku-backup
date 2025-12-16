@@ -9,13 +9,21 @@
     <div id="artificial-inseminasi-list-container"
          class="bg-white rounded-2xl shadow-lg overflow-hidden min-h-[550px] w-full opacity-0 translate-y-4 transition-all duration-700">
 
-        {{-- Panggil partial tabel Artificial Inseminasi --}}
-        @include('admin.care_livestock.artificial_inseminasi.partials.tabel')
-        {{-- Pastikan file partial berada di:
-             resources/views/admin/reproduction/artificial_insemination/partials/tabel.blade.php --}}
+        {{-- Livewire list --}}
+        @livewire('admin.artificial-insemination.index-component', ['farm' => $farm])
+
+        {{-- 🔹 Tambahkan ini --}}
+        @if (session('error'))
+            <div class="px-6 pt-4">
+                <div class="px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-medium">
+                    {{ session('error') }}
+                </div>
+            </div>
+        @endif
     </div>
 </div>
 @endsection
+
 
 @section('script')
 <style>

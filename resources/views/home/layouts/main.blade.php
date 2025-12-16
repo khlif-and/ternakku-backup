@@ -14,7 +14,8 @@
         }
     </style>
 </head>
-<body class="bg-white text-gray-900">
+
+<body class="antialiased">
     {{-- Navbar --}}
     @include('home.partials.navbar')
 
@@ -22,5 +23,18 @@
     <main class="w-full flex flex-col">
         @yield('content')
     </main>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <script>
+        AOS.init();
+    </script>
+
+    @stack('scripts')
+
 </body>
 </html>

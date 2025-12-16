@@ -1,183 +1,131 @@
-<div
-    class="w-full max-w-7xl mx-auto px-4 md:px-10 py-16 md:py-24 flex flex-col md:flex-row items-center md:items-start gap-12 relative overflow-visible">
+<section class="w-full py-16 md:py-24 bg-white text-gray-900 relative overflow-hidden">
 
-    {{-- Kiri: Image HP Demo --}}
-    <div class="flex-1 flex justify-center md:justify-end relative w-full md:w-auto">
-        {{-- Gradient Circle di belakang gambar --}}
-        <div
-            class="absolute -top-10 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:-right-10 w-80 h-80 md:w-[360px] md:h-[360px] rounded-full bg-green-300 opacity-30 blur-3xl z-0">
-        </div>
+    <!-- 🔆 Gradient glow di tengah dan proporsional -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+        w-[90%] h-[60%] bg-amber-400/20 rounded-full blur-[140px] z-0"
+        aria-hidden="true"></div>
 
-        {{-- Gambar HP --}}
-        <img src="{{ asset('home/assets/img/desain.png') }}" alt="Ternakku App Preview"
-            class="floating-animate w-64 md:w-[370px] lg:w-[520px] h-auto block relative z-10"
-            style="margin-bottom: -40px;" loading="lazy" />
-    </div>
+    <div class="w-full max-w-7xl mx-auto px-4 md:px-8 relative z-10">
+        <h1
+            class="text-4xl md:text-5xl lg:text-6xl font-light text-gray-900 text-center max-w-4xl mx-auto mb-16 md:mb-20 leading-tight">
+            Are you ready to start an <br> unmatched golf experience
+        </h1>
 
-    {{-- Kanan: Konten --}}
-    <div class="flex-1 max-w-2xl">
-        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mb-5 text-left leading-tight">
-            Ternakku,
-            <span class="text-green-600">Lebih dari Sekadar Aplikasi</span>
-        </h2>
-        <p class="text-gray-700 text-lg mb-7 font-medium leading-relaxed">
-            Kami hadir untuk membantu peternak Indonesia bertumbuh di era digital.
-            Dengan <span class="text-green-700 font-semibold">Ternakku</span>,
-            urusan ternak, laporan usaha, hingga akses modal jadi <span class="font-semibold text-green-600">satu
-                genggaman</span>.
-        </p>
-        <p class="text-base text-gray-500 font-normal mb-8">
-            Bukan sekadar alat, tapi sahabat perjalanan usahamu.
-        </p>
-        <div class="space-y-6">
-            <div class="flex items-start gap-4">
-                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-green-100 mt-1">
-                    <svg class="h-5 w-5 text-green-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </span>
-                <div>
-                    <span class="font-bold text-gray-900">Kelola ternak otomatis</span>
-                    <div class="text-gray-500 text-sm">Pantau kesehatan, riwayat, dan produktivitas ternak tanpa ribet.
+        <div class="flex flex-col lg:flex-row gap-6">
+
+            <div class="lg:w-5/12">
+                <div
+                    class="bg-gray-100 rounded-[2rem] p-6 md:p-8 flex flex-col h-full min-h-[550px] relative overflow-hidden">
+
+                    <img src="https://i.pinimg.com/736x/1c/ad/ac/1cadac6736fff0a2dddbcd14b3a44f50.jpg" alt="Golf bags in a field"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60 object-center">
+
+                    <div class="relative z-10 flex flex-col justify-between flex-grow h-full">
+                        <h2 class="text-3xl md:text-4xl font-light text-gray-900 leading-snug">
+                            Immerse yourself in prestige and professional growth on California's finest courses
+                        </h2>
+                        <div
+                            class="flex items-center space-x-2 bg-white/40 backdrop-blur-md rounded-full p-2 w-fit mt-8">
+                            <button
+                                class="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center text-gray-800 transition-all hover:bg-black/20">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                            </button>
+                            <button
+                                class="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center text-gray-800 transition-all hover:bg-black/20">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </button>
+                            <button
+                                class="w-10 h-10 rounded-full bg-black/10 flex items-center justify-center text-gray-800 transition-all hover:bg-black/20">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="flex items-start gap-4">
-                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 mt-1">
-                    <svg class="h-5 w-5 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </span>
-                <div>
-                    <span class="font-bold text-gray-900">Laporan usaha instan</span>
-                    <div class="text-gray-500 text-sm">Seluruh pemasukan & pengeluaran langsung tercatat dan rapi.</div>
+
+            <div class="lg:w-3/12 flex flex-col gap-6">
+                <div class="rounded-[2rem] overflow-hidden aspect-[3/4]">
+                    <img src="https://i.pinimg.com/1200x/88/d4/92/88d492f1fa86b56004e75e0a17397f3f.jpg" alt="Woman golfer" class="w-full h-full object-cover">
+                </div>
+
+                <div class="bg-gray-900 text-white rounded-[1.5rem] p-5 flex items-center justify-between gap-4">
+                    <div class="flex items-center">
+                        <div class="flex -space-x-3">
+                            <img class="w-10 h-10 rounded-full border-2 border-gray-900 object-cover"
+                                src="https://i.pinimg.com/736x/f6/18/69/f61869edabb0815b0ecd6828a6abdc1c.jpg" alt="Golf course 1">
+                            <img class="w-10 h-10 rounded-full border-2 border-gray-900 object-cover"
+                                src="https://i.pinimg.com/736x/7e/f0/a3/7ef0a3fd2a7dc10a628a59d7dc6937e3.jpg" alt="Golf course 2">
+                        </div>
+                        <span class="ml-3 text-sm font-medium text-gray-300">Discover world-class golf</span>
+                    </div>
+                    <a href="#"
+                        class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white shadow-md transition-all hover:bg-white/30 flex-shrink-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                        </svg>
+                    </a>
+                </div>
+
+                <p class="text-sm text-gray-600 font-light leading-relaxed">
+                    Located amidst the green landscapes of Los Angeles, our golf club offers perfect conditions for
+                    training and hosting tournaments. This is a space for inspiration, growth, and true sporting drive.
+                </p>
+            </div>
+
+            <div class="lg:w-4/12 flex flex-col gap-6">
+                <a href="#"
+                    class="bg-gray-100 rounded-[1.5rem] p-6 flex items-center justify-between transition-all hover:bg-gray-200">
+                    <div>
+                        <span class="text-sm text-gray-600">California,</span>
+                        <h3 class="text-gray-900 text-lg font-medium">Los Angeles</h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                            stroke="currentColor" class="w-5 h-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                        </svg>
+                    </div>
+                </a>
+
+                <a href="#"
+                    class="bg-gray-900 rounded-[2rem] p-6 md:p-8 flex-grow flex flex-col justify-end min-h-[350px] relative overflow-hidden transition-all group">
+                    <img src="https://i.pinimg.com/1200x/89/b4/28/89b428bf244f201a9209e35209b1a025.jpg" alt="Golfer silhouette"
+                        class="absolute inset-0 w-full h-full object-cover opacity-80 transition-all duration-300 group-hover:opacity-90 group-hover:scale-105">
+
+                    <div class="relative z-10">
+                        <h3 class="text-white text-xl font-medium">The Riviera</h3>
+                        <h2 class="text-white text-3xl md:text-4xl font-light">Golf Club</h2>
+                    </div>
+                </a>
+
+                <div class="flex justify-end">
+                    <a href="#"
+                        class="bg-gray-900 text-white rounded-full w-24 h-24 md:w-28 md:h-28 flex items-center justify-center transition-all hover:bg-black hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="w-10 h-10 md:w-12 md:h-12">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                        </svg>
+                    </a>
                 </div>
             </div>
-            <div class="flex items-start gap-4">
-                <span class="inline-flex items-center justify-center h-8 w-8 rounded-full bg-yellow-100 mt-1">
-                    <svg class="h-5 w-5 text-yellow-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </span>
-                <div>
-                    <span class="font-bold text-gray-900">Akses kemitraan & modal</span>
-                    <div class="text-gray-500 text-sm">Informasi dan pengajuan langsung dari aplikasi, tanpa birokrasi
-                        rumit.</div>
-                </div>
-            </div>
+
         </div>
+
     </div>
-</div>
-
-<div
-    class="w-full max-w-7xl mx-auto px-4 md:px-10 mt-20 md:mt-32 py-16 md:py-24 flex flex-col md:flex-row-reverse items-start gap-12">
-
-    {{-- Kanan: Gambar HP --}}
-    <div class="relative w-full md:w-1/2 flex justify-center md:justify-end">
-        {{-- Circle Gradient (lebih besar dan soft) --}}
-        <div
-            class="absolute top-0 right-1/2 translate-x-1/2 md:right-0 md:translate-x-0 w-[400px] h-[400px] md:w-[480px] md:h-[480px] rounded-full bg-green-200 opacity-40 blur-[100px] z-0">
-        </div>
-
-        {{-- Gambar HP floating --}}
-        <img src="{{ asset('home/assets/img/desain.png') }}" alt="Ternakku App Preview"
-            class="w-64 md:w-[370px] lg:w-[520px] h-auto block relative z-10" style="margin-bottom: -40px;"
-            loading="lazy" />
-    </div>
-
-    {{-- Kiri: Judul + Paragraf + Kotak Kemudahan --}}
-    <div class="w-full md:w-1/2">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-4 leading-tight">
-            Peternak Hebat, <span class="text-green-600">Peternak Tangguh</span>
-        </h2>
-        <p class="text-gray-700 text-base md:text-lg font-medium mb-8 leading-relaxed">
-            Didesain untuk <span class="text-green-700 font-semibold">mendampingi peternak Indonesia</span> menjadi
-            lebih mandiri, digital, dan unggul di pasar. Semua fitur kami hadir untuk membuat pekerjaan Anda lebih
-            ringan dan usaha Anda lebih maju.
-        </p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div
-                class="flex items-start gap-4 p-5 bg-white border border-gray-200 rounded-xl shadow hover:shadow-md transition">
-                <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-green-100">
-                    <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </span>
-                <div>
-                    <div class="font-semibold text-gray-900">Manajemen Ternak</div>
-                    <p class="text-sm text-gray-500">Data ternak tersimpan rapi & lengkap.</p>
-                </div>
-            </div>
-            <div
-                class="flex items-start gap-4 p-5 bg-white border border-gray-200 rounded-xl shadow hover:shadow-md transition">
-                <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-blue-100">
-                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </span>
-                <div>
-                    <div class="font-semibold text-gray-900">Laporan Instan</div>
-                    <p class="text-sm text-gray-500">Pemasukan dan pengeluaran langsung tercatat.</p>
-                </div>
-            </div>
-            <div
-                class="flex items-start gap-4 p-5 bg-white border border-gray-200 rounded-xl shadow hover:shadow-md transition">
-                <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-yellow-100">
-                    <svg class="w-6 h-6 text-yellow-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </span>
-                <div>
-                    <div class="font-semibold text-gray-900">Kemudahan Modal</div>
-                    <p class="text-sm text-gray-500">Ajukan kemitraan langsung dari aplikasi.</p>
-                </div>
-            </div>
-            <div
-                class="flex items-start gap-4 p-5 bg-white border border-gray-200 rounded-xl shadow hover:shadow-md transition">
-                <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-red-100">
-                    <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                </span>
-                <div>
-                    <div class="font-semibold text-gray-900">Pemantauan Kesehatan</div>
-                    <p class="text-sm text-gray-500">Pantau performa & kondisi ternak kapan saja.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-</div>
-
-
-
-
-
-<style>
-    @keyframes floating {
-        0% {
-            transform: translateY(0);
-        }
-
-        50% {
-            transform: translateY(-24px);
-        }
-
-        100% {
-            transform: translateY(0);
-        }
-    }
-
-    .floating-animate {
-        animation: floating 7.5s ease-in-out infinite;
-    }
-</style>
+</section>
