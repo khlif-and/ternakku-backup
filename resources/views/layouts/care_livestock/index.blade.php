@@ -15,6 +15,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
     <style>
+        [x-cloak] { display: none !important; }
+        
         body {
             font-family: 'Public Sans', sans-serif;
         }
@@ -74,7 +76,7 @@
         </div>
     </div>
 
-    <div x-show="logoutModal" @click.away="logoutModal = false" x-transition
+    <div x-cloak x-show="logoutModal" @click.self="logoutModal = false" x-transition
         class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center backdrop-blur-sm">
         <div class="bg-white w-full max-w-md mx-4 rounded-xl shadow-xl overflow-hidden">
             <div class="flex justify-between items-center px-6 py-4 border-b">

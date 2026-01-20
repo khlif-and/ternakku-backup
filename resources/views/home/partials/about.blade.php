@@ -8,7 +8,7 @@
     <div class="w-full max-w-7xl mx-auto px-4 md:px-8 relative z-10">
         <h1
             class="text-4xl md:text-5xl lg:text-6xl font-light text-gray-900 text-center max-w-4xl mx-auto mb-16 md:mb-20 leading-tight">
-            Are you ready to start an <br> unmatched golf experience
+            Siapkah Anda memulai <br> pengalaman beternak digital terbaik?
         </h1>
 
         <div class="flex flex-col lg:flex-row gap-6">
@@ -22,7 +22,7 @@
 
                     <div class="relative z-10 flex flex-col justify-between flex-grow h-full">
                         <h2 class="text-3xl md:text-4xl font-light text-gray-900 leading-snug">
-                            Immerse yourself in prestige and professional growth on California's finest courses
+                            Tingkatkan produktivitas dan kualitas ternak Anda dengan dukungan teknologi terkini dan manajemen profesional
                         </h2>
                         <div
                             class="flex items-center space-x-2 bg-white/40 backdrop-blur-md rounded-full p-2 w-fit mt-8">
@@ -68,7 +68,7 @@
                             <img class="w-10 h-10 rounded-full border-2 border-gray-900 object-cover"
                                 src="https://i.pinimg.com/736x/7e/f0/a3/7ef0a3fd2a7dc10a628a59d7dc6937e3.jpg" alt="Golf course 2">
                         </div>
-                        <span class="ml-3 text-sm font-medium text-gray-300">Discover world-class golf</span>
+                        <span class="ml-3 text-sm font-medium text-gray-300">Temukan standar peternakan modern</span>
                     </div>
                     <a href="#"
                         class="w-9 h-9 rounded-full bg-white/20 flex items-center justify-center text-white shadow-md transition-all hover:bg-white/30 flex-shrink-0">
@@ -81,8 +81,7 @@
                 </div>
 
                 <p class="text-sm text-gray-600 font-light leading-relaxed">
-                    Located amidst the green landscapes of Los Angeles, our golf club offers perfect conditions for
-                    training and hosting tournaments. This is a space for inspiration, growth, and true sporting drive.
+                    Hadir untuk memajukan peternakan Indonesia, kami menyediakan platform digital yang memudahkan monitoring, manajemen kesehatan, dan jual beli ternak secara efisien.
                 </p>
             </div>
 
@@ -90,8 +89,8 @@
                 <a href="#"
                     class="bg-gray-100 rounded-[1.5rem] p-6 flex items-center justify-between transition-all hover:bg-gray-200">
                     <div>
-                        <span class="text-sm text-gray-600">California,</span>
-                        <h3 class="text-gray-900 text-lg font-medium">Los Angeles</h3>
+                        <span class="text-sm text-gray-600">Indonesia,</span>
+                        <h3 class="text-gray-900 text-lg font-medium">Nasional</h3>
                     </div>
                     <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-800">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
@@ -108,8 +107,8 @@
                         class="absolute inset-0 w-full h-full object-cover opacity-80 transition-all duration-300 group-hover:opacity-90 group-hover:scale-105">
 
                     <div class="relative z-10">
-                        <h3 class="text-white text-xl font-medium">The Riviera</h3>
-                        <h2 class="text-white text-3xl md:text-4xl font-light">Golf Club</h2>
+                        <h3 class="text-white text-xl font-medium">Ekosistem</h3>
+                        <h2 class="text-white text-3xl md:text-4xl font-light">Ternakku.id</h2>
                     </div>
                 </a>
 
