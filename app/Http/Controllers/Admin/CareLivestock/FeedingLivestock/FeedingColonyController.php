@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin\CareLivestock\FeedingLivestock;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\Farming\FeedingColonyStoreRequest;
-use App\Http\Requests\Farming\FeedingColonyUpdateRequest;
 use App\Services\Web\Farming\FeedingColony\FeedingColonyService;
 
 class FeedingColonyController extends Controller
@@ -27,11 +25,6 @@ class FeedingColonyController extends Controller
         return $this->service->create($farmId, $request);
     }
 
-    public function store(FeedingColonyStoreRequest $request, $farmId)
-    {
-        return $this->service->store($request, $farmId);
-    }
-
     public function show($farmId, $feedingColonyId)
     {
         return $this->service->show($farmId, $feedingColonyId);
@@ -40,15 +33,5 @@ class FeedingColonyController extends Controller
     public function edit($farmId, $feedingColonyId)
     {
         return $this->service->edit($farmId, $feedingColonyId);
-    }
-
-    public function update(FeedingColonyUpdateRequest $request, $farmId, $feedingColonyId)
-    {
-        return $this->service->update($request, $farmId, $feedingColonyId);
-    }
-
-    public function destroy($farmId, $feedingColonyId)
-    {
-        return $this->service->destroy($farmId, $feedingColonyId);
     }
 }

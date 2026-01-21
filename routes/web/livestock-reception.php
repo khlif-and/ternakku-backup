@@ -22,6 +22,7 @@ Route::prefix('care-livestock/{farm_id}/livestock-reception')
         
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
+        Route::get('/{id}', 'show')->name('show');
         Route::get('/{id}/edit', 'edit')->name('edit');
         
     });
