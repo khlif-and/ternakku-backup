@@ -105,6 +105,8 @@ class CreateComponent extends Component
 
     public function updatedLivestockTypeId($value)
     {
+        Log::info('updatedLivestockTypeId called with value: ' . $value);
+        
         $this->livestock_breed_id = null;
         $this->breeds = [];
 
@@ -112,6 +114,7 @@ class CreateComponent extends Component
             $this->breeds = LivestockBreed::where('livestock_type_id', $value)
                 ->pluck('name', 'id')
                 ->toArray();
+            Log::info('Breeds loaded: ' . count($this->breeds));
         }
     }
 

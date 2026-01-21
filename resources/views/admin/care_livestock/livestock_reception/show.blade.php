@@ -4,23 +4,23 @@
     <div class="p-6">
         <div class="mb-6 flex items-center justify-between">
             <div>
-                <p class="text-gray-700 text-lg mb-1 font-semibold">[ Detail Pemberian Pakan Koloni ]</p>
+                <p class="text-gray-700 text-lg mb-1 font-semibold">[ Detail Penerimaan Ternak ]</p>
                 <ul class="flex items-center text-sm space-x-2 text-gray-500">
                     <li><a href="/" class="hover:text-blue-600"><i class="icon-home"></i></a></li>
                     <li><i class="icon-arrow-right"></i></li>
                     <li>Care Livestock</li>
                     <li><i class="icon-arrow-right"></i></li>
-                    <li><a href="{{ route('admin.care-livestock.feeding-colony.index', $farm->id) }}" class="hover:text-blue-600">Pemberian Pakan Koloni</a></li>
+                    <li><a href="{{ route('admin.care-livestock.livestock-reception.index', $farm->id) }}" class="hover:text-blue-600">Penerimaan Ternak</a></li>
                     <li><i class="icon-arrow-right"></i></li>
                     <li>Detail</li>
                 </ul>
             </div>
             <div class="flex items-center gap-2">
-                <a href="{{ route('admin.care-livestock.feeding-colony.edit', [$farm->id, $feedingColony->id]) }}"
+                <a href="{{ route('admin.care-livestock.livestock-reception.edit', [$farm->id, $reception->id]) }}"
                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg px-4 py-2 text-sm shadow transition-all">
                    Edit
                 </a>
-                <a href="{{ route('admin.care-livestock.feeding-colony.index', $farm->id) }}"
+                <a href="{{ route('admin.care-livestock.livestock-reception.index', $farm->id) }}"
                    class="bg-gray-400 hover:bg-gray-500 text-white font-semibold rounded-lg px-4 py-2 text-sm shadow transition-all">
                    Kembali
                 </a>
@@ -29,7 +29,7 @@
 
         <div class="bg-white rounded-2xl shadow-lg overflow-hidden w-full">
             <div class="px-8 py-6">
-                @livewire('admin.feeding-colony.show-component', ['farm' => $farm, 'feedingColony' => $feedingColony])
+                @livewire('admin.livestock-reception.show-component', ['farm' => $farm, 'reception' => $reception])
             </div>
         </div>
     </div>
