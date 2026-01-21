@@ -1,11 +1,8 @@
-* text=auto eol=lf
+# Abaikan semua file dari statistik bahasa (dianggap sebagai file eksternal/vendor)
+* linguist-vendored
 
-*.blade.php diff=html
-*.css diff=css
-*.html diff=html
-*.md diff=markdown
-*.php diff=php
+# Kecuali file PHP, masukkan kembali ke statistik
+*.php linguist-vendored=false
 
-/.github export-ignore
-CHANGELOG.md export-ignore
-.styleci.yml export-ignore
+# Paksa file Blade agar dihitung sebagai PHP
+*.blade.php linguist-language=PHP linguist-vendored=false
