@@ -1,14 +1,10 @@
 <div>
     @if (session('success'))
-        <div class="mb-6 px-4 py-3 rounded-lg bg-green-100 border border-green-400 text-green-700 font-medium">
-            {{ session('success') }}
-        </div>
+        <x-alert.flash type="success">{{ session('success') }}</x-alert.flash>
     @endif
 
     @if (session('error'))
-        <div class="mb-6 px-4 py-3 rounded-lg bg-red-100 border border-red-400 text-red-700 font-medium">
-            {{ session('error') }}
-        </div>
+        <x-alert.flash type="error">{{ session('error') }}</x-alert.flash>
     @endif
 
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -16,10 +12,9 @@
             <input type="date" wire:model.live="start_date" class="px-4 py-2 border rounded-lg text-sm">
             <input type="date" wire:model.live="end_date" class="px-4 py-2 border rounded-lg text-sm">
         </div>
-        <a href="{{ route('admin.care-livestock.livestock-death.create', $farm->id) }}"
-            class="bg-green-500 hover:bg-green-600 text-white font-semibold px-5 py-2 rounded-lg transition-all">
+        <x-button.link href="{{ route('admin.care-livestock.livestock-death.create', $farm->id) }}" color="green">
             + Tambah Kematian
-        </a>
+        </x-button.link>
     </div>
 
     <div class="bg-white rounded-xl shadow overflow-hidden">
@@ -46,24 +41,14 @@
                         <td class="px-4 py-3">{{ Str::limit($death->indication, 30) }}</td>
                         <td class="px-4 py-3">
                             <div class="flex items-center justify-center gap-2">
-                                <a href="{{ route('admin.care-livestock.livestock-death.edit', [$farm->id, $death->id]) }}"
-                                    class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs rounded-lg transition-all">
-                                    Edit
-                                </a>
-                                <button wire:click="delete({{ $death->id }})"
-                                    wire:confirm="Yakin ingin menghapus data kematian ini?"
-                                    class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white text-xs rounded-lg transition-all">
-                                    Hapus
-                                </button>
+                                <x-button.action href="{{ route('admin.care-livestock.livestock-death.show', [$farm->id, $death->id]) }}" color="gray">Detail</x-button.action>
+                                <x-button.action href="{{ route('admin.care-livestock.livestock-death.edit', [$farm->id, $death->id]) }}" color="blue">Edit</x-button.action>
+                                <x-button.primary type="button" wire:click="delete({{ $death->id }})" wire:confirm="Yakin ingin menghapus data kematian ini?" color="red" size="sm">Hapus</x-button.primary>
                             </div>
                         </td>
                     </tr>
                 @empty
-                    <tr>
-                        <td colspan="7" class="px-4 py-8 text-center text-gray-500">
-                            Belum ada data kematian ternak.
-                        </td>
-                    </tr>
+                    <x-table.empty colspan="7" empty="Belum ada data kematian ternak." />
                 @endforelse
             </tbody>
         </table>

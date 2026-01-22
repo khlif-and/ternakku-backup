@@ -1,6 +1,6 @@
 @extends('home.layouts.main')
 
-@section('title', 'Landing Page')
+@section('title', 'Ternakku : Platform Digital Ternak')
 
 @section('content')
     <section id="hero-banner"
