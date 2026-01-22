@@ -28,6 +28,14 @@ class LivestockDeathService
         return view('admin.care_livestock.livestock_death.create', compact('farm'));
     }
 
+    public function show($farmId, $id, Request $request)
+    {
+        $farm = $request->attributes->get('farm');
+        $death = LivestockDeath::where('farm_id', $farm->id)->with(['livestock', 'disease'])->findOrFail($id);
+
+        return view('admin.care_livestock.livestock_death.show', compact('farm', 'death'));
+    }
+
     public function edit($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');

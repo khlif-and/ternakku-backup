@@ -18,27 +18,13 @@
 
     <form wire:submit.prevent="save" class="w-full">
         <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="block mb-2 text-base font-semibold text-gray-700">Tanggal Kematian</label>
-                <input type="date" wire:model="transaction_date"
-                    class="w-full px-4 py-3 border rounded-lg text-base @error('transaction_date') border-red-500 @enderror" required>
-                @error('transaction_date') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
-            </div>
-            <div>
-                <label class="block mb-2 text-base font-semibold text-gray-700">Penyakit (opsional)</label>
-                <select wire:model="disease_id" class="w-full px-4 py-3 border rounded-lg text-base">
-                    <option value="">Pilih Penyakit</option>
-                    @foreach($diseases as $id => $name)
-                        <option value="{{ $id }}">{{ $name }}</option>
-                    @endforeach
-                </select>
-            </div>
+            <x-form.date wire:model="transaction_date" name="transaction_date" label="Tanggal Kematian" required />
+            <x-form.select wire:model="disease_id" name="disease_id" label="Penyakit (opsional)" :options="$diseases" placeholder="Pilih Penyakit" />
         </div>
 
         <div class="mb-8">
-            <label class="block mb-2 text-base font-semibold text-gray-700">Pilih Ternak</label>
-            <select wire:model="livestock_id"
-                class="w-full px-4 py-3 border rounded-lg text-base @error('livestock_id') border-red-500 @enderror" required>
+            <label class="block mb-2 text-base font-semibold text-gray-700">Pilih Ternak <span class="text-red-500">*</span></label>
+            <select wire:model="livestock_id" class="w-full px-4 py-3 border rounded-lg text-base" required>
                 <option value="">Pilih Ternak</option>
                 @foreach($livestocks as $livestock)
                     <option value="{{ $livestock->id }}">
@@ -46,30 +32,19 @@
                     </option>
                 @endforeach
             </select>
-            @error('livestock_id') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
+            <x-form.error name="livestock_id" />
         </div>
 
-        <div class="mb-8">
-            <label class="block mb-2 text-base font-semibold text-gray-700">Indikasi Kematian</label>
-            <textarea wire:model="indication" rows="3"
-                class="w-full px-4 py-3 border rounded-lg text-base" placeholder="Gejala atau indikasi yang terlihat..."></textarea>
-        </div>
-
-        <div class="mb-8">
-            <label class="block mb-2 text-base font-semibold text-gray-700">Catatan (opsional)</label>
-            <textarea wire:model="notes" rows="2" class="w-full px-4 py-3 border rounded-lg text-base"></textarea>
-        </div>
+        <x-form.textarea wire:model="indication" name="indication" label="Indikasi Kematian" rows="3" placeholder="Gejala atau indikasi yang terlihat..." class="mb-8" />
+        <x-form.textarea wire:model="notes" name="notes" label="Catatan (opsional)" rows="2" class="mb-8" />
 
         <div class="flex justify-end mt-8 gap-3">
-            <a href="{{ route('admin.care-livestock.livestock-death.index', $farm->id) }}"
-                class="px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-all">
+            <a href="{{ route('admin.care-livestock.livestock-death.index', $farm->id) }}" class="px-8 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-all">
                 Batal
             </a>
-            <button type="submit"
-                class="px-8 py-3 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg transition-all disabled:opacity-50"
-                wire:loading.attr="disabled">
-                <span wire:loading.remove>Perbarui Data</span>
-                <span wire:loading>Memperbarui...</span>
+            <button type="submit" class="px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition-all disabled:opacity-50" wire:loading.attr="disabled">
+                <span wire:loading.remove>Simpan Perubahan</span>
+                <span wire:loading>Menyimpan...</span>
             </button>
         </div>
     </form>

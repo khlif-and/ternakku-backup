@@ -25,6 +25,11 @@ class LivestockReceptionController extends Controller
         return $this->service->create($farmId, $request);
     }
 
+    public function show($farmId, $id, Request $request)
+    {
+        return $this->service->show($farmId, $id, $request);
+    }
+
     public function edit($farmId, $id, Request $request)
     {
         return $this->service->edit($farmId, $id, $request);

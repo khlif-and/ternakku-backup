@@ -36,6 +36,21 @@ class LivestockReceptionService
         ]);
     }
 
+    public function show($farmId, $id, Request $request)
+    {
+        $farm = $request->attributes->get('farm');
+        if (!$farm) {
+            abort(404, 'Farm tidak ditemukan');
+        }
+
+        $reception = $this->core->findReception($farm, $id);
+
+        return view('admin.care_livestock.livestock_reception.show', [
+            'farm' => $farm,
+            'reception' => $reception,
+        ]);
+    }
+
     public function edit($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');
