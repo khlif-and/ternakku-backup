@@ -127,17 +127,17 @@
         {{-- Tabs for different sections --}}
         <div x-data="{ activeTab: 'livestock' }" class="bg-white rounded-xl shadow-sm border overflow-hidden">
             {{-- Tab Headers --}}
-            <div class="flex border-b">
-                <button @click="activeTab = 'livestock'" :class="activeTab === 'livestock' ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-3 font-medium transition">
+            <div class="flex border-b overflow-x-auto">
+                <button @click="activeTab = 'livestock'" :class="activeTab === 'livestock' ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-3 font-medium transition whitespace-nowrap">
                     Daftar Ternak ({{ count($livestocks) }})
                 </button>
-                <button @click="activeTab = 'feeding'" :class="activeTab === 'feeding' ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-3 font-medium transition">
+                <button @click="activeTab = 'feeding'" :class="activeTab === 'feeding' ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-3 font-medium transition whitespace-nowrap">
                     Riwayat Pakan ({{ count($feedingHistory) }})
                 </button>
-                <button @click="activeTab = 'treatment'" :class="activeTab === 'treatment' ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-3 font-medium transition">
+                <button @click="activeTab = 'treatment'" :class="activeTab === 'treatment' ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-3 font-medium transition whitespace-nowrap">
                     Riwayat Pengobatan ({{ count($treatmentHistory) }})
                 </button>
-                <button @click="activeTab = 'milk'" :class="activeTab === 'milk' ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-3 font-medium transition">
+                <button @click="activeTab = 'milk'" :class="activeTab === 'milk' ? 'bg-emerald-50 text-emerald-700 border-b-2 border-emerald-600' : 'text-gray-500 hover:text-gray-700'" class="px-6 py-3 font-medium transition whitespace-nowrap">
                     Produksi Susu ({{ count($milkProduction) }})
                 </button>
             </div>
@@ -166,7 +166,7 @@
                                         <td class="px-4 py-3">{{ $livestock->livestockSex->name ?? '-' }}</td>
                                         <td class="px-4 py-3">{{ $livestock->livestockClassification->name ?? '-' }}</td>
                                         <td class="px-4 py-3">
-                                            @if ($livestock->is_alive)
+                                            @if ($livestock->is_alive ?? true)
                                                 <span class="px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Hidup</span>
                                             @else
                                                 <span class="px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">Mati</span>
@@ -190,26 +190,26 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-left font-semibold text-gray-600">Tanggal</th>
+                                    <th class="px-4 py-3 text-left font-semibold text-gray-600">No. Transaksi</th>
                                     <th class="px-4 py-3 text-left font-semibold text-gray-600">Pakan</th>
                                     <th class="px-4 py-3 text-left font-semibold text-gray-600">Jumlah</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-600">Keterangan</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 @foreach ($feedingHistory as $feeding)
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($feeding->feeding_date)->format('d M Y') }}</td>
+                                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($feeding->feedingH->transaction_date ?? now())->format('d M Y') }}</td>
+                                        <td class="px-4 py-3 font-medium">{{ $feeding->feedingH->transaction_number ?? '-' }}</td>
                                         <td class="px-4 py-3">
-                                            @foreach ($feeding->feedingColonyDs as $detail)
-                                                <span class="block">{{ $detail->feed->name ?? '-' }}</span>
+                                            @foreach ($feeding->feedingColonyItems ?? [] as $item)
+                                                <span class="block">{{ $item->feed->name ?? '-' }}</span>
                                             @endforeach
                                         </td>
                                         <td class="px-4 py-3">
-                                            @foreach ($feeding->feedingColonyDs as $detail)
-                                                <span class="block">{{ $detail->quantity ?? '-' }} {{ $detail->feed->unit ?? '' }}</span>
+                                            @foreach ($feeding->feedingColonyItems ?? [] as $item)
+                                                <span class="block">{{ $item->quantity ?? '-' }} {{ $item->feed->unit ?? '' }}</span>
                                             @endforeach
                                         </td>
-                                        <td class="px-4 py-3">{{ $feeding->notes ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -228,26 +228,22 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-left font-semibold text-gray-600">Tanggal</th>
+                                    <th class="px-4 py-3 text-left font-semibold text-gray-600">No. Transaksi</th>
+                                    <th class="px-4 py-3 text-left font-semibold text-gray-600">Penyakit</th>
                                     <th class="px-4 py-3 text-left font-semibold text-gray-600">Obat</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-600">Dosis</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-600">Keterangan</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 @foreach ($treatmentHistory as $treatment)
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($treatment->treatment_date)->format('d M Y') }}</td>
+                                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($treatment->treatmentH->transaction_date ?? now())->format('d M Y') }}</td>
+                                        <td class="px-4 py-3 font-medium">{{ $treatment->treatmentH->transaction_number ?? '-' }}</td>
+                                        <td class="px-4 py-3">{{ $treatment->disease->name ?? '-' }}</td>
                                         <td class="px-4 py-3">
-                                            @foreach ($treatment->treatmentColonyDs as $detail)
-                                                <span class="block">{{ $detail->medicine->name ?? '-' }}</span>
+                                            @foreach ($treatment->treatmentColonyMedicineItems ?? [] as $item)
+                                                <span class="block">{{ $item->medicine->name ?? '-' }} ({{ $item->dosage ?? '-' }})</span>
                                             @endforeach
                                         </td>
-                                        <td class="px-4 py-3">
-                                            @foreach ($treatment->treatmentColonyDs as $detail)
-                                                <span class="block">{{ $detail->dosage ?? '-' }}</span>
-                                            @endforeach
-                                        </td>
-                                        <td class="px-4 py-3">{{ $treatment->notes ?? '-' }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -268,7 +264,7 @@
                                 <span class="font-bold text-blue-800">{{ number_format($statistics['total_milk'] ?? 0, 2) }} Liter</span>
                             </div>
                             <div>
-                                <span class="text-blue-600">Rata-rata per Hari:</span>
+                                <span class="text-blue-600">Rata-rata per Record:</span>
                                 <span class="font-bold text-blue-800">{{ number_format($statistics['avg_milk_per_day'] ?? 0, 2) }} Liter</span>
                             </div>
                         </div>
@@ -278,16 +274,16 @@
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-4 py-3 text-left font-semibold text-gray-600">Tanggal</th>
+                                    <th class="px-4 py-3 text-left font-semibold text-gray-600">No. Transaksi</th>
                                     <th class="px-4 py-3 text-left font-semibold text-gray-600">Volume (L)</th>
-                                    <th class="px-4 py-3 text-left font-semibold text-gray-600">Keterangan</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-100">
                                 @foreach ($milkProduction as $production)
                                     <tr class="hover:bg-gray-50">
-                                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($production->production_date)->format('d M Y') }}</td>
-                                        <td class="px-4 py-3 font-medium">{{ number_format($production->total_volume ?? 0, 2) }}</td>
-                                        <td class="px-4 py-3">{{ $production->notes ?? '-' }}</td>
+                                        <td class="px-4 py-3">{{ \Carbon\Carbon::parse($production->milkProductionH->transaction_date ?? now())->format('d M Y') }}</td>
+                                        <td class="px-4 py-3 font-medium">{{ $production->milkProductionH->transaction_number ?? '-' }}</td>
+                                        <td class="px-4 py-3 font-medium">{{ number_format($production->volume ?? 0, 2) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

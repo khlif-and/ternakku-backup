@@ -1,17 +1,18 @@
 @props([
     'href' => '#',
-    'color' => 'gray',
+    'type' => 'primary', // primary, secondary, danger
 ])
 
 @php
-    $colors = [
-        'gray' => 'bg-gray-500 hover:bg-gray-600',
-        'blue' => 'bg-blue-500 hover:bg-blue-600',
-        'red' => 'bg-red-500 hover:bg-red-600',
+    // Map semantic 'type' to base component 'color'
+    $colorMap = [
+        'primary' => 'blue',
+        'secondary' => 'gray',
+        'danger' => 'red',
     ];
-    $colorClass = $colors[$color] ?? $colors['gray'];
+    $color = $colorMap[$type] ?? 'blue';
 @endphp
 
-<a href="{{ $href }}" {{ $attributes->merge(['class' => $colorClass . ' px-3 py-1 text-white text-xs rounded-lg transition-all']) }}>
+<x-button.base :href="$href" :color="$color" {{ $attributes }}>
     {{ $slot }}
-</a>
+</x-button.base>
