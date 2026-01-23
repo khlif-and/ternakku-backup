@@ -12,16 +12,10 @@ use App\Http\Controllers\Admin\Report\CareLivestock\Natural_Inseminasi_Report_Co
 |--------------------------------------------------------------------------
 */
 
-// Pen Report
-Route::prefix('care-livestock/{farm_id}/report/pen')
+// Pen Report (Livewire-based)
+Route::get('care-livestock/{farm_id}/report/pen', [Pen_Report_Controller::class, 'index'])
     ->middleware('check.farm.access')
-    ->controller(Pen_Report_Controller::class)
-    ->name('admin.care-livestock.pen-report.')
-    ->group(function () {
-        Route::get('/', 'index')->name('index');
-        Route::get('/detail', 'detail')->name('detail');
-        Route::get('/export', 'exportPdf')->name('export');
-    });
+    ->name('admin.care-livestock.pen-report.index');
 
 // Mutation Individu Report
 Route::prefix('care-livestock/{farm_id}/report/mutation-individu')
