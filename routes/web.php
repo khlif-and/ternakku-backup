@@ -24,26 +24,26 @@
 
     /*
     |--------------------------------------------------------------------------
-    | Qurban Module (separated files)
+    | Qurban Module (separated files in qurban folder)
     |--------------------------------------------------------------------------
     */
-    require __DIR__.'/web/qurban.php';
-    require __DIR__.'/web/qurban-customer.php';
-    require __DIR__.'/web/qurban-fleet.php';
-    require __DIR__.'/web/qurban-driver.php';
-    require __DIR__.'/web/qurban-reweight.php';
-    require __DIR__.'/web/qurban-payment.php';
-    require __DIR__.'/web/qurban-delivery.php';
-    require __DIR__.'/web/qurban-fleet-tracking.php';
-    require __DIR__.'/web/qurban-livestock-delivery-note.php';
-    require __DIR__.'/web/qurban-delivery-order-data.php';
-    require __DIR__.'/web/qurban-population-report.php';
-    require __DIR__.'/web/qurban-sales.php';
-    require __DIR__.'/web/qurban-cancelation.php';
+    require __DIR__.'/web/qurban/qurban.php';
+    require __DIR__.'/web/qurban/qurban-customer.php';
+    require __DIR__.'/web/qurban/qurban-fleet.php';
+    require __DIR__.'/web/qurban/qurban-driver.php';
+    require __DIR__.'/web/qurban/qurban-reweight.php';
+    require __DIR__.'/web/qurban/qurban-payment.php';
+    require __DIR__.'/web/qurban/qurban-delivery.php';
+    require __DIR__.'/web/qurban/qurban-fleet-tracking.php';
+    require __DIR__.'/web/qurban/qurban-livestock-delivery-note.php';
+    require __DIR__.'/web/qurban/qurban-delivery-order-data.php';
+    require __DIR__.'/web/qurban/qurban-population-report.php';
+    require __DIR__.'/web/qurban/qurban-sales.php';
+    require __DIR__.'/web/qurban/qurban-cancelation.php';
 
     /*
     |--------------------------------------------------------------------------
-    | Care Livestock Module
+    | Care Livestock Module (Farming/Buka Qurban)
     |--------------------------------------------------------------------------
     */
     Route::get('care-livestock', [CareLivestockController::class, 'index'])->name('care_livestock');
@@ -58,35 +58,35 @@
 
     /*
     |--------------------------------------------------------------------------
-    | Separated Route Files (Care Livestock Modules)
+    | Separated Route Files (Care Livestock Modules in farming folder)
     |--------------------------------------------------------------------------
     */
-    require __DIR__.'/web/pens.php';
-    require __DIR__.'/web/reports.php';
-    require __DIR__.'/web/livestock-reception.php';
-    require __DIR__.'/web/sales-order.php';
-    require __DIR__.'/web/sales-livestock.php';
-    require __DIR__.'/web/livestock-sale-weight.php';
-    require __DIR__.'/web/livestock-death.php';
-    require __DIR__.'/web/feed-medicine-purchase.php';
-    require __DIR__.'/web/milk-production-global.php';
-    require __DIR__.'/web/milk-analysis-colony.php';
-    require __DIR__.'/web/milk-analysis-global.php';
-    require __DIR__.'/web/feeding-individu.php';
-    require __DIR__.'/web/feeding-colony.php';
-    require __DIR__.'/web/treatment-individu.php';
-    require __DIR__.'/web/treatment-colony.php';
-    require __DIR__.'/web/treatment-schedule-individu.php';
-    require __DIR__.'/web/mutation-individu.php';
-    require __DIR__.'/web/artificial-inseminasi.php';
-    require __DIR__.'/web/natural-insemination.php';
-    require __DIR__.'/web/pregnant-check.php';
-    require __DIR__.'/web/reproduction.php';
-    require __DIR__.'/web/birth.php';
-    require __DIR__.'/web/milk-production-individu.php';
-    require __DIR__.'/web/milk-analysis-individu.php';
-    require __DIR__.'/web/classification.php';
-    require __DIR__.'/web/customer.php';
+    require __DIR__.'/web/farming/pens.php';
+    require __DIR__.'/web/farming/reports.php';
+    require __DIR__.'/web/farming/livestock-reception.php';
+    require __DIR__.'/web/farming/sales-order.php';
+    require __DIR__.'/web/farming/sales-livestock.php';
+    require __DIR__.'/web/farming/livestock-sale-weight.php';
+    require __DIR__.'/web/farming/livestock-death.php';
+    require __DIR__.'/web/farming/feed-medicine-purchase.php';
+    require __DIR__.'/web/farming/milk-production-global.php';
+    require __DIR__.'/web/farming/milk-analysis-colony.php';
+    require __DIR__.'/web/farming/milk-analysis-global.php';
+    require __DIR__.'/web/farming/feeding-individu.php';
+    require __DIR__.'/web/farming/feeding-colony.php';
+    require __DIR__.'/web/farming/treatment-individu.php';
+    require __DIR__.'/web/farming/treatment-colony.php';
+    require __DIR__.'/web/farming/treatment-schedule-individu.php';
+    require __DIR__.'/web/farming/mutation-individu.php';
+    require __DIR__.'/web/farming/artificial-inseminasi.php';
+    require __DIR__.'/web/farming/natural-insemination.php';
+    require __DIR__.'/web/farming/pregnant-check.php';
+    require __DIR__.'/web/farming/reproduction.php';
+    require __DIR__.'/web/farming/birth.php';
+    require __DIR__.'/web/farming/milk-production-individu.php';
+    require __DIR__.'/web/farming/milk-analysis-individu.php';
+    require __DIR__.'/web/farming/classification.php';
+    require __DIR__.'/web/farming/customer.php';
 
     /*
     |--------------------------------------------------------------------------
