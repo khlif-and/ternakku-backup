@@ -16,5 +16,10 @@
         <tbody class="divide-y divide-gray-100">
             {{ $slot }}
         </tbody>
+        @if(isset($footer))
+            <tfoot class="bg-gray-50 border-t border-gray-100">
+                {{ $footer }}
+            </tfoot>
+        @endif
     </table>
 </div>

@@ -6,9 +6,9 @@ use Livewire\Component;
 use App\Models\Farm;
 use App\Models\Pen;
 use App\Models\Livestock;
-use App\Models\FeedingColonyH;
-use App\Models\TreatmentColonyH;
-use App\Models\MilkProductionGlobalH;
+use App\Models\FeedingColonyD;
+use App\Models\TreatmentColonyD;
+use App\Models\MilkProductionColonyD;
 use Illuminate\Support\Facades\Log;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -63,26 +63,48 @@ class IndexComponent extends Component
                 ->with(['livestockType', 'livestockSex', 'livestockClassification'])
                 ->get();
 
-            // Get feeding history
-            $this->feedingHistory = FeedingColonyH::where('pen_id', $this->pen_id)
-                ->whereBetween('feeding_date', [$this->from_date, $this->to_date])
-                ->with(['feedingColonyDs.feed'])
-                ->orderBy('feeding_date', 'desc')
+            // Get feeding history from FeedingColonyD (which has pen_id relation)
+            $this->feedingHistory = FeedingColonyD::where('pen_id', $this->pen_id)
+                ->whereHas('feedingH', function($q) {
+                    $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
+                })
+                ->with(['feedingH', 'feedingColonyItems.feed'])
+                ->orderByDesc(function($q) {
+                    return $q->select('transaction_date')
+                        ->from('feeding_h')
+                        ->whereColumn('feeding_h.id', 'feeding_colony_d.feeding_h_id')
+                        ->limit(1);
+                })
                 ->limit(50)
                 ->get();
 
-            // Get treatment history
-            $this->treatmentHistory = TreatmentColonyH::where('pen_id', $this->pen_id)
-                ->whereBetween('treatment_date', [$this->from_date, $this->to_date])
-                ->with(['treatmentColonyDs.medicine'])
-                ->orderBy('treatment_date', 'desc')
+            // Get treatment history from TreatmentColonyD
+            $this->treatmentHistory = TreatmentColonyD::where('pen_id', $this->pen_id)
+                ->whereHas('treatmentH', function($q) {
+                    $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
+                })
+                ->with(['treatmentH', 'treatmentColonyMedicineItems.medicine', 'disease'])
+                ->orderByDesc(function($q) {
+                    return $q->select('transaction_date')
+                        ->from('treatment_h')
+                        ->whereColumn('treatment_h.id', 'treatment_colony_d.treatment_h_id')
+                        ->limit(1);
+                })
                 ->limit(50)
                 ->get();
 
-            // Get milk production (if dairy farm)
-            $this->milkProduction = MilkProductionGlobalH::where('pen_id', $this->pen_id)
-                ->whereBetween('production_date', [$this->from_date, $this->to_date])
-                ->orderBy('production_date', 'desc')
+            // Get milk production from MilkProductionColonyD
+            $this->milkProduction = MilkProductionColonyD::where('pen_id', $this->pen_id)
+                ->whereHas('milkProductionH', function($q) {
+                    $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
+                })
+                ->with(['milkProductionH'])
+                ->orderByDesc(function($q) {
+                    return $q->select('transaction_date')
+                        ->from('milk_production_h')
+                        ->whereColumn('milk_production_h.id', 'milk_production_colony_d.milk_production_h_id')
+                        ->limit(1);
+                })
                 ->limit(50)
                 ->get();
 
@@ -128,7 +150,7 @@ class IndexComponent extends Component
         $totalFeedings = $this->feedingHistory->count();
         $totalTreatments = $this->treatmentHistory->count();
         
-        $totalMilk = $this->milkProduction->sum('total_volume');
+        $totalMilk = $this->milkProduction->sum('volume');
         $avgMilkPerDay = $this->milkProduction->count() > 0 
             ? round($totalMilk / $this->milkProduction->count(), 2) 
             : 0;
