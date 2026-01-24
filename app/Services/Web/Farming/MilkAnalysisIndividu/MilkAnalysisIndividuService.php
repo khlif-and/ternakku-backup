@@ -41,21 +41,29 @@ class MilkAnalysisIndividuService
     {
         return ErrorHandler::handle(function () use ($request, $farmId) {
             $farm = $request->attributes->get('farm');
-            $this->core->storeAnalysis($farm, $request->validated());
+            $record = $this->core->storeAnalysis($farm, $request->validated());
 
             return redirect()
-                ->route('admin.care-livestock.milk-analysis-individu.index', $farmId)
+                ->route('admin.care-livestock.milk-analysis-individu.show', [$farmId, $record->id])
                 ->with('success', 'Data analisis susu berhasil ditambahkan.');
         }, 'MilkAnalysis Store Error');
+    }
+
+    public function show($farmId, $id, Request $request)
+    {
+        $farm = $request->attributes->get('farm');
+        $milkAnalysisIndividu = $this->core->findAnalysis($farm, $id);
+
+        return view('admin.care_livestock.milk_analysis_individu.show', compact('farm', 'milkAnalysisIndividu'));
     }
 
     public function edit($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');
-        $analysis = $this->core->findAnalysis($farm, $id);
+        $milkAnalysisIndividu = $this->core->findAnalysis($farm, $id);
         $livestocks = $farm->livestocks()->where('livestock_sex_id', 2)->get();
 
-        return view('admin.care_livestock.milk_analysis_individu.edit', compact('farm', 'analysis', 'livestocks'));
+        return view('admin.care_livestock.milk_analysis_individu.edit', compact('farm', 'milkAnalysisIndividu', 'livestocks'));
     }
 
     public function update(MilkAnalysisIndividuUpdateRequest $request, $farmId, $id)
@@ -65,7 +73,7 @@ class MilkAnalysisIndividuService
             $this->core->updateAnalysis($farm, $id, $request->validated());
 
             return redirect()
-                ->route('admin.care-livestock.milk-analysis-individu.index', $farmId)
+                ->route('admin.care-livestock.milk-analysis-individu.show', [$farmId, $id])
                 ->with('success', 'Data analisis susu berhasil diperbarui.');
         }, 'MilkAnalysis Update Error');
     }

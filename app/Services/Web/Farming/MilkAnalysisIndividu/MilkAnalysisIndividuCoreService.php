@@ -39,17 +39,13 @@ class MilkAnalysisIndividuCoreService
         ];
     }
 
-    public function storeAnalysis($farm, array $data): void
+    public function storeAnalysis($farm, array $data): MilkAnalysisIndividuD
     {
         $livestock = $farm->livestocks()
             ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
-            ->find($data['livestock_id']);
+            ->findOrFail($data['livestock_id']);
 
-        if (!$livestock) {
-            throw new \InvalidArgumentException('Ternak tidak ditemukan atau bukan betina.');
-        }
-
-        DB::transaction(function () use ($farm, $data) {
+        return DB::transaction(function () use ($farm, $data) {
             $milkAnalysisH = MilkAnalysisH::create([
                 'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
@@ -57,7 +53,7 @@ class MilkAnalysisIndividuCoreService
                 'notes' => $data['notes'] ?? null,
             ]);
 
-            MilkAnalysisIndividuD::create([
+            return MilkAnalysisIndividuD::create([
                 'milk_analysis_h_id' => $milkAnalysisH->id,
                 'livestock_id' => $data['livestock_id'],
                 'bj' => $data['bj'] ?? null,
@@ -69,7 +65,6 @@ class MilkAnalysisIndividuCoreService
                 'fat' => $data['fat'] ?? null,
                 'snf' => $data['snf'] ?? null,
                 'ts' => $data['ts'] ?? null,
-                'rzn' => $data['rzn'] ?? null,
                 'notes' => $data['notes'] ?? null,
             ]);
         });
@@ -88,11 +83,7 @@ class MilkAnalysisIndividuCoreService
 
         $livestock = $farm->livestocks()
             ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
-            ->find($data['livestock_id']);
-
-        if (!$livestock) {
-            throw new \InvalidArgumentException('Ternak tidak ditemukan atau bukan betina.');
-        }
+            ->findOrFail($data['livestock_id']);
 
         DB::transaction(function () use ($analysis, $data) {
             $analysis->milkAnalysisH->update([
@@ -111,7 +102,6 @@ class MilkAnalysisIndividuCoreService
                 'fat' => $data['fat'] ?? null,
                 'snf' => $data['snf'] ?? null,
                 'ts' => $data['ts'] ?? null,
-                'rzn' => $data['rzn'] ?? null,
                 'notes' => $data['notes'] ?? null,
             ]);
         });
