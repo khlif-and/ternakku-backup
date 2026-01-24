@@ -1,13 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\CareLivestock\MilkAnalysisGlobalController;
-
-/*
-|--------------------------------------------------------------------------
-| Milk Analysis Global Routes
-|--------------------------------------------------------------------------
-*/
+use App\Http\Controllers\Admin\CareLivestock\MilkAnalysisGlobal\MilkAnalysisGlobalController;
 
 Route::prefix('care-livestock/{farm_id}/milk-analysis-global')
     ->middleware('check.farm.access')

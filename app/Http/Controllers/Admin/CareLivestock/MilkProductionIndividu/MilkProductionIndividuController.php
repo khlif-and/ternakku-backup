@@ -22,9 +22,9 @@ class MilkProductionIndividuController extends Controller
         return $this->service->index($farmId, $request);
     }
 
-    public function create($farmId, Request $request)
+    public function create($farmId)
     {
-        return $this->service->create($farmId, $request);
+        return $this->service->create($farmId);
     }
 
     public function store(MilkProductionIndividuStoreRequest $request, $farmId)
@@ -32,9 +32,14 @@ class MilkProductionIndividuController extends Controller
         return $this->service->store($request, $farmId);
     }
 
-    public function edit($farmId, $id, Request $request)
+    public function show($farmId, $id)
     {
-        return $this->service->edit($farmId, $id, $request);
+        return $this->service->show($farmId, $id);
+    }
+
+    public function edit($farmId, $id)
+    {
+        return $this->service->edit($farmId, $id);
     }
 
     public function update(MilkProductionIndividuUpdateRequest $request, $farmId, $id)
@@ -42,8 +47,8 @@ class MilkProductionIndividuController extends Controller
         return $this->service->update($request, $farmId, $id);
     }
 
-    public function destroy($farmId, $id, Request $request)
+    public function destroy($farmId, $id)
     {
-        return $this->service->destroy($farmId, $id, $request);
+        return $this->service->destroy($farmId, $id);
     }
 }

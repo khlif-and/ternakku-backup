@@ -6,10 +6,11 @@ use App\Models\MilkProductionH;
 use App\Models\MilkProductionIndividuD;
 use App\Enums\LivestockSexEnum;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class MilkProductionIndividuCoreService
 {
-    public function listProductions($farm, array $filters): array
+    public function list($farm, array $filters = []): array
     {
         $query = MilkProductionIndividuD::whereHas('milkProductionH', function ($q) use ($farm) {
             $q->where('farm_id', $farm->id)->where('type', 'individu');
@@ -39,17 +40,16 @@ class MilkProductionIndividuCoreService
         ];
     }
 
-    public function storeProduction($farm, array $data): void
+    public function find($farm, $id): MilkProductionIndividuD
     {
-        $livestock = $farm->livestocks()
-            ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
-            ->find($data['livestock_id']);
+        return MilkProductionIndividuD::whereHas('milkProductionH', function ($q) use ($farm) {
+            $q->where('farm_id', $farm->id);
+        })->with(['milkProductionH', 'livestock'])->findOrFail($id);
+    }
 
-        if (!$livestock) {
-            throw new \InvalidArgumentException('Ternak tidak ditemukan atau bukan betina.');
-        }
-
-        DB::transaction(function () use ($farm, $data) {
+    public function store($farm, array $data): MilkProductionIndividuD
+    {
+        return DB::transaction(function () use ($farm, $data) {
             $milkProductionH = MilkProductionH::create([
                 'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
@@ -57,67 +57,58 @@ class MilkProductionIndividuCoreService
                 'notes' => $data['notes'] ?? null,
             ]);
 
-            MilkProductionIndividuD::create([
-                'milk_production_h_id' => $milkProductionH->id,
-                'livestock_id' => $data['livestock_id'],
-                'milking_shift' => $data['milking_shift'],
-                'milking_time' => $data['milking_time'],
-                'milker_name' => $data['milker_name'],
-                'quantity_liters' => $data['quantity_liters'],
-                'milk_condition' => $data['milk_condition'] ?? null,
-                'notes' => $data['notes'] ?? null,
-            ]);
+            $lastCreated = null;
+
+            foreach ($data['items'] as $item) {
+                $time = Carbon::parse($item['milking_time']);
+                $shift = $time->hour < 12 ? 'morning' : 'afternoon';
+
+                $lastCreated = MilkProductionIndividuD::create([
+                    'milk_production_h_id' => $milkProductionH->id,
+                    'livestock_id' => $item['livestock_id'],
+                    'milking_shift' => $shift,
+                    'milking_time' => $item['milking_time'],
+                    'milker_name' => $data['milker_name'],
+                    'quantity_liters' => $item['volume'],
+                    'milk_condition' => $data['milk_condition'] ?? null,
+                    'notes' => $data['notes'] ?? null,
+                ]);
+            }
+
+            return $lastCreated;
         });
     }
 
-    public function findProduction($farm, $id)
+    public function update($farm, $id, array $data): MilkProductionIndividuD
     {
-        return MilkProductionIndividuD::whereHas('milkProductionH', function ($q) use ($farm) {
-            $q->where('farm_id', $farm->id);
-        })->with(['milkProductionH', 'livestock'])->findOrFail($id);
-    }
+        $production = $this->find($farm, $id);
 
-    public function updateProduction($farm, $id, array $data): void
-    {
-        $production = $this->findProduction($farm, $id);
+        return DB::transaction(function () use ($production, $data) {
+            $item = $data['items'][0] ?? null;
+            $time = Carbon::parse($item['milking_time'] ?? $production->milking_time);
+            $shift = $time->hour < 12 ? 'morning' : 'afternoon';
 
-        $livestock = $farm->livestocks()
-            ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
-            ->find($data['livestock_id']);
-
-        if (!$livestock) {
-            throw new \InvalidArgumentException('Ternak tidak ditemukan atau bukan betina.');
-        }
-
-        DB::transaction(function () use ($production, $data) {
             $production->milkProductionH->update([
                 'transaction_date' => $data['transaction_date'],
                 'notes' => $data['notes'] ?? null,
             ]);
 
             $production->update([
-                'livestock_id' => $data['livestock_id'],
-                'milking_shift' => $data['milking_shift'],
-                'milking_time' => $data['milking_time'],
+                'livestock_id' => $item['livestock_id'] ?? $production->livestock_id,
+                'milking_shift' => $shift,
+                'milking_time' => $item['milking_time'] ?? $production->milking_time,
                 'milker_name' => $data['milker_name'],
-                'quantity_liters' => $data['quantity_liters'],
+                'quantity_liters' => $item['volume'] ?? $production->quantity_liters,
                 'milk_condition' => $data['milk_condition'] ?? null,
                 'notes' => $data['notes'] ?? null,
             ]);
+
+            return $production;
         });
     }
 
-    public function deleteProduction($farm, $id): void
+    public function delete($farm, $id): void
     {
-        $production = $this->findProduction($farm, $id);
-
-        DB::transaction(function () use ($production) {
-            $milkProductionH = $production->milkProductionH;
-            $production->delete();
-
-            if ($milkProductionH->milkProductionIndividuD()->count() === 0) {
-                $milkProductionH->delete();
-            }
-        });
+        $this->find($farm, $id)->delete();
     }
 }
