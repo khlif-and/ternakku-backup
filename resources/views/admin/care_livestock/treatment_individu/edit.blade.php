@@ -2,15 +2,18 @@
 
 @section('content')
     <x-admin.feature-card 
-        title="Tambah Treatment Individu" 
+        title="Edit Treatment Individu" 
         :backUrl="route('admin.care-livestock.treatment-individu.index', $farm->id)"
         :breadcrumbs="[
             ['route' => '/', 'icon' => 'icon-home'],
             ['label' => 'Care Livestock'],
             ['label' => 'Treatment Individu', 'route' => route('admin.care-livestock.treatment-individu.index', $farm->id)],
-            ['label' => 'Tambah']
+            ['label' => 'Edit']
         ]"
     >
-        @livewire('admin.treatment-individu.create-component', ['farm' => $farm])
+        @livewire('admin.treatment-individu.edit-component', [
+            'farm' => $farm, 
+            'treatmentIndividu' => $treatmentIndividu
+        ])
     </x-admin.feature-card>
 @endsection
