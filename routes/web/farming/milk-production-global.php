@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\CareLivestock\MilkProductionGlobalController;
+use App\Http\Controllers\Admin\CareLivestock\MilkProductionGlobal\MilkProductionGlobalController;
 
 /*
 |--------------------------------------------------------------------------
