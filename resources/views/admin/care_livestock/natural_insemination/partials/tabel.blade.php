@@ -5,7 +5,7 @@
         <p class="mt-1 text-sm text-gray-500">Daftar semua data natural insemination di peternakan.</p>
     </div>
     <div class="flex-shrink-0">
-        <a href="{{ route('admin.care_livestock.natural_insemination.create', ['farm_id' => $farmId]) }}"
+        <a href="{{ route('admin.care-livestock.natural-inseminasi.create', ['farm_id' => $farmId]) }}"
            class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-4 py-2 text-sm shadow-sm transition-all">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
                 <path fill-rule="evenodd" d="M12 4.5a.75.75 0 01.75.75v6h6a.75.75 0 010 1.5h-6v6a.75.75 0 01-1.5 0v-6h-6a.75.75 0 010-1.5h6v-6A.75.75 0 0112 4.5z" clip-rule="evenodd"/>
@@ -24,7 +24,7 @@
 @endif
 
 <div class="px-8 py-4">
-    <form method="GET" action="{{ route('admin.care_livestock.natural_insemination.index', ['farm_id' => $farmId]) }}"
+    <form method="GET" action="{{ route('admin.care-livestock.natural-inseminasi.index', ['farm_id' => $farmId]) }}"
           class="relative w-full max-w-xs">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -93,7 +93,7 @@
 
                                 <td class="px-6 py-4 text-right text-sm font-medium">
                                     <div class="flex items-center justify-end space-x-2">
-                                        <a href="{{ route('admin.care_livestock.natural_insemination.edit', ['farm_id' => $farmId, 'id' => $ai->id]) }}"
+                                        <a href="{{ route('admin.care-livestock.natural-inseminasi.edit', ['farm_id' => $farmId, 'id' => $ai->id]) }}"
                                            class="text-blue-600 hover:text-blue-900 p-2 hover:bg-gray-100 rounded-full"
                                            title="Edit">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -102,7 +102,7 @@
                                             </svg>
                                         </a>
 
-                                        <form action="{{ route('admin.care_livestock.natural_insemination.destroy', ['farm_id' => $farmId, 'id' => $ai->id]) }}"
+                                        <form action="{{ route('admin.care-livestock.natural-inseminasi.destroy', ['farm_id' => $farmId, 'id' => $ai->id]) }}"
                                               method="POST"
                                               onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                                             @csrf

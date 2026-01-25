@@ -9,8 +9,8 @@
     <x-sidebar.menu-link href="#" label="Reweight / Timbang Ulang" />
 
     <x-sidebar.menu-submenu name="inseminasiInnerOpen" label="Kelahiran Ternak">
-        <x-sidebar.menu-link :href="route('admin.care_livestock.artificial_inseminasi.index', ['farm_id' => $farm->id])" label="Inseminasi Buatan" />
-        <x-sidebar.menu-link :href="route('admin.care_livestock.natural_insemination.index', ['farm_id' => $farm->id])" label="Inseminasi Alami" />
+        <x-sidebar.menu-link :href="route('admin.care-livestock.artificial-inseminasi.index', ['farm_id' => $farm->id])" label="Inseminasi Buatan" />
+        <x-sidebar.menu-link :href="route('admin.care-livestock.natural-inseminasi.index', ['farm_id' => $farm->id])" label="Inseminasi Alami" />
     </x-sidebar.menu-submenu>
 
     <x-sidebar.menu-section label="Kebuntingan & Kelahiran" />

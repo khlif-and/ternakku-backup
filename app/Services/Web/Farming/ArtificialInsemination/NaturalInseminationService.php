@@ -71,7 +71,7 @@ class NaturalInseminationService
         try {
             $this->core->recordNatural($farm, $validated);
             return redirect()
-                ->route('admin.care_livestock.natural_insemination.index', ['farm_id' => $farmId])
+                ->route('admin.care-livestock.natural-inseminasi.index', ['farm_id' => $farmId])
                 ->with('success', 'Data created successfully');
         } catch (\InvalidArgumentException $e) {
             return back()->withInput()->withErrors(['sire_breed_id' => $e->getMessage()]);
@@ -114,7 +114,7 @@ class NaturalInseminationService
         try {
             $this->core->updateNatural($farm, $id, $validated);
             return redirect()
-                ->route('admin.care_livestock.natural_insemination.index', ['farm_id' => $farmId])
+                ->route('admin.care-livestock.natural-inseminasi.index', ['farm_id' => $farmId])
                 ->with('success', 'Data updated successfully');
         } catch (\InvalidArgumentException $e) {
             return back()->withInput()->withErrors(['sire_breed_id' => $e->getMessage()]);
@@ -131,7 +131,7 @@ class NaturalInseminationService
         try {
             $this->core->deleteNatural($farm, $id);
             return redirect()
-                ->route('admin.care_livestock.natural_insemination.index', ['farm_id' => $farmId])
+                ->route('admin.care-livestock.natural-inseminasi.index', ['farm_id' => $farmId])
                 ->with('success', 'Data deleted successfully');
         } catch (\Throwable $e) {
             Log::error('❌ Natural Insemination Delete Error', ['message' => $e->getMessage()]);

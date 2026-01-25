@@ -9,10 +9,10 @@ use App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi\NaturalInsemin
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('care-livestock/{farm_id}/natural-insemination')
+Route::prefix('care-livestock/{farm_id}/natural-inseminasi') // Ubah insemination -> inseminasi
     ->middleware('check.farm.access')
     ->controller(NaturalInseminationController::class)
-    ->name('admin.care_livestock.natural_insemination.')
+    ->name('admin.care-livestock.natural-inseminasi.') // Gunakan dash '-' dan 'inseminasi'
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
