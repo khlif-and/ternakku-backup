@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi\NaturalInseminationController;
+use App\Http\Controllers\Admin\CareLivestock\NaturalInsemination\NaturalInseminationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -9,10 +9,10 @@ use App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi\NaturalInsemin
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('care-livestock/{farm_id}/natural-inseminasi') // Ubah insemination -> inseminasi
+Route::prefix('care-livestock/{farm_id}/natural-insemination')
     ->middleware('check.farm.access')
     ->controller(NaturalInseminationController::class)
-    ->name('admin.care-livestock.natural-inseminasi.') // Gunakan dash '-' dan 'inseminasi'
+    ->name('admin.care-livestock.natural-insemination.')
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');

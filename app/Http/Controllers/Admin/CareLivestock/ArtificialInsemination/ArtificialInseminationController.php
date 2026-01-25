@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi;
+namespace App\Http\Controllers\Admin\CareLivestock\ArtificialInsemination;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;

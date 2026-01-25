@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi\ArtificialInseminationController;
+use App\Http\Controllers\Admin\CareLivestock\ArtificialInsemination\ArtificialInseminationController;
 
 Route::prefix('care-livestock/{farm_id}/artificial-inseminasi')
     ->middleware('check.farm.access')
