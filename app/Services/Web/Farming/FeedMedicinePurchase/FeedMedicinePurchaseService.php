@@ -3,8 +3,6 @@
 namespace App\Services\Web\Farming\FeedMedicinePurchase;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use App\Models\FeedMedicinePurchase;
 use App\Http\Requests\Farming\FeedMedicinePurchaseStoreRequest;
 use App\Http\Requests\Farming\FeedMedicinePurchaseUpdateRequest;
 
@@ -19,110 +17,63 @@ class FeedMedicinePurchaseService
 
     public function index($farmId, Request $request)
     {
-        $farm = $request->attributes->get('farm');
-        
+        $farm = request()->attributes->get('farm');
         $filters = $request->only(['start_date', 'end_date', 'purchase_type']);
-        $data = $this->core->listPurchases($farm, $filters);
+        $items = $this->core->listPurchases($farm, $filters);
 
-        return view('admin.care_livestock.feed_medicine_purchase.index', [
-            'data' => $data,
-            'farm' => $farm,
-            'request' => $request,
-        ]);
+        return view('admin.care_livestock.feed_medicine_purchase.index', compact('farm', 'items', 'request'));
     }
 
-    public function create($farmId, Request $request)
+    public function create($farmId)
     {
-        $farm = $request->attributes->get('farm');
-        return view('admin.care_livestock.feed_medicine_purchase.create', [
-            'farm' => $farm,
-        ]);
+        $farm = request()->attributes->get('farm');
+        return view('admin.care_livestock.feed_medicine_purchase.create', compact('farm'));
     }
 
     public function store(FeedMedicinePurchaseStoreRequest $request, $farmId)
     {
-        DB::beginTransaction();
+        $farm = request()->attributes->get('farm');
+        $this->core->storePurchase($farm, $request->validated());
 
-        try {
-            $farm = $request->attributes->get('farm');
-            $this->core->storePurchase($farm, $request->validated());
-            
-            DB::commit();
-
-            return redirect()
-                ->route('admin.care-livestock.feed-medicine-purchase.index', $farm->id)
-                ->with('success', 'Data pembelian berhasil disimpan.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()->with('error', $e->getMessage() . ' | LINE: ' . $e->getLine());
-        }
+        return redirect()
+            ->route('admin.care-livestock.feed-medicine-purchase.index', $farm->id)
+            ->with('success', 'Data pembelian berhasil disimpan.');
     }
 
-    public function show($farmId, $id, Request $request)
+public function show($farmId, $id)
     {
-        try {
-            $farm = $request->attributes->get('farm');
-            $data = $this->core->findPurchase($farm, $id);
+        $farm = request()->attributes->get('farm');
+        // Gunakan findPurchase() agar sinkron dengan CoreService
+        $data = $this->core->findPurchase($farm, $id);
 
-            return view('admin.care_livestock.feed_medicine_purchase.show', [
-                'data' => $data,
-                'farm' => $farm,
-            ]);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Data tidak ditemukan.');
-        }
+        return view('admin.care_livestock.feed_medicine_purchase.show', compact('farm', 'data'));
     }
 
-    public function edit($farmId, $id, Request $request)
+    public function edit($farmId, $id)
     {
-        try {
-            $farm = $request->attributes->get('farm');
-            $data = $this->core->findPurchase($farm, $id);
+        $farm = request()->attributes->get('farm');
+        $data = $this->core->findPurchase($farm, $id);
 
-            return view('admin.care_livestock.feed_medicine_purchase.edit', [
-                'data' => $data,
-                'farm' => $farm,
-            ]);
-        } catch (\Exception $e) {
-            return back()->with('error', 'Data tidak ditemukan.');
-        }
+        return view('admin.care_livestock.feed_medicine_purchase.edit', compact('farm', 'data'));
     }
 
     public function update(FeedMedicinePurchaseUpdateRequest $request, $farmId, $id)
     {
-        DB::beginTransaction();
+        $farm = request()->attributes->get('farm');
+        $this->core->updatePurchase($farm, $id, $request->validated());
 
-        try {
-            $farm = $request->attributes->get('farm');
-            $this->core->updatePurchase($farm, $id, $request->validated());
-
-            DB::commit();
-
-            return redirect()
-                ->route('admin.care-livestock.feed-medicine-purchase.index', $farm->id)
-                ->with('success', 'Data berhasil diupdate.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withInput()->with('error', 'Gagal update data.');
-        }
+        return redirect()
+            ->route('admin.care-livestock.feed-medicine-purchase.index', $farm->id)
+            ->with('success', 'Data berhasil diupdate.');
     }
 
-    public function destroy($farmId, $id, Request $request)
+    public function destroy($farmId, $id)
     {
-        DB::beginTransaction();
+        $farm = request()->attributes->get('farm');
+        $this->core->deletePurchase($farm, $id);
 
-        try {
-            $farm = $request->attributes->get('farm');
-            $this->core->deletePurchase($farm, $id);
-
-            DB::commit();
-
-            return redirect()
-                ->route('admin.care-livestock.feed-medicine-purchase.index', $farm->id)
-                ->with('success', 'Data berhasil dihapus.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->with('error', 'Gagal menghapus data.');
-        }
+        return redirect()
+            ->route('admin.care-livestock.feed-medicine-purchase.index', $farm->id)
+            ->with('success', 'Data berhasil dihapus.');
     }
 }
