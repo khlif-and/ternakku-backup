@@ -2,12 +2,14 @@
 
 namespace App\Services\Web\Farming\MutationIndividu;
 
-use App\Models\{MutationH, MutationIndividuD, PenHistory};
+use App\Models\MutationH;
+use App\Models\MutationIndividuD;
+use App\Models\PenHistory;
 use Illuminate\Support\Facades\DB;
 
 class MutationIndividuCoreService
 {
-    public function listMutations($farm, array $filters): array
+    public function listMutations($farm, array $filters)
     {
         $query = MutationIndividuD::with(['mutationH', 'livestock'])
             ->whereHas('mutationH', function ($q) use ($farm, $filters) {
@@ -21,7 +23,15 @@ class MutationIndividuCoreService
                 }
             });
 
-        foreach (['livestock_type_id', 'livestock_group_id', 'livestock_breed_id', 'livestock_sex_id', 'pen_id'] as $filter) {
+        $livestockFilters = [
+            'livestock_type_id', 
+            'livestock_group_id', 
+            'livestock_breed_id', 
+            'livestock_sex_id', 
+            'pen_id'
+        ];
+
+        foreach ($livestockFilters as $filter) {
             if (!empty($filters[$filter])) {
                 $query->whereHas('livestock', fn($q) =>
                     $q->where($filter, $filters[$filter])
@@ -33,26 +43,21 @@ class MutationIndividuCoreService
             $query->where('livestock_id', $filters['livestock_id']);
         }
 
-        return $query->get()->all();
+        return $query->get();
     }
 
-    public function storeMutation($farm, array $data): MutationIndividuD
+    public function find($farm, $id): MutationIndividuD
     {
-        $livestock = $farm->livestocks()->find($data['livestock_id']);
-        if (!$livestock) {
-            throw new \InvalidArgumentException('Livestock not found in this farm.');
-        }
+        return MutationIndividuD::with(['mutationH', 'livestock'])
+            ->whereHas('mutationH', fn($q) => $q->where('farm_id', $farm->id)->where('type', 'individu'))
+            ->findOrFail($id);
+    }
 
-        $penDestination = $farm->pens()->find($data['pen_destination']);
-        if (!$penDestination) {
-            throw new \InvalidArgumentException('The destination pen not found.');
-        }
+    public function store($farm, array $data): MutationIndividuD
+    {
+        return DB::transaction(function () use ($farm, $data) {
+            $livestock = $farm->livestocks()->findOrFail($data['livestock_id']);
 
-        if ($penDestination->id == $livestock->pen_id) {
-            throw new \InvalidArgumentException('The destination pen must be different from the current pen.');
-        }
-
-        return DB::transaction(function () use ($farm, $data, $livestock) {
             $mutationH = MutationH::create([
                 'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
@@ -60,7 +65,7 @@ class MutationIndividuCoreService
                 'notes' => $data['notes'] ?? null,
             ]);
 
-            $mutationIndividu = MutationIndividuD::create([
+            $mutationIndividuD = MutationIndividuD::create([
                 'mutation_h_id' => $mutationH->id,
                 'livestock_id' => $data['livestock_id'],
                 'from' => $livestock->pen_id,
@@ -75,41 +80,23 @@ class MutationIndividuCoreService
 
             $livestock->update(['pen_id' => $data['pen_destination']]);
 
-            return $mutationIndividu;
+            return $mutationIndividuD;
         });
     }
 
-    public function findMutation($farm, $id)
+    public function update($farm, $id, array $data): MutationIndividuD
     {
-        return MutationIndividuD::with(['mutationH', 'livestock'])
-            ->whereHas('mutationH', fn($q) => $q->where('farm_id', $farm->id)->where('type', 'individu'))
-            ->findOrFail($id);
-    }
+        $mutationIndividuD = $this->find($farm, $id);
+        $livestock = $mutationIndividuD->livestock;
 
-    public function updateMutation($farm, $id, array $data): void
-    {
-        $mutation = $this->findMutation($farm, $id);
-        $livestock = $mutation->livestock;
-
-        if ($mutation->to !== ($livestock->pen_id ?? null)) {
-            throw new \InvalidArgumentException('Editing is not allowed because this is an old record.');
-        }
-
-        $penDestination = $farm->pens()->find($data['pen_destination']);
-        if (!$penDestination) {
-            throw new \InvalidArgumentException('The destination pen not found.');
-        }
-        if ($penDestination->id == $mutation->from) {
-            throw new \InvalidArgumentException('The destination pen must be different from the current pen.');
-        }
-
-        DB::transaction(function () use ($mutation, $livestock, $data) {
-            $mutation->mutationH->update([
+        return DB::transaction(function () use ($mutationIndividuD, $livestock, $data) {
+            $mutationH = $mutationIndividuD->mutationH;
+            $mutationH->update([
                 'transaction_date' => $data['transaction_date'],
                 'notes' => $data['notes'] ?? null,
             ]);
 
-            $mutation->update([
+            $mutationIndividuD->update([
                 'notes' => $data['notes'] ?? null,
                 'to' => $data['pen_destination'],
             ]);
@@ -125,32 +112,35 @@ class MutationIndividuCoreService
             }
 
             $livestock->update(['pen_id' => $data['pen_destination']]);
+
+            return $mutationIndividuD;
         });
     }
 
-    public function deleteMutation($farm, $id): void
+    public function delete($farm, $id): void
     {
-        $mutation = $this->findMutation($farm, $id);
-        $livestock = $mutation->livestock;
+        $mutationIndividuD = $this->find($farm, $id);
+        $livestock = $mutationIndividuD->livestock;
 
-        if ($mutation->to !== ($livestock->pen_id ?? null)) {
-            throw new \InvalidArgumentException('Deleting is not allowed because this is an old record.');
-        }
-
-        DB::transaction(function () use ($mutation, $livestock) {
-            $livestock->update(['pen_id' => $mutation->from]);
+        DB::transaction(function () use ($mutationIndividuD, $livestock) {
+            $livestock->update(['pen_id' => $mutationIndividuD->from]);
 
             $penHistory = PenHistory::where('livestock_id', $livestock->id)->latest()->first();
             if ($penHistory) {
                 $penHistory->delete();
             }
 
-            $mutation->delete();
+            $mutationH = $mutationIndividuD->mutationH;
+            $mutationIndividuD->delete();
 
-            $mutationH = $mutation->mutationH;
             if ($mutationH && !$mutationH->mutationIndividuD()->exists()) {
                 $mutationH->delete();
             }
         });
+    }
+
+    public function checkIsLatest($mutationIndividuD): bool
+    {
+        return $mutationIndividuD->to === ($mutationIndividuD->livestock->pen_id ?? null);
     }
 }
