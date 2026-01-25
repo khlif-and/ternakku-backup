@@ -2,22 +2,19 @@
 
 namespace App\Services\Web\Farming\PregnantCheck;
 
-use App\Models\{
-    PregnantCheck,
-    PregnantCheckD,
-    LivestockExpense,
-    ReproductionCycle
-};
-use App\Enums\{
-    LivestockExpenseTypeEnum,
-    LivestockSexEnum,
-    ReproductionCycleStatusEnum
-};
+use App\Models\PregnantCheck;
+use App\Models\PregnantCheckD;
+use App\Models\LivestockExpense;
+use App\Models\ReproductionCycle;
+use App\Enums\LivestockExpenseTypeEnum;
+use App\Enums\LivestockSexEnum;
+use App\Enums\ReproductionCycleStatusEnum;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class PregnantCheckCoreService
 {
-    public function listChecks($farm, array $filters): array
+    public function listPregnantChecks($farm, array $filters)
     {
         $query = PregnantCheckD::with([
             'pregnantCheck',
@@ -44,28 +41,19 @@ class PregnantCheckCoreService
         }
 
         $pcTable = (new PregnantCheckD)->getTable();
+        
         return $query->orderByDesc(
             PregnantCheck::query()
                 ->select('transaction_date')
                 ->whereColumn('pregnant_checks.id', "{$pcTable}.pregnant_check_id")
                 ->limit(1)
-        )->get()->all();
+        )->get();
     }
 
-    public function findCheck($farm, $id)
-    {
-        return PregnantCheckD::with([
-            'pregnantCheck',
-            'reproductionCycle.livestock.livestockType',
-            'reproductionCycle.livestock.livestockBreed',
-            'reproductionCycle.livestock.pen',
-        ])->whereHas('pregnantCheck', fn($q) => $q->where('farm_id', $farm->id))
-        ->findOrFail($id);
-    }
-
-    public function storeCheck($farm, array $data): void
+    public function store($farm, array $data): PregnantCheckD
     {
         $livestock = $farm->livestocks()->find($data['livestock_id']);
+        
         if (!$livestock) {
             throw new \InvalidArgumentException('Livestock not found.');
         }
@@ -73,7 +61,7 @@ class PregnantCheckCoreService
             throw new \InvalidArgumentException('Livestock is not female.');
         }
 
-        DB::transaction(function () use ($farm, $data, $livestock) {
+        return DB::transaction(function () use ($farm, $data, $livestock) {
             $check = ReproductionCycle::where('livestock_id', $data['livestock_id'])
                 ->orderByDesc('created_at')
                 ->first();
@@ -92,6 +80,7 @@ class PregnantCheckCoreService
             $repro->save();
 
             $transactionNumber = $this->generatePCNumber($data['transaction_date'], $farm->id);
+            
             $pregnantCheck = PregnantCheck::withoutEvents(function () use ($farm, $data, $transactionNumber) {
                 return PregnantCheck::create([
                     'farm_id' => $farm->id,
@@ -101,7 +90,7 @@ class PregnantCheckCoreService
                 ]);
             });
 
-            PregnantCheckD::create([
+            $pregnantCheckD = PregnantCheckD::create([
                 'reproduction_cycle_id' => $repro->id,
                 'pregnant_check_id' => $pregnantCheck->id,
                 'action_time' => $data['action_time'],
@@ -122,10 +111,23 @@ class PregnantCheckCoreService
             ]);
             $exp->amount = ($exp->amount ?? 0) + $data['cost'];
             $exp->save();
+
+            return $pregnantCheckD;
         });
     }
 
-    public function updateCheck($farm, $id, array $data): void
+    public function find($farm, $id): PregnantCheckD
+    {
+        return PregnantCheckD::with([
+            'pregnantCheck',
+            'reproductionCycle.livestock.livestockType',
+            'reproductionCycle.livestock.livestockBreed',
+            'reproductionCycle.livestock.pen',
+        ])->whereHas('pregnantCheck', fn($q) => $q->where('farm_id', $farm->id))
+        ->findOrFail($id);
+    }
+
+    public function update($farm, $id, array $data): PregnantCheckD
     {
         $item = PregnantCheckD::with(['pregnantCheck', 'reproductionCycle.livestock'])
             ->whereHas('pregnantCheck', fn($q) => $q->where('farm_id', $farm->id))
@@ -133,7 +135,7 @@ class PregnantCheckCoreService
 
         $livestock = $item->reproductionCycle->livestock;
 
-        DB::transaction(function () use ($item, $livestock, $data) {
+        return DB::transaction(function () use ($item, $livestock, $data) {
             $item->pregnantCheck->update([
                 'transaction_date' => $data['transaction_date'],
                 'notes' => $data['notes'] ?? null,
@@ -163,10 +165,12 @@ class PregnantCheckCoreService
                     : null,
                 'cost' => $data['cost'],
             ]);
+
+            return $item;
         });
     }
 
-    public function deleteCheck($farm, $id): void
+    public function delete($farm, $id): void
     {
         $item = PregnantCheckD::with(['pregnantCheck', 'reproductionCycle.livestock'])
             ->whereHas('pregnantCheck', fn($q) => $q->where('farm_id', $farm->id))
@@ -206,7 +210,7 @@ class PregnantCheckCoreService
 
     private function generatePCNumber(string $transactionDate, int $farmId): string
     {
-        $date = \Illuminate\Support\Carbon::parse($transactionDate);
+        $date = Carbon::parse($transactionDate);
         $prefix = $date->format('ym') . '-PC-';
 
         $last = PregnantCheck::whereYear('transaction_date', $date->year)
