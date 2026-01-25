@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin\CareLivestock\MutationLivestock;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Farming\MutationIndividuStoreRequest;
 use App\Http\Requests\Farming\MutationIndividuUpdateRequest;
-use Illuminate\Http\Request;
 use App\Services\Web\Farming\MutationIndividu\MutationIndividuService;
+use Illuminate\Http\Request;
 
 class MutationIndividuController extends Controller
 {
@@ -32,23 +32,23 @@ class MutationIndividuController extends Controller
         return $this->service->store($request, $farmId);
     }
 
-    public function show($farmId, $mutationIndividuId)
+    public function show($farmId, $id)
     {
-        return $this->service->show($farmId, $mutationIndividuId);
+        return $this->service->show($farmId, $id);
     }
 
-    public function edit($farmId, $mutationIndividuId)
+    public function edit($farmId, $id)
     {
-        return $this->service->edit($farmId, $mutationIndividuId);
+        return $this->service->edit($farmId, $id);
     }
 
-    public function update(MutationIndividuUpdateRequest $request, $farmId, $mutationIndividuId)
+    public function update(MutationIndividuUpdateRequest $request, $farmId, $id)
     {
-        return $this->service->update($request, $farmId, $mutationIndividuId);
+        return $this->service->update($request, $farmId, $id);
     }
 
-    public function destroy($farmId, $mutationIndividuId)
+    public function destroy($farmId, $id)
     {
-        return $this->service->destroy($farmId, $mutationIndividuId);
+        return $this->service->destroy($farmId, $id);
     }
 }
