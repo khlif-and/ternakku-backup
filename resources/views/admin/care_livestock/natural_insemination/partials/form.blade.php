@@ -1,5 +1,5 @@
 <form x-data="formInsemination()" x-init="init()"
-    action='{{ route('admin.care_livestock.natural_insemination.store', ['farm_id' => $farm->id]) }}' method='POST'
+    action='{{ route('admin.care-livestock.natural-inseminasi.store', ['farm_id' => $farm->id]) }}' method='POST'
     class='w-full max-w-full'>
     @csrf
 

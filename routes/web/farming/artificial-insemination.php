@@ -1,18 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi\ArtificialInseminasiController;
-
-/*
-|--------------------------------------------------------------------------
-| Artificial Inseminasi Routes
-|--------------------------------------------------------------------------
-*/
+use App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi\ArtificialInseminationController;
 
 Route::prefix('care-livestock/{farm_id}/artificial-inseminasi')
     ->middleware('check.farm.access')
-    ->controller(ArtificialInseminasiController::class)
-    ->name('admin.care_livestock.artificial_inseminasi.')
+    ->controller(ArtificialInseminationController::class)
+    ->name('admin.care-livestock.artificial-inseminasi.')
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');

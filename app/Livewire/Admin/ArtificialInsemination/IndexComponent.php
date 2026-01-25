@@ -3,97 +3,59 @@
 namespace App\Livewire\Admin\ArtificialInsemination;
 
 use Livewire\Component;
+use App\Models\Farm;
 use App\Models\InseminationArtificial;
+use App\Services\Web\Farming\ArtificialInsemination\ArtificialInseminationCoreService;
 
 class IndexComponent extends Component
 {
-    public $farm;
-    public $search = '';
-    public $filters = [
-        'start_date' => '',
-        'end_date' => '',
-        'livestock_type_id' => '',
-        'livestock_group_id' => '',
-        'livestock_breed_id' => '',
-        'pen_id' => '',
+    public Farm $farm;
+    public $start_date;
+    public $end_date;
+    public $livestock_id;
+
+    protected $queryString = [
+        'start_date' => ['except' => ''],
+        'end_date' => ['except' => ''],
+        'livestock_id' => ['except' => ''],
     ];
 
-    protected $queryString = ['search', 'filters'];
-
-    public function mount($farm)
+    public function mount(Farm $farm)
     {
         $this->farm = $farm;
     }
 
-    public function resetFilters()
+    public function delete($id, ArtificialInseminationCoreService $coreService)
     {
-        $this->filters = [
-            'start_date' => '',
-            'end_date' => '',
-            'livestock_type_id' => '',
-            'livestock_group_id' => '',
-            'livestock_breed_id' => '',
-            'pen_id' => '',
-        ];
-
-        $this->search = '';
+        try {
+            $item = $coreService->find($this->farm, $id);
+            $coreService->delete($item);
+            session()->flash('success', 'Data inseminasi buatan berhasil dihapus.');
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+        }
     }
 
     public function render()
     {
         $query = InseminationArtificial::with([
-                'insemination',
-                'reproductionCycle.livestock.livestockType',
-                'reproductionCycle.livestock.livestockBreed',
-                'reproductionCycle.livestock.pen',
-            ])
-            ->whereHas('insemination', function ($q) {
-                $q->where('farm_id', $this->farm->id)
-                  ->where('type', 'artificial');
+            'insemination',
+            'reproductionCycle.livestock',
+            'semenBreed'
+        ])->whereHas('insemination', function ($q) {
+            $q->where('farm_id', $this->farm->id)->where('type', 'artificial');
 
-                if (!empty($this->filters['start_date'])) {
-                    $q->where('transaction_date', '>=', $this->filters['start_date']);
-                }
+            if ($this->start_date) {
+                $q->where('transaction_date', '>=', $this->start_date);
+            }
+            if ($this->end_date) {
+                $q->where('transaction_date', '<=', $this->end_date);
+            }
+        });
 
-                if (!empty($this->filters['end_date'])) {
-                    $q->where('transaction_date', '<=', $this->filters['end_date']);
-                }
-            });
-
-        if (!empty($this->filters['livestock_type_id'])) {
-            $query->whereHas('reproductionCycle.livestock', function ($q) {
-                $q->where('livestock_type_id', $this->filters['livestock_type_id']);
-            });
-        }
-
-        if (!empty($this->filters['livestock_group_id'])) {
-            $query->whereHas('reproductionCycle.livestock', function ($q) {
-                $q->where('livestock_group_id', $this->filters['livestock_group_id']);
-            });
-        }
-
-        if (!empty($this->filters['livestock_breed_id'])) {
-            $query->whereHas('reproductionCycle.livestock', function ($q) {
-                $q->where('livestock_breed_id', $this->filters['livestock_breed_id']);
-            });
-        }
-
-        if (!empty($this->filters['pen_id'])) {
-            $query->whereHas('reproductionCycle.livestock', function ($q) {
-                $q->where('pen_id', $this->filters['pen_id']);
-            });
-        }
-
-        if (!empty($this->search)) {
-            $query->where(function ($q) {
-                $q->whereHas('reproductionCycle.livestock', function ($subQ) {
-                    $subQ->where('eartag', 'like', '%' . $this->search . '%')
-                         ->orWhere('eartag_number', 'like', '%' . $this->search . '%')
-                         ->orWhere('ear_tag', 'like', '%' . $this->search . '%')
-                         ->orWhere('name', 'like', '%' . $this->search . '%')
-                         ->orWhere('nama', 'like', '%' . $this->search . '%');
-                })
-                ->orWhere('officer_name', 'like', '%' . $this->search . '%');
+        if ($this->livestock_id) {
+            $query->whereHas('reproductionCycle', function ($q) {
+                $q->where('livestock_id', $this->livestock_id);
             });
         }
 
@@ -101,6 +63,10 @@ class IndexComponent extends Component
 
         return view('livewire.admin.artificial-insemination.index-component', [
             'items' => $items,
+            'livestocks' => $this->farm->livestocks()
+                ->whereHas('livestockSex', function($q) {
+                    $q->where('name', 'Female')->orWhere('name', 'Betina');
+                })->get(),
         ]);
     }
 }

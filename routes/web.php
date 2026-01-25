@@ -1,32 +1,19 @@
 <?php
 
-    use Illuminate\Support\Facades\Route;
-    use App\Http\Controllers\HomeController;
-    use App\Http\Controllers\Admin\CareLivestock\CareLivestockController;
-    use App\Http\Controllers\Admin\LivestockOutlet\LivestockOutletController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Admin\CareLivestock\CareLivestockController;
+use App\Http\Controllers\Admin\LivestockOutlet\LivestockOutletController;
 
-    /*
-    |--------------------------------------------------------------------------
-    | Web Routes
-    |--------------------------------------------------------------------------
-    */
+Route::get('/', [HomeController::class, 'index']);
 
-    Route::get('/', [HomeController::class, 'index']);
+require __DIR__.'/web/auth.php';
 
-// Authentication Routes (separated file)
-    require __DIR__.'/web/auth.php';
-
-    Route::middleware(['auth', 'email.verified'])->group(function () {
+Route::middleware(['auth', 'email.verified'])->group(function () {
     Route::get('dashboard', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('dashboard');
 
-    // Farm Routes (separated file)
     require __DIR__.'/web/farm.php';
 
-    /*
-    |--------------------------------------------------------------------------
-    | Qurban Module (separated files in qurban folder)
-    |--------------------------------------------------------------------------
-    */
     require __DIR__.'/web/qurban/qurban.php';
     require __DIR__.'/web/qurban/qurban-customer.php';
     require __DIR__.'/web/qurban/qurban-fleet.php';
@@ -41,11 +28,6 @@
     require __DIR__.'/web/qurban/qurban-sales.php';
     require __DIR__.'/web/qurban/qurban-cancelation.php';
 
-    /*
-    |--------------------------------------------------------------------------
-    | Care Livestock Module (Farming/Buka Qurban)
-    |--------------------------------------------------------------------------
-    */
     Route::get('care-livestock', [CareLivestockController::class, 'index'])->name('care_livestock');
     Route::get('care-livestock/dashboard', function () {
         $farmId = session('selected_farm');
@@ -56,11 +38,6 @@
     Route::get('care-livestock/{farm_id}/dashboard', [CareLivestockController::class, 'dashboard'])
         ->name('admin.care-livestock.dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | Separated Route Files (Care Livestock Modules in farming folder)
-    |--------------------------------------------------------------------------
-    */
     require __DIR__.'/web/farming/pens.php';
     require __DIR__.'/web/farming/reports.php';
     require __DIR__.'/web/farming/livestock-reception.php';
@@ -78,7 +55,7 @@
     require __DIR__.'/web/farming/treatment-colony.php';
     require __DIR__.'/web/farming/treatment-schedule-individu.php';
     require __DIR__.'/web/farming/mutation-individu.php';
-    require __DIR__.'/web/farming/artificial-inseminasi.php';
+    require __DIR__.'/web/farming/artificial-insemination.php';
     require __DIR__.'/web/farming/natural-insemination.php';
     require __DIR__.'/web/farming/pregnant-check.php';
     require __DIR__.'/web/farming/reproduction.php';
@@ -88,11 +65,6 @@
     require __DIR__.'/web/farming/classification.php';
     require __DIR__.'/web/farming/customer.php';
 
-    /*
-    |--------------------------------------------------------------------------
-    | Livestock Outlet
-    |--------------------------------------------------------------------------
-    */
     Route::get('admin/livestock-outlet/dashboard', [LivestockOutletController::class, 'dashboard'])
         ->name('livestock_outlet.dashboard');
 });
