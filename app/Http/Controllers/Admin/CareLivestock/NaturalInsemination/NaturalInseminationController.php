@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin\CareLivestock\ArtificialInseminasi;
+namespace App\Http\Controllers\Admin\CareLivestock\NaturalInsemination;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Farming\NaturalInseminationStoreRequest;
 use App\Http\Requests\Farming\NaturalInseminationUpdateRequest;
-use App\Services\Web\Farming\ArtificialInsemination\NaturalInseminationService;
+use App\Services\Web\Farming\NaturalInsemination\NaturalInseminationService;
 
 class NaturalInseminationController extends Controller
 {
