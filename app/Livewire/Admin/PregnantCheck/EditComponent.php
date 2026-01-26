@@ -27,6 +27,13 @@ class EditComponent extends Component
     // Data Sources
     public $livestocks = [];
 
+    // Options for dropdowns
+    public $checkStatuses = [
+        'PREGNANT' => 'Pregnant (Bunting)',
+        'NOT_PREGNANT' => 'Not Pregnant (Tidak Bunting)',
+        'INCONCLUSIVE' => 'Inconclusive (Belum Jelas)',
+    ];
+
     protected function rules()
     {
         return [
@@ -34,7 +41,7 @@ class EditComponent extends Component
             'action_time' => 'required',
             'livestock_id' => 'required|exists:livestocks,id',
             'officer_name' => 'required|string|max:255',
-            'status' => 'required|in:PREGNANT,NOT_PREGNANT',
+            'status' => 'required|in:PREGNANT,NOT_PREGNANT,INCONCLUSIVE',
             'pregnant_age' => 'required_if:status,PREGNANT|nullable|numeric|min:0',
             'cost' => 'required|numeric|min:0',
             'notes' => 'nullable|string',
