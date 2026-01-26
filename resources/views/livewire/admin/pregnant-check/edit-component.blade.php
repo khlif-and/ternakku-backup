@@ -30,54 +30,39 @@
         {{-- Section 1: Timing --}}
         <div class="mb-8 grid grid-cols-1 md:grid-cols-2 gap-4">
             <x-form.date wire:model="transaction_date" name="transaction_date" label="Transaction Date" required />
-            
-            <div>
-                <label class="block mb-2 text-base font-semibold text-gray-700">Action Time <span class="text-red-500">*</span></label>
-                <input type="time" wire:model="action_time" class="w-full px-4 py-3 border rounded-lg text-base" required>
-                <x-form.error name="action_time" />
-            </div>
+            <x-form.input wire:model="action_time" type="time" name="action_time" label="Action Time" required />
         </div>
 
         {{-- Section 2: Result Data --}}
         <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
             {{-- Officer Name --}}
-            <div>
-                <label class="block mb-2 text-base font-semibold text-gray-700">Officer Name <span class="text-red-500">*</span></label>
-                <input type="text" wire:model="officer_name" class="w-full px-4 py-3 border rounded-lg text-base" placeholder="Dr. Name" required>
-                <x-form.error name="officer_name" />
-            </div>
+            <x-form.input wire:model="officer_name" name="officer_name" label="Officer Name" placeholder="Dr. Name" required />
 
             {{-- Status --}}
-            <div>
-                <label class="block mb-2 text-base font-semibold text-gray-700">Status <span class="text-red-500">*</span></label>
-                <select wire:model.live="status" class="w-full px-4 py-3 border rounded-lg text-base" required>
-                    <option value="">Select Status</option>
-                    <option value="PREGNANT">Pregnant (Bunting)</option>
-                    <option value="NOT_PREGNANT">Not Pregnant (Tidak Bunting)</option>
-                </select>
-                <x-form.error name="status" />
-            </div>
+            <x-form.select 
+                wire:model.live="status" 
+                name="status" 
+                label="Status" 
+                :options="$checkStatuses"
+                placeholder="Select Status"
+                required 
+            />
 
             {{-- Pregnant Age (Conditional) --}}
-            <div>
-                <label class="block mb-2 text-base font-semibold text-gray-700">
-                    Pregnant Age (Month) 
-                    @if($status === 'PREGNANT') <span class="text-red-500">*</span> @endif
-                </label>
-                <input type="number" 
-                       wire:model="pregnant_age" 
-                       class="w-full px-4 py-3 border rounded-lg text-base bg-white disabled:bg-gray-100 disabled:text-gray-400" 
-                       min="0"
-                       step="0.1"
-                       @if($status !== 'PREGNANT') disabled @endif
-                >
-                <x-form.error name="pregnant_age" />
-            </div>
+            <x-form.number 
+                wire:model="pregnant_age" 
+                name="pregnant_age" 
+                label="Pregnant Age (Month)" 
+                :min="0"
+                step="0.1"
+                :disabled="$status !== 'PREGNANT'"
+                :required="$status === 'PREGNANT'"
+            />
         </div>
 
         {{-- Section 3: Cost & Notes --}}
         <div class="mb-8">
-             <x-form.input wire:model="cost" type="number" name="cost" label="Check Cost (Rp)" required />
+            <x-form.number wire:model="cost" name="cost" label="Check Cost (Rp)" :min="0" required />
         </div>
 
         <x-form.textarea wire:model="notes" name="notes" label="Change Notes (optional)" rows="3" class="mb-8" />

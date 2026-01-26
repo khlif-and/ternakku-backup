@@ -2,22 +2,18 @@
 
 namespace App\Services\Web\Farming\LivestockBirth;
 
-use App\Models\{
-    LivestockBirth,
-    LivestockBirthD,
-    LivestockExpense,
-    ReproductionCycle
-};
-use App\Enums\{
-    LivestockSexEnum,
-    LivestockExpenseTypeEnum,
-    ReproductionCycleStatusEnum
-};
+use App\Models\LivestockBirth;
+use App\Models\LivestockBirthD;
+use App\Models\LivestockExpense;
+use App\Models\ReproductionCycle;
+use App\Enums\LivestockSexEnum;
+use App\Enums\LivestockExpenseTypeEnum;
+use App\Enums\ReproductionCycleStatusEnum;
 use Illuminate\Support\Facades\DB;
 
 class LivestockBirthCoreService
 {
-    public function listBirths($farm, array $filters): array
+    public function listBirths($farm, array $filters)
     {
         $query = LivestockBirth::where('farm_id', $farm->id);
 
@@ -44,7 +40,7 @@ class LivestockBirthCoreService
         ];
     }
 
-    public function storeBirth($farm, array $data): LivestockBirth
+    public function storeBirth($farm, array $data)
     {
         $livestock = $farm->livestocks()->find($data['livestock_id']);
         if (!$livestock) {
@@ -107,14 +103,14 @@ class LivestockBirthCoreService
         });
     }
 
-    public function findBirth($farm, $id): LivestockBirth
+    public function findBirth($farm, $id)
     {
         return LivestockBirth::where('farm_id', $farm->id)
             ->with(['reproductionCycle.livestock', 'livestockBirthD'])
             ->findOrFail($id);
     }
 
-    public function updateBirth($farm, $id, array $data): LivestockBirth
+    public function updateBirth($farm, $id, array $data)
     {
         $birth = $this->findBirth($farm, $id);
 
@@ -171,7 +167,7 @@ class LivestockBirthCoreService
         });
     }
 
-    public function deleteBirth($farm, $id): void
+    public function deleteBirth($farm, $id)
     {
         $birth = $this->findBirth($farm, $id);
         DB::transaction(function () use ($birth) {
@@ -197,7 +193,7 @@ class LivestockBirthCoreService
         });
     }
 
-    private function updateExpense($livestockId, $cost): void
+    private function updateExpense($livestockId, $cost)
     {
         $expense = LivestockExpense::where('livestock_id', $livestockId)
             ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::BIRTH->value)
