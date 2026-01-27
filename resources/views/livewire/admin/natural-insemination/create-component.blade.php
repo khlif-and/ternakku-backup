@@ -1,59 +1,43 @@
-<div> <x-alert.session /> <x-alert.validation-errors :errors="$errors" />
+<div>
+    <x-alert.session />
+    <x-alert.validation-errors :errors="$errors" />
 
-<form wire:submit.prevent="save" class="w-full">
-    <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <x-form.date wire:model="transaction_date" name="transaction_date" label="Transaction Date" required />
-        
-        <div>
-            <label class="block mb-2 text-base font-semibold text-gray-700">Female Livestock <span class="text-red-500">*</span></label>
-            <select wire:model="livestock_id" class="w-full px-4 py-3 border rounded-lg text-base" required>
-                <option value="">Select Female</option>
-                @foreach($livestocks as $livestock)
-                    <option value="{{ $livestock->id }}">
-                        {{ $livestock->identification_number }} - {{ $livestock->nickname ?? 'No Name' }}
-                    </option>
-                @endforeach
-            </select>
-            <x-form.error name="livestock_id" />
+    <form wire:submit.prevent="save" class="w-full">
+        <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <x-form.date wire:model="transaction_date" name="transaction_date" label="Transaction Date" required />
+
+            <x-form.select
+                wire:model="livestock_id"
+                name="livestock_id"
+                label="Female Livestock"
+                :options="$livestocks->mapWithKeys(fn($l) => [$l->id => $l->identification_number . ' - ' . ($l->nickname ?? 'No Name')])->toArray()"
+                placeholder="Select Female"
+                required
+            />
+
+            <x-form.select
+                wire:model="sire_breed_id"
+                name="sire_breed_id"
+                label="Sire Breed"
+                :options="$breeds->pluck('name', 'id')->toArray()"
+                placeholder="Select Breed"
+                required
+            />
         </div>
 
-        <div>
-            <label class="block mb-2 text-base font-semibold text-gray-700">Sire Breed <span class="text-red-500">*</span></label>
-            <select wire:model="sire_breed_id" class="w-full px-4 py-3 border rounded-lg text-base" required>
-                <option value="">Select Breed</option>
-                @foreach($breeds as $breed)
-                    <option value="{{ $breed->id }}">{{ $breed->name }}</option>
-                @endforeach
-            </select>
-            <x-form.error name="sire_breed_id" />
-        </div>
-    </div>
+        <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <x-form.clock wire:model="action_time" name="action_time" label="Action Time" required />
 
-    <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-            <label class="block mb-2 text-base font-semibold text-gray-700">Action Time <span class="text-red-500">*</span></label>
-            <input type="time" wire:model="action_time" class="w-full px-4 py-3 border rounded-lg text-base" required>
-            <x-form.error name="action_time" />
+            <x-form.input wire:model="sire_owner_name" name="sire_owner_name" label="Sire Owner Name" placeholder="Example: John Doe" required />
+
+            <x-form.number wire:model="cost" name="cost" label="Action Cost (Rp)" required />
         </div>
 
-        <div>
-            <label class="block mb-2 text-base font-semibold text-gray-700">Sire Owner Name <span class="text-red-500">*</span></label>
-            <input type="text" wire:model="sire_owner_name" class="w-full px-4 py-3 border rounded-lg text-base" placeholder="Example: John Doe" required>
-            <x-form.error name="sire_owner_name" />
-        </div>
+        <x-form.textarea wire:model="notes" name="notes" label="Notes (optional)" rows="3" class="mb-8" />
 
-        <div>
-            <label class="block mb-2 text-base font-semibold text-gray-700">Action Cost (Rp) <span class="text-red-500">*</span></label>
-            <input type="number" wire:model="cost" class="w-full px-4 py-3 border rounded-lg text-base" required>
-            <x-form.error name="cost" />
-        </div>
-    </div>
-
-    <x-form.textarea wire:model="notes" name="notes" label="Notes (optional)" rows="3" class="mb-8" />
-
-    <x-form.footer 
-        backRoute="{{ route('admin.care-livestock.natural-insemination.index', $farm->id) }}"
-        submitLabel="Save Natural Insemination Data" 
-    />
-</form>
+        <x-form.footer
+            backRoute="{{ route('admin.care-livestock.natural-insemination.index', $farm->id) }}"
+            submitLabel="Save Natural Insemination Data"
+        />
+    </form>
 </div>

@@ -23,4 +23,9 @@ protected $fillable = [
     public $incrementing = false; // ✅ Tambahkan ini karena kita assign ID manual
 
     protected $keyType = 'string'; // ✅ Jika ID-nya kadang string (bukan integer murni)
+
+    public function getFormattedNameAttribute()
+    {
+        return "{$this->name} - {$this->district_name}, {$this->regency_name}";
+    }
 }

@@ -36,16 +36,26 @@
                     <form action="{{ url('qurban/customer/' . $customer->id ) }}" method="POST">
                         @csrf
                         @method('put')
-                        <div class="form-group">
-                            <label for="name">Nama</label>
-                            <input type="text" class="form-control" id="name" name="name" required value="{{ $customer->name }}">
+                        <div class="mb-4">
+                            <x-form.input 
+                                name="name" 
+                                label="Nama" 
+                                :value="$customer->name"
+                                required 
+                                error="name"
+                            />
                         </div>
-                        <div class="form-group">
-                            <label for="phone_number">Nomor Telepon</label>
-                            <input type="text" class="form-control" id="phone_number" name="phone_number" value="{{ $customer->phone_number }}" required>
+                        <div class="mb-8">
+                            <x-form.input 
+                                name="phone_number" 
+                                label="Nomor Telepon" 
+                                :value="$customer->phone_number"
+                                required 
+                                error="phone_number"
+                            />
                         </div>
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        <div class="flex justify-start">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-6 py-2 transition-all">Simpan</button>
                         </div>
                     </form>
                 </div>
