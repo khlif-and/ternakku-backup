@@ -1,165 +1,79 @@
-@php($farmId = request()->route('farm_id'))
+@php
+    $isEdit = isset($customer);
+    $action = $isEdit
+        ? route('admin.care-livestock.customer.update', ['farm_id' => $farmId, 'id' => $customer->id])
+        : route('admin.care-livestock.customer.store', ['farm_id' => $farmId]);
+@endphp
 
-{{-- HEADER --}}
-<div class="flex flex-col sm:flex-row items-center justify-between px-8 py-4 gap-4">
-    <div>
-        <h1 class="text-xl font-bold text-gray-800">Customer</h1>
-        <p class="mt-1 text-sm text-gray-500">Daftar semua customer di peternakan.</p>
-    </div>
+<form action="{{ $action }}" method="POST">
+    @csrf
+    @if($isEdit)
+        @method('PUT')
+    @endif
 
-    <div class="flex-shrink-0">
-        <a href="{{ route('admin.care-livestock.customer.create', ['farm_id' => $farmId]) }}"
-           class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg px-4 py-2 text-sm shadow-sm transition-all">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 viewBox="0 0 24 24"
-                 fill="currentColor"
-                 class="w-5 h-5">
-                <path fill-rule="evenodd"
-                      d="M12 4.5a.75.75 0 01.75.75v6h6a.75.75 0 010 1.5h-6v6a.75.75 0 01-1.5 0v-6h-6a.75.75 0 010-1.5h6v-6A.75.75 0 0112 4.5z"
-                      clip-rule="evenodd"/>
-            </svg>
-            Tambah Customer
-        </a>
-    </div>
-</div>
-
-{{-- SUCCESS ALERT --}}
-@if (session('success'))
-    <div class="px-8 pt-2">
-        <div class="px-4 py-3 rounded-lg bg-green-50 border border-green-200 text-green-700 text-sm font-medium">
-            {{ session('success') }}
-        </div>
-    </div>
-@endif
-
-{{-- SEARCH --}}
-<div class="px-8 py-4">
-    <form method="GET"
-          action="{{ route('admin.care-livestock.customer.index', ['farm_id' => $farmId]) }}"
-          class="relative w-full max-w-xs">
-
-        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg class="h-5 w-5 text-gray-400"
-                 xmlns="http://www.w3.org/2000/svg"
-                 fill="none"
-                 viewBox="0 0 24 24"
-                 stroke="currentColor"
-                 stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M21 21l-4.35-4.35m1.6-5.4a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
+    <div class="space-y-6">
+        
+        {{-- NAMA --}}
+        <div>
+            <label for="name" class="block mb-2 text-sm font-medium text-gray-900">
+                Nama Customer <span class="text-red-600">*</span>
+            </label>
+            <input type="text"
+                   id="name"
+                   name="name"
+                   value="{{ old('name', $customer->name ?? '') }}"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                   placeholder="Masukkan nama customer"
+                   required>
+            @error('name')
+                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
 
-        <input type="text"
-               name="search"
-               id="search-input"
-               value="{{ request('search') }}"
-               placeholder="Cari nama, email, nomor hp..."
-               class="block w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm bg-white text-gray-900 placeholder-gray-500
-                      focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition">
-    </form>
-</div>
-
-{{-- TABEL --}}
-<div class="flex flex-col mt-2">
-    <div class="-my-2 overflow-x-auto">
-        <div class="py-2 align-middle inline-block min-w-full px-8">
-            <div class="shadow-sm overflow-hidden border-b border-gray-200 rounded-lg">
-
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">No</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nama</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Nomor HP</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Email</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Alamat</th>
-                            <th class="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Aksi</th>
-                        </tr>
-                    </thead>
-
-                    <tbody class="bg-white divide-y divide-gray-200">
-
-                        @if(isset($customers) && count($customers))
-                            @foreach ($customers as $index => $cust)
-                                <tr class="hover:bg-gray-50 transition-colors duration-150">
-
-                                    <td class="px-6 py-4 text-sm text-gray-500">
-                                        {{ $index + 1 }}
-                                    </td>
-
-                                    <td class="px-6 py-4 text-sm text-gray-800">
-                                        {{ $cust->name ?? '-' }}
-                                    </td>
-
-                                    <td class="px-6 py-4 text-sm text-gray-800">
-                                        {{ $cust->phone ?? '-' }}
-                                    </td>
-
-                                    <td class="px-6 py-4 text-sm text-gray-800">
-                                        {{ $cust->email ?? '-' }}
-                                    </td>
-
-                                    <td class="px-6 py-4 text-sm text-gray-800">
-                                        <a href="{{ route('admin.care-livestock.customer.address.index', [$farmId, $cust->id]) }}"
-                                           class="text-blue-600 hover:text-blue-700 underline">
-                                            Lihat Alamat
-                                        </a>
-                                    </td>
-
-                                    <td class="px-6 py-4 text-right text-sm font-medium">
-                                        <div class="flex items-center justify-end space-x-2">
-
-                                            {{-- EDIT --}}
-                                            <a href="{{ route('admin.care-livestock.customer.edit', [$farmId, $cust->id]) }}"
-                                               class="text-blue-600 hover:text-blue-900 p-2 hover:bg-gray-100 rounded-full"
-                                               title="Edit">
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                     viewBox="0 0 20 20"
-                                                     fill="currentColor"
-                                                     class="w-5 h-5">
-                                                    <path d="M13.586 3.586a2 2 0 112.828 2.828l-8.95 8.95a2 2 0 01-.878.502l-3.3.943a.5.5 0 01-.62-.62l.943-3.3a2 2 0 01.502-.878l8.95-8.95z"/>
-                                                </svg>
-                                            </a>
-
-                                            {{-- DELETE --}}
-                                            <form action="{{ route('admin.care-livestock.customer.destroy', [$farmId, $cust->id]) }}"
-                                                  method="POST"
-                                                  onsubmit="return confirm('Yakin ingin menghapus customer ini?');">
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <button type="submit"
-                                                        class="text-red-600 hover:text-red-900 p-2 hover:bg-gray-100 rounded-full"
-                                                        title="Hapus">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         viewBox="0 0 20 20"
-                                                         fill="currentColor"
-                                                         class="w-5 h-5">
-                                                        <path fill-rule="evenodd"
-                                                              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                                                              clip-rule="evenodd"/>
-                                                    </svg>
-                                                </button>
-                                            </form>
-
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-
-                        @else
-                            <tr>
-                                <td colspan="6" class="text-center py-10 text-gray-500">
-                                    Belum ada data customer.
-                                </td>
-                            </tr>
-                        @endif
-
-                    </tbody>
-                </table>
-
-            </div>
+        {{-- PHONE --}}
+        <div>
+            <label for="phone" class="block mb-2 text-sm font-medium text-gray-900">
+                Nomor HP
+            </label>
+            <input type="text"
+                   id="phone"
+                   name="phone"
+                   value="{{ old('phone', $customer->phone ?? '') }}"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                   placeholder="Contoh: 08123456789">
+            @error('phone')
+                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+            @enderror
         </div>
+
+        {{-- EMAIL --}}
+        <div>
+            <label for="email" class="block mb-2 text-sm font-medium text-gray-900">
+                Email
+            </label>
+            <input type="email"
+                   id="email"
+                   name="email"
+                   value="{{ old('email', $customer->email ?? '') }}"
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                   placeholder="Contoh: email@example.com">
+            @error('email')
+                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
+        {{-- BUTTONS --}}
+        <div class="flex items-center gap-4 pt-4">
+            <button type="submit"
+                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
+                {{ $isEdit ? 'Simpan Perubahan' : 'Tambah Customer' }}
+            </button>
+
+            <a href="{{ route('admin.care-livestock.customer.index', ['farm_id' => $farmId]) }}"
+               class="text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center transition-colors">
+                Batal
+            </a>
+        </div>
+
     </div>
-</div>
+</form>

@@ -30,6 +30,11 @@ class CustomerController extends Controller
         return $this->service->store($request, $farm_id);
     }
 
+    public function show($farm_id, $id)
+    {
+        return $this->service->show($farm_id, $id);
+    }
+
     public function edit($farm_id, $id)
     {
         return $this->service->edit($farm_id, $id);
