@@ -1,46 +1,30 @@
 <?php
 
-namespace App\Livewire\Admin\SalesLivestock;
+namespace App\Livewire\Qurban\SalesLivestock;
 
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\QurbanSaleLivestockH;
-use App\Services\Qurban\SalesLivestockCoreService;
-use Illuminate\Support\Facades\Log;
 
 class ShowComponent extends Component
 {
     public Farm $farm;
-    public QurbanSaleLivestockH $salesLivestock;
+    public $salesLivestock;
 
-    public function mount(Farm $farm, QurbanSaleLivestockH $salesLivestock)
+    public function mount(Farm $farm, $id)
     {
         $this->farm = $farm;
-        $this->salesLivestock = $salesLivestock->load([
-            'qurbanCustomer',
-            'qurbanSalesOrder',
-            'qurbanSaleLivestockD.livestock',
-        ]);
-    }
-
-    public function delete(SalesLivestockCoreService $coreService)
-    {
-        try {
-            $coreService->delete($this->farm, $this->salesLivestock->id);
-            
-            session()->flash('success', 'Data penjualan ternak berhasil dihapus.');
-            return redirect()->route('admin.care-livestock.sales-livestock.index', $this->farm->id);
-        } catch (\Throwable $e) {
-            Log::error('SalesLivestock Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
+        $this->salesLivestock = QurbanSaleLivestockH::with([
+                'qurbanCustomer.user', 
+                'qurbanSaleLivestockD.livestock.livestockType',
+                'qurbanSaleLivestockD.qurbanCustomerAddress'
+            ])
+            ->where('farm_id', $farm->id)
+            ->findOrFail($id);
     }
 
     public function render()
     {
-        return view('livewire.admin.sales-livestock.show-component');
+        return view('livewire.qurban.sales-livestock.show-component');
     }
 }

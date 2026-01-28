@@ -1,105 +1,121 @@
 <div>
     <x-alert.session />
-    <x-alert.validation-errors :errors="$errors" />
 
-    <form wire:submit.prevent="save" class="w-full">
-        
-        <div class="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <x-form.date 
-                wire:model="transaction_date" 
-                name="transaction_date" 
-                label="Transaction Date" 
-                required 
-            />
+    <div class="bg-white rounded-lg shadow-sm border p-6">
+        <form wire:submit.prevent="update" class="space-y-6">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <x-form.select 
+                    wire:model.live="customer_id" 
+                    name="customer_id"
+                    label="Customer" 
+                    :options="$customers" 
+                    placeholder="Pilih Customer"
+                />
 
-            <x-form.select
-                wire:model="customer_id"
-                name="customer_id"
-                label="Customer"
-                :options="$customers->pluck('name', 'id')->toArray()"
-                placeholder="Select Customer"
-                required
-            />
+                <x-form.disabled 
+                    label="Nomor Transaksi" 
+                    :value="$sales_order_number" 
+                />
 
-            <x-form.select
-                wire:model="sales_order_id"
-                name="sales_order_id"
-                label="Sales Order (Optional)"
-                :options="$salesOrders->mapWithKeys(fn($o) => [$o->id => 'Order #' . $o->id . ' - ' . $o->order_date])->toArray()"
-                placeholder="Select Order Ref"
-            />
-        </div>
+                <x-form.date 
+                    wire:model="transaction_date" 
+                    name="transaction_date"
+                    label="Tanggal Transaksi" 
+                />
 
-        <div class="mb-8">
-            <div class="flex items-center justify-between mb-4 border-b pb-2">
-                <h3 class="text-lg font-semibold text-gray-700">Livestock Items</h3>
-                <button type="button" wire:click="addDetail" class="text-sm text-blue-600 hover:text-blue-800 font-medium">
-                    + Add Item
-                </button>
+                <div class="md:col-span-2">
+                    <x-form.textarea
+                        wire:model="notes"
+                        name="notes"
+                        label="Catatan"
+                        placeholder="Tambahkan catatan jika ada"
+                    />
+                </div>
             </div>
 
             <div class="space-y-4">
-                @foreach($details as $index => $detail)
-                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 relative">
-                        
-                        @if(count($details) > 1)
-                            <button type="button" wire:click="removeDetail({{ $index }})" class="absolute top-3 right-3 text-red-400 hover:text-red-600">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                </svg>
-                            </button>
-                        @endif
+                <div class="flex items-center justify-between border-b pb-2">
+                    <label class="block text-sm font-medium text-gray-700">Detail Ternak</label>
+                    <x-button.action wire:click="addItem" type="button" size="xs" color="blue">
+                        + Tambah Ternak
+                    </x-button.action>
+                </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 pr-8">
-                            <x-form.select
-                                wire:model="details.{{ $index }}.livestock_id"
-                                name="details.{{ $index }}.livestock_id"
-                                label="Livestock"
-                                :options="$livestocks->mapWithKeys(fn($l) => [$l->id => $l->identification_number . ' - ' . ($l->nickname ?? 'No Name')])->toArray()"
-                                placeholder="Select Livestock"
-                                required
+                @if($errors->has('items'))
+                    <span class="text-red-500 text-sm">{{ $errors->first('items') }}</span>
+                @endif
+
+                @foreach($items as $index => $item)
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end bg-gray-50 p-4 rounded-lg border relative group" wire:key="item-{{ $index }}">
+                        <div class="md:col-span-3">
+                            <x-form.select 
+                                wire:model.live="items.{{ $index }}.livestock_id" 
+                                name="items.{{ $index }}.livestock_id"
+                                label="Ternak" 
+                                :options="$availableLivestock->mapWithKeys(fn($l) => [$l->id => ($l->livestockType->name ?? '') . ' - ' . $l->eartag . ' (' . ($l->current_weight ?? 0) . ' kg)'])" 
+                                placeholder="Pilih Ternak"
                             />
-                            
-                            <x-form.date 
-                                wire:model="details.{{ $index }}.delivery_plan_date" 
-                                name="details.{{ $index }}.delivery_plan_date" 
-                                label="Delivery Plan Date" 
+                        </div>
+                        <div class="md:col-span-3">
+                            <x-form.select 
+                                wire:model="items.{{ $index }}.customer_address_id" 
+                                name="items.{{ $index }}.customer_address_id"
+                                label="Alamat Pengiriman" 
+                                :options="$addresses" 
+                                placeholder="Pilih Alamat"
+                            />
+                        </div>
+                        <div class="md:col-span-2">
+                            <x-form.disabled 
+                                label="Berat (Kg)" 
+                                wire:model="items.{{ $index }}.weight"
+                            />
+                        </div>
+                        <div class="md:col-span-2">
+                            <x-form.number 
+                                wire:model.blur="items.{{ $index }}.price_per_kg" 
+                                name="items.{{ $index }}.price_per_kg"
+                                label="Harga/Kg" 
+                                min="0"
+                            />
+                        </div>
+                        <div class="md:col-span-2">
+                            <x-form.disabled 
+                                label="Harga Total" 
+                                :value="number_format($item['price_per_head'] ?? 0, 0, ',', '.')"
+                            />
+                        </div>
+                         
+                        <div class="md:col-span-2">
+                           <x-form.date 
+                                wire:model="items.{{ $index }}.delivery_plan_date" 
+                                name="items.{{ $index }}.delivery_plan_date"
+                                label="Rencana Kirim" 
                             />
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <x-form.number 
-                                wire:model="details.{{ $index }}.weight" 
-                                name="details.{{ $index }}.weight" 
-                                label="Weight (Kg)" 
-                                step="0.01"
-                                required 
-                            />
-
-                            <x-form.number 
-                                wire:model="details.{{ $index }}.price_per_kg" 
-                                name="details.{{ $index }}.price_per_kg" 
-                                label="Price / Kg (Rp)" 
-                                required 
-                            />
-
-                            <x-form.number 
-                                wire:model="details.{{ $index }}.price_per_head" 
-                                name="details.{{ $index }}.price_per_head" 
-                                label="Total / Head (Rp)" 
-                                required 
-                            />
+                        <div class="md:col-span-1 flex justify-end">
+                            @if(count($items) > 1)
+                                <button type="button" wire:click="removeItem({{ $index }})" class="text-red-500 hover:text-red-700">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            @endif
                         </div>
                     </div>
                 @endforeach
             </div>
-        </div>
 
-        <x-form.textarea wire:model="notes" name="notes" label="Notes (optional)" rows="3" class="mb-8" />
-
-        <x-form.footer
-            backRoute="{{ route('admin.care-livestock.sales-livestock.show', [$farm->id, $salesLivestock->id]) }}"
-            submitLabel="Update Sales Data"
-        />
-    </form>
+            <div class="flex justify-end gap-3 pt-4 border-t">
+                <x-button.link href="{{ route('admin.care-livestock.sales-livestock.index', $farm->id) }}" color="gray">
+                    Batal
+                </x-button.link>
+                <x-button.primary type="submit">
+                    Simpan Perubahan
+                </x-button.primary>
+            </div>
+        </form>
+    </div>
 </div>

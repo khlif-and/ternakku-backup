@@ -27,7 +27,7 @@ class QurbanSaleLivestockH extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber($model->type , $model->transaction_date,  $model->farm_id);
+            $model->transaction_number = self::generateTransactionNumber($model->type , $model->transaction_date,  $model->farm_id);
         });
     }
 
@@ -45,7 +45,7 @@ class QurbanSaleLivestockH extends Model
         return $query;
     }
 
-    private function generateTransactionNumber($type , $transactionDate, $farmId)
+    public static function generateTransactionNumber($type , $transactionDate, $farmId)
     {
         $date = Carbon::parse($transactionDate);
 

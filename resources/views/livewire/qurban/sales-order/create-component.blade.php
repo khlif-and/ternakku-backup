@@ -5,13 +5,15 @@
         
         <x-form.select 
             wire:model="customer_id" 
+            name="customer_id"
             label="Customer" 
-            :options="$customers->pluck('name', 'id')" 
+            :options="$customers" 
             placeholder="Pilih Customer"
         />
 
         <x-form.date 
             wire:model="order_date" 
+            name="order_date"
             label="Tanggal Order" 
         />
 
@@ -28,6 +30,7 @@
                     <div class="md:col-span-5">
                         <x-form.select 
                             wire:model="items.{{ $index }}.livestock_type_id" 
+                            name="items.{{ $index }}.livestock_type_id"
                             label="Jenis Hewan" 
                             :options="$livestockTypes->pluck('name', 'id')" 
                             placeholder="Pilih Jenis Hewan"
@@ -36,6 +39,7 @@
                     <div class="md:col-span-3">
                         <x-form.number 
                             wire:model="items.{{ $index }}.quantity" 
+                            name="items.{{ $index }}.quantity"
                             label="Jumlah (Ekor)" 
                             min="1"
                         />
@@ -43,6 +47,7 @@
                     <div class="md:col-span-3">
                         <x-form.number 
                             wire:model="items.{{ $index }}.total_weight" 
+                            name="items.{{ $index }}.total_weight"
                             label="Total Berat (Kg)" 
                             min="0"
                             step="0.01"
@@ -65,7 +70,7 @@
             <x-button.link href="{{ route('admin.care-livestock.sales-order.index', $farm->id) }}" color="gray">
                 Batal
             </x-button.link>
-            <x-button.primary>
+            <x-button.primary type="submit">
                 Simpan
             </x-button.primary>
         </div>

@@ -43,7 +43,7 @@
                     {{ $item->order_date ? date('d/m/Y', strtotime($item->order_date)) : '-' }}
                 </td>
                 <td class="px-4 py-3 border-b">
-                    <div class="text-sm font-bold text-gray-900">{{ $item->qurbanCustomer?->name ?? '-' }}</div>
+                    <div class="text-sm font-bold text-gray-900">{{ $item->qurbanCustomer?->user?->name ?? $item->qurbanCustomer?->phone_number ?? 'Customer #' . $item->qurbanCustomer?->id ?? '-' }}</div>
                     <div class="text-xs text-gray-500">{{ $item->qurbanCustomer?->phone ?? '' }}</div>
                 </td>
                 <td class="px-4 py-3 border-b text-sm">
