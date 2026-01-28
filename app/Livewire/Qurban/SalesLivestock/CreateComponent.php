@@ -25,6 +25,10 @@ class CreateComponent extends Component
     {
         $this->farm = $farm;
         $this->transaction_date = date('Y-m-d');
+        
+        // Generate prediction for transaction number
+        $this->transaction_number = $this->generateTransactionNumberPreview('QSL', $this->transaction_date, $this->farm->id);
+
         $this->items = [
             [
                 'livestock_id' => '',
@@ -35,6 +39,33 @@ class CreateComponent extends Component
                 'delivery_plan_date' => date('Y-m-d'),
             ]
         ];
+    }
+
+    private function generateTransactionNumberPreview($type, $transactionDate, $farmId)
+    {
+        $date = \Illuminate\Support\Carbon::parse($transactionDate);
+
+        $code =  'QSL';
+        $year = $date->format('y');
+        $month = $date->format('m');
+        $prefix = "$year$month-$code-";
+
+        // Get the last transaction number for the current month and year
+        $lastTransaction = \App\Models\QurbanSaleLivestockH::whereYear('transaction_date', $date->year)
+            ->whereMonth('transaction_date', $date->month)
+            ->where('farm_id' , $farmId)
+            ->where('transaction_number' , 'like' , "%$code%")
+            ->orderBy('transaction_number', 'desc')
+            ->first();
+
+        if ($lastTransaction) {
+            $lastNumber = (int) substr($lastTransaction->transaction_number, -3);
+            $newNumber = str_pad($lastNumber + 1, 3, '0', STR_PAD_LEFT);
+        } else {
+            $newNumber = '001';
+        }
+
+        return $prefix . $newNumber;
     }
 
     public function updatedCustomerId($value)
