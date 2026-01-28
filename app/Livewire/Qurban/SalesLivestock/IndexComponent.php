@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Livewire\Admin\SalesLivestock;
+namespace App\Livewire\Qurban\SalesLivestock;
 
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Farm;
 use App\Models\QurbanCustomer;
-use App\Services\Qurban\SalesLivestockCoreService;
+use App\Services\Web\Qurban\SalesLivestock\SalesLivestockCoreService;
 
 class IndexComponent extends Component
 {
@@ -32,7 +32,7 @@ class IndexComponent extends Component
     {
         try {
             $coreService->delete($this->farm, $id);
-            session()->flash('success', 'Data penjualan ternak berhasil dihapus.');
+            session()->flash('success', 'Data berhasil dihapus.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
@@ -46,11 +46,15 @@ class IndexComponent extends Component
             'qurban_customer_id' => $this->qurban_customer_id,
         ];
 
-        $sales = $coreService->list($this->farm, $filters);
-        $customers = QurbanCustomer::all();
+        $salesLivestocks = $coreService->list($this->farm, $filters);
+        
+        $customers = QurbanCustomer::with('user')->get()->map(function($customer) {
+            $customer->name = $customer->user->name ?? $customer->phone_number ?? 'Customer #' . $customer->id;
+            return $customer;
+        });
 
-        return view('livewire.admin.sales-livestock.index-component', [
-            'sales' => $sales,
+        return view('livewire.qurban.sales-livestock.index-component', [
+            'salesLivestocks' => $salesLivestocks,
             'customers' => $customers,
         ]);
     }

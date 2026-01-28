@@ -91,7 +91,13 @@ class EditComponent extends Component
 
     public function render()
     {
-        $customers = QurbanCustomer::all();
+        $customers = QurbanCustomer::with('user')->get()->map(function($customer) {
+            return [
+                'id' => $customer->id,
+                'name' => $customer->user->name ?? $customer->phone_number ?? 'Customer #' . $customer->id
+            ];
+        })->pluck('name', 'id');
+
         $livestockTypes = \App\Models\LivestockType::all();
         
         return view('livewire.qurban.sales-order.edit-component', [

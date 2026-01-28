@@ -47,7 +47,10 @@ class IndexComponent extends Component
         ];
 
         $salesOrders = $coreService->list($this->farm, $filters);
-        $customers = QurbanCustomer::all();
+        $customers = QurbanCustomer::with('user')->get()->map(function($customer) {
+            $customer->name = $customer->user->name ?? $customer->phone_number ?? 'Customer #' . $customer->id;
+            return $customer;
+        });
 
         return view('livewire.qurban.sales-order.index-component', [
             'salesOrders' => $salesOrders,

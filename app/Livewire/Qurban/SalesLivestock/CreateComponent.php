@@ -1,109 +1,174 @@
 <?php
 
-namespace App\Livewire\Admin\SalesLivestock;
+namespace App\Livewire\Qurban\SalesLivestock;
 
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\QurbanCustomer;
+use App\Models\QurbanCustomerAddress;
 use App\Models\QurbanSalesOrder;
-use App\Services\Qurban\SalesLivestockCoreService;
-use Illuminate\Support\Facades\Log;
+use App\Services\Web\Qurban\SalesLivestock\SalesLivestockCoreService;
 
 class CreateComponent extends Component
 {
     public Farm $farm;
-
-    public $transaction_date;
     public $customer_id;
     public $sales_order_id;
+    public $transaction_date;
+    public $transaction_number;
+
+    public $sales_order_number;
     public $notes;
-    public $details = [];
-
-    public $customers = [];
-    public $salesOrders = [];
-    public $livestocks = [];
-
-    protected function rules()
-    {
-        return [
-            'transaction_date' => 'required|date',
-            'customer_id' => 'required|exists:qurban_customers,id',
-            'sales_order_id' => 'nullable|exists:qurban_sales_orders,id',
-            'notes' => 'nullable|string',
-            'details' => 'array|min:1',
-            'details.*.livestock_id' => 'required|exists:livestocks,id',
-            'details.*.customer_address_id' => 'nullable|integer',
-            'details.*.weight' => 'required|numeric|min:0',
-            'details.*.price_per_kg' => 'required|numeric|min:0',
-            'details.*.price_per_head' => 'required|numeric|min:0',
-            'details.*.delivery_plan_date' => 'nullable|date',
-        ];
-    }
-
-    protected $messages = [
-        'transaction_date.required' => 'Tanggal transaksi wajib diisi.',
-        'customer_id.required' => 'Customer wajib dipilih.',
-        'details.min' => 'Minimal satu ternak harus dipilih.',
-    ];
+    public $items = [];
 
     public function mount(Farm $farm)
     {
         $this->farm = $farm;
-        $this->transaction_date = now()->format('Y-m-d');
-        
-        $this->customers = QurbanCustomer::all();
-        $this->salesOrders = QurbanSalesOrder::where('farm_id', $farm->id)->get();
-        $this->livestocks = $farm->livestocks()->alive()->get();
-
-        $this->addDetail();
-    }
-
-    public function addDetail()
-    {
-        $this->details[] = [
-            'livestock_id' => '',
-            'customer_address_id' => null,
-            'weight' => 0,
-            'price_per_kg' => 0,
-            'price_per_head' => 0,
-            'delivery_plan_date' => null,
+        $this->transaction_date = date('Y-m-d');
+        $this->items = [
+            [
+                'livestock_id' => '',
+                'customer_address_id' => '',
+                'weight' => 0,
+                'price_per_kg' => 0,
+                'price_per_head' => 0,
+                'delivery_plan_date' => date('Y-m-d'),
+            ]
         ];
     }
 
-    public function removeDetail($index)
+    public function updatedCustomerId($value)
     {
-        if (count($this->details) > 1) {
-            unset($this->details[$index]);
-            $this->details = array_values($this->details);
+        $this->sales_order_id = null;
+        $this->sales_order_number = '-';
+
+        if ($value) {
+            $salesOrder = QurbanSalesOrder::where('farm_id', $this->farm->id)
+                ->where('qurban_customer_id', $value)
+                ->latest()
+                ->first();
+            
+            if ($salesOrder) {
+                $this->sales_order_id = $salesOrder->id;
+                $this->sales_order_number = $salesOrder->transaction_number;
+            }
         }
     }
 
-    public function save(SalesLivestockCoreService $coreService)
+    public function addItem()
     {
-        $this->validate();
+        $this->items[] = [
+            'livestock_id' => '',
+            'customer_address_id' => '',
+            'weight' => 0,
+            'price_per_kg' => 0,
+            'price_per_head' => 0,
+            'delivery_plan_date' => date('Y-m-d'),
+        ];
+    }
+
+    public function removeItem($index)
+    {
+        unset($this->items[$index]);
+        $this->items = array_values($this->items);
+    }
+
+    public function updatedItems($value, $key)
+    {
+        $parts = explode('.', $key);
+        if (count($parts) < 2) return;
+        
+        $index = $parts[0];
+        $field = $parts[1];
+
+        // Auto-fill weight when livestock is selected
+        if ($field === 'livestock_id') {
+            $livestockId = $value;
+            if ($livestockId) {
+                $livestock = \App\Models\Livestock::find($livestockId);
+                if ($livestock) {
+                    $this->items[$index]['weight'] = $livestock->current_weight ?? 0;
+                    
+                    // Recalculate total if price per kg exists
+                    $pricePerKg = (float) ($this->items[$index]['price_per_kg'] ?? 0);
+                    $this->items[$index]['price_per_head'] = $this->items[$index]['weight'] * $pricePerKg;
+                }
+            }
+        }
+
+        // Calculate Total Price when Weight or Price/Kg changes
+        if ($field === 'weight' || $field === 'price_per_kg') {
+            $weight = (float) ($this->items[$index]['weight'] ?? 0);
+            $pricePerKg = (float) ($this->items[$index]['price_per_kg'] ?? 0);
+            
+            $this->items[$index]['price_per_head'] = $weight * $pricePerKg;
+        }
+    }
+
+    public function store(SalesLivestockCoreService $coreService)
+    {
+        $this->validate([
+            'customer_id' => 'required',
+            'transaction_date' => 'required|date',
+            'items' => 'required|array|min:1',
+            'items.*.livestock_id' => 'required',
+            'items.*.customer_address_id' => 'required',
+            'items.*.weight' => 'required|numeric|min:0',
+            'items.*.price_per_kg' => 'required|numeric|min:0',
+            'items.*.price_per_head' => 'required|numeric|min:0',
+            'items.*.delivery_plan_date' => 'required|date',
+        ]);
 
         try {
-            $salesLivestockH = $coreService->store($this->farm, [
-                'transaction_date' => $this->transaction_date,
+            $data = [
                 'customer_id' => $this->customer_id,
                 'sales_order_id' => $this->sales_order_id,
+                'transaction_date' => $this->transaction_date,
                 'notes' => $this->notes,
-                'details' => $this->details,
-            ]);
+                'items' => $this->items,
+            ];
+
+            $coreService->store($this->farm, $data);
 
             session()->flash('success', 'Data penjualan ternak berhasil ditambahkan.');
-            return redirect()->route('admin.care-livestock.sales-livestock.show', [$this->farm->id, $salesLivestockH->id]);
+            return redirect()->route('admin.care-livestock.sales-livestock.index', $this->farm->id);
+
         } catch (\Throwable $e) {
-            Log::error('SalesLivestock Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            session()->flash('error', 'Gagal menyimpan data: ' . $e->getMessage());
         }
     }
 
-    public function render()
+    public function render(SalesLivestockCoreService $coreService)
     {
-        return view('livewire.admin.sales-livestock.create-component');
+        $customers = QurbanCustomer::with('user')->get()->mapWithKeys(function($customer) {
+            $name = $customer->user->name ?? $customer->phone_number ?? 'Customer #' . $customer->id;
+            return [$customer->id => $name];
+        });
+
+        $addresses = collect([]);
+        if ($this->customer_id) {
+            $addresses = QurbanCustomerAddress::where('qurban_customer_id', $this->customer_id)
+                ->get()
+                ->mapWithKeys(function($addr) {
+                    $label = $addr->name ? ($addr->name . ' - ' . $addr->address_line) : $addr->address_line;
+                    return [$addr->id => $label];
+                });
+        }
+
+        $availableLivestock = $coreService->getAvailableLivestock($this->farm->id);
+
+        $salesOrders = collect([]);
+        if ($this->customer_id) {
+            $salesOrders = QurbanSalesOrder::where('farm_id', $this->farm->id)
+                ->where('qurban_customer_id', $this->customer_id)
+                ->get();
+        }
+
+        return view('livewire.qurban.sales-livestock.create-component', [
+            'customers' => $customers,
+            'addresses' => $addresses,
+            'availableLivestock' => $availableLivestock,
+            'salesOrders' => $salesOrders,
+        ]);
     }
 }

@@ -6,49 +6,56 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\Qurban\SalesLivestockStoreRequest;
 use App\Http\Requests\Qurban\SalesLivestockUpdateRequest;
-use App\Services\Qurban\SalesLivestockService;
+use App\Services\Web\Qurban\SalesLivestock\SalesLivestockCoreService;
 
 class SalesLivestockController extends Controller
 {
-    protected SalesLivestockService $service;
+    protected SalesLivestockCoreService $service;
 
-    public function __construct(SalesLivestockService $service)
+    public function __construct(SalesLivestockCoreService $service)
     {
         $this->service = $service;
     }
 
-    public function index($farmId, Request $request)
+    public function index($farmId)
     {
-        return $this->service->index($farmId, $request);
+        $farm = \App\Models\Farm::findOrFail($farmId);
+        return view('admin.care_livestock.sales_livestock.index', compact('farm'));
     }
 
-    public function create($farmId, Request $request)
+    public function create($farmId)
     {
-        return $this->service->create($farmId, $request);
+        $farm = \App\Models\Farm::findOrFail($farmId);
+        return view('admin.care_livestock.sales_livestock.create', compact('farm'));
     }
 
     public function store(SalesLivestockStoreRequest $request, $farmId)
     {
-        return $this->service->store($request, $farmId);
+         // Logic handled by Livewire check
+         return redirect()->route('admin.care-livestock.sales-livestock.index', $farmId);
     }
 
     public function show($farmId, $id)
     {
-        return $this->service->show($farmId, $id);
+        $farm = \App\Models\Farm::findOrFail($farmId);
+        return view('admin.care_livestock.sales_livestock.show', compact('farm', 'id'));
     }
 
-    public function edit($farmId, $id, Request $request)
+    public function edit($farmId, $id)
     {
-        return $this->service->edit($farmId, $id, $request);
+        $farm = \App\Models\Farm::findOrFail($farmId);
+        return view('admin.care_livestock.sales_livestock.edit', compact('farm', 'id'));
     }
 
     public function update(SalesLivestockUpdateRequest $request, $farmId, $id)
     {
-        return $this->service->update($request, $farmId, $id);
+         // Logic handled by Livewire
+         return redirect()->route('admin.care-livestock.sales-livestock.index', $farmId);
     }
 
-    public function destroy($farmId, $id, Request $request)
+    public function destroy($farmId, $id)
     {
-        return $this->service->destroy($farmId, $id, $request);
+         // Logic handled by Livewire
+         return redirect()->route('admin.care-livestock.sales-livestock.index', $farmId);
     }
 }

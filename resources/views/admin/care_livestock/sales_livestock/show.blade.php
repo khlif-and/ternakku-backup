@@ -2,14 +2,14 @@
 
 @section('content')
     <x-admin.feature-card 
-        title="Edit Penjualan Ternak" 
+        title="Detail Penjualan Ternak" 
         :breadcrumbs="[
             ['route' => route('care_livestock'), 'icon' => 'icon-home', 'label' => 'Care Livestock'],
             ['route' => route('admin.care-livestock.sales-livestock.index', $farm->id), 'label' => 'Penjualan Ternak'],
-            ['label' => 'Edit']
+            ['label' => 'Detail']
         ]"
         backUrl="{{ route('admin.care-livestock.sales-livestock.index', $farm->id) }}"
     >
-        @livewire('qurban.sales-livestock.edit-component', ['farm' => $farm, 'id' => $id])
+        @livewire('qurban.sales-livestock.show-component', ['farm' => $farm, 'id' => $id])
     </x-admin.feature-card>
 @endsection
