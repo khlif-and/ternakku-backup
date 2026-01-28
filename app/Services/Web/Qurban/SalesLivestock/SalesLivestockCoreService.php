@@ -9,9 +9,10 @@ use Illuminate\Support\Facades\Auth;
 
 class SalesLivestockCoreService
 {
-    public function list($farm, array $filters = []): array
+    public function list($farm, array $filters)
     {
-        $query = QurbanSaleLivestockH::where('farm_id', $farm->id)
+        $query = QurbanSaleLivestockH::with(['qurbanCustomer', 'qurbanSaleLivestockD.livestock'])
+            ->where('farm_id', $farm->id)
             ->filterMarketing($farm->id);
 
         if (!empty($filters['start_date'])) {
@@ -26,16 +27,13 @@ class SalesLivestockCoreService
             $query->where('qurban_customer_id', $filters['qurban_customer_id']);
         }
 
-        return [
-            'sales' => $query->with(['qurbanCustomer', 'qurbanSaleLivestockD.livestock'])->latest()->paginate(15),
-            'livestocks' => $farm->livestocks()->alive()->get(),
-        ];
+        return $query->latest()->paginate(15);
     }
 
     public function find($farm, $id): QurbanSaleLivestockH
     {
-        return QurbanSaleLivestockH::where('farm_id', $farm->id)
-            ->with(['qurbanSaleLivestockD.livestock', 'qurbanCustomer', 'qurbanSalesOrder'])
+        return QurbanSaleLivestockH::with(['qurbanSaleLivestockD.livestock', 'qurbanCustomer', 'qurbanSalesOrder'])
+            ->where('farm_id', $farm->id)
             ->findOrFail($id);
     }
 
@@ -102,7 +100,7 @@ class SalesLivestockCoreService
     public function delete($farm, $id): void
     {
         $header = $this->find($farm, $id);
-        
+
         DB::transaction(function () use ($header) {
             $header->qurbanSaleLivestockD()->delete();
             $header->delete();
