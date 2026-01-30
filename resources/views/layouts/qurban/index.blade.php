@@ -3,157 +3,120 @@
 
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>Ternakku - Kurban</title>
+    <title>Ternakku - Qurban</title>
     <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
     <link rel="icon" href="{{ asset('admin/img/kaiadmin/favicon.ico') }}" type="image/x-icon" />
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
-
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Public Sans -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
+    @livewireStyles
+
     <style>
+        [x-cloak] { display: none !important; }
+        
         body {
             font-family: 'Public Sans', sans-serif;
+        }
+
+        .sidebar {
+            width: 20rem;
+            min-width: 20rem;
+            max-width: 20rem;
+            transition: width 0.3s ease;
+            overflow-y: auto;
+            background-color: #255F38;
+            scrollbar-width: none;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .sidebar.closed {
+            width: 4rem !important;
+            min-width: 4rem !important;
+            max-width: 4rem !important;
+        }
+
+        .sidebar.closed .sidebar-label,
+        .sidebar.closed .navbar-brand {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .arrow-icon {
+            transition: transform 0.3s ease;
+            transition-property: transform;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+
+        .arrow-icon.rotate-180 {
+            transform: rotate(180deg);
         }
     </style>
 </head>
 
-<style>
-    .sidebar {
-        width: 20rem;
-        min-width: 20rem;
-        max-width: 20rem;
-        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        overflow-y: auto;
-        overflow-x: hidden;
-        background-color: #255F38;
-        scrollbar-width: none;
-    }
+<body class="bg-gray-100 min-h-screen" x-data="{ sidebarCollapsed: false, submenuOpen: false, logoutModal: false }">
+    <div class="flex h-screen overflow-hidden">
 
-    .sidebar::-webkit-scrollbar {
-        display: none;
-    }
+        @php
+            $farm = $farm ?? request()->attributes->get('farm');
+            if (!$farm && session()->has('selected_farm')) {
+                $farm = \App\Models\Farm::find(session('selected_farm'));
+            }
+        @endphp
 
+        @include('layouts.qurban.sidebar', ['farm' => $farm])
 
-    .sidebar.closed {
-        width: 4rem !important;
-        min-width: 4rem !important;
-        max-width: 4rem !important;
-        padding-left: 0 !important;
-        padding-right: 0 !important;
-    }
+        <div class="flex flex-col flex-1 min-w-0 h-screen overflow-y-auto">
+            @include('layouts.qurban.header')
 
-    .sidebar.closed .sidebar-label,
-    .sidebar.closed .navbar-brand {
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.2s;
-    }
-
-    .sidebar .sidebar-label,
-    .sidebar .navbar-brand {
-        transition: opacity 0.2s;
-    }
-
-    .sidebar.closed .submenu-container {
-        display: none !important;
-    }
-
-    .sidebar.closed .arrow {
-        opacity: 0;
-    }
-</style>
-
-
-<body id="mainBody" class="bg-gray-100 min-h-screen">
-
-
-    <div class="flex min-h-screen">
-
-        {{-- Sidebar --}}
-        @include('layouts.qurban.sidebar')
-
-        {{-- Sidebar mobile toggle button (optional, tambahkan sesuai kebutuhan) --}}
-        <!--
-        <button class="fixed top-4 left-4 z-40 lg:hidden bg-[#255F38] text-white p-2 rounded-full shadow-lg focus:outline-none" aria-label="Open Sidebar">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-        </button>
-        -->
-
-        <div class="flex flex-col flex-1 min-w-0">
-            <header
-                class="w-full bg-white min-h-[64px] flex items-center justify-between px-6 shadow z-20 transition-all">
-                @include('layouts.qurban.header')
-            </header>
-
-            <main class="flex-1 transition-all">
-                <div>
-                    @yield('content')
-                </div>
+            <main class="flex-1">
+                @yield('content')
             </main>
-
-
         </div>
     </div>
 
-    @include('layouts.admin.logout_modal')
+    <div x-cloak x-show="logoutModal" @click.self="logoutModal = false" x-transition
+        class="fixed inset-0 z-50 bg-black/30 flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md mx-4 rounded-xl shadow-xl overflow-hidden">
+            <div class="flex justify-between items-center px-6 py-4 border-b">
+                <h3 class="text-lg font-bold text-gray-900">Logout</h3>
+                <button @click="logoutModal = false" class="text-gray-400 hover:text-gray-600 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="px-6 py-5 text-gray-800">
+                Are you sure you want to logout?
+            </div>
+            <div class="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50">
+                <button @click="logoutModal = false"
+                    class="px-4 py-2 rounded-lg text-gray-600 bg-white border border-gray-300 hover:bg-gray-100 transition font-medium">
+                    Cancel
+                </button>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="px-4 py-2 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold shadow transition">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-
-
     @yield('script')
-
-    <script>
-        document.querySelectorAll('#closeSidebarBtn, #closeSidebarBtn2').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                const sidebar = document.querySelector('.sidebar');
-                sidebar.classList.toggle('closed');
-                sidebar.querySelectorAll('.arrow-icon').forEach(svg => {
-                    svg.classList.toggle('rotate-180', sidebar.classList.contains('closed'));
-                });
-            });
-        });
-
-        document.querySelectorAll('.submenu-btn').forEach(function(btn) {
-            btn.addEventListener('click', function() {
-                var target = document.getElementById(btn.dataset.target);
-                var expanded = !target.classList.contains('max-h-0');
-                document.querySelectorAll('.submenu-container').forEach(function(sub) {
-                    if (sub !== target) {
-                        sub.style.maxHeight = '0px';
-                        sub.classList.add('max-h-0');
-                        sub.previousElementSibling.querySelector('.arrow').classList.remove(
-                            'rotate-180');
-                    }
-                });
-                if (expanded) {
-                    target.style.maxHeight = '0px';
-                    target.classList.add('max-h-0');
-                    btn.querySelector('.arrow').classList.remove('rotate-180');
-                } else {
-                    target.classList.remove('max-h-0');
-                    target.style.maxHeight = '0px';
-                    setTimeout(function() {
-                        target.style.maxHeight = target.scrollHeight + 'px';
-                    }, 10);
-                    btn.querySelector('.arrow').classList.add('rotate-180');
-                }
-            });
-        });
-    </script>
-
-
+    @stack('scripts')
+    @livewireScripts
 </body>
 
 </html>

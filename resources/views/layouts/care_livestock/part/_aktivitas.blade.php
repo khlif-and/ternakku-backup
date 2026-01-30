@@ -6,7 +6,8 @@
     <x-sidebar.menu-section label="Mutasi & Reweight" />
 
     <x-sidebar.menu-link :href="route('admin.care-livestock.mutation-individu.index', ['farm_id' => $farm->id])" label="Mutasi Ternak" />
-    <x-sidebar.menu-link href="#" label="Reweight / Timbang Ulang" />
+    <x-sidebar.menu-link :href="route('admin.care-livestock.reweight.index', $farm->id)" label="Reweight / Timbang Ulang" />
+
 
     <x-sidebar.menu-submenu name="inseminasiInnerOpen" label="Kelahiran Ternak">
         <x-sidebar.menu-link :href="route('admin.care-livestock.artificial-inseminasi.index', ['farm_id' => $farm->id])" label="Inseminasi Buatan" />
