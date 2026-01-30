@@ -44,7 +44,9 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
     require __DIR__.'/web/farming/sales-order.php';
     require __DIR__.'/web/farming/sales-livestock.php';
     require __DIR__.'/web/farming/livestock-sale-weight.php';
+    require __DIR__.'/web/farming/reweight.php';
     require __DIR__.'/web/farming/livestock-death.php';
+
     require __DIR__.'/web/farming/feed-medicine-purchase.php';
     require __DIR__.'/web/farming/milk-production-global.php';
     require __DIR__.'/web/farming/milk-analysis-colony.php';

@@ -16,7 +16,7 @@
             Data Pengguna
         </a>
 
-        <a href="{{ route('qurban.customer.index') }}"
+        <a href="{{ route('admin.care-livestock.customer.index', $farm->id) }}"
             class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
             Data Pelanggan & Alamat Kirim
         </a>
