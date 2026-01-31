@@ -9,6 +9,6 @@
         ]"
     >
 
-        @livewire('admin.qurban.payment.index-component', ['farm' => $farm])
+        @livewire('qurban.payment.index-component', ['farm' => $farm])
     </x-admin.feature-card>
 @endsection

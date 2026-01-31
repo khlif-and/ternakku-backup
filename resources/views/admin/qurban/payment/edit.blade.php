@@ -10,6 +10,6 @@
         ]"
     >
 
-        @livewire('admin.qurban.payment.edit-component', ['farm' => $farm, 'payment' => $payment])
+        @livewire('qurban.payment.edit-component', ['farm' => $farm, 'payment' => $payment])
     </x-admin.feature-card>
 @endsection

@@ -11,6 +11,6 @@
             ['label' => 'Tambah']
         ]"
     >
-        @livewire('admin.qurban.payment.create-component', ['farm' => $farm])
+        @livewire('qurban.payment.create-component', ['farm' => $farm])
     </x-admin.feature-card>
 @endsection
