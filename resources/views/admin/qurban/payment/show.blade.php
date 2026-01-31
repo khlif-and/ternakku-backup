@@ -22,6 +22,6 @@
         ]"
     >
 
-        @livewire('admin.qurban.payment.show-component', ['farm' => $farm, 'payment' => $payment])
+        @livewire('qurban.payment.show-component', ['farm' => $farm, 'payment' => $payment])
     </x-admin.feature-card>
 @endsection

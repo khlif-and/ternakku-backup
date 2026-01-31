@@ -10,7 +10,7 @@ class PaymentCoreService
 {
     public function listPayments(array $filters)
     {
-        $query = QurbanPayment::with(['qurbanCustomer.user', 'livestock']); 
+        $query = QurbanPayment::with(['qurbanCustomer.user', 'livestock']);
 
         if (!empty($filters['start_date'])) {
             $query->where('transaction_date', '>=', $filters['start_date']);
@@ -31,19 +31,19 @@ class PaymentCoreService
     {
         // Validation logic mirroring API
         $qurbanSaleLivestock = \App\Models\QurbanSaleLivestockD::where('livestock_id', $data['livestock_id'])
-                                    ->whereHas('qurbanSaleLivestockH', function ($q) use ($data) {
-                                        $q->where('qurban_customer_id', $data['qurban_customer_id']);
-                                    })
-                                    ->firstOrFail();
+            ->whereHas('qurbanSaleLivestockH', function ($q) use ($data) {
+                $q->where('qurban_customer_id', $data['qurban_customer_id']);
+            })
+            ->firstOrFail();
 
         return DB::transaction(function () use ($data) {
             $payment = QurbanPayment::create([
-                'farm_id'               => $data['farm_id'],
-                'transaction_date'      => $data['transaction_date'],
-                'qurban_customer_id'    => $data['qurban_customer_id'],
-                'livestock_id'          => $data['livestock_id'],
-                'amount'                => $data['amount'],
-                'created_by'            => auth()->id(),
+                'farm_id' => $data['farm_id'],
+                'transaction_date' => $data['transaction_date'],
+                'qurban_customer_id' => $data['qurban_customer_id'],
+                'livestock_id' => $data['livestock_id'],
+                'amount' => $data['amount'],
+                'created_by' => auth()->id(),
             ]);
 
             return $payment;
@@ -61,17 +61,17 @@ class PaymentCoreService
 
         // Validation logic mirroring API
         $qurbanSaleLivestock = \App\Models\QurbanSaleLivestockD::where('livestock_id', $data['livestock_id'])
-                                    ->whereHas('qurbanSaleLivestockH', function ($q) use ($data) {
-                                        $q->where('qurban_customer_id', $data['qurban_customer_id']);
-                                    })
-                                    ->firstOrFail();
+            ->whereHas('qurbanSaleLivestockH', function ($q) use ($data) {
+                $q->where('qurban_customer_id', $data['qurban_customer_id']);
+            })
+            ->firstOrFail();
 
         return DB::transaction(function () use ($payment, $data) {
             $payment->update([
-                'transaction_date'      => $data['transaction_date'],
-                'qurban_customer_id'    => $data['qurban_customer_id'],
-                'livestock_id'          => $data['livestock_id'],
-                'amount'                => $data['amount'],
+                'transaction_date' => $data['transaction_date'],
+                'qurban_customer_id' => $data['qurban_customer_id'],
+                'livestock_id' => $data['livestock_id'],
+                'amount' => $data['amount'],
             ]);
 
             return $payment;

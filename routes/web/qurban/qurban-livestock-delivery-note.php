@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\Qurban\LiveestockDeliveryNoteController;
+use App\Http\Controllers\Admin\Qurban\LivestockDeliveryQurban\LivestockDeliveryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -11,7 +11,7 @@ use App\Http\Controllers\Admin\Qurban\LiveestockDeliveryNoteController;
 
 Route::prefix('qurban/livestock-delivery-note')
     ->middleware('farmer')
-    ->controller(LiveestockDeliveryNoteController::class)
+    ->controller(LivestockDeliveryController::class)
     ->name('qurban.livestock-delivery-note.')
     ->group(function () {
         Route::get('/', 'index')->name('index');
