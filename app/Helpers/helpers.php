@@ -26,7 +26,16 @@ if (!function_exists('generateOtp')) {
 if (!function_exists('getNeoObject')) {
     function getNeoObject($fileName)
     {
-        return config('filesystems.disks.neo.endpoint') . '/' . config('filesystems.disks.neo.bucket') . '/' . $fileName;
+        if (empty($fileName))
+            return null;
+
+        // Cek jika menggunakan S3/Neo
+        // if (!empty(config('filesystems.disks.neo.bucket'))) {
+        //    return config('filesystems.disks.neo.endpoint') . '/' . config('filesystems.disks.neo.bucket') . '/' . $fileName;
+        // }
+
+        // Fallback ke Local Storage (Public)
+        return asset('storage/' . $fileName);
     }
 }
 
@@ -34,71 +43,102 @@ if (!function_exists('getNeoObject')) {
 if (!function_exists('uploadNeoObject')) {
     function uploadNeoObject($file, $fileName, $pathName)
     {
-        $client = new S3Client([
-            'version'     => 'latest',
-            'region'      => config('filesystems.disks.neo.region'),
-            'endpoint'    => config('filesystems.disks.neo.endpoint'),
-            'credentials' => [
-                'key'    => config('filesystems.disks.neo.key'),
-                'secret' => config('filesystems.disks.neo.secret'),
-            ],
-        ]);
+        $fullName = $pathName . $fileName;
 
-        try {
-            $fullName = $pathName . $fileName;
-
-            // Tentukan ContentType dan SourceFile
-            if (is_string($file)) {
-                // Jika file adalah path string
-                $contentType = File::mimeType($file);
-                $sourceFile = $file;
-            } elseif ($file instanceof \Illuminate\Http\UploadedFile || $file instanceof \Illuminate\Http\File) {
-                // Jika file adalah UploadedFile / File instance
-                $contentType = $file->getClientMimeType();
-                $sourceFile = $file->getRealPath();
-            } else {
-                throw new \Exception('uploadNeoObject hanya mendukung string path atau instance File/UploadedFile');
-            }
-
-            $client->putObject([
-                'Bucket'      => config('filesystems.disks.neo.bucket'),
-                'Key'         => $fullName,
-                'ContentType' => $contentType,
-                'SourceFile'  => $sourceFile,
-                'ACL'         => 'public-read',
+        // Cek apakah konfigurasi Neo/S3 lengkap
+        /*
+        if (!empty(config('filesystems.disks.neo.bucket')) && !empty(config('filesystems.disks.neo.key'))) {
+            $client = new S3Client([
+                'version' => 'latest',
+                'region' => config('filesystems.disks.neo.region'),
+                'endpoint' => config('filesystems.disks.neo.endpoint'),
+                'credentials' => [
+                    'key' => config('filesystems.disks.neo.key'),
+                    'secret' => config('filesystems.disks.neo.secret'),
+                ],
             ]);
 
-            return $fullName;
+            try {
+                // Tentukan ContentType dan SourceFile
+                if (is_string($file)) {
+                    $contentType = File::mimeType($file);
+                    $sourceFile = $file;
+                } elseif ($file instanceof \Illuminate\Http\UploadedFile || $file instanceof \Illuminate\Http\File) {
+                    $contentType = $file->getClientMimeType();
+                    $sourceFile = $file->getRealPath();
+                } else {
+                    throw new \Exception('uploadNeoObject hanya mendukung string path atau instance File/UploadedFile');
+                }
 
-        } catch (S3Exception $e) {
-            Log::error('S3 Upload Error: ' . $e->getMessage());
+                $client->putObject([
+                    'Bucket' => config('filesystems.disks.neo.bucket'),
+                    'Key' => $fullName,
+                    'ContentType' => $contentType,
+                    'SourceFile' => $sourceFile,
+                    'ACL' => 'public-read',
+                ]);
+
+                return $fullName;
+
+            } catch (S3Exception $e) {
+                Log::error('S3 Upload Error: ' . $e->getMessage());
+                return null;
+            }
+        } else {
+        */
+        // Fallback: Upload ke Local Storage (Public)
+        try {
+            if (is_string($file)) {
+                $content = file_get_contents($file);
+            } elseif ($file instanceof \Illuminate\Http\UploadedFile || $file instanceof \Illuminate\Http\File) {
+                $content = file_get_contents($file->getRealPath());
+            } else {
+                return null;
+            }
+
+            \Illuminate\Support\Facades\Storage::disk('public')->put($fullName, $content);
+            return $fullName;
+        } catch (\Exception $e) {
+            Log::error('Local Upload Error: ' . $e->getMessage());
             return null;
         }
+        /*
+        }
+        */
     }
 }
 
 if (!function_exists('deleteNeoObject')) {
     function deleteNeoObject($fileName)
     {
-        $client = new S3Client([
-            'version'     => 'latest',
-            'region'      => config('filesystems.disks.neo.region'),
-            'endpoint'    => config('filesystems.disks.neo.endpoint'),
-            'credentials' => [
-                'key'    => config('filesystems.disks.neo.key'),
-                'secret' => config('filesystems.disks.neo.secret'),
-            ],
-        ]);
-
-        try {
-            $client->deleteObject([
-                'Bucket' => config('filesystems.disks.neo.bucket'),
-                'Key'    => $fileName,
+        /*
+        if (!empty(config('filesystems.disks.neo.bucket')) && !empty(config('filesystems.disks.neo.key'))) {
+            $client = new S3Client([
+                'version' => 'latest',
+                'region' => config('filesystems.disks.neo.region'),
+                'endpoint' => config('filesystems.disks.neo.endpoint'),
+                'credentials' => [
+                    'key' => config('filesystems.disks.neo.key'),
+                    'secret' => config('filesystems.disks.neo.secret'),
+                ],
             ]);
 
-        } catch (S3Exception $e) {
-            \Log::error('S3 Deletion Error: ' . $e->getMessage());
+            try {
+                $client->deleteObject([
+                    'Bucket' => config('filesystems.disks.neo.bucket'),
+                    'Key' => $fileName,
+                ]);
+
+            } catch (S3Exception $e) {
+                \Log::error('S3 Deletion Error: ' . $e->getMessage());
+            }
+        } else {
+        */
+        // Fallback Delete Local
+        \Illuminate\Support\Facades\Storage::disk('public')->delete($fileName);
+        /*
         }
+        */
     }
 }
 

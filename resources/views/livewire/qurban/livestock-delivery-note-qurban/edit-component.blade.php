@@ -5,27 +5,17 @@
         <form wire:submit.prevent="save" class="space-y-6">
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <x-form.select wire:model.live="qurban_customer_id" name="qurban_customer_id" label="Pelanggan"
-                    :options="$customers->mapWithKeys(fn($c) => [$c->id => $c->user->name ?? '-'])"
-                    placeholder="Pilih Pelanggan" />
+                <!-- Readonly Info -->
+                <x-form.input wire:model="transaction_number" name="transaction_number" label="No. Transaksi Penjualan"
+                    readonly />
+                <x-form.input wire:model="customer_name" name="customer_name" label="Pelanggan" readonly />
 
-                <x-form.select wire:model="livestock_id" name="livestock_id" label="Ternak"
-                    :options="collect($livestocks)->pluck('eartag_number', 'id')"
-                    placeholder="{{ empty($livestocks) ? 'Pilih Pelanggan Terlebih Dahulu' : 'Pilih Ternak' }}"
-                    :disabled="empty($livestocks)" />
-
-                <x-form.input wire:model="breed_name" name="breed_name" label="Ras Ternak" readonly />
-
+                <!-- Editable -->
                 <x-form.date wire:model="delivery_date" name="delivery_date" label="Tanggal Pengiriman" />
-
-                <div class="md:col-span-2">
-                    <x-form.textarea wire:model="notes" name="notes" label="Catatan Pengiriman"
-                        placeholder="Masukkan catatan tambahan jika ada..." />
-                </div>
             </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t">
-                <x-button.link href="{{ route('qurban.livestock-delivery-note.index') }}" color="gray">
+                <x-button.link href="{{ route('qurban.livestock-delivery-note.index', $farm->id) }}" color="gray">
                     Batal
                 </x-button.link>
                 <x-button.primary type="submit">

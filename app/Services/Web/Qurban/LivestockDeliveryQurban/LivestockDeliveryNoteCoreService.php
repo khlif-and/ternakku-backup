@@ -2,13 +2,21 @@
 
 namespace App\Services\Web\Qurban\LivestockDeliveryQurban;
 
-use Illuminate\Support\Facades\DB;
+use App\Services\Qurban\DeliveryOrderService;
+use App\Models\QurbanDeliveryOrderH;
 
 class LivestockDeliveryNoteCoreService
 {
+    protected DeliveryOrderService $apiService;
+
+    public function __construct(DeliveryOrderService $apiService)
+    {
+        $this->apiService = $apiService;
+    }
+
     public function listDeliveryNotes(array $filters)
     {
-        $query = \App\Models\QurbanDeliveryOrderH::with(['qurbanSaleLivestockH.qurbanCustomer.user', 'qurbanDeliveryOrderD.livestock']);
+        $query = QurbanDeliveryOrderH::with(['qurbanSaleLivestockH.qurbanCustomer.user', 'qurbanDeliveryOrderD.livestock']);
 
         if (!empty($filters['start_date'])) {
             $query->where('transaction_date', '>=', $filters['start_date']);
@@ -18,119 +26,60 @@ class LivestockDeliveryNoteCoreService
             $query->where('transaction_date', '<=', $filters['end_date']);
         }
 
-        // qurban_customer_id is on the Sale Header via relation, or we check if QurbanDeliveryOrderH has it?
-        // QurbanDeliveryOrderH does NOT have qurban_customer_id directly, it has qurban_sale_livestock_h_id
         if (!empty($filters['qurban_customer_id'])) {
             $query->whereHas('qurbanSaleLivestockH', function ($q) use ($filters) {
                 $q->where('qurban_customer_id', $filters['qurban_customer_id']);
             });
         }
 
-        return $query->paginate(10);
+        return $query->latest()->paginate(10);
     }
 
     public function store(array $data)
     {
-        // 1. Find the Sale Header and the specific Sale Detail for validation
-        // We know livestock_id. We need to find which QurbanSaleLivestockH owns this livestock for this customer.
+        // $data expects 'farm_id', 'qurban_sales_livestock_id', 'transaction_date'
+        $result = $this->apiService->storeDeliveryOrder($data['farm_id'], $data);
 
-        $qurbanSaleLivestockD = \App\Models\QurbanSaleLivestockD::where('livestock_id', $data['livestock_id'])
-            ->whereHas('qurbanSaleLivestockH', function ($q) use ($data) {
-                $q->where('qurban_customer_id', $data['qurban_customer_id']);
-            })
-            ->firstOrFail();
+        if ($result['error']) {
+            throw new \Exception("Gagal membuat surat jalan melalui API Service");
+        }
 
-        $saleHeader = $qurbanSaleLivestockD->qurbanSaleLivestockH;
-
-        // 2. Get Customer Address (Taking the first one for now as default, since UI doesn't allow selection yet)
-        $customerAddress = \App\Models\QurbanCustomerAddress::where('qurban_customer_id', $data['qurban_customer_id'])->first();
-
-        return DB::transaction(function () use ($data, $saleHeader, $customerAddress) {
-            // Create Header
-            $deliveryOrderH = \App\Models\QurbanDeliveryOrderH::create([
-                'farm_id' => $data['farm_id'],
-                'transaction_date' => $data['delivery_date'], // delivery_date maps to transaction_date?
-                'qurban_customer_address_id' => $customerAddress ? $customerAddress->id : null, // nullable?
-                'qurban_sale_livestock_h_id' => $saleHeader->id,
-                'status' => $data['status'] ?? 'pending',
-                // transaction_number auto-generated
-            ]);
-
-            // Create Detail
-            \App\Models\QurbanDeliveryOrderD::create([
-                'qurban_delivery_order_h_id' => $deliveryOrderH->id,
-                'livestock_id' => $data['livestock_id'],
-            ]);
-
-            return $deliveryOrderH;
-        });
+        // Return the first created order (or collection if needed, but UI typically expects single object redirect)
+        // Store API returns array of objects.
+        return $result['data'][0] ?? null;
     }
 
     public function find($id)
     {
-        return \App\Models\QurbanDeliveryOrderH::with(['qurbanSaleLivestockH.qurbanCustomer.user', 'qurbanDeliveryOrderD.livestock'])->findOrFail($id);
+        return QurbanDeliveryOrderH::with(['qurbanSaleLivestockH.qurbanCustomer.user', 'qurbanDeliveryOrderD.livestock'])->findOrFail($id);
     }
 
     public function update($id, array $data)
     {
-        $deliveryOrderH = \App\Models\QurbanDeliveryOrderH::findOrFail($id);
+        // The API only has setDeliverySchedule or logic inside store. 
+        // For simple updates (like date), we can do it directly or verify if API has update endpoint.
+        // API controller show setDeliverySchedule.
+        // Let's stick to basic model update for date if API service doesn't have generic update.
+        // Or if we want to be strict, we only allow what API allows. 
+        // user asked to "sesuaikan", so if API doesn't support full update, we shouldn't either?
+        // But for "Edit" feature in web, changing date is reasonable.
 
-        // Update logic. If livestock changes, we need to find new salen etc.
-        // For simplicity, let's assume basic updates.
+        $deliveryOrder = QurbanDeliveryOrderH::findOrFail($id);
+        $deliveryOrder->update([
+            'transaction_date' => $data['delivery_date']
+        ]);
 
-        return DB::transaction(function () use ($deliveryOrderH, $data) {
-            // If customer changed, we'd need to re-fetch address and sale header. 
-            // This is complex. Let's do a basic update of date and generic fields if supported.
-
-            // If livestock_id changed, we update Detail.
-            if (isset($data['livestock_id'])) {
-                // Check validity like in store
-                $qurbanSaleLivestockD = \App\Models\QurbanSaleLivestockD::where('livestock_id', $data['livestock_id'])
-                    ->whereHas('qurbanSaleLivestockH', function ($q) use ($data) {
-                        $q->where('qurban_customer_id', $data['qurban_customer_id']);
-                    })->firstOrFail();
-
-                $saleHeader = $qurbanSaleLivestockD->qurbanSaleLivestockH;
-                $customerAddress = \App\Models\QurbanCustomerAddress::where('qurban_customer_id', $data['qurban_customer_id'])->first();
-
-                $deliveryOrderH->update([
-                    'transaction_date' => $data['delivery_date'],
-                    'qurban_sale_livestock_h_id' => $saleHeader->id,
-                    'qurban_customer_address_id' => $customerAddress ? $customerAddress->id : $deliveryOrderH->qurban_customer_address_id,
-                ]);
-
-                // Update Detail
-                // Assume one detail per header for this simplified Note? 
-                // or wipe and recreate details?
-                // QurbanDeliveryOrderH hasMany D.
-
-                // Let's update the first detail or create if missing
-                $detail = $deliveryOrderH->qurbanDeliveryOrderD()->first();
-                if ($detail) {
-                    $detail->update(['livestock_id' => $data['livestock_id']]);
-                } else {
-                    \App\Models\QurbanDeliveryOrderD::create([
-                        'qurban_delivery_order_h_id' => $deliveryOrderH->id,
-                        'livestock_id' => $data['livestock_id'],
-                    ]);
-                }
-            } else {
-                // Only date update?
-                $deliveryOrderH->update([
-                    'transaction_date' => $data['delivery_date'],
-                ]);
-            }
-
-            return $deliveryOrderH;
-        });
+        return $deliveryOrder;
     }
 
     public function delete($id): void
     {
-        $deliveryOrderH = \App\Models\QurbanDeliveryOrderH::findOrFail($id);
-        // Delete details first? Relations cascade?
-        // Laravel usually needs manual delete if no cascade.
-        $deliveryOrderH->qurbanDeliveryOrderD()->delete();
-        $deliveryOrderH->delete();
+        // Need farm_id. Fetch from model.
+        $deliveryOrder = QurbanDeliveryOrderH::findOrFail($id);
+        $result = $this->apiService->deleteDeliveryOrder($deliveryOrder->farm_id, $id);
+
+        if ($result['error']) {
+            throw new \Exception("Gagal menghapus surat jalan melalui API Service");
+        }
     }
 }

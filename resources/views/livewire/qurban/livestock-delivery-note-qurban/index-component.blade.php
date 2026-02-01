@@ -38,16 +38,23 @@
             <tr class="hover:bg-gray-50 transition-colors">
                 <td class="px-4 py-3 border-b text-sm">{{ $items->firstItem() + $index }}</td>
                 <td class="px-4 py-3 border-b text-sm">
-                    {{ $item->delivery_date ? date('d/m/Y', strtotime($item->delivery_date)) : '-' }}
+                    {{ $item->transaction_date ? date('d/m/Y', strtotime($item->transaction_date)) : '-' }}
                 </td>
                 <td class="px-4 py-3 border-b text-sm font-semibold text-gray-700">
-                    {{ $item->qurbanCustomer->user->name ?? '-' }}
+                    {{ $item->qurbanSaleLivestockH->qurbanCustomer->user->name ?? '-' }}
                 </td>
                 <td class="px-4 py-3 border-b text-sm text-gray-600">
-                    {{ $item->livestock->eartag_number ?? '-' }}
+                    @if($item->qurbanDeliveryOrderD->isNotEmpty())
+                        {{ $item->qurbanDeliveryOrderD->first()->livestock->eartag_number ?? '-' }}
+                        @if($item->qurbanDeliveryOrderD->count() > 1)
+                            <span class="text-xs text-gray-400">(+{{ $item->qurbanDeliveryOrderD->count() - 1 }})</span>
+                        @endif
+                    @else
+                        -
+                    @endif
                 </td>
                 <td class="px-4 py-3 border-b text-sm text-gray-600">
-                    {{ $item->livestock->livestockBreed->name ?? '-' }}
+                    {{ $item->qurbanDeliveryOrderD->first()->livestock->livestockBreed->name ?? '-' }}
                 </td>
                 <td class="px-4 py-3 border-b text-sm text-center">
                     <span
