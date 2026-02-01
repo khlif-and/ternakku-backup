@@ -8,6 +8,6 @@
             ['label' => 'Surat Jalan', 'route' => route('qurban.livestock-delivery-note.index', $farm->id)],
             ['label' => 'Detail']
         ]">
-        @livewire('qurban.livestock-delivery-note-qurban.show-component', ['farm' => $farm, 'deliveryNote' => $deliveryNote])
+        @livewire('qurban.livestock-delivery-note-qurban.show-component', ['farm' => $farm, 'deliveryNote' => $delivery])
     </x-admin.feature-card>
 @endsection
