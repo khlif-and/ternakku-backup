@@ -16,26 +16,26 @@ class DeliveryOrderService
     {
         $data = [];
         $error = false;
-    
+
         DB::beginTransaction();
-    
+
         try {
             $saleLivestock = QurbanSaleLivestockH::where('farm_id', $farm_id)
                 ->findOrFail($request['qurban_sales_livestock_id']);
-    
+
             // CEK: Apakah sudah ada surat jalan untuk sale ini?
             $existingOrders = QurbanDeliveryOrderH::where('qurban_sale_livestock_h_id', $saleLivestock->id)->get();
-    
+
             if ($existingOrders->count() > 0) {
                 return [
                     'data' => $existingOrders,
                     'error' => false,
                 ];
             }
-    
+
             $groupedDetails = $saleLivestock->qurbanSaleLivestockD
                 ->groupBy('qurban_customer_address_id');
-    
+
             foreach ($groupedDetails as $customerAddressId => $details) {
                 // Buat surat jalan (Header)
                 $deliveryOrder = QurbanDeliveryOrderH::create([
@@ -44,7 +44,7 @@ class DeliveryOrderService
                     'qurban_customer_address_id' => $customerAddressId,
                     'qurban_sale_livestock_h_id' => $saleLivestock->id,
                 ]);
-    
+
                 // Tambahkan detail
                 foreach ($details as $detail) {
                     QurbanDeliveryOrderD::create([
@@ -52,37 +52,37 @@ class DeliveryOrderService
                         'livestock_id' => $detail->livestock_id,
                     ]);
                 }
-    
+
                 // Generate PDF
-                $pdf = Pdf::loadView('pdf.delivery_order', [
+                $pdf = Pdf::loadView('pdf.qurban_delivery_order', [
                     'deliveryOrder' => $deliveryOrder,
                 ]);
-    
+
                 $fileName = now()->format('YmdHis') . '-delivery-order-' . $deliveryOrder->id . '.pdf';
                 $tempPath = storage_path('app/temp/' . $fileName);
-    
+
                 // Pastikan direktori temp ada
                 if (!File::exists(dirname($tempPath))) {
                     File::makeDirectory(dirname($tempPath), 0755, true);
                 }
-    
+
                 $pdf->save($tempPath);
-    
+
                 // Upload ke S3
                 $s3Path = 'qurban/delivery_orders/';
                 $s3Url = uploadNeoObject($tempPath, $fileName, $s3Path);
-    
+
                 // Simpan ke database
                 $deliveryOrder->file = $s3Url;
                 $deliveryOrder->save();
-    
+
                 // Simpan ke hasil
                 $data[] = $deliveryOrder;
-    
+
                 // Hapus file sementara
                 unlink($tempPath);
             }
-    
+
             DB::commit();
         } catch (\Exception $e) {
             dd($e);
@@ -90,13 +90,13 @@ class DeliveryOrderService
             \Log::error('Gagal membuat surat jalan: ' . $e->getMessage());
             $error = true;
         }
-    
+
         return [
             'data' => $data,
             'error' => $error,
         ];
     }
-    
+
     public function getDeliveryOrders($farmId, $param)
     {
         $query = QurbanDeliveryOrderH::with(['qurbanDeliveryOrderD', 'qurbanCustomerAddress.qurbanCustomer', 'qurbanSaleLivestockH', 'farm'])
@@ -140,7 +140,7 @@ class DeliveryOrderService
         $data = null;
 
         try {
-            $deliveryOrder = QurbanDeliveryOrderH::where('farm_id' , $farmId)->findOrFail($id);
+            $deliveryOrder = QurbanDeliveryOrderH::where('farm_id', $farmId)->findOrFail($id);
             $deliveryOrder->delivery_schedule = $schedule;
             $deliveryOrder->save();
 

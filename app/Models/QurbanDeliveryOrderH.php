@@ -29,7 +29,7 @@ class QurbanDeliveryOrderH extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            $model->transaction_number = $model->generateTransactionNumber($model->transaction_date,  $model->farm_id);
+            $model->transaction_number = $model->generateTransactionNumber($model->transaction_date, $model->farm_id);
         });
     }
 
@@ -37,7 +37,7 @@ class QurbanDeliveryOrderH extends Model
     {
         $date = Carbon::parse($transactionDate);
 
-        $code =  'QSJ';
+        $code = 'QSJ';
         $year = $date->format('y'); // last two digits of the year
         $month = $date->format('m'); // month with leading zero
         $prefix = "$year$month-$code-";
@@ -45,8 +45,8 @@ class QurbanDeliveryOrderH extends Model
         // Get the last transaction number for the current month and year
         $lastTransaction = self::whereYear('transaction_date', $date->year)
             ->whereMonth('transaction_date', $date->month)
-            ->where('farm_id' , $farmId)
-            ->where('transaction_number' , 'like' , "%$code%")
+            ->where('farm_id', $farmId)
+            ->where('transaction_number', 'like', "%$code%")
             ->orderBy('transaction_number', 'desc')
             ->first();
 
