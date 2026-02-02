@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Farming\Reweight;
+namespace App\Livewire\Shared\Reweight;
 
 use App\Models\Farm;
 use App\Models\Livestock;
@@ -49,7 +49,7 @@ class CreateComponent extends Component
             $service->store($this->farm, $data);
 
             session()->flash('success', 'Data penimbangan berhasil ditambahkan.');
-            return redirect()->route('admin.care-livestock.reweight.index', $this->farm->id);
+            return redirect()->route('shared.reweight.index', $this->farm->id);
 
         } catch (\Exception $e) {
             $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal menyimpan data: ' . $e->getMessage()]);
@@ -62,7 +62,7 @@ class CreateComponent extends Component
             ->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
             ->get();
 
-        return view('livewire.farming.reweight.create-component', [
+        return view('livewire.shared.reweight.create-component', [
             'livestocks' => $livestocks
         ]);
     }

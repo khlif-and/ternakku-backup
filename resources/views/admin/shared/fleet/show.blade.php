@@ -1,12 +1,12 @@
 @extends('layouts.qurban.index')
 
 @section('content')
-    <x-admin.feature-card title="Tambah Armada" :backUrl="route('shared.fleet.index', $farm->id)" :breadcrumbs="[
+    <x-admin.feature-card title="Detail Armada" :breadcrumbs="[
             ['route' => '/', 'icon' => 'icon-home'],
             ['label' => 'Qurban'],
             ['label' => 'Armada', 'route' => route('shared.fleet.index', $farm->id)],
-            ['label' => 'Tambah']
+            ['label' => 'Detail']
         ]">
-        @livewire('shared.fleet.create-component', ['farm' => $farm])
+        @livewire('shared.fleet.show-component', ['farm' => $farm, 'id' => $fleet->id])
     </x-admin.feature-card>
 @endsection
