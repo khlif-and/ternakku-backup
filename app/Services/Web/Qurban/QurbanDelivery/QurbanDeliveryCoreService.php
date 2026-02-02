@@ -2,14 +2,15 @@
 
 namespace App\Services\Web\Qurban\QurbanDelivery;
 
-use App\Services\Qurban\DeliveryOrderService;
+use App\Services\Qurban\DeliveryInstructionService;
+use App\Models\QurbanDeliveryInstructionH;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class QurbanDeliveryCoreService
 {
     protected $apiService;
 
-    public function __construct(DeliveryOrderService $apiService)
+    public function __construct(DeliveryInstructionService $apiService)
     {
         $this->apiService = $apiService;
     }
@@ -17,121 +18,52 @@ class QurbanDeliveryCoreService
     public function listDeliveries(int $farmId, array $filters): LengthAwarePaginator
     {
         $params = [
-            'transaction_date_start' => $filters['start_date'] ?? null,
-            'transaction_date_end' => $filters['end_date'] ?? null,
-            'qurban_customer_id' => $filters['qurban_customer_id'] ?? null,
-            'page' => $filters['page'] ?? 1,
-            'per_page' => $filters['per_page'] ?? 10,
+            'delivery_date_start' => $filters['start_date'] ?? null,
+            'delivery_date_end' => $filters['end_date'] ?? null,
+            'status' => $filters['status'] ?? null,
+            'driver_id' => $filters['driver_id'] ?? null,
+            'fleet_id' => $filters['fleet_id'] ?? null,
         ];
 
-        $deliveryOrders = $this->apiService->getDeliveryOrders($farmId, $params);
+        $deliveryInstructions = $this->apiService->getDeliveryInstructions($farmId, $params);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $perPage = $params['per_page'];
-        $currentItems = $deliveryOrders->slice(($currentPage * $perPage) - $perPage, $perPage)->values();
+        $perPage = $filters['per_page'] ?? 10;
+        $currentItems = $deliveryInstructions->slice(($currentPage * $perPage) - $perPage, $perPage)->values();
 
-        return new LengthAwarePaginator($currentItems, $deliveryOrders->count(), $perPage, $currentPage, [
+        return new LengthAwarePaginator($currentItems, $deliveryInstructions->count(), $perPage, $currentPage, [
             'path' => LengthAwarePaginator::resolveCurrentPath(),
         ]);
     }
 
-    public function store(array $data)
+    public function store(int $farmId, array $data)
     {
-        $result = $this->apiService->storeDeliveryOrder($data['farm_id'] ?? null, [
-            'qurban_sales_livestock_id' => $data['qurban_sales_livestock_id'],
-            'transaction_date' => $data['transaction_date'],
+        return $this->apiService->storeDeliveryInstruction($farmId, [
+            'delivery_date' => $data['delivery_date'],
+            'driver_id' => $data['driver_id'],
+            'fleet_id' => $data['fleet_id'],
+            'delivery_order_ids' => $data['delivery_order_ids'],
         ]);
-
-        if (empty($result['error']) && !empty($result['data'])) {
-            foreach ($result['data'] as $deliveryOrder) {
-                $deliveryOrder->load([
-                    'farm.farmDetail.region',
-                    'qurbanSaleLivestockH.qurbanCustomer.user',
-                    'qurbanCustomerAddress',
-                    'qurbanDeliveryOrderD.livestock.livestockType',
-                    'qurbanDeliveryOrderD.livestock.livestockBreed',
-                    'qurbanDeliveryOrderD.livestock.livestockSex',
-                    'qurbanDeliveryOrderD.livestock.qurbanSaleLivestockD.qurbanCustomerAddress'
-                ]);
-
-                $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.qurban_delivery_order', [
-                    'deliveryOrder' => $deliveryOrder,
-                ]);
-
-                $fileName = now()->format('YmdHis') . '-delivery-order-' . $deliveryOrder->id . '.pdf';
-                $tempPath = storage_path('app/temp/' . $fileName);
-
-                if (!\Illuminate\Support\Facades\File::exists(dirname($tempPath))) {
-                    \Illuminate\Support\Facades\File::makeDirectory(dirname($tempPath), 0755, true);
-                }
-
-                $pdf->save($tempPath);
-
-                $s3Path = 'qurban/delivery_orders/';
-                $s3Url = uploadNeoObject($tempPath, $fileName, $s3Path);
-
-                $deliveryOrder->file = $s3Url;
-                $deliveryOrder->save();
-
-                if (file_exists($tempPath)) {
-                    unlink($tempPath);
-                }
-            }
-        }
-
-        return $result;
     }
 
     public function find($id)
     {
-
-        return \App\Models\QurbanDeliveryOrderH::with(['qurbanSaleLivestockH.qurbanCustomer.user', 'qurbanDeliveryOrderD.livestock'])->findOrFail($id);
+        return QurbanDeliveryInstructionH::with([
+            'driver',
+            'fleet',
+            'farm',
+            'qurbanDeliveryInstructionD.qurbanDeliveryOrderH.qurbanCustomerAddress.qurbanCustomer.user',
+            'qurbanDeliveryInstructionD.qurbanDeliveryOrderH.qurbanDeliveryOrderD.livestock.livestockBreed',
+        ])->findOrFail($id);
     }
 
-    public function update($id, array $data)
+    public function setReadyToDeliver(int $farmId, $id)
     {
-        $deliveryOrder = \App\Models\QurbanDeliveryOrderH::findOrFail($id);
-        $deliveryOrder->transaction_date = $data['transaction_date'];
-        $deliveryOrder->save();
-
-        $deliveryOrder->load([
-            'farm.farmDetail.region',
-            'qurbanSaleLivestockH.qurbanCustomer.user',
-            'qurbanCustomerAddress',
-            'qurbanDeliveryOrderD.livestock.livestockType',
-            'qurbanDeliveryOrderD.livestock.livestockBreed',
-            'qurbanDeliveryOrderD.livestock.livestockSex',
-            'qurbanDeliveryOrderD.livestock.qurbanSaleLivestockD.qurbanCustomerAddress'
-        ]);
-
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('pdf.qurban_delivery_order', [
-            'deliveryOrder' => $deliveryOrder,
-        ]);
-
-        $fileName = now()->format('YmdHis') . '-delivery-order-' . $deliveryOrder->id . '.pdf';
-        $tempPath = storage_path('app/temp/' . $fileName);
-
-        if (!\Illuminate\Support\Facades\File::exists(dirname($tempPath))) {
-            \Illuminate\Support\Facades\File::makeDirectory(dirname($tempPath), 0755, true);
-        }
-
-        $pdf->save($tempPath);
-
-        $s3Path = 'qurban/delivery_orders/';
-        $s3Url = uploadNeoObject($tempPath, $fileName, $s3Path);
-
-        $deliveryOrder->file = $s3Url;
-        $deliveryOrder->save();
-
-        if (file_exists($tempPath)) {
-            unlink($tempPath);
-        }
-
-        return $deliveryOrder;
+        return $this->apiService->setToReadyToDeliver($farmId, $id);
     }
 
     public function delete(int $farmId, $id)
     {
-        return $this->apiService->deleteDeliveryOrder($farmId, $id);
+        return $this->apiService->deleteDeliveryInstruction($farmId, $id);
     }
 }

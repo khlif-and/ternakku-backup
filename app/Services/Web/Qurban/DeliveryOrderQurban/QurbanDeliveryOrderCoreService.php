@@ -1,33 +1,34 @@
 <?php
 
-namespace App\Services\Web\Qurban\LivestockDeliveryQurban;
+namespace App\Services\Web\Qurban\DeliveryOrderQurban;
 
 use App\Services\Qurban\DeliveryOrderService;
-use App\Models\QurbanDeliveryOrderH;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Models\QurbanDeliveryOrderH;
 
-class LivestockDeliveryNoteCoreService
+class QurbanDeliveryOrderCoreService
 {
-    protected DeliveryOrderService $apiService;
+    protected $apiService;
 
     public function __construct(DeliveryOrderService $apiService)
     {
         $this->apiService = $apiService;
     }
 
-    public function listDeliveryNotes(int $farmId, array $filters): LengthAwarePaginator
+    public function listDeliveries(int $farmId, array $filters): LengthAwarePaginator
     {
         $params = [
             'transaction_date_start' => $filters['start_date'] ?? null,
             'transaction_date_end' => $filters['end_date'] ?? null,
             'qurban_customer_id' => $filters['qurban_customer_id'] ?? null,
-            'status' => $filters['status'] ?? null,
+            'page' => $filters['page'] ?? 1,
+            'per_page' => $filters['per_page'] ?? 10,
         ];
 
         $deliveryOrders = $this->apiService->getDeliveryOrders($farmId, $params);
 
         $currentPage = LengthAwarePaginator::resolveCurrentPage();
-        $perPage = $filters['per_page'] ?? 10;
+        $perPage = $params['per_page'];
         $currentItems = $deliveryOrders->slice(($currentPage * $perPage) - $perPage, $perPage)->values();
 
         return new LengthAwarePaginator($currentItems, $deliveryOrders->count(), $perPage, $currentPage, [
@@ -35,9 +36,10 @@ class LivestockDeliveryNoteCoreService
         ]);
     }
 
-    public function store(int $farmId, array $data)
+    public function store(array $data)
     {
-        return $this->apiService->storeDeliveryOrder($farmId, [
+        // Call API Service directly, passing raw parameters as expected
+        return $this->apiService->storeDeliveryOrder($data['farm_id'] ?? null, [
             'qurban_sales_livestock_id' => $data['qurban_sales_livestock_id'],
             'transaction_date' => $data['transaction_date'],
         ]);
@@ -45,16 +47,13 @@ class LivestockDeliveryNoteCoreService
 
     public function find($id)
     {
-        return QurbanDeliveryOrderH::with([
-            'qurbanCustomerAddress.qurbanCustomer.user',
-            'qurbanSaleLivestockH.qurbanCustomer.user',
-            'qurbanDeliveryOrderD.livestock.livestockBreed',
-            'qurbanDeliveryOrderD.livestock.livestockType',
-            'farm',
-        ])->findOrFail($id);
+        // Utilizing API Service logic if possible, or direct model if API service requires farm_id which we might not have in scope here easily without query, 
+        // but API controller uses getById($farm_id, $id).
+        // For simplicity and matching API "read" logic, we can access model directly like API service getById does, but let's stick to simple find for web helper
+        return QurbanDeliveryOrderH::with(['qurbanSaleLivestockH.qurbanCustomer.user', 'qurbanDeliveryOrderD.livestock.livestockType', 'qurbanDeliveryOrderD.livestock.livestockBreed', 'farm.farmDetail'])->findOrFail($id);
     }
 
-    public function updateSchedule(int $farmId, $id, $schedule)
+    public function updateSchedule($farmId, $id, $schedule)
     {
         return $this->apiService->setDeliverySchedule($farmId, $id, $schedule);
     }

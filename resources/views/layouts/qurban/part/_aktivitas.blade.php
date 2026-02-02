@@ -51,9 +51,9 @@
             Pelacakan Armada
         </a>
 
-        <a href="{{ route('qurban.delivery-order-data.index') }}"
+        <a href="{{ route('admin.qurban.delivery_order_qurban.index') }}"
             class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Surat Jalan Qurban
+            Data DO
         </a>
 
         <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide px-2 pt-2">

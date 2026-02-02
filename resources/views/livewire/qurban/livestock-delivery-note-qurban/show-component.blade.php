@@ -1,79 +1,90 @@
 <div>
     <x-alert.session />
 
-    <x-admin.feature-card title="Detail Surat Jalan Ternak" subtitle="Informasi detail pengiriman ternak qurban">
-        <x-slot:actions>
-            <x-button.link href="{{ route('qurban.livestock-delivery-note.index', $farm->id) }}" color="gray">
-                Kembali
-            </x-button.link>
-        </x-slot:actions>
-
-        <div class="grid lg:grid-cols-3 gap-6">
-            <div class="lg:col-span-1 space-y-6">
-                <x-sales.transaction-info transactionAccount="-" :orderDate="$deliveryNote->transaction_date"
-                    description="{{ $deliveryNote->notes ?? '-' }}"
-                    :editUrl="route('qurban.livestock-delivery-note.edit', $deliveryNote->id)" deleteAction="delete">
-                    <div class="mt-4 space-y-3">
-                        <div>
-                            <div class="text-xs text-gray-500 uppercase font-bold tracking-wider">Ternak</div>
-                            <div class="space-y-1">
-                                @forelse ($deliveryNote->qurbanDeliveryOrderD as $detail)
-                                    <div class="text-sm font-medium text-gray-800">
-                                        {{ $detail->livestock->eartag_number ?? '-' }}
-                                        ({{ $detail->livestock->gender ?? '-' }}) -
-                                        {{ $detail->livestock->livestockBreed->name ?? '-' }}
-                                    </div>
-                                @empty
-                                    <div class="text-sm text-gray-500">-</div>
-                                @endforelse
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="text-xs text-gray-500 uppercase font-bold tracking-wider">Status Pengiriman
-                            </div>
-                            <div class="mt-1">
-                                <span
-                                    class="px-2 py-1 rounded-full text-xs font-bold {{ $deliveryNote->status === 'delivered' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ ucfirst($deliveryNote->status ?? 'pending') }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </x-sales.transaction-info>
-
-                <x-sales.customer-info :name="$deliveryNote->qurbanSaleLivestockH->qurbanCustomer->user->name ?? '-'"
-                    :phone="$deliveryNote->qurbanSaleLivestockH->qurbanCustomer->user->phone_number ?? '-'"
-                    :address="$deliveryNote->qurbanCustomerAddress->address ?? '-'" />
-            </div>
-
-            <div class="lg:col-span-2 space-y-6">
-                <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
-                        <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider">Detail Pengiriman</h3>
-                        @if ($deliveryNote->file)
-                            <x-button.link href="{{ getNeoObject($deliveryNote->file) }}" target="_blank" color="blue"
-                                size="xs">
-                                <i class="icon-download mr-1"></i> Download PDF
-                            </x-button.link>
-                        @endif
-                    </div>
-                    <div class="p-4">
-                        <div class="grid grid-cols-2 gap-4 text-sm">
-                            <div class="text-gray-600">Farm:</div>
-                            <div class="font-medium text-right">{{ $deliveryNote->farm->name ?? '-' }}</div>
-
-                            <div class="text-gray-600">Tanggal Pengiriman:</div>
-                            <div class="font-medium text-right">
-                                {{ date('d F Y', strtotime($deliveryNote->transaction_date)) }}
-                            </div>
-
-                            <div class="text-gray-600">Catatan Tambahan:</div>
-                            <div class="font-medium text-right">{{ $deliveryNote->notes ?? '-' }}</div>
-                        </div>
-                    </div>
-                </div>
+    <div class="bg-white rounded-lg shadow-sm border">
+        <div class="px-6 py-4 border-b flex justify-between items-center bg-gray-50">
+            <h3 class="font-semibold text-gray-800">Detail Surat Jalan</h3>
+            <div class="flex gap-2">
+                @if($deliveryNote->file)
+                    <x-button.link href="{{ getNeoObject($deliveryNote->file) }}" target="_blank" color="blue" size="sm">
+                        <i class="icon-download mr-1"></i> Download PDF
+                    </x-button.link>
+                @endif
+                <x-button.action href="{{ route('qurban.livestock-delivery-note.edit', $deliveryNote->id) }}"
+                    color="blue">
+                    Edit Jadwal
+                </x-button.action>
+                <x-button.primary type="button" wire:click="delete"
+                    wire:confirm="Apakah Anda yakin ingin menghapus surat jalan ini?" color="red" size="sm">
+                    Hapus
+                </x-button.primary>
             </div>
         </div>
-    </x-admin.feature-card>
+
+        <div class="p-6">
+            <dl class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-6">
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">No. Transaksi</dt>
+                    <dd class="mt-1 text-sm text-gray-900 font-semibold">{{ $deliveryNote->transaction_number }}</dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Tanggal Transaksi</dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                        {{ $deliveryNote->transaction_date ? date('d/m/Y', strtotime($deliveryNote->transaction_date)) : '-' }}
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Jadwal Pengiriman</dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                        {{ $deliveryNote->delivery_schedule ? date('d/m/Y', strtotime($deliveryNote->delivery_schedule)) : '-' }}
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Pelanggan</dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                        {{ $deliveryNote->qurbanCustomerAddress->qurbanCustomer->user->name ?? $deliveryNote->qurbanCustomerAddress->qurbanCustomer->name ?? '-' }}
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Alamat Pengiriman</dt>
+                    <dd class="mt-1 text-sm text-gray-900">
+                        {{ $deliveryNote->qurbanCustomerAddress->address ?? '-' }}
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-sm font-medium text-gray-500">Farm</dt>
+                    <dd class="mt-1 text-sm text-gray-900">{{ $deliveryNote->farm->name ?? '-' }}</dd>
+                </div>
+
+                <div class="md:col-span-2">
+                    <dt class="text-sm font-medium text-gray-500 mb-2">Daftar Ternak</dt>
+                    <dd class="mt-1">
+                        <div class="bg-gray-50 rounded-lg border">
+                            @forelse($deliveryNote->qurbanDeliveryOrderD as $detail)
+                                <div class="p-3 {{ !$loop->last ? 'border-b' : '' }}">
+                                    <div class="flex justify-between items-center">
+                                        <div>
+                                            <span
+                                                class="font-semibold text-sm">{{ $detail->livestock->eartag ?? '-' }}</span>
+                                            <span class="text-sm text-gray-600">
+                                                - {{ $detail->livestock->livestockBreed->name ?? '-' }}
+                                                ({{ $detail->livestock->livestockType->name ?? '-' }})
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            @empty
+                                <div class="p-3 text-sm text-gray-500">Tidak ada data ternak.</div>
+                            @endforelse
+                        </div>
+                    </dd>
+                </div>
+            </dl>
+        </div>
+        <div class="px-6 py-4 bg-gray-50 border-t flex justify-end">
+            <x-button.link href="{{ route('qurban.livestock-delivery-note.index') }}" color="gray">
+                Kembali
+            </x-button.link>
+        </div>
+    </div>
 </div>
