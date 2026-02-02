@@ -4,7 +4,8 @@ namespace App\Livewire\Qurban\QurbanDelivery;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Models\QurbanCustomer;
+use App\Models\User;
+use App\Models\QurbanFleet;
 use App\Services\Web\Qurban\QurbanDelivery\QurbanDeliveryCoreService;
 
 class IndexComponent extends Component
@@ -12,12 +13,14 @@ class IndexComponent extends Component
     public Farm $farm;
     public $start_date;
     public $end_date;
-    public $qurban_customer_id;
+    public $status;
+    public $driver_id;
 
     protected $queryString = [
         'start_date' => ['except' => ''],
         'end_date' => ['except' => ''],
-        'qurban_customer_id' => ['except' => ''],
+        'status' => ['except' => ''],
+        'driver_id' => ['except' => ''],
     ];
 
     public function mount(Farm $farm)
@@ -29,7 +32,7 @@ class IndexComponent extends Component
     {
         try {
             $coreService->delete($this->farm->id, $id);
-            session()->flash('success', 'Data pengiriman berhasil dihapus.');
+            session()->flash('success', 'Instruksi pengiriman berhasil dihapus.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
@@ -40,14 +43,16 @@ class IndexComponent extends Component
         $filters = [
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
-            'qurban_customer_id' => $this->qurban_customer_id,
+            'status' => $this->status,
+            'driver_id' => $this->driver_id,
         ];
 
         $items = $coreService->listDeliveries($this->farm->id, $filters);
 
         return view('livewire.qurban.delivery-qurban.index-component', [
             'items' => $items,
-            'customers' => QurbanCustomer::where('farm_id', $this->farm->id)->get(),
+            'drivers' => User::whereHas('roles', fn($q) => $q->where('name', 'driver'))->get(),
+            'statuses' => ['scheduled', 'ready_to_deliver', 'in_delivery', 'delivered'],
         ]);
     }
 }

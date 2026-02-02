@@ -4,7 +4,9 @@ namespace App\Livewire\Qurban\LivestockDeliveryNoteQurban;
 
 use Livewire\Component;
 use App\Models\Farm;
+use App\Models\QurbanSaleLivestockH;
 use App\Services\Web\Qurban\LivestockDeliveryQurban\LivestockDeliveryNoteCoreService;
+use Illuminate\Support\Facades\Log;
 
 class CreateComponent extends Component
 {
@@ -32,13 +34,10 @@ class CreateComponent extends Component
         $this->farm = $farm;
         $this->transaction_date = now()->format('Y-m-d');
 
-        $this->transactions = \App\Models\QurbanSaleLivestockH::with(['qurbanCustomer.user'])
+        $this->transactions = QurbanSaleLivestockH::with(['qurbanCustomer.user'])
             ->where('farm_id', $farm->id)
             ->latest()
             ->get();
-
-        // Optional: Filter transactions that don't have delivery orders yet?
-        // But the API handles duplicate checks gracefully, so listing all is fine.
     }
 
     public function save(LivestockDeliveryNoteCoreService $coreService)
@@ -46,16 +45,28 @@ class CreateComponent extends Component
         $this->validate();
 
         try {
-            $coreService->store([
-                'farm_id' => $this->farm->id,
+            $response = $coreService->store($this->farm->id, [
                 'qurban_sales_livestock_id' => $this->qurban_sales_livestock_id,
                 'transaction_date' => $this->transaction_date,
             ]);
 
+            if ($response['error']) {
+                session()->flash('error', 'Gagal membuat surat jalan.');
+                return;
+            }
+
+            $firstOrder = $response['data'][0] ?? null;
+
             session()->flash('success', 'Surat jalan berhasil dibuat.');
-            return redirect()->route('qurban.livestock-delivery-note.index', $this->farm->id);
+
+            if ($firstOrder) {
+                return redirect()->route('qurban.livestock-delivery-note.show', $firstOrder->id);
+            }
+
+            return redirect()->route('qurban.livestock-delivery-note.index');
+
         } catch (\Throwable $e) {
-            \Log::error('Delivery Note Create Error: ' . $e->getMessage());
+            Log::error('Delivery Note Create Error: ' . $e->getMessage());
             session()->flash('error', 'Gagal membuat surat jalan: ' . $e->getMessage());
         }
     }

@@ -6,35 +6,35 @@ use Livewire\Component;
 use App\Models\Farm;
 use App\Models\QurbanDeliveryOrderH;
 use App\Services\Web\Qurban\LivestockDeliveryQurban\LivestockDeliveryNoteCoreService;
+use Illuminate\Support\Facades\Log;
 
 class EditComponent extends Component
 {
     public Farm $farm;
     public QurbanDeliveryOrderH $deliveryNote;
 
-    public $transaction_number;
-    public $customer_name;
-    public $delivery_date;
+    public $delivery_schedule;
 
     protected function rules()
     {
         return [
-            'delivery_date' => 'required|date',
+            'delivery_schedule' => 'required|date',
         ];
     }
+
+    protected $messages = [
+        'delivery_schedule.required' => 'Jadwal pengiriman wajib diisi.',
+    ];
 
     public function mount(Farm $farm, QurbanDeliveryOrderH $deliveryNote)
     {
         $this->farm = $farm;
-        $this->deliveryNote = $deliveryNote->load(['qurbanSaleLivestockH', 'qurbanCustomerAddress.qurbanCustomer.user']);
+        $this->deliveryNote = $deliveryNote->load([
+            'qurbanSaleLivestockH.qurbanCustomer.user',
+            'qurbanCustomerAddress.qurbanCustomer.user'
+        ]);
 
-        // Transaction number (from sale header usually, or delivery order itself doesn't have one visible in create?)
-        // QurbanDeliveryOrderH has transaction_number from trait? Yes.
-        // It also has qurbanSaleLivestockH relationship.
-
-        $this->transaction_number = $deliveryNote->qurbanSaleLivestockH->transaction_number ?? '-';
-        $this->customer_name = $deliveryNote->qurbanCustomerAddress->qurbanCustomer->user->name ?? '-';
-        $this->delivery_date = $deliveryNote->transaction_date;
+        $this->delivery_schedule = $deliveryNote->delivery_schedule;
     }
 
     public function save(LivestockDeliveryNoteCoreService $coreService)
@@ -42,13 +42,18 @@ class EditComponent extends Component
         $this->validate();
 
         try {
-            $coreService->update($this->deliveryNote->id, [
-                'delivery_date' => $this->delivery_date,
-            ]);
+            $response = $coreService->updateSchedule($this->farm->id, $this->deliveryNote->id, $this->delivery_schedule);
 
-            return redirect()->route('qurban.livestock-delivery-note.index', $this->farm->id)
-                ->with('success', 'Surat jalan berhasil diperbarui.');
-        } catch (\Exception $e) {
+            if ($response['error']) {
+                session()->flash('error', 'Gagal memperbarui jadwal pengiriman.');
+                return;
+            }
+
+            session()->flash('success', 'Jadwal pengiriman berhasil diperbarui.');
+            return redirect()->route('qurban.livestock-delivery-note.show', $this->deliveryNote->id);
+
+        } catch (\Throwable $e) {
+            Log::error('Delivery Note Edit Error: ' . $e->getMessage());
             session()->flash('error', 'Gagal memperbarui data: ' . $e->getMessage());
         }
     }

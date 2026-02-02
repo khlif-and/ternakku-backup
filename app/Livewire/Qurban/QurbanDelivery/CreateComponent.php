@@ -4,7 +4,9 @@ namespace App\Livewire\Qurban\QurbanDelivery;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Models\QurbanSaleLivestockH;
+use App\Models\User;
+use App\Models\QurbanFleet;
+use App\Models\QurbanDeliveryOrderH;
 use App\Services\Web\Qurban\QurbanDelivery\QurbanDeliveryCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -12,42 +14,44 @@ class CreateComponent extends Component
 {
     public Farm $farm;
 
-    public $transaction_date;
-    public $qurban_sales_livestock_id;
+    public $delivery_date;
+    public $driver_id;
+    public $fleet_id;
+    public $delivery_order_ids = [];
 
-    public $transactions = [];
+    public $drivers = [];
+    public $fleets = [];
+    public $availableOrders = [];
 
     protected function rules()
     {
         return [
-            'qurban_sales_livestock_id' => 'required',
-            'transaction_date' => 'required|date',
+            'delivery_date' => 'required|date',
+            'driver_id' => 'required|exists:users,id',
+            'fleet_id' => 'required|exists:qurban_fleets,id',
+            'delivery_order_ids' => 'required|array|min:1',
         ];
     }
 
     protected $messages = [
-        'transaction_date.required' => 'Tanggal pengiriman wajib diisi.',
-        'qurban_sales_livestock_id.required' => 'Transaksi Penjualan wajib dipilih.',
+        'delivery_date.required' => 'Tanggal pengiriman wajib diisi.',
+        'driver_id.required' => 'Driver wajib dipilih.',
+        'fleet_id.required' => 'Armada wajib dipilih.',
+        'delivery_order_ids.required' => 'Minimal pilih 1 surat jalan.',
+        'delivery_order_ids.min' => 'Minimal pilih 1 surat jalan.',
     ];
 
     public function mount(Farm $farm)
     {
         $this->farm = $farm;
-        $this->transaction_date = now()->format('Y-m-d');
+        $this->delivery_date = now()->format('Y-m-d');
 
-        // Fetch transactions that do not have a delivery order yet?
-        // Or fetch all valid transactions.
-        // For simplicity, fetch all transactions for this farm.
-        // Ideally filter those that are eligible for delivery.
+        $this->drivers = User::whereHas('roles', fn($q) => $q->where('name', 'driver'))->get();
+        $this->fleets = QurbanFleet::where('farm_id', $farm->id)->get();
 
-        // FilterLogic: Transaction should be paid? or just existing?
-        // API doesn't seem to enforce paid status in store method, so we list all.
-        // Maybe filter out those that already have delivery orders if we want to be strict,
-        // but `DeliveryOrderService::storeDeliveryOrder` handles duplication gracefully (returns existing).
-
-        $this->transactions = QurbanSaleLivestockH::with('qurbanCustomer.user')
-            ->where('farm_id', $farm->id)
-            ->latest('transaction_date')
+        $this->availableOrders = QurbanDeliveryOrderH::where('farm_id', $farm->id)
+            ->whereDoesntHave('qurbanDeliveryInstructionD')
+            ->with('qurbanCustomerAddress.qurbanCustomer.user')
             ->get();
     }
 
@@ -56,29 +60,20 @@ class CreateComponent extends Component
         $this->validate();
 
         try {
-            $response = $coreService->store([
-                'farm_id' => $this->farm->id,
-                'qurban_sales_livestock_id' => $this->qurban_sales_livestock_id,
-                'transaction_date' => $this->transaction_date,
+            $response = $coreService->store($this->farm->id, [
+                'delivery_date' => $this->delivery_date,
+                'driver_id' => $this->driver_id,
+                'fleet_id' => $this->fleet_id,
+                'delivery_order_ids' => $this->delivery_order_ids,
             ]);
 
             if ($response['error']) {
-                session()->flash('error', 'Gagal membuat pengiriman.');
+                session()->flash('error', 'Gagal membuat instruksi pengiriman.');
                 return;
             }
 
-            // Since API returns an array of created/existing orders, we redirect to index or the first one.
-            // data is an array of QurbanDeliveryOrderH objects.
-
-            $firstOrder = $response['data'][0] ?? null;
-
-            session()->flash('success', 'Data pengiriman berhasil ditambahkan.');
-
-            if ($firstOrder) {
-                return redirect()->route('admin.qurban.qurban_delivery.show', $firstOrder->id);
-            }
-
-            return redirect()->route('admin.qurban.qurban_delivery.index');
+            session()->flash('success', 'Instruksi pengiriman berhasil dibuat.');
+            return redirect()->route('admin.qurban.qurban_delivery.show', $response['data']->id);
 
         } catch (\Throwable $e) {
             Log::error('Qurban Delivery Create Error', [

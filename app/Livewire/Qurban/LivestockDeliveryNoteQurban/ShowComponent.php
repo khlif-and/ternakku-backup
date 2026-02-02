@@ -5,6 +5,8 @@ namespace App\Livewire\Qurban\LivestockDeliveryNoteQurban;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\QurbanDeliveryOrderH;
+use App\Services\Web\Qurban\LivestockDeliveryQurban\LivestockDeliveryNoteCoreService;
+use Illuminate\Support\Facades\Log;
 
 class ShowComponent extends Component
 {
@@ -15,20 +17,23 @@ class ShowComponent extends Component
     {
         $this->farm = $farm;
         $this->deliveryNote = $deliveryNote->load([
+            'qurbanCustomerAddress.qurbanCustomer.user',
             'qurbanSaleLivestockH.qurbanCustomer.user',
             'qurbanDeliveryOrderD.livestock.livestockBreed',
+            'qurbanDeliveryOrderD.livestock.livestockType',
             'farm'
         ]);
     }
 
-    public function delete()
+    public function delete(LivestockDeliveryNoteCoreService $coreService)
     {
         try {
-            $this->deliveryNote->qurbanDeliveryOrderD()->delete();
-            $this->deliveryNote->delete();
-            return redirect()->route('qurban.livestock-delivery-note.index', $this->farm->id)
-                ->with('success', 'Surat jalan berhasil dihapus.');
-        } catch (\Exception $e) {
+            $coreService->delete($this->farm->id, $this->deliveryNote->id);
+
+            session()->flash('success', 'Surat jalan berhasil dihapus.');
+            return redirect()->route('qurban.livestock-delivery-note.index');
+        } catch (\Throwable $e) {
+            Log::error('Delivery Note Delete Error: ' . $e->getMessage());
             session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
         }
     }

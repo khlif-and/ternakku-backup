@@ -4,51 +4,35 @@ namespace App\Livewire\Qurban\QurbanDelivery;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Models\QurbanDeliveryOrderH;
+use App\Models\QurbanDeliveryInstructionH;
 use App\Services\Web\Qurban\QurbanDelivery\QurbanDeliveryCoreService;
 use Illuminate\Support\Facades\Log;
 
 class EditComponent extends Component
 {
     public Farm $farm;
-    public QurbanDeliveryOrderH $delivery;
+    public QurbanDeliveryInstructionH $delivery;
 
-    public $transaction_date;
-
-    protected function rules()
-    {
-        return [
-            'transaction_date' => 'required|date',
-        ];
-    }
-
-    protected $messages = [
-        'transaction_date.required' => 'Tanggal pengiriman wajib diisi.',
-    ];
-
-    public function mount(Farm $farm, QurbanDeliveryOrderH $delivery)
+    public function mount(Farm $farm, QurbanDeliveryInstructionH $delivery)
     {
         $this->farm = $farm;
-        $this->delivery = $delivery->load('qurbanSaleLivestockH.qurbanCustomer.user');
-
-        $this->transaction_date = $this->delivery->transaction_date;
+        $this->delivery = $delivery->load([
+            'driver',
+            'fleet',
+            'qurbanDeliveryInstructionD.qurbanDeliveryOrderH.qurbanCustomerAddress.qurbanCustomer.user',
+        ]);
     }
 
-    public function save(QurbanDeliveryCoreService $coreService)
+    public function setReadyToDeliver(QurbanDeliveryCoreService $coreService)
     {
-        $this->validate();
-
         try {
-            $coreService->update($this->delivery->id, [
-                'farm_id' => $this->farm->id,
-                'transaction_date' => $this->transaction_date,
-            ]);
+            $coreService->setReadyToDeliver($this->farm->id, $this->delivery->id);
 
-            session()->flash('success', 'Data pengiriman berhasil diperbarui.');
+            session()->flash('success', 'Status berhasil diubah ke Ready to Deliver.');
             return redirect()->route('admin.qurban.qurban_delivery.show', $this->delivery->id);
 
         } catch (\Throwable $e) {
-            Log::error('Qurban Delivery Edit Error', [
+            Log::error('Qurban Delivery SetReady Error', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

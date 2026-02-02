@@ -1,11 +1,11 @@
 @extends('layouts.qurban.index')
 
 @section('content')
-    <x-admin.feature-card title="Tambah Surat Jalan" :backUrl="route('qurban.livestock-delivery-note.index', $farm->id)"
+    <x-admin.feature-card title="Tambah Surat Jalan" :backUrl="route('qurban.livestock-delivery-note.index')"
         :breadcrumbs="[
             ['route' => '/', 'icon' => 'icon-home'],
             ['label' => 'Qurban'],
-            ['label' => 'Surat Jalan', 'route' => route('qurban.livestock-delivery-note.index', $farm->id)],
+            ['label' => 'Surat Jalan Ternak', 'route' => route('qurban.livestock-delivery-note.index')],
             ['label' => 'Tambah']
         ]">
         @livewire('qurban.livestock-delivery-note-qurban.create-component', ['farm' => $farm])

@@ -4,7 +4,7 @@ namespace App\Livewire\Qurban\QurbanDelivery;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Models\QurbanDeliveryOrderH;
+use App\Models\QurbanDeliveryInstructionH;
 use App\Services\Web\Qurban\QurbanDelivery\QurbanDeliveryCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -12,15 +12,17 @@ class ShowComponent extends Component
 {
     public Farm $farm;
 
-    public QurbanDeliveryOrderH $delivery;
+    public QurbanDeliveryInstructionH $delivery;
 
-    public function mount(Farm $farm, QurbanDeliveryOrderH $delivery)
+    public function mount(Farm $farm, QurbanDeliveryInstructionH $delivery)
     {
         $this->farm = $farm;
         $this->delivery = $delivery->load([
-            'qurbanCustomerAddress.qurbanCustomer.user',
-            'qurbanDeliveryOrderD.livestock.livestockBreed',
-            'farm'
+            'driver',
+            'fleet',
+            'farm',
+            'qurbanDeliveryInstructionD.qurbanDeliveryOrderH.qurbanCustomerAddress.qurbanCustomer.user',
+            'qurbanDeliveryInstructionD.qurbanDeliveryOrderH.qurbanDeliveryOrderD.livestock.livestockBreed',
         ]);
     }
 
@@ -29,10 +31,32 @@ class ShowComponent extends Component
         try {
             $coreService->delete($this->farm->id, $this->delivery->id);
 
-            session()->flash('success', 'Data pengiriman berhasil dihapus.');
-            return redirect()->route('admin.qurban.qurban_delivery.index', $this->farm->id);
+            session()->flash('success', 'Instruksi pengiriman berhasil dihapus.');
+            return redirect()->route('admin.qurban.qurban_delivery.index');
         } catch (\Throwable $e) {
             Log::error('Qurban Delivery Delete Error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function setReadyToDeliver(QurbanDeliveryCoreService $coreService)
+    {
+        try {
+            $coreService->setReadyToDeliver($this->farm->id, $this->delivery->id);
+
+            session()->flash('success', 'Status berhasil diubah ke Ready to Deliver.');
+            $this->delivery = $this->delivery->fresh([
+                'driver',
+                'fleet',
+                'farm',
+                'qurbanDeliveryInstructionD.qurbanDeliveryOrderH.qurbanCustomerAddress.qurbanCustomer.user',
+                'qurbanDeliveryInstructionD.qurbanDeliveryOrderH.qurbanDeliveryOrderD.livestock.livestockBreed',
+            ]);
+        } catch (\Throwable $e) {
+            Log::error('Qurban Delivery SetReady Error', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

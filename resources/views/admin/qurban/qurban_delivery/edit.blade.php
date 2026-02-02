@@ -1,12 +1,12 @@
 @extends('layouts.qurban.index')
 
 @section('content')
-    <x-admin.feature-card title="Edit Pengiriman" :backUrl="route('admin.qurban.qurban_delivery.index', $farm->id)"
+    <x-admin.feature-card title="Proses Instruksi Pengiriman" :backUrl="route('admin.qurban.qurban_delivery.index')"
         :breadcrumbs="[
             ['route' => '/', 'icon' => 'icon-home'],
             ['label' => 'Qurban'],
-            ['label' => 'Pengiriman', 'route' => route('admin.qurban.qurban_delivery.index', $farm->id)],
-            ['label' => 'Edit']
+            ['label' => 'Instruksi Pengiriman', 'route' => route('admin.qurban.qurban_delivery.index')],
+            ['label' => 'Proses']
         ]">
         @livewire('qurban.qurban-delivery.edit-component', ['farm' => $farm, 'delivery' => $delivery])
     </x-admin.feature-card>

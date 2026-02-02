@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin\Qurban\QurbanDelivery;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\Qurban\QurbanDeliveryStoreRequest;
-use App\Http\Requests\Qurban\QurbanDeliveryUpdateRequest;
 use App\Services\Web\Qurban\QurbanDelivery\QurbanDeliveryService;
 
 class QurbanDeliveryController extends Controller
@@ -27,9 +25,17 @@ class QurbanDeliveryController extends Controller
         return $this->service->create();
     }
 
-    public function store(QurbanDeliveryStoreRequest $request)
+    public function store(Request $request)
     {
-        return $this->service->store($request);
+        $validated = $request->validate([
+            'delivery_date' => 'required|date',
+            'driver_id' => 'required|exists:users,id',
+            'fleet_id' => 'required|exists:qurban_fleets,id',
+            'delivery_order_ids' => 'required|array|min:1',
+            'delivery_order_ids.*' => 'exists:qurban_delivery_order_h,id',
+        ]);
+
+        return $this->service->store($validated);
     }
 
     public function show($id)
@@ -42,9 +48,9 @@ class QurbanDeliveryController extends Controller
         return $this->service->edit($id);
     }
 
-    public function update(QurbanDeliveryUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        return $this->service->update($request, $id);
+        return $this->service->setReadyToDeliver($id);
     }
 
     public function destroy($id)

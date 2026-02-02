@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin\Qurban\LivestockDeliveryQurban;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\Qurban\LivestockDeliveryStoreRequest;
-use App\Http\Requests\Qurban\LivestockDeliveryUpdateRequest;
 use App\Services\Web\Qurban\LivestockDeliveryQurban\LivestockDeliveryNoteService;
 
 class LivestockDeliveryController extends Controller
@@ -27,9 +25,14 @@ class LivestockDeliveryController extends Controller
         return $this->service->create();
     }
 
-    public function store(LivestockDeliveryStoreRequest $request)
+    public function store(Request $request)
     {
-        return $this->service->store($request);
+        $validated = $request->validate([
+            'qurban_sales_livestock_id' => 'required|integer|exists:qurban_sale_livestock_h,id',
+            'transaction_date' => 'required|date',
+        ]);
+
+        return $this->service->store($validated);
     }
 
     public function show($id)
@@ -42,9 +45,13 @@ class LivestockDeliveryController extends Controller
         return $this->service->edit($id);
     }
 
-    public function update(LivestockDeliveryUpdateRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        return $this->service->update($request, $id);
+        $validated = $request->validate([
+            'delivery_schedule' => 'required|date',
+        ]);
+
+        return $this->service->updateSchedule($id, $validated['delivery_schedule']);
     }
 
     public function destroy($id)

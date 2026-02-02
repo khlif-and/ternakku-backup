@@ -15,27 +15,19 @@
                     <option value="{{ $customer->id }}">{{ $customer->user->name ?? $customer->id }}</option>
                 @endforeach
             </select>
-
-            <select wire:model.live="status" class="px-4 py-2 border rounded-lg text-sm focus:ring-blue-500">
-                <option value="">Semua Status</option>
-                @foreach($statuses as $s)
-                    <option value="{{ $s }}">{{ ucfirst(str_replace('_', ' ', $s)) }}</option>
-                @endforeach
-            </select>
         </div>
-        <x-button.link href="{{ route('qurban.livestock-delivery-note.create') }}" color="green">
-            + Tambah Surat Jalan
+        <x-button.link href="{{ route('admin.qurban.delivery_order_qurban.create') }}" color="green">
+            + Tambah Pengiriman
         </x-button.link>
     </div>
 
     @php
         $headers = [
             ['label' => 'No', 'class' => 'text-left w-16'],
-            ['label' => 'No. Transaksi', 'class' => 'text-left'],
-            ['label' => 'Tgl Transaksi', 'class' => 'text-left'],
-            ['label' => 'Jadwal Kirim', 'class' => 'text-left'],
+            ['label' => 'Tgl Pengiriman', 'class' => 'text-left'],
             ['label' => 'Pelanggan', 'class' => 'text-left'],
-            ['label' => 'Ternak', 'class' => 'text-left'],
+            ['label' => 'Ternak (Eartag)', 'class' => 'text-left'],
+            ['label' => 'Ras', 'class' => 'text-left'],
             ['label' => 'Aksi', 'class' => 'text-center'],
         ];
     @endphp
@@ -44,42 +36,37 @@
         @forelse($items as $index => $item)
             <tr class="hover:bg-gray-50 transition-colors">
                 <td class="px-4 py-3 border-b text-sm">{{ $items->firstItem() + $index }}</td>
-                <td class="px-4 py-3 border-b text-sm font-semibold">{{ $item->transaction_number }}</td>
                 <td class="px-4 py-3 border-b text-sm">
                     {{ $item->transaction_date ? date('d/m/Y', strtotime($item->transaction_date)) : '-' }}
-                </td>
-                <td class="px-4 py-3 border-b text-sm">
-                    {{ $item->delivery_schedule ? date('d/m/Y', strtotime($item->delivery_schedule)) : '-' }}
                 </td>
                 <td class="px-4 py-3 border-b text-sm font-semibold text-gray-700">
                     {{ $item->qurbanCustomerAddress->qurbanCustomer->user->name ?? $item->qurbanCustomerAddress->qurbanCustomer->name ?? '-' }}
                 </td>
                 <td class="px-4 py-3 border-b text-sm text-gray-600">
-                    @if($item->qurbanDeliveryOrderD->isNotEmpty())
-                        {{ $item->qurbanDeliveryOrderD->map(fn($d) => $d->livestock->eartag ?? '-')->join(', ') }}
-                    @else
-                        -
-                    @endif
+                    {{ $item->qurbanDeliveryOrderD->map(fn($d) => $d->livestock->eartag ?? '-')->join(', ') }}
+                </td>
+                <td class="px-4 py-3 border-b text-sm text-gray-600">
+                    {{ $item->qurbanDeliveryOrderD->map(fn($d) => $d->livestock->livestockBreed->name ?? '-')->unique()->join(', ') }}
                 </td>
                 <td class="px-4 py-3 border-b">
                     <div class="flex items-center justify-center gap-2">
-                        <x-button.action href="{{ route('qurban.livestock-delivery-note.show', $item->id) }}"
+                        <x-button.action href="{{ route('admin.qurban.delivery_order_qurban.show', $item->id) }}"
                             color="gray">Detail</x-button.action>
 
                         <x-pdf.download-button :file="$item->file" title="Download Surat Jalan">
                             Unduh
                         </x-pdf.download-button>
 
-                        <x-button.action href="{{ route('qurban.livestock-delivery-note.edit', $item->id) }}"
+                        <x-button.action href="{{ route('admin.qurban.delivery_order_qurban.edit', $item->id) }}"
                             color="blue">Edit</x-button.action>
                         <x-button.primary type="button" wire:click="delete({{ $item->id }})"
-                            wire:confirm="Apakah Anda yakin ingin menghapus surat jalan ini?" color="red"
+                            wire:confirm="Apakah Anda yakin ingin menghapus data pengiriman ini?" color="red"
                             size="sm">Hapus</x-button.primary>
                     </div>
                 </td>
             </tr>
         @empty
-            <x-table.empty colspan="7" empty="Tidak ada surat jalan ditemukan." />
+            <x-table.empty colspan="6" empty="Tidak ada data pengiriman ditemukan." />
         @endforelse
     </x-table.wrapper>
 
