@@ -14,18 +14,16 @@
             Penjualan & Pembayaran
         </p>
 
-        <a href="{{ route('admin.care-livestock.reweight.index', $farm->id) }}"
+        <a href="{{ route('shared.reweight.index', $farm->id) }}"
             class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
             ReWeight / Timbang Ulang
         </a>
 
-        <a href="{{ route('admin.care-livestock.sales-order.index', $farm->id) }}"
-            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+        <a href="{{ route('qurban.sales-order.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
             Sales Order Kurban
         </a>
 
-        <a href="{{ route('admin.care-livestock.sales-livestock.index', $farm->id) }}"
-            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+        <a href="{{ route('qurban.sales.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
             Penjualan Ternak Kurban
         </a>
 
@@ -54,14 +52,6 @@
         <a href="{{ route('admin.qurban.delivery_order_qurban.index') }}"
             class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
             Data DO
-        </a>
-
-        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide px-2 pt-2">
-            Pembatalan
-        </p>
-
-        <a href="{{ route('qurban.cancelation.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Pembatalan Kurban
         </a>
 
     </div>

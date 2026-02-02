@@ -15,17 +15,13 @@ class EditComponent extends Component
 
     public Farm $farm;
     public $reweightId;
-    
+
     public $livestock_id;
     public $transaction_date;
     public $weight;
     public $notes;
     public $photo;
     public $current_photo;
-
-    // Search properties for Livestock
-    public $search_livestock = '';
-    public $selected_livestock_label = '';
 
     public function mount(Farm $farm, $id, ReweightCoreService $service)
     {
@@ -34,28 +30,17 @@ class EditComponent extends Component
 
         try {
             $reweight = $service->get($farm, $id);
-            
+
             $this->livestock_id = $reweight->livestock_id;
             $this->transaction_date = $reweight->livestockReweightH->transaction_date;
             $this->weight = $reweight->weight;
             $this->notes = $reweight->livestockReweightH->notes;
             $this->current_photo = $reweight->photo;
 
-            if ($reweight->livestock) {
-                $this->selected_livestock_label = $reweight->livestock->eartag . ($reweight->livestock->name ? ' - ' . $reweight->livestock->name : '');
-            }
-
         } catch (\Exception $e) {
             session()->flash('error', 'Data tidak ditemukan.');
             return redirect()->route('admin.care-livestock.reweight.index', $this->farm->id);
         }
-    }
-
-    public function selectLivestock($id, $label)
-    {
-        $this->livestock_id = $id;
-        $this->selected_livestock_label = $label;
-        $this->search_livestock = ''; 
     }
 
     public function save(ReweightCoreService $service)
@@ -89,18 +74,9 @@ class EditComponent extends Component
 
     public function render()
     {
-        // Simple search for livestock
-        $livestocks = [];
-        if (strlen($this->search_livestock) > 1) {
-            $livestocks = Livestock::where('farm_id', $this->farm->id)
-                ->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
-                ->where(function($q) {
-                    $q->where('eartag', 'like', '%' . $this->search_livestock . '%')
-                      ->orWhere('name', 'like', '%' . $this->search_livestock . '%');
-                })
-                ->limit(10)
-                ->get();
-        }
+        $livestocks = Livestock::where('farm_id', $this->farm->id)
+            ->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
+            ->get();
 
         return view('livewire.farming.reweight.edit-component', [
             'livestocks' => $livestocks

@@ -29,7 +29,6 @@ class PaymentCoreService
 
     public function store(array $data): QurbanPayment
     {
-        // Validation logic mirroring API
         $qurbanSaleLivestock = \App\Models\QurbanSaleLivestockD::where('livestock_id', $data['livestock_id'])
             ->whereHas('qurbanSaleLivestockH', function ($q) use ($data) {
                 $q->where('qurban_customer_id', $data['qurban_customer_id']);
@@ -59,7 +58,6 @@ class PaymentCoreService
     {
         $payment = QurbanPayment::findOrFail($id);
 
-        // Validation logic mirroring API
         $qurbanSaleLivestock = \App\Models\QurbanSaleLivestockD::where('livestock_id', $data['livestock_id'])
             ->whereHas('qurbanSaleLivestockH', function ($q) use ($data) {
                 $q->where('qurban_customer_id', $data['qurban_customer_id']);

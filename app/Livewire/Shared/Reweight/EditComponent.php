@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Farming\Reweight;
+namespace App\Livewire\Shared\Reweight;
 
 use App\Models\Farm;
 use App\Models\Livestock;
@@ -9,22 +9,38 @@ use Livewire\WithFileUploads;
 use App\Services\Web\Farming\Reweight\ReweightCoreService;
 use App\Enums\LivestockStatusEnum;
 
-class CreateComponent extends Component
+class EditComponent extends Component
 {
     use WithFileUploads;
 
     public Farm $farm;
+    public $reweightId;
 
     public $livestock_id;
     public $transaction_date;
     public $weight;
     public $notes;
     public $photo;
+    public $current_photo;
 
-    public function mount(Farm $farm)
+    public function mount(Farm $farm, $id, ReweightCoreService $service)
     {
         $this->farm = $farm;
-        $this->transaction_date = date('Y-m-d');
+        $this->reweightId = $id;
+
+        try {
+            $reweight = $service->get($farm, $id);
+
+            $this->livestock_id = $reweight->livestock_id;
+            $this->transaction_date = $reweight->livestockReweightH->transaction_date;
+            $this->weight = $reweight->weight;
+            $this->notes = $reweight->livestockReweightH->notes;
+            $this->current_photo = $reweight->photo;
+
+        } catch (\Exception $e) {
+            session()->flash('error', 'Data tidak ditemukan.');
+            return redirect()->route('shared.reweight.index', $this->farm->id);
+        }
     }
 
     public function save(ReweightCoreService $service)
@@ -46,13 +62,13 @@ class CreateComponent extends Component
                 'photo' => $this->photo,
             ];
 
-            $service->store($this->farm, $data);
+            $service->update($this->farm, $this->reweightId, $data);
 
-            session()->flash('success', 'Data penimbangan berhasil ditambahkan.');
-            return redirect()->route('admin.care-livestock.reweight.index', $this->farm->id);
+            session()->flash('success', 'Data penimbangan berhasil diperbarui.');
+            return redirect()->route('shared.reweight.index', $this->farm->id);
 
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+            $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal memperbarui data: ' . $e->getMessage()]);
         }
     }
 
@@ -62,7 +78,7 @@ class CreateComponent extends Component
             ->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
             ->get();
 
-        return view('livewire.farming.reweight.create-component', [
+        return view('livewire.shared.reweight.edit-component', [
             'livestocks' => $livestocks
         ]);
     }

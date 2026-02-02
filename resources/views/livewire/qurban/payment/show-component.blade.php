@@ -37,7 +37,6 @@
             </div>
 
             <div class="lg:col-span-2 space-y-6">
-                {{-- Payment Details Section --}}
                 <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
                     <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
                         <h3 class="text-sm font-bold text-gray-700 uppercase tracking-wider">Detail Pembayaran</h3>
@@ -49,7 +48,8 @@
 
                             <div class="text-gray-600">Tanggal Transaksi:</div>
                             <div class="font-medium text-right">
-                                {{ date('d F Y', strtotime($payment->transaction_date)) }}</div>
+                                {{ date('d F Y', strtotime($payment->transaction_date)) }}
+                            </div>
                         </div>
                     </div>
                 </div>
