@@ -70,6 +70,10 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
     // Shared features (accessible from both Qurban and Care Livestock)
     require __DIR__ . '/web/shared/reweight.php';
     require __DIR__ . '/web/shared/fleet.php';
+    require __DIR__ . '/web/shared/driver.php';
+
+    // Driver portal routes
+    require __DIR__ . '/web/driver.php';
 
     Route::get('admin/livestock-outlet/dashboard', [LivestockOutletController::class, 'dashboard'])
         ->name('livestock_outlet.dashboard');

@@ -46,7 +46,12 @@ class CreateComponent extends Component
         $this->farm = $farm;
         $this->delivery_date = now()->format('Y-m-d');
 
-        $this->drivers = User::whereHas('roles', fn($q) => $q->where('name', 'driver'))->get();
+        $this->drivers = \App\Models\FarmUser::where('farm_id', $farm->id)
+            ->where('farm_role', 'DRIVER')
+            ->with('user')
+            ->get()
+            ->pluck('user')
+            ->filter();
         $this->fleets = QurbanFleet::where('farm_id', $farm->id)->get();
 
         $this->availableOrders = QurbanDeliveryOrderH::where('farm_id', $farm->id)
