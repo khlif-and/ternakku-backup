@@ -51,7 +51,12 @@ class IndexComponent extends Component
 
         return view('livewire.qurban.delivery-qurban.index-component', [
             'items' => $items,
-            'drivers' => User::whereHas('roles', fn($q) => $q->where('name', 'driver'))->get(),
+            'drivers' => \App\Models\FarmUser::where('farm_id', $this->farm->id)
+                ->where('farm_role', 'DRIVER')
+                ->with('user')
+                ->get()
+                ->pluck('user')
+                ->filter(),
             'statuses' => ['scheduled', 'ready_to_deliver', 'in_delivery', 'delivered'],
         ]);
     }

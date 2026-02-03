@@ -23,7 +23,8 @@
             Data Armada
         </a>
 
-        <a href="{{ route('qurban.driver.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+        <a href="{{ route('shared.driver.index', $farm->id) }}"
+            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
             Data Pengemudi
         </a>
 
