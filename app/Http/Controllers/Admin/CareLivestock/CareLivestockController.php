@@ -13,15 +13,27 @@ class CareLivestockController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $existingFarm = Farm::where('owner_id', $user->id)->first();
-        if (!$existingFarm) {
-            return redirect()->route('farm.create');
+
+        $farmUser = \App\Models\FarmUser::with('farm')
+            ->where('user_id', $user->id)
+            ->whereIn('farm_role', ['OWNER', 'ADMIN', 'ABK'])
+            ->first();
+
+        if (!$farmUser || !$farmUser->farm) {
+            $existingFarm = \App\Models\Farm::where('owner_id', $user->id)->first();
+            if (!$existingFarm) {
+                return redirect()->route('farm.create');
+            }
+            session(['selected_farm' => $existingFarm->id]);
+            return redirect()->route('admin.care-livestock.dashboard', [
+                'farm_id' => $existingFarm->id,
+            ]);
         }
 
-        session(['selected_farm' => $existingFarm->id]);
+        session(['selected_farm' => $farmUser->farm->id]);
 
         return redirect()->route('admin.care-livestock.dashboard', [
-            'farm_id' => $existingFarm->id,
+            'farm_id' => $farmUser->farm->id,
         ]);
     }
 
@@ -38,20 +50,20 @@ class CareLivestockController extends Controller
             'pen',
             'livestockReceptionH',
         ])
-            ->whereHas('livestockReceptionH', fn ($q) => $q->where('farm_id', $farm->id))
+            ->whereHas('livestockReceptionH', fn($q) => $q->where('farm_id', $farm->id))
             ->latest()
             ->get();
 
-        $maleCount = $livestocks->where(fn ($item) => Str::lower($item->livestockSex?->name) === 'jantan')->count();
-        $femaleCount = $livestocks->where(fn ($item) => Str::lower($item->livestockSex?->name) === 'betina')->count();
+        $maleCount = $livestocks->where(fn($item) => Str::lower($item->livestockSex?->name) === 'jantan')->count();
+        $femaleCount = $livestocks->where(fn($item) => Str::lower($item->livestockSex?->name) === 'betina')->count();
 
         $typeCounts = $livestocks
-            ->groupBy(fn ($item) => $item->livestockType->name ?? 'Tidak diketahui')
-            ->map(fn ($group) => $group->count());
+            ->groupBy(fn($item) => $item->livestockType->name ?? 'Tidak diketahui')
+            ->map(fn($group) => $group->count());
 
         $classificationCounts = $livestocks
-            ->groupBy(fn ($item) => $item->livestockClassification->name ?? 'Tidak diketahui')
-            ->map(fn ($group) => $group->count());
+            ->groupBy(fn($item) => $item->livestockClassification->name ?? 'Tidak diketahui')
+            ->map(fn($group) => $group->count());
 
         $analysisData = MilkAnalysisGlobal::where('farm_id', $farm->id)
             ->orderBy('transaction_date')
@@ -62,11 +74,11 @@ class CareLivestockController extends Controller
             ->get();
 
 
-        $recentSales = \App\Models\LivestockSaleWeightD::whereHas('livestockSaleWeightH', function($q) use ($farm_id) {
-                $q->where('farm_id', $farm_id);
-            })
+        $recentSales = \App\Models\LivestockSaleWeightD::whereHas('livestockSaleWeightH', function ($q) use ($farm_id) {
+            $q->where('farm_id', $farm_id);
+        })
             ->latest('created_at')->take(5)->get()
-            ->map(function($x){
+            ->map(function ($x) {
                 return [
                     'type' => 'sale',
                     'description' => "Penjualan <span class='font-semibold text-slate-900'>{$x->weight} kg</span> berhasil dicatat.",
@@ -74,7 +86,7 @@ class CareLivestockController extends Controller
                 ];
             });
 
-        $recentMilk = $milkProductionData->sortByDesc('transaction_date')->take(5)->map(function($x){
+        $recentMilk = $milkProductionData->sortByDesc('transaction_date')->take(5)->map(function ($x) {
             return [
                 'type' => 'milk_production',
                 'description' => "Input produksi susu <span class='font-semibold text-slate-900'>{$x->quantity_liters} L</span> oleh <span class='font-semibold text-slate-900'>{$x->milker_name}</span>.",
@@ -82,7 +94,7 @@ class CareLivestockController extends Controller
             ];
         });
 
-        $recentAnalysis = $analysisData->sortByDesc('transaction_date')->take(3)->map(function($x){
+        $recentAnalysis = $analysisData->sortByDesc('transaction_date')->take(3)->map(function ($x) {
             return [
                 'type' => 'milk_analysis',
                 'description' => "Analisis susu <span class='font-semibold text-slate-900'>{$x->bj}</span> BJ pada <span class='font-semibold text-slate-900'>" . \Carbon\Carbon::parse($x->transaction_date)->format('d M Y') . "</span>.",

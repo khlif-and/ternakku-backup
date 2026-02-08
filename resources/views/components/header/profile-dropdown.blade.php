@@ -2,20 +2,35 @@
     'user',
     'currentFarm' => null,
     'profileImage' => null,
+    'transparent' => false,
 ])
 
 @php
     $profileSrc = $profileImage ?? asset('admin/img/profile.jpg');
+    $headerClasses = $transparent 
+        ? 'bg-transparent w-full px-6 py-3 flex items-center justify-end z-20' 
+        : 'bg-white w-full px-6 py-3 flex items-center justify-end shadow z-20';
+
+    $hour = \Carbon\Carbon::now('Asia/Jakarta')->format('H');
+    if ($hour >= 5 && $hour < 11) {
+        $greeting = 'Selamat Pagi';
+    } elseif ($hour >= 11 && $hour < 15) {
+        $greeting = 'Selamat Siang';
+    } elseif ($hour >= 15 && $hour < 18) {
+        $greeting = 'Selamat Sore';
+    } else {
+        $greeting = 'Selamat Malam';
+    }
 @endphp
 
-<header class="bg-white w-full px-6 py-3 flex items-center justify-end shadow z-20">
+<header class="{{ $headerClasses }}">
     <div class="relative" x-data="{ open: false }">
         <button @click="open = !open"
-                class="flex items-center gap-2 px-3 py-1 rounded-full hover:bg-slate-100">
+                class="flex items-center gap-2 px-3 py-1 rounded-full hover:bg-slate-100/50 transition duration-200">
             <img src="{{ $profileSrc }}"
-                 class="h-8 w-8 rounded-full ring-2 ring-white" alt="Foto">
-            <span class="text-sm font-semibold text-slate-700 hidden sm:inline">
-                Halo, {{ strtok($user->name, ' ') }}
+                 class="h-8 w-8 rounded-full ring-2 ring-white object-cover" alt="Foto">
+            <span class="text-sm font-semibold {{ $transparent ? 'text-slate-800' : 'text-slate-700' }} hidden sm:inline">
+                {{ $greeting }}, {{ strtok($user->name, ' ') }}
             </span>
             <svg :class="{ 'rotate-180': open }"
                  class="h-4 w-4 text-gray-500 transition"

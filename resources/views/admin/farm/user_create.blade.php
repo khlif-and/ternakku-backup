@@ -54,20 +54,17 @@
                         <div class="mb-8">
                             <label class="block mb-2 text-base font-semibold text-gray-700" for="name">Nama</label>
                             <input type="text" id="name" name="name"
-                                class="w-full px-4 py-3 border rounded-md text-base outline-none bg-gray-100"
-                                readonly>
+                                class="w-full px-4 py-3 border rounded-md text-base outline-none bg-gray-100" readonly>
                         </div>
                         <div class="mb-8">
                             <label class="block mb-2 text-base font-semibold text-gray-700" for="email">Email</label>
                             <input type="text" id="email" name="email"
-                                class="w-full px-4 py-3 border rounded-md text-base outline-none bg-gray-100"
-                                readonly>
+                                class="w-full px-4 py-3 border rounded-md text-base outline-none bg-gray-100" readonly>
                         </div>
                         <div class="mb-8">
                             <label class="block mb-2 text-base font-semibold text-gray-700" for="phone_number">No HP</label>
                             <input type="text" id="phone_number" name="phone_number"
-                                class="w-full px-4 py-3 border rounded-md text-base outline-none bg-gray-100"
-                                readonly>
+                                class="w-full px-4 py-3 border rounded-md text-base outline-none bg-gray-100" readonly>
                         </div>
                         <input type="hidden" id="user_id" name="user_id" value="">
                         <div class="mb-8">
@@ -79,6 +76,7 @@
                                 <option value="ADMIN">Admin</option>
                                 <option value="ABK">ABK</option>
                                 <option value="DRIVER">Driver</option>
+                                <option value="MARKETING">Marketing</option>
                             </select>
                             @error('farm_role')
                                 <span class="text-red-500 text-xs">{{ $message }}</span>
@@ -99,56 +97,56 @@
 @endsection
 
 @section('script')
-<script>
-$(document).ready(function() {
-    var timer;
-    $('#username').on('keyup change', function() {
-        clearTimeout(timer);
-        var username = $(this).val().trim();
-        timer = setTimeout(function() {
-            if (username.length > 0) {
-                $.ajax({
-                    url: '/qurban/farm/find-user',
-                    type: 'get',
-                    data: { username: username },
-                    success: function(response) {
-                        let data = response;
-                        if (data && data.name) {
-                            // Tampilkan user-info (smooth)
-                            $('#user-info')
-                                .removeClass('opacity-0 pointer-events-none max-h-0')
-                                .addClass('opacity-100 max-h-[1000px]');
-                            $('#name').val(data.name ?? '');
-                            $('#email').val(data.email ?? '');
-                            $('#phone_number').val(data.phone_number ?? '');
-                            $('#user_id').val(data.id ?? '');
-                            $('#username-notfound').addClass('hidden');
-                        } else {
-                            // Sembunyikan user-info (smooth)
-                            $('#user-info')
-                                .removeClass('opacity-100 max-h-[1000px]')
-                                .addClass('opacity-0 pointer-events-none max-h-0');
-                            $('#name, #email, #phone_number, #user_id').val('');
-                            $('#username-notfound').removeClass('hidden');
-                        }
-                    },
-                    error: function(xhr) {
+    <script>
+        $(document).ready(function () {
+            var timer;
+            $('#username').on('keyup change', function () {
+                clearTimeout(timer);
+                var username = $(this).val().trim();
+                timer = setTimeout(function () {
+                    if (username.length > 0) {
+                        $.ajax({
+                            url: '/qurban/farm/find-user',
+                            type: 'get',
+                            data: { username: username },
+                            success: function (response) {
+                                let data = response;
+                                if (data && data.name) {
+                                    // Tampilkan user-info (smooth)
+                                    $('#user-info')
+                                        .removeClass('opacity-0 pointer-events-none max-h-0')
+                                        .addClass('opacity-100 max-h-[1000px]');
+                                    $('#name').val(data.name ?? '');
+                                    $('#email').val(data.email ?? '');
+                                    $('#phone_number').val(data.phone_number ?? '');
+                                    $('#user_id').val(data.id ?? '');
+                                    $('#username-notfound').addClass('hidden');
+                                } else {
+                                    // Sembunyikan user-info (smooth)
+                                    $('#user-info')
+                                        .removeClass('opacity-100 max-h-[1000px]')
+                                        .addClass('opacity-0 pointer-events-none max-h-0');
+                                    $('#name, #email, #phone_number, #user_id').val('');
+                                    $('#username-notfound').removeClass('hidden');
+                                }
+                            },
+                            error: function (xhr) {
+                                $('#user-info')
+                                    .removeClass('opacity-100 max-h-[1000px]')
+                                    .addClass('opacity-0 pointer-events-none max-h-0');
+                                $('#name, #email, #phone_number, #user_id').val('');
+                                $('#username-notfound').removeClass('hidden');
+                            }
+                        });
+                    } else {
                         $('#user-info')
                             .removeClass('opacity-100 max-h-[1000px]')
                             .addClass('opacity-0 pointer-events-none max-h-0');
                         $('#name, #email, #phone_number, #user_id').val('');
-                        $('#username-notfound').removeClass('hidden');
+                        $('#username-notfound').addClass('hidden');
                     }
-                });
-            } else {
-                $('#user-info')
-                    .removeClass('opacity-100 max-h-[1000px]')
-                    .addClass('opacity-0 pointer-events-none max-h-0');
-                $('#name, #email, #phone_number, #user_id').val('');
-                $('#username-notfound').addClass('hidden');
-            }
-        }, 700);
-    });
-});
-</script>
+                }, 700);
+            });
+        });
+    </script>
 @endsection

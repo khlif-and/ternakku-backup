@@ -9,6 +9,12 @@ Route::get('/', [HomeController::class, 'index']);
 
 require __DIR__ . '/web/auth.php';
 
+// Driver portal routes (outside auth middleware - has its own auth handling)
+require __DIR__ . '/web/driver.php';
+
+// Marketing portal routes (outside auth middleware - has its own auth handling)
+require __DIR__ . '/web/marketing.php';
+
 Route::middleware(['auth', 'email.verified'])->group(function () {
     Route::get('dashboard', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('dashboard');
 
@@ -72,8 +78,7 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
     require __DIR__ . '/web/shared/fleet.php';
     require __DIR__ . '/web/shared/driver.php';
 
-    // Driver portal routes
-    require __DIR__ . '/web/driver.php';
+
 
     Route::get('admin/livestock-outlet/dashboard', [LivestockOutletController::class, 'dashboard'])
         ->name('livestock_outlet.dashboard');
