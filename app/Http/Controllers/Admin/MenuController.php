@@ -12,8 +12,30 @@ class MenuController extends Controller
     public function index()
     {
         $farmId = session('selected_farm');
+
         if (!$farmId) {
-            return redirect()->route('care_livestock');
+            // Coba cari farm default (Owner atau FarmUser)
+            $user = auth()->user();
+
+            // Cek di FarmUser dulu (roles)
+            $farmUser = \App\Models\FarmUser::where('user_id', $user->id)->first();
+            if ($farmUser) {
+                $farmId = $farmUser->farm_id;
+            } else {
+                // Cek sebagai Owner
+                $ownedFarm = \App\Models\Farm::where('owner_id', $user->id)->first();
+                if ($ownedFarm) {
+                    $farmId = $ownedFarm->id;
+                }
+            }
+
+            // Jika ketemu farm, set session
+            if ($farmId) {
+                session(['selected_farm' => $farmId]);
+            } else {
+                // Jika benar-benar tidak punya farm, baru redirect ke flow buat farm
+                return redirect()->route('care_livestock');
+            }
         }
 
         // Query contoh aktivitas terbaru
