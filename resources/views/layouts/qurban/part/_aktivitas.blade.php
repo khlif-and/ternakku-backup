@@ -10,49 +10,67 @@
 
     <div x-show="aktivitasOpen" x-transition class="mt-2 bg-white rounded-md shadow px-3 py-2 text-gray-800 space-y-2">
 
-        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide px-2">
-            Penjualan & Pembayaran
-        </p>
+        @php
+            $userRole = \App\Models\FarmUser::where('user_id', auth()->id())
+                ->where('farm_id', $farm->id)
+                ->value('farm_role');
+            $isOwner = $userRole === 'OWNER' || $farm->owner_id === auth()->id();
+            $isAdmin = $userRole === 'ADMIN';
+            $isMarketing = $userRole === 'MARKETING';
+            $isDriver = $userRole === 'DRIVER';
+        @endphp
 
-        <a href="{{ route('shared.reweight.index', $farm->id) }}"
-            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            ReWeight / Timbang Ulang
-        </a>
+        @if($isOwner || $isAdmin || $isMarketing)
+            <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide px-2">
+                Penjualan & Pembayaran
+            </p>
 
-        <a href="{{ route('qurban.sales-order.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Sales Order Kurban
-        </a>
+            <a href="{{ route('shared.reweight.index', $farm->id) }}"
+                class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                ReWeight / Timbang Ulang
+            </a>
 
-        <a href="{{ route('qurban.sales.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Penjualan Ternak Kurban
-        </a>
+            <a href="{{ route('qurban.sales-order.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                Sales Order Kurban
+            </a>
 
-        <a href="{{ route('admin.qurban.payment.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Pembayaran
-        </a>
+            <a href="{{ route('qurban.sales.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                Penjualan Ternak Kurban
+            </a>
 
-        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide px-2 pt-2">
-            Pengiriman
-        </p>
+            @if($isOwner || $isAdmin)
+                <a href="{{ route('admin.qurban.payment.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                    Pembayaran
+                </a>
+            @endif
+        @endif
 
-        <a href="{{ route('qurban.livestock-delivery-note.index') }}"
-            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Surat Jalan Ternak Kurban
-        </a>
+        @if($isOwner || $isAdmin || $isDriver)
+            <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide px-2 pt-2">
+                Pengiriman
+            </p>
 
-        <a href="{{ route('admin.qurban.qurban_delivery.index') }}"
-            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Pengiriman Ternak Kurban
-        </a>
+            @if($isOwner || $isAdmin)
+                <a href="{{ route('qurban.livestock-delivery-note.index') }}"
+                    class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                    Surat Jalan Ternak Kurban
+                </a>
 
-        <a href="{{ route('qurban.fleet-tracking.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Pelacakan Armada
-        </a>
+                <a href="{{ route('admin.qurban.qurban_delivery.index') }}"
+                    class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                    Pengiriman Ternak Kurban
+                </a>
 
-        <a href="{{ route('admin.qurban.delivery_order_qurban.index') }}"
-            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Data DO
-        </a>
+                <a href="{{ route('admin.qurban.delivery_order_qurban.index') }}"
+                    class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                    Data DO
+                </a>
+            @endif
+
+            <a href="{{ route('qurban.fleet-tracking.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                Pelacakan Armada
+            </a>
+        @endif
 
     </div>
 </li>

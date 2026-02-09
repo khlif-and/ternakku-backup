@@ -10,23 +10,41 @@
 
     <div x-show="dataAwalOpen" x-transition class="mt-2 bg-white rounded-md shadow px-3 py-2 text-gray-800 space-y-1">
 
-        <a href="{{ route('qurban.farm.user-list') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Data Pengguna
-        </a>
+        @php
+            $userRole = \App\Models\FarmUser::where('user_id', auth()->id())
+                ->where('farm_id', $farm->id)
+                ->value('farm_role');
+            $isOwner = $userRole === 'OWNER' || $farm->owner_id === auth()->id();
+            $isAdmin = $userRole === 'ADMIN';
+            $isMarketing = $userRole === 'MARKETING';
+            $isDriver = $userRole === 'DRIVER';
+        @endphp
 
-        <a href="{{ route('qurban.customer.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Data Pelanggan & Alamat Kirim
-        </a>
+        @if($isOwner)
+            <a href="{{ route('qurban.farm.user-list') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                Data Pengguna
+            </a>
+        @endif
 
-        <a href="{{ route('shared.fleet.index', $farm->id) }}"
-            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Data Armada
-        </a>
+        @if($isOwner || $isAdmin || $isMarketing)
+            <a href="{{ route('qurban.customer.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                Data Pelanggan & Alamat Kirim
+            </a>
+        @endif
 
-        <a href="{{ route('shared.driver.index', $farm->id) }}"
-            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Data Pengemudi
-        </a>
+        @if($isOwner || $isAdmin)
+            <a href="{{ route('shared.fleet.index', $farm->id) }}"
+                class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                Data Armada
+            </a>
+        @endif
+
+        @if($isOwner || $isAdmin)
+            <a href="{{ route('shared.driver.index', $farm->id) }}"
+                class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+                Data Pengemudi
+            </a>
+        @endif
 
     </div>
 </li>
