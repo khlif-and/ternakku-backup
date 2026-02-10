@@ -28,9 +28,9 @@ class LivestockReceptionCoreService
             $search = $filters['search'];
             $query->where(function ($q) use ($search) {
                 $q->where('eartag_number', 'like', "%{$search}%")
-                  ->orWhere('rfid_number', 'like', "%{$search}%")
-                  ->orWhereHas('livestockType', fn($q2) => $q2->where('name', 'like', "%{$search}%"))
-                  ->orWhereHas('livestockBreed', fn($q2) => $q2->where('name', 'like', "%{$search}%"));
+                    ->orWhere('rfid_number', 'like', "%{$search}%")
+                    ->orWhereHas('livestockType', fn($q2) => $q2->where('name', 'like', "%{$search}%"))
+                    ->orWhereHas('livestockBreed', fn($q2) => $q2->where('name', 'like', "%{$search}%"));
             });
         }
 
@@ -45,20 +45,6 @@ class LivestockReceptionCoreService
         ];
     }
 
-    /**
-     * Get form dropdown data
-     */
-    public function getFormData(Farm $farm): array
-    {
-        $farm->load('pens');
-
-        return [
-            'livestockTypes' => DB::table('livestock_types')->pluck('name', 'id'),
-            'sexes' => DB::table('livestock_sexes')->pluck('name', 'id'),
-            'groups' => DB::table('livestock_groups')->pluck('name', 'id'),
-            'classifications' => DB::table('livestock_classifications')->pluck('name', 'id'),
-        ];
-    }
 
     /**
      * Find reception by ID
@@ -240,8 +226,15 @@ class LivestockReceptionCoreService
     private function createPhenotype(Livestock $livestock, array $data): void
     {
         $phenotypeData = collect($data)->only([
-            'height', 'body_length', 'hip_height', 'hip_width',
-            'chest_width', 'head_length', 'head_width', 'ear_length', 'body_weight'
+            'height',
+            'body_length',
+            'hip_height',
+            'hip_width',
+            'chest_width',
+            'head_length',
+            'head_width',
+            'ear_length',
+            'body_weight'
         ])->filter();
 
         if ($phenotypeData->isNotEmpty()) {
@@ -255,8 +248,15 @@ class LivestockReceptionCoreService
     private function updatePhenotype(Livestock $livestock, array $data): void
     {
         $phenotypeData = collect($data)->only([
-            'height', 'body_length', 'hip_height', 'hip_width',
-            'chest_width', 'head_length', 'head_width', 'ear_length', 'body_weight'
+            'height',
+            'body_length',
+            'hip_height',
+            'hip_width',
+            'chest_width',
+            'head_length',
+            'head_width',
+            'ear_length',
+            'body_weight'
         ])->filter();
 
         if ($phenotypeData->isNotEmpty()) {

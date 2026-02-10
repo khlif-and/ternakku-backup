@@ -5,7 +5,7 @@ namespace App\Livewire\Admin\ArtificialInsemination;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\InseminationArtificial;
-use App\Models\LivestockBreed;
+use App\Helpers\Web\ArtificialInseminationFormService;
 use App\Services\Web\Farming\ArtificialInsemination\ArtificialInseminationCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -48,11 +48,14 @@ class EditComponent extends Component
         'semen_breed_id.required' => 'Ras semen wajib dipilih.',
     ];
 
-    public function mount(Farm $farm, InseminationArtificial $item)
+    public function mount(Farm $farm, InseminationArtificial $item, ArtificialInseminationFormService $formService)
     {
         $this->farm = $farm;
         $this->aiRecord = $item;
-        $this->breeds = LivestockBreed::all();
+
+        $formData = $formService->getDropdownData($farm);
+        $this->breeds = $formData['breeds'];
+
         $this->fillFormData();
     }
 

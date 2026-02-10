@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\FeedMedicinePurchase;
 
 use Livewire\Component;
 use App\Models\Farm;
+use App\Helpers\Web\FeedMedicinePurchaseFormService;
 use App\Services\Web\Farming\FeedMedicinePurchase\FeedMedicinePurchaseCoreService;
 
 class IndexComponent extends Component
@@ -14,14 +15,12 @@ class IndexComponent extends Component
     public $purchase_type;
     public $purchaseTypes = [];
 
-    public function mount(Farm $farm)
+    public function mount(Farm $farm, FeedMedicinePurchaseFormService $formService)
     {
         $this->farm = $farm;
-        $this->purchaseTypes = [
-            'forage' => 'Hijauan (Forage)',
-            'concentrate' => 'Konsentrat (Concentrate)',
-            'medicine' => 'Obat (Medicine)'
-        ];
+
+        $formData = $formService->getDropdownData();
+        $this->purchaseTypes = $formData['purchaseTypes'];
     }
 
     public function render(FeedMedicinePurchaseCoreService $coreService)

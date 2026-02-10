@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\MilkProductionGlobal;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\MilkProductionGlobal;
+use App\Services\Web\Farming\MilkProductionGlobal\MilkProductionGlobalCoreService;
 
 class ShowComponent extends Component
 {
@@ -17,10 +18,16 @@ class ShowComponent extends Component
         $this->milkProductionGlobal = $milkProductionGlobal;
     }
 
-    public function delete()
+    public function delete(MilkProductionGlobalCoreService $coreService)
     {
-        $this->milkProductionGlobal->delete();
-        return redirect()->route('admin.care-livestock.milk-production-global.index', $this->farm->id);
+        try {
+            $coreService->delete($this->farm, $this->milkProductionGlobal->id);
+
+            session()->flash('success', 'Data produksi susu global berhasil dihapus.');
+            return redirect()->route('admin.care-livestock.milk-production-global.index', $this->farm->id);
+        } catch (\Throwable $e) {
+            session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
+        }
     }
 
     public function render()

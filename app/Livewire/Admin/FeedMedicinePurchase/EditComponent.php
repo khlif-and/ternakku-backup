@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\FeedMedicinePurchase;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\FeedMedicinePurchase;
+use App\Helpers\Web\FeedMedicinePurchaseFormService;
 use App\Services\Web\Farming\FeedMedicinePurchase\FeedMedicinePurchaseCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -33,16 +34,13 @@ class EditComponent extends Component
         ];
     }
 
-    public function mount(Farm $farm, FeedMedicinePurchase $purchase)
+    public function mount(Farm $farm, FeedMedicinePurchase $purchase, FeedMedicinePurchaseFormService $formService)
     {
         $this->farm = $farm;
         $this->purchase = $purchase;
-        
-        $this->purchaseTypes = [
-            'forage' => 'Hijauan (Forage)',
-            'concentrate' => 'Konsentrat (Concentrate)',
-            'medicine' => 'Obat (Medicine)'
-        ];
+
+        $formData = $formService->getDropdownData();
+        $this->purchaseTypes = $formData['purchaseTypes'];
 
         $this->fillFormData();
     }

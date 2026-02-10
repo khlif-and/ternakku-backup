@@ -3,11 +3,10 @@
 namespace App\Livewire\Farming\Reweight;
 
 use App\Models\Farm;
-use App\Models\Livestock;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Helpers\Web\ReweightFormService;
 use App\Services\Web\Farming\Reweight\ReweightCoreService;
-use App\Enums\LivestockStatusEnum;
 
 class CreateComponent extends Component
 {
@@ -21,10 +20,15 @@ class CreateComponent extends Component
     public $notes;
     public $photo;
 
-    public function mount(Farm $farm)
+    public $livestocks = [];
+
+    public function mount(Farm $farm, ReweightFormService $formService)
     {
         $this->farm = $farm;
         $this->transaction_date = date('Y-m-d');
+
+        $formData = $formService->getDropdownData($farm);
+        $this->livestocks = $formData['livestocks'];
     }
 
     public function save(ReweightCoreService $service)
@@ -58,12 +62,8 @@ class CreateComponent extends Component
 
     public function render()
     {
-        $livestocks = Livestock::where('farm_id', $this->farm->id)
-            ->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
-            ->get();
-
         return view('livewire.farming.reweight.create-component', [
-            'livestocks' => $livestocks
+            'livestocks' => $this->livestocks,
         ]);
     }
 }

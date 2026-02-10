@@ -14,71 +14,50 @@ class EditComponent extends Component
     public MilkProductionGlobal $milkProductionGlobal;
 
     public $transaction_date;
-    public $pen_id;
+    public $milking_shift;
+    public $milking_time;
+    public $milker_name;
+    public $quantity_liters;
+    public $milk_condition;
     public $notes;
-    public $items = [];
-
-    public $pens = [];
 
     protected function rules()
     {
         return [
             'transaction_date' => 'required|date',
-            'pen_id' => 'required|exists:pens,id',
+            'milking_shift' => 'required|in:morning,afternoon',
+            'milking_time' => 'required',
+            'milker_name' => 'required|string|max:255',
+            'quantity_liters' => 'required|numeric|min:0',
+            'milk_condition' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
-            'items' => 'required|array|min:1',
-            'items.*.name' => 'required|string',
-            'items.*.volume' => 'required|numeric|min:0',
         ];
     }
 
     protected $messages = [
         'transaction_date.required' => 'Tanggal wajib diisi.',
-        'pen_id.required' => 'Kandang wajib dipilih.',
-        'items.*.name.required' => 'Nama shift wajib diisi.',
-        'items.*.volume.required' => 'Volume susu wajib diisi.',
+        'milking_shift.required' => 'Shift perah wajib dipilih.',
+        'milking_time.required' => 'Waktu perah wajib diisi.',
+        'milker_name.required' => 'Nama pemerah wajib diisi.',
+        'quantity_liters.required' => 'Volume susu wajib diisi.',
     ];
 
     public function mount(Farm $farm, MilkProductionGlobal $milkProductionGlobal)
     {
         $this->farm = $farm;
         $this->milkProductionGlobal = $milkProductionGlobal;
-        $this->pens = $farm->pens;
         $this->fillFormData();
     }
 
     public function fillFormData()
     {
-        $this->transaction_date = $this->milkProductionGlobal->milkProductionH?->transaction_date;
-        $this->pen_id = $this->milkProductionGlobal->pen_id;
+        $this->transaction_date = $this->milkProductionGlobal->transaction_date;
+        $this->milking_shift = $this->milkProductionGlobal->milking_shift;
+        $this->milking_time = $this->milkProductionGlobal->milking_time ? date('H:i', strtotime($this->milkProductionGlobal->milking_time)) : '';
+        $this->milker_name = $this->milkProductionGlobal->milker_name;
+        $this->quantity_liters = $this->milkProductionGlobal->quantity_liters;
+        $this->milk_condition = $this->milkProductionGlobal->milk_condition;
         $this->notes = $this->milkProductionGlobal->notes;
-
-        $this->items = $this->milkProductionGlobal->milkProductionGlobalItems->map(function ($item) {
-            return [
-                'name' => $item->name,
-                'volume' => $item->volume,
-            ];
-        })->toArray();
-
-        if (empty($this->items)) {
-            $this->addItem();
-        }
-    }
-
-    public function addItem()
-    {
-        $this->items[] = [
-            'name' => '',
-            'volume' => 0,
-        ];
-    }
-
-    public function removeItem($index)
-    {
-        if (count($this->items) > 1) {
-            unset($this->items[$index]);
-            $this->items = array_values($this->items);
-        }
     }
 
     public function save(MilkProductionGlobalCoreService $coreService)
@@ -88,9 +67,12 @@ class EditComponent extends Component
         try {
             $coreService->update($this->farm, $this->milkProductionGlobal->id, [
                 'transaction_date' => $this->transaction_date,
-                'pen_id' => $this->pen_id,
+                'milking_shift' => $this->milking_shift,
+                'milking_time' => $this->milking_time,
+                'milker_name' => $this->milker_name,
+                'quantity_liters' => $this->quantity_liters,
+                'milk_condition' => $this->milk_condition,
                 'notes' => $this->notes,
-                'items' => $this->items,
             ]);
 
             session()->flash('success', 'Data produksi susu global berhasil diperbarui.');
@@ -98,7 +80,6 @@ class EditComponent extends Component
         } catch (\Throwable $e) {
             Log::error('MilkProductionGlobal Edit Error', [
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
             ]);
             session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }

@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class ReweightCoreService
 {
+
     public function store($farm, array $data)
     {
         DB::beginTransaction();
@@ -31,9 +32,9 @@ class ReweightCoreService
 
             // Simpan data header LivestockReweightH
             $livestockReweightH = LivestockReweightH::create([
-                'farm_id'          => $farm->id,
+                'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
-                'notes'            => $data['notes'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $photo = null;
@@ -48,9 +49,9 @@ class ReweightCoreService
 
             $livestockReweightD = LivestockReweightD::create([
                 'livestock_reweight_h_id' => $livestockReweightH->id,
-                'livestock_id'            => $data['livestock_id'],
-                'weight'                  => $data['weight'],
-                'photo'                   => $photo,
+                'livestock_id' => $data['livestock_id'],
+                'weight' => $data['weight'],
+                'photo' => $photo,
             ]);
 
             DB::commit();
@@ -77,12 +78,12 @@ class ReweightCoreService
 
             $livestockReweightH->update([
                 'transaction_date' => $data['transaction_date'],
-                'notes'            => $data['notes'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $updateData = [
                 'livestock_id' => $data['livestock_id'],
-                'weight'       => $data['weight'],
+                'weight' => $data['weight'],
             ];
 
             // Handle file upload if present

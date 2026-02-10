@@ -2,7 +2,6 @@
 
 namespace App\Services\Web\Farming\FeedingColony;
 
-use App\Models\FeedingColonyD;
 use Illuminate\Http\Request;
 
 class FeedingColonyService

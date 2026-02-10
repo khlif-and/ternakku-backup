@@ -45,10 +45,10 @@ class IndexComponent extends Component
             'end_date' => $this->end_date,
         ];
 
-        $result = $coreService->listDeaths($this->farm, $filters);
+        $data = $coreService->listDeaths($this->farm, $filters);
 
         return view('livewire.admin.livestock-death.index-component', [
-            'deaths' => $result['deaths'],
+            'deaths' => $data['deaths'],
         ]);
     }
 }

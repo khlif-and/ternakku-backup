@@ -4,9 +4,7 @@ namespace App\Livewire\Admin\LivestockDeath;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Models\Livestock;
-use App\Models\Disease;
-use App\Enums\LivestockStatusEnum;
+use App\Helpers\Web\LivestockDeathFormService;
 use App\Services\Web\Farming\LivestockDeath\LivestockDeathCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -39,21 +37,14 @@ class CreateComponent extends Component
         'livestock_id.required' => 'Ternak wajib dipilih.',
     ];
 
-    public function mount(Farm $farm)
+    public function mount(Farm $farm, LivestockDeathFormService $formService)
     {
         $this->farm = $farm;
         $this->transaction_date = now()->format('Y-m-d');
-        $this->loadDropdownData();
-    }
 
-    public function loadDropdownData()
-    {
-        $this->livestocks = Livestock::with(['livestockType', 'livestockBreed'])
-            ->where('farm_id', $this->farm->id)
-            ->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
-            ->get();
-
-        $this->diseases = Disease::pluck('name', 'id')->toArray();
+        $formData = $formService->getDropdownData($farm);
+        $this->livestocks = $formData['livestocks'];
+        $this->diseases = $formData['diseases'];
     }
 
     public function save(LivestockDeathCoreService $coreService)

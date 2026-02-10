@@ -4,8 +4,7 @@ namespace App\Livewire\Admin\ArtificialInsemination;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Models\Livestock;
-use App\Models\LivestockBreed;
+use App\Helpers\Web\ArtificialInseminationFormService;
 use App\Services\Web\Farming\ArtificialInsemination\ArtificialInseminationCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -51,18 +50,15 @@ class CreateComponent extends Component
         'officer_name.required' => 'Nama petugas/inseminator wajib diisi.',
     ];
 
-    public function mount(Farm $farm)
+    public function mount(Farm $farm, ArtificialInseminationFormService $formService)
     {
         $this->farm = $farm;
         $this->transaction_date = now()->format('Y-m-d');
         $this->action_time = now()->format('H:i');
-        
-        $this->livestocks = Livestock::where('farm_id', $this->farm->id)
-            ->whereHas('livestockSex', function($q) {
-                $q->where('name', 'Female')->orWhere('name', 'Betina');
-            })->get();
 
-        $this->breeds = LivestockBreed::all();
+        $formData = $formService->getDropdownData($farm);
+        $this->livestocks = $formData['livestocks'];
+        $this->breeds = $formData['breeds'];
     }
 
     public function save(ArtificialInseminationCoreService $coreService)
@@ -85,7 +81,7 @@ class CreateComponent extends Component
 
             session()->flash('success', 'Data Inseminasi Buatan berhasil disimpan.');
             return redirect()->route('admin.care-livestock.artificial-inseminasi.show', [$this->farm->id, $aiRecord->id]);
-            
+
         } catch (\Throwable $e) {
             Log::error('AI Create Component Error: ' . $e->getMessage());
             session()->flash('error', 'Gagal menyimpan data: ' . $e->getMessage());

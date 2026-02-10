@@ -4,10 +4,8 @@ namespace App\Livewire\Admin\LivestockDeath;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Models\Livestock;
 use App\Models\LivestockDeath;
-use App\Models\Disease;
-use App\Enums\LivestockStatusEnum;
+use App\Helpers\Web\LivestockDeathFormService;
 use App\Services\Web\Farming\LivestockDeath\LivestockDeathCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -41,12 +39,16 @@ class EditComponent extends Component
         'livestock_id.required' => 'Ternak wajib dipilih.',
     ];
 
-    public function mount(Farm $farm, LivestockDeath $death)
+    public function mount(Farm $farm, LivestockDeath $death, LivestockDeathFormService $formService)
     {
         $this->farm = $farm;
         $this->death = $death;
+
+        $formData = $formService->getDropdownDataForEdit($farm, $death->livestock_id);
+        $this->livestocks = $formData['livestocks'];
+        $this->diseases = $formData['diseases'];
+
         $this->fillFormData();
-        $this->loadDropdownData();
     }
 
     public function fillFormData()
@@ -56,19 +58,6 @@ class EditComponent extends Component
         $this->disease_id = $this->death->disease_id;
         $this->indication = $this->death->indication;
         $this->notes = $this->death->notes;
-    }
-
-    public function loadDropdownData()
-    {
-        $this->livestocks = Livestock::with(['livestockType', 'livestockBreed'])
-            ->where('farm_id', $this->farm->id)
-            ->where(function ($q) {
-                $q->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)
-                  ->orWhere('id', $this->death->livestock_id);
-            })
-            ->get();
-
-        $this->diseases = Disease::pluck('name', 'id')->toArray();
     }
 
     public function save(LivestockDeathCoreService $coreService)

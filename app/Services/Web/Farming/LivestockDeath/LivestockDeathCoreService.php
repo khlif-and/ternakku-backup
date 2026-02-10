@@ -22,18 +22,8 @@ class LivestockDeathCoreService
             $query->where('transaction_date', '<=', $filters['end_date']);
         }
 
-        foreach (['livestock_type_id', 'livestock_group_id', 'livestock_breed_id', 'livestock_sex_id', 'pen_id'] as $filter) {
-            if (!empty($filters[$filter])) {
-                $query->whereHas('livestock', function ($q) use ($filter, $filters) {
-                    $q->where($filter, $filters[$filter]);
-                });
-            }
-        }
-
-        $deaths = $query->orderByDesc('transaction_date')->paginate(10)->appends($filters);
-
         return [
-            'deaths' => $deaths
+            'deaths' => $query->orderByDesc('transaction_date')->paginate(10)->appends($filters),
         ];
     }
 
@@ -49,12 +39,12 @@ class LivestockDeathCoreService
             LivestockSaleWeightD::where('livestock_id', $livestock->id)->delete();
 
             $death = LivestockDeath::create([
-                'farm_id'        => $farm->id,
+                'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
-                'livestock_id'   => $data['livestock_id'],
-                'disease_id'     => $data['disease_id'] ?? null,
-                'indication'     => $data['indication'] ?? null,
-                'notes'          => $data['notes'] ?? null,
+                'livestock_id' => $data['livestock_id'],
+                'disease_id' => $data['disease_id'] ?? null,
+                'indication' => $data['indication'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $livestock->update(['livestock_status_id' => LivestockStatusEnum::MATI->value]);
@@ -77,10 +67,10 @@ class LivestockDeathCoreService
 
             $death->update([
                 'transaction_date' => $data['transaction_date'],
-                'livestock_id'     => $data['livestock_id'],
-                'disease_id'       => $data['disease_id'] ?? null,
-                'indication'       => $data['indication'] ?? null,
-                'notes'            => $data['notes'] ?? null,
+                'livestock_id' => $data['livestock_id'],
+                'disease_id' => $data['disease_id'] ?? null,
+                'indication' => $data['indication'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             if ($oldLivestockId && $oldLivestockId != $data['livestock_id']) {

@@ -8,7 +8,7 @@ use App\Models\Insemination;
 use App\Models\InseminationArtificial;
 use App\Models\LivestockExpense;
 use App\Models\ReproductionCycle;
-use App\Models\LivestockBreed;
+
 use App\Enums\LivestockExpenseTypeEnum;
 use App\Enums\ReproductionCycleStatusEnum;
 use Illuminate\Support\Facades\DB;
@@ -23,10 +23,10 @@ class ArtificialInseminationCoreService
             'reproductionCycle.livestock.livestockBreed',
             'reproductionCycle.livestock.pen',
         ])
-        ->whereHas('insemination', function ($q) use ($farm) {
-            $q->where('farm_id', $farm->id)->where('type', 'artificial');
-        })
-        ->findOrFail($id);
+            ->whereHas('insemination', function ($q) use ($farm) {
+                $q->where('farm_id', $farm->id)->where('type', 'artificial');
+            })
+            ->findOrFail($id);
     }
 
     public function store(Farm $farm, array $data): InseminationArtificial
@@ -107,7 +107,8 @@ class ArtificialInseminationCoreService
     private function updatePreviousCycleStatus(Livestock $livestock): void
     {
         $latestCycle = ReproductionCycle::where('livestock_id', $livestock->id)->latest()->first();
-        if (!$latestCycle) return;
+        if (!$latestCycle)
+            return;
 
         $currentStatus = (int) $latestCycle->reproduction_cycle_status_id;
         if ($currentStatus === (int) ReproductionCycleStatusEnum::INSEMINATION->value) {

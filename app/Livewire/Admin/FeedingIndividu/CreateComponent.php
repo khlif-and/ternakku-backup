@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\FeedingIndividu;
 
 use Livewire\Component;
 use App\Models\Farm;
+use App\Helpers\Web\FeedingIndividuFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingIndividuCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -39,18 +40,14 @@ class CreateComponent extends Component
         'items.min' => 'Minimal 1 item pakan harus diisi.',
     ];
 
-    public function mount(Farm $farm)
+    public function mount(Farm $farm, FeedingIndividuFormService $formService)
     {
         $this->farm = $farm;
         $this->transaction_date = now()->format('Y-m-d');
-        
-        $this->livestocks = $farm->livestocks()
-            ->with(['livestockType:id,name', 'livestockBreed:id,name'])
-            ->get()
-            ->sortBy(function ($livestock) {
-                return $livestock->eartag_number ?? $livestock->eartag ?? $livestock->id;
-            });
-            
+
+        $formData = $formService->getDropdownData($farm);
+        $this->livestocks = $formData['livestocks'];
+
         $this->addItem();
     }
 
