@@ -9,20 +9,24 @@ use Illuminate\Support\Facades\DB;
 
 class MilkAnalysisIndividuCoreService
 {
-    public function listAnalyses($farm, array $filters): array
+    public function list($farm, array $filters = []): array
     {
         $query = MilkAnalysisIndividuD::whereHas('milkAnalysisH', function ($q) use ($farm) {
             $q->where('farm_id', $farm->id)->where('type', 'individu');
         });
 
         if (!empty($filters['start_date'])) {
-            $query->whereHas('milkAnalysisH', fn($q) =>
+            $query->whereHas(
+                'milkAnalysisH',
+                fn($q) =>
                 $q->where('transaction_date', '>=', $filters['start_date'])
             );
         }
 
         if (!empty($filters['end_date'])) {
-            $query->whereHas('milkAnalysisH', fn($q) =>
+            $query->whereHas(
+                'milkAnalysisH',
+                fn($q) =>
                 $q->where('transaction_date', '<=', $filters['end_date'])
             );
         }
@@ -39,9 +43,16 @@ class MilkAnalysisIndividuCoreService
         ];
     }
 
-    public function storeAnalysis($farm, array $data): MilkAnalysisIndividuD
+    public function find($farm, $id): MilkAnalysisIndividuD
     {
-        $livestock = $farm->livestocks()
+        return MilkAnalysisIndividuD::whereHas('milkAnalysisH', function ($q) use ($farm) {
+            $q->where('farm_id', $farm->id)->where('type', 'individu');
+        })->with(['milkAnalysisH', 'livestock'])->findOrFail($id);
+    }
+
+    public function store($farm, array $data): MilkAnalysisIndividuD
+    {
+        $farm->livestocks()
             ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
             ->findOrFail($data['livestock_id']);
 
@@ -65,27 +76,21 @@ class MilkAnalysisIndividuCoreService
                 'fat' => $data['fat'] ?? null,
                 'snf' => $data['snf'] ?? null,
                 'ts' => $data['ts'] ?? null,
+                'rzn' => $data['rzn'] ?? null,
                 'notes' => $data['notes'] ?? null,
             ]);
         });
     }
 
-    public function findAnalysis($farm, $id)
+    public function update($farm, $id, array $data): MilkAnalysisIndividuD
     {
-        return MilkAnalysisIndividuD::whereHas('milkAnalysisH', function ($q) use ($farm) {
-            $q->where('farm_id', $farm->id);
-        })->with(['milkAnalysisH', 'livestock'])->findOrFail($id);
-    }
+        $analysis = $this->find($farm, $id);
 
-    public function updateAnalysis($farm, $id, array $data): void
-    {
-        $analysis = $this->findAnalysis($farm, $id);
-
-        $livestock = $farm->livestocks()
+        $farm->livestocks()
             ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
             ->findOrFail($data['livestock_id']);
 
-        DB::transaction(function () use ($analysis, $data) {
+        return DB::transaction(function () use ($analysis, $data) {
             $analysis->milkAnalysisH->update([
                 'transaction_date' => $data['transaction_date'],
                 'notes' => $data['notes'] ?? null,
@@ -102,14 +107,17 @@ class MilkAnalysisIndividuCoreService
                 'fat' => $data['fat'] ?? null,
                 'snf' => $data['snf'] ?? null,
                 'ts' => $data['ts'] ?? null,
+                'rzn' => $data['rzn'] ?? null,
                 'notes' => $data['notes'] ?? null,
             ]);
+
+            return $analysis;
         });
     }
 
-    public function deleteAnalysis($farm, $id): void
+    public function delete($farm, $id): void
     {
-        $analysis = $this->findAnalysis($farm, $id);
+        $analysis = $this->find($farm, $id);
 
         DB::transaction(function () use ($analysis) {
             $milkAnalysisH = $analysis->milkAnalysisH;

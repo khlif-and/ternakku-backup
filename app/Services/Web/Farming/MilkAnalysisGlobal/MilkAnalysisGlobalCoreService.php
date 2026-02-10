@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class MilkAnalysisGlobalCoreService
 {
-    public function listAnalyses($farm, array $filters): array
+    public function list($farm, array $filters = [])
     {
         $query = MilkAnalysisGlobal::where('farm_id', $farm->id);
 
@@ -19,12 +19,15 @@ class MilkAnalysisGlobalCoreService
             $query->where('transaction_date', '<=', $filters['end_date']);
         }
 
-        return [
-            'analyses' => $query->latest('transaction_date')->paginate(15),
-        ];
+        return $query->latest('transaction_date')->paginate(15);
     }
 
-    public function storeAnalysis($farm, array $data): MilkAnalysisGlobal
+    public function find($farm, $id): MilkAnalysisGlobal
+    {
+        return MilkAnalysisGlobal::where('farm_id', $farm->id)->findOrFail($id);
+    }
+
+    public function store($farm, array $data): MilkAnalysisGlobal
     {
         return DB::transaction(function () use ($farm, $data) {
             return MilkAnalysisGlobal::create([
@@ -45,16 +48,11 @@ class MilkAnalysisGlobalCoreService
         });
     }
 
-    public function findAnalysis($farm, $id)
+    public function update($farm, $id, array $data): MilkAnalysisGlobal
     {
-        return MilkAnalysisGlobal::where('farm_id', $farm->id)->findOrFail($id);
-    }
+        $analysis = $this->find($farm, $id);
 
-    public function updateAnalysis($farm, $id, array $data): void
-    {
-        $analysis = $this->findAnalysis($farm, $id);
-
-        DB::transaction(function () use ($analysis, $data) {
+        return DB::transaction(function () use ($analysis, $data) {
             $analysis->update([
                 'transaction_date' => $data['transaction_date'],
                 'bj' => $data['bj'] ?? null,
@@ -69,12 +67,13 @@ class MilkAnalysisGlobalCoreService
                 'rzn' => $data['rzn'] ?? null,
                 'notes' => $data['notes'] ?? null,
             ]);
+
+            return $analysis;
         });
     }
 
-    public function deleteAnalysis($farm, $id): void
+    public function delete($farm, $id): void
     {
-        $analysis = $this->findAnalysis($farm, $id);
-        DB::transaction(fn() => $analysis->delete());
+        $this->find($farm, $id)->delete();
     }
 }

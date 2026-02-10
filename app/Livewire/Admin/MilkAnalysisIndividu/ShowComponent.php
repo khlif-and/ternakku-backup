@@ -21,8 +21,8 @@ class ShowComponent extends Component
     public function delete(MilkAnalysisIndividuCoreService $coreService)
     {
         try {
-            $coreService->deleteAnalysis($this->farm, $this->milkAnalysisIndividu->id);
-            
+            $coreService->delete($this->farm, $this->milkAnalysisIndividu->id);
+
             session()->flash('success', 'Data analisis susu individu berhasil dihapus.');
             return redirect()->route('admin.care-livestock.milk-analysis-individu.index', $this->farm->id);
         } catch (\Throwable $e) {

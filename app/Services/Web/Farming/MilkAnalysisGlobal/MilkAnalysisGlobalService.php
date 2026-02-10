@@ -30,7 +30,7 @@ class MilkAnalysisGlobalService
     public function show($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');
-        $milkAnalysisGlobal = $this->core->findAnalysis($farm, $id);
+        $milkAnalysisGlobal = $this->core->find($farm, $id);
 
         return view('admin.care_livestock.milk_analysis_global.show', compact('farm', 'milkAnalysisGlobal'));
     }
@@ -38,7 +38,7 @@ class MilkAnalysisGlobalService
     public function edit($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');
-        $milkAnalysisGlobal = $this->core->findAnalysis($farm, $id);
+        $milkAnalysisGlobal = $this->core->find($farm, $id);
 
         return view('admin.care_livestock.milk_analysis_global.edit', compact('farm', 'milkAnalysisGlobal'));
     }

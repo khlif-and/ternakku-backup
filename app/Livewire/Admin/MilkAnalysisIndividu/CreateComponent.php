@@ -23,9 +23,8 @@ class CreateComponent extends Component
     public $fat;
     public $snf;
     public $ts;
+    public $rzn;
     public $notes;
-
-    public $livestocks = [];
 
     protected function rules()
     {
@@ -41,6 +40,7 @@ class CreateComponent extends Component
             'fat' => 'nullable|numeric',
             'snf' => 'nullable|numeric',
             'ts' => 'nullable|numeric',
+            'rzn' => 'nullable|numeric',
             'notes' => 'nullable|string',
         ];
     }
@@ -54,10 +54,6 @@ class CreateComponent extends Component
     {
         $this->farm = $farm;
         $this->transaction_date = now()->format('Y-m-d');
-        
-        $this->livestocks = $this->farm->livestocks()
-            ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
-            ->get();
     }
 
     public function save(MilkAnalysisIndividuCoreService $coreService)
@@ -65,7 +61,7 @@ class CreateComponent extends Component
         $this->validate();
 
         try {
-            $data = [
+            $record = $coreService->store($this->farm, [
                 'transaction_date' => $this->transaction_date,
                 'livestock_id' => $this->livestock_id,
                 'bj' => $this->bj,
@@ -77,13 +73,12 @@ class CreateComponent extends Component
                 'fat' => $this->fat,
                 'snf' => $this->snf,
                 'ts' => $this->ts,
+                'rzn' => $this->rzn,
                 'notes' => $this->notes,
-            ];
-
-            $record = $coreService->storeAnalysis($this->farm, $data);
+            ]);
 
             session()->flash('success', 'Data analisis susu individu berhasil disimpan.');
-            
+
             return redirect()->route('admin.care-livestock.milk-analysis-individu.show', [
                 $this->farm->id,
                 $record->id
@@ -98,6 +93,12 @@ class CreateComponent extends Component
 
     public function render()
     {
-        return view('livewire.admin.milk-analysis-individu.create-component');
+        $livestocks = $this->farm->livestocks()
+            ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
+            ->get();
+
+        return view('livewire.admin.milk-analysis-individu.create-component', [
+            'livestocks' => $livestocks
+        ]);
     }
 }

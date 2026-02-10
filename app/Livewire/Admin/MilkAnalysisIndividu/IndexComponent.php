@@ -45,7 +45,7 @@ class IndexComponent extends Component
     public function delete($id, MilkAnalysisIndividuCoreService $coreService)
     {
         try {
-            $coreService->deleteAnalysis($this->farm, $id);
+            $coreService->delete($this->farm, $id);
             session()->flash('success', 'Data analisis susu individu berhasil dihapus.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
@@ -54,7 +54,7 @@ class IndexComponent extends Component
 
     public function render(MilkAnalysisIndividuCoreService $coreService)
     {
-        $data = $coreService->listAnalyses($this->farm, [
+        $data = $coreService->list($this->farm, [
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
             'livestock_id' => $this->livestock_id,
