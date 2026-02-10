@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\FeedingIndividu;
 
 use Livewire\Component;
 use App\Models\Farm;
+use App\Helpers\Web\FeedingIndividuFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingIndividuCoreService;
 
 class IndexComponent extends Component
@@ -13,11 +14,16 @@ class IndexComponent extends Component
     public $end_date;
     public $livestock_id;
 
+    public $livestocks = [];
+
     protected $queryString = ['start_date', 'end_date', 'livestock_id'];
 
-    public function mount(Farm $farm)
+    public function mount(Farm $farm, FeedingIndividuFormService $formService)
     {
         $this->farm = $farm;
+
+        $formData = $formService->getDropdownData($farm);
+        $this->livestocks = $formData['livestocks'];
     }
 
     public function delete($id, FeedingIndividuCoreService $coreService)
@@ -38,19 +44,11 @@ class IndexComponent extends Component
             'livestock_id' => $this->livestock_id,
         ];
 
-        // Assuming the method name on service, but not implementing it as per instruction to only create this component.
         $items = $coreService->listFeedingIndividu($this->farm, $filters);
-        
-        $livestocks = $this->farm->livestocks()
-            ->with(['livestockType:id,name', 'livestockBreed:id,name'])
-            ->get()
-            ->sortBy(function ($livestock) {
-                return $livestock->eartag_number ?? $livestock->eartag ?? $livestock->id;
-            });
 
         return view('livewire.admin.feeding-individu.index-component', [
             'items' => $items,
-            'livestocks' => $livestocks,
+            'livestocks' => $this->livestocks,
         ]);
     }
 }

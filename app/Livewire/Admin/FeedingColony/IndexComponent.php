@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\FeedingColony;
 
 use Livewire\Component;
 use App\Models\Farm;
+use App\Helpers\Web\FeedingColonyFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingColonyCoreService;
 
 class IndexComponent extends Component
@@ -13,11 +14,16 @@ class IndexComponent extends Component
     public $end_date;
     public $pen_id;
 
+    public $pens = [];
+
     protected $queryString = ['start_date', 'end_date', 'pen_id'];
 
-    public function mount(Farm $farm)
+    public function mount(Farm $farm, FeedingColonyFormService $formService)
     {
         $this->farm = $farm;
+
+        $formData = $formService->getDropdownData($farm);
+        $this->pens = $formData['pens'];
     }
 
     public function delete($id, FeedingColonyCoreService $coreService)
@@ -42,7 +48,7 @@ class IndexComponent extends Component
 
         return view('livewire.admin.feeding-colony.index-component', [
             'items' => $items,
-            'pens' => $this->farm->pens,
+            'pens' => $this->pens,
         ]);
     }
 }

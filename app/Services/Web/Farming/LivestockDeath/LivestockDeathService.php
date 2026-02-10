@@ -3,7 +3,6 @@
 namespace App\Services\Web\Farming\LivestockDeath;
 
 use Illuminate\Http\Request;
-use App\Models\LivestockDeath;
 
 class LivestockDeathService
 {
@@ -31,7 +30,7 @@ class LivestockDeathService
     public function show($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');
-        $death = LivestockDeath::where('farm_id', $farm->id)->with(['livestock', 'disease'])->findOrFail($id);
+        $death = $this->core->findDeath($farm, $id);
 
         return view('admin.care_livestock.livestock_death.show', compact('farm', 'death'));
     }
@@ -39,7 +38,7 @@ class LivestockDeathService
     public function edit($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');
-        $death = LivestockDeath::where('farm_id', $farm->id)->findOrFail($id);
+        $death = $this->core->findDeath($farm, $id);
 
         return view('admin.care_livestock.livestock_death.edit', compact('farm', 'death'));
     }

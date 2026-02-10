@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\FeedingColony;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\FeedingColonyD;
+use App\Helpers\Web\FeedingColonyFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingColonyCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -38,11 +39,14 @@ class EditComponent extends Component
         'items.required' => 'Minimal 1 item pakan harus diisi.',
     ];
 
-    public function mount(Farm $farm, FeedingColonyD $feedingColony)
+    public function mount(Farm $farm, FeedingColonyD $feedingColony, FeedingColonyFormService $formService)
     {
         $this->farm = $farm;
         $this->feedingColony = $feedingColony;
-        $this->pens = $farm->pens;
+
+        $formData = $formService->getDropdownData($farm);
+        $this->pens = $formData['pens'];
+
         $this->fillFormData();
     }
 

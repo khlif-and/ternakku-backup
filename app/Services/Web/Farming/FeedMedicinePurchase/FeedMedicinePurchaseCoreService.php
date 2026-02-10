@@ -11,7 +11,7 @@ class FeedMedicinePurchaseCoreService
     public function listPurchases($farm, array $filters)
     {
         $query = FeedMedicinePurchase::with(['feedMedicinePurchaseItem'])
-            ->withCount(['feedMedicinePurchaseItem']) 
+            ->withCount(['feedMedicinePurchaseItem'])
             ->where('farm_id', $farm->id);
 
         if (!empty($filters['start_date'])) {
@@ -42,11 +42,11 @@ class FeedMedicinePurchaseCoreService
     {
         return DB::transaction(function () use ($farm, $data) {
             $purchase = FeedMedicinePurchase::create([
-                'farm_id'          => $farm->id,
+                'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
-                'supplier'         => $data['supplier'],
-                'notes'            => $data['notes'] ?? null,
-                'total_amount'     => 0,
+                'supplier' => $data['supplier'],
+                'notes' => $data['notes'] ?? null,
+                'total_amount' => 0,
             ]);
 
             $totalAmount = 0;
@@ -56,12 +56,12 @@ class FeedMedicinePurchaseCoreService
 
                 FeedMedicinePurchaseItem::create([
                     'feed_medicine_purchase_id' => $purchase->id,
-                    'purchase_type'             => $item['purchase_type'],
-                    'item_name'                 => $item['item_name'],
-                    'quantity'                  => $item['quantity'],
-                    'unit'                      => $item['unit'],
-                    'price_per_unit'            => $item['price_per_unit'],
-                    'total_price'               => $total,
+                    'purchase_type' => $item['purchase_type'],
+                    'item_name' => $item['item_name'],
+                    'quantity' => $item['quantity'],
+                    'unit' => $item['unit'],
+                    'price_per_unit' => $item['price_per_unit'],
+                    'total_price' => $total,
                 ]);
             }
 
@@ -77,8 +77,8 @@ class FeedMedicinePurchaseCoreService
         return DB::transaction(function () use ($purchase, $data) {
             $purchase->update([
                 'transaction_date' => $data['transaction_date'],
-                'supplier'         => $data['supplier'],
-                'notes'            => $data['notes'] ?? null,
+                'supplier' => $data['supplier'],
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $purchase->feedMedicinePurchaseItem()->delete();
@@ -90,12 +90,12 @@ class FeedMedicinePurchaseCoreService
 
                 FeedMedicinePurchaseItem::create([
                     'feed_medicine_purchase_id' => $purchase->id,
-                    'purchase_type'             => $item['purchase_type'],
-                    'item_name'                 => $item['item_name'],
-                    'quantity'                  => $item['quantity'],
-                    'unit'                      => $item['unit'],
-                    'price_per_unit'            => $item['price_per_unit'],
-                    'total_price'               => $total,
+                    'purchase_type' => $item['purchase_type'],
+                    'item_name' => $item['item_name'],
+                    'quantity' => $item['quantity'],
+                    'unit' => $item['unit'],
+                    'price_per_unit' => $item['price_per_unit'],
+                    'total_price' => $total,
                 ]);
             }
 

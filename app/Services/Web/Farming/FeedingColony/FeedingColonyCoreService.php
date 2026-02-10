@@ -45,26 +45,26 @@ class FeedingColonyCoreService
 
         $livestocks = $pen->livestocks;
         $totalLivestocks = $livestocks->count();
-        
+
         if ($totalLivestocks < 1) {
             throw new \InvalidArgumentException('Tidak ada ternak dalam kandang ini.');
         }
 
         return DB::transaction(function () use ($farm, $data, $pen, $livestocks, $totalLivestocks) {
             $feedingH = FeedingH::create([
-                'farm_id'          => $farm->id,
+                'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
-                'type'             => 'colony',
-                'notes'            => $data['notes'] ?? null,
+                'type' => 'colony',
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $feedingColonyD = FeedingColonyD::create([
-                'feeding_h_id'    => $feedingH->id,
-                'pen_id'          => $pen->id,
-                'notes'           => $data['notes'] ?? null,
+                'feeding_h_id' => $feedingH->id,
+                'pen_id' => $pen->id,
+                'notes' => $data['notes'] ?? null,
                 'total_livestock' => $totalLivestocks,
-                'total_cost'      => 0,
-                'average_cost'    => 0,
+                'total_cost' => 0,
+                'average_cost' => 0,
             ]);
 
             $totalCost = 0;
@@ -74,29 +74,29 @@ class FeedingColonyCoreService
 
                 FeedingColonyItem::create([
                     'feeding_colony_d_id' => $feedingColonyD->id,
-                    'type'                => $item['type'],
-                    'name'                => $item['name'],
-                    'qty_kg'              => $item['qty_kg'],
-                    'price_per_kg'        => $item['price_per_kg'],
-                    'total_price'         => $totalPrice,
+                    'type' => $item['type'],
+                    'name' => $item['name'],
+                    'qty_kg' => $item['qty_kg'],
+                    'price_per_kg' => $item['price_per_kg'],
+                    'total_price' => $totalPrice,
                 ]);
             }
 
             $averageCost = $totalLivestocks > 0 ? $totalCost / $totalLivestocks : 0;
             $feedingColonyD->update([
-                'total_cost'   => $totalCost,
+                'total_cost' => $totalCost,
                 'average_cost' => $averageCost,
             ]);
 
             foreach ($livestocks as $livestock) {
                 FeedingColonyLivestock::create([
                     'feeding_colony_d_id' => $feedingColonyD->id,
-                    'livestock_id'        => $livestock->id,
+                    'livestock_id' => $livestock->id,
                 ]);
 
                 $expense = LivestockExpense::firstOrCreate(
                     [
-                        'livestock_id'              => $livestock->id,
+                        'livestock_id' => $livestock->id,
                         'livestock_expense_type_id' => LivestockExpenseTypeEnum::FEEDING->value,
                     ],
                     ['amount' => 0]
@@ -126,7 +126,7 @@ class FeedingColonyCoreService
             $feedingH = $feedingColonyD->feedingH;
             $feedingH->update([
                 'transaction_date' => $data['transaction_date'],
-                'notes'            => $data['notes'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             foreach ($feedingColonyD->livestocks as $livestock) {
@@ -142,8 +142,8 @@ class FeedingColonyCoreService
             FeedingColonyItem::where('feeding_colony_d_id', $feedingColonyD->id)->delete();
 
             $feedingColonyD->update([
-                'notes'        => $data['notes'] ?? null,
-                'total_cost'   => 0,
+                'notes' => $data['notes'] ?? null,
+                'total_cost' => 0,
                 'average_cost' => 0,
             ]);
 
@@ -154,11 +154,11 @@ class FeedingColonyCoreService
 
                 FeedingColonyItem::create([
                     'feeding_colony_d_id' => $feedingColonyD->id,
-                    'type'                => $item['type'],
-                    'name'                => $item['name'],
-                    'qty_kg'              => $item['qty_kg'],
-                    'price_per_kg'        => $item['price_per_kg'],
-                    'total_price'         => $totalPrice,
+                    'type' => $item['type'],
+                    'name' => $item['name'],
+                    'qty_kg' => $item['qty_kg'],
+                    'price_per_kg' => $item['price_per_kg'],
+                    'total_price' => $totalPrice,
                 ]);
             }
 
@@ -166,14 +166,14 @@ class FeedingColonyCoreService
             $averageCost = $totalLivestocks > 0 ? $totalCost / $totalLivestocks : 0;
 
             $feedingColonyD->update([
-                'total_cost'   => $totalCost,
+                'total_cost' => $totalCost,
                 'average_cost' => $averageCost,
             ]);
 
             foreach ($feedingColonyD->livestocks as $livestock) {
                 $expense = LivestockExpense::firstOrCreate(
                     [
-                        'livestock_id'              => $livestock->id,
+                        'livestock_id' => $livestock->id,
                         'livestock_expense_type_id' => LivestockExpenseTypeEnum::FEEDING->value,
                     ],
                     ['amount' => 0]

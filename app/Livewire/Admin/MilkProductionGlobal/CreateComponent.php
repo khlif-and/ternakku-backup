@@ -12,56 +12,39 @@ class CreateComponent extends Component
     public Farm $farm;
 
     public $transaction_date;
+    public $milking_shift = '';
+    public $milking_time;
     public $milker_name = '';
+    public $quantity_liters;
     public $milk_condition = '';
     public $notes;
-    public $items = [];
 
     protected function rules()
     {
         return [
             'transaction_date' => 'required|date',
+            'milking_shift' => 'required|in:morning,afternoon',
+            'milking_time' => 'required',
             'milker_name' => 'required|string|max:255',
-            'milk_condition' => 'required|string|max:255',
+            'quantity_liters' => 'required|numeric|min:0',
+            'milk_condition' => 'nullable|string|max:255',
             'notes' => 'nullable|string',
-            'items' => 'required|array|min:1',
-            'items.*.milking_time' => 'required',
-            'items.*.volume' => 'required|numeric|min:0',
         ];
     }
 
     protected $messages = [
         'transaction_date.required' => 'Tanggal wajib diisi.',
+        'milking_shift.required' => 'Shift perah wajib dipilih.',
+        'milking_time.required' => 'Waktu perah wajib diisi.',
         'milker_name.required' => 'Nama pemerah wajib diisi.',
-        'milk_condition.required' => 'Kondisi susu wajib diisi.',
-        'items.*.milking_time.required' => 'Waktu perah wajib diisi.',
-        'items.*.volume.required' => 'Volume susu wajib diisi.',
+        'quantity_liters.required' => 'Volume susu wajib diisi.',
     ];
 
     public function mount(Farm $farm)
     {
         $this->farm = $farm;
         $this->transaction_date = now()->format('Y-m-d');
-        $this->milker_name = '';
-        $this->milk_condition = '';
-        
-        $this->addItem();
-    }
-
-    public function addItem()
-    {
-        $this->items[] = [
-            'milking_time' => now()->format('H:i'),
-            'volume' => 0,
-        ];
-    }
-
-    public function removeItem($index)
-    {
-        if (count($this->items) > 1) {
-            unset($this->items[$index]);
-            $this->items = array_values($this->items);
-        }
+        $this->milking_time = now()->format('H:i');
     }
 
     public function save(MilkProductionGlobalCoreService $coreService)
@@ -71,16 +54,18 @@ class CreateComponent extends Component
         try {
             $milkProductionGlobal = $coreService->store($this->farm, [
                 'transaction_date' => $this->transaction_date,
+                'milking_shift' => $this->milking_shift,
+                'milking_time' => $this->milking_time,
                 'milker_name' => $this->milker_name,
+                'quantity_liters' => $this->quantity_liters,
                 'milk_condition' => $this->milk_condition,
                 'notes' => $this->notes,
-                'items' => $this->items,
             ]);
 
             session()->flash('success', 'Data produksi susu global berhasil disimpan.');
-            
+
             return redirect()->route('admin.care-livestock.milk-production-global.show', [
-                $this->farm->id, 
+                $this->farm->id,
                 $milkProductionGlobal->id
             ]);
         } catch (\Throwable $e) {

@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\FeedingIndividu;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\FeedingIndividuD;
+use App\Helpers\Web\FeedingIndividuFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingIndividuCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -40,17 +41,13 @@ class EditComponent extends Component
         'items.required' => 'Minimal 1 item pakan harus diisi.',
     ];
 
-    public function mount(Farm $farm, FeedingIndividuD $feedingIndividu)
+    public function mount(Farm $farm, FeedingIndividuD $feedingIndividu, FeedingIndividuFormService $formService)
     {
         $this->farm = $farm;
         $this->feedingIndividu = $feedingIndividu;
-        
-        $this->livestocks = $farm->livestocks()
-            ->with(['livestockType:id,name', 'livestockBreed:id,name'])
-            ->get()
-            ->sortBy(function ($livestock) {
-                return $livestock->eartag_number ?? $livestock->eartag ?? $livestock->id;
-            });
+
+        $formData = $formService->getDropdownData($farm);
+        $this->livestocks = $formData['livestocks'];
 
         $this->fillFormData();
     }
@@ -100,7 +97,7 @@ class EditComponent extends Component
         try {
             $coreService->update($this->farm, $this->feedingIndividu->id, [
                 'transaction_date' => $this->transaction_date,
-                'livestock_id' => $this->livestock_id, // Although usually we don't change livestock on edit, passing it just in case logic needs it or validation checks it.
+                'livestock_id' => $this->livestock_id,
                 'notes' => $this->notes,
                 'items' => $this->items,
             ]);

@@ -44,17 +44,17 @@ class FeedingIndividuCoreService
     {
         return DB::transaction(function () use ($farm, $data) {
             $feedingH = FeedingH::create([
-                'farm_id'          => $farm->id,
+                'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
-                'type'             => 'individu',
-                'notes'            => $data['notes'] ?? null,
+                'type' => 'individu',
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $feedingIndividuD = FeedingIndividuD::create([
                 'feeding_h_id' => $feedingH->id,
                 'livestock_id' => $data['livestock_id'],
-                'notes'        => $data['notes'] ?? null,
-                'total_cost'   => 0,
+                'notes' => $data['notes'] ?? null,
+                'total_cost' => 0,
             ]);
 
             $totalCost = 0;
@@ -64,11 +64,11 @@ class FeedingIndividuCoreService
 
                 FeedingIndividuItem::create([
                     'feeding_individu_d_id' => $feedingIndividuD->id,
-                    'type'                => $item['type'],
-                    'name'                => $item['name'],
-                    'qty_kg'              => $item['qty_kg'],
-                    'price_per_kg'        => $item['price_per_kg'],
-                    'total_price'         => $totalPrice,
+                    'type' => $item['type'],
+                    'name' => $item['name'],
+                    'qty_kg' => $item['qty_kg'],
+                    'price_per_kg' => $item['price_per_kg'],
+                    'total_price' => $totalPrice,
                 ]);
             }
 
@@ -77,7 +77,7 @@ class FeedingIndividuCoreService
             // Update/Create expense
             $expense = LivestockExpense::firstOrCreate(
                 [
-                    'livestock_id'              => $data['livestock_id'],
+                    'livestock_id' => $data['livestock_id'],
                     'livestock_expense_type_id' => LivestockExpenseTypeEnum::FEEDING->value,
                 ],
                 ['amount' => 0]
@@ -125,7 +125,7 @@ class FeedingIndividuCoreService
             $feedingH = $feedingIndividuD->feedingH;
             $feedingH->update([
                 'transaction_date' => $data['transaction_date'],
-                'notes'            => $data['notes'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             // Revert old expense
@@ -148,23 +148,23 @@ class FeedingIndividuCoreService
 
                 FeedingIndividuItem::create([
                     'feeding_individu_d_id' => $feedingIndividuD->id,
-                    'type'                => $item['type'],
-                    'name'                => $item['name'],
-                    'qty_kg'              => $item['qty_kg'],
-                    'price_per_kg'        => $item['price_per_kg'],
-                    'total_price'         => $totalPrice,
+                    'type' => $item['type'],
+                    'name' => $item['name'],
+                    'qty_kg' => $item['qty_kg'],
+                    'price_per_kg' => $item['price_per_kg'],
+                    'total_price' => $totalPrice,
                 ]);
             }
 
             $feedingIndividuD->update([
-                'notes'      => $data['notes'] ?? null,
+                'notes' => $data['notes'] ?? null,
                 'total_cost' => $totalCost,
             ]);
 
             // Update/Create expense with new cost
             $expense = LivestockExpense::firstOrCreate(
                 [
-                    'livestock_id'              => $feedingIndividuD->livestock_id,
+                    'livestock_id' => $feedingIndividuD->livestock_id,
                     'livestock_expense_type_id' => LivestockExpenseTypeEnum::FEEDING->value,
                 ],
                 ['amount' => 0]

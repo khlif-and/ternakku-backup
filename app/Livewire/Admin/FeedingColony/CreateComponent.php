@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\FeedingColony;
 
 use Livewire\Component;
 use App\Models\Farm;
+use App\Helpers\Web\FeedingColonyFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingColonyCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -40,13 +41,16 @@ class CreateComponent extends Component
         'items.min' => 'Minimal 1 item pakan harus diisi.',
     ];
 
-    public function mount(Farm $farm, $fromPen = null)
+    public function mount(Farm $farm, FeedingColonyFormService $formService, $fromPen = null)
     {
         $this->farm = $farm;
         $this->fromPen = $fromPen;
         $this->transaction_date = now()->format('Y-m-d');
         $this->pen_id = $fromPen?->id;
-        $this->pens = $farm->pens;
+
+        $formData = $formService->getDropdownData($farm);
+        $this->pens = $formData['pens'];
+
         $this->addItem();
     }
 
