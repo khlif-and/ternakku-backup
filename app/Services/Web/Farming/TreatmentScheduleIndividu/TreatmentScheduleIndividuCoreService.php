@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class TreatmentScheduleIndividuCoreService
 {
-    public function listSchedules($farm, array $filters): array
+    public function list($farm, array $filters): array
     {
         $query = TreatmentScheduleIndividu::with(['treatmentSchedule', 'livestock'])
             ->whereHas('treatmentSchedule', function ($q) use ($farm) {
@@ -28,8 +28,11 @@ class TreatmentScheduleIndividuCoreService
         }
 
         foreach ([
-            'livestock_type_id','livestock_group_id','livestock_breed_id',
-            'livestock_sex_id','pen_id'
+            'livestock_type_id',
+            'livestock_group_id',
+            'livestock_breed_id',
+            'livestock_sex_id',
+            'pen_id'
         ] as $filter) {
             if (!empty($filters[$filter])) {
                 $query->whereHas('livestock', fn($q) => $q->where($filter, $filters[$filter]));
@@ -39,17 +42,18 @@ class TreatmentScheduleIndividuCoreService
         return $query->orderByDesc('schedule_date')->get()->all();
     }
 
-    public function findSchedule($farm, $id)
+    public function find($farm, $id)
     {
         return TreatmentScheduleIndividu::with(['treatmentSchedule', 'livestock'])
             ->whereHas('treatmentSchedule', fn($q) => $q->where('farm_id', $farm->id)->where('type', 'individu'))
             ->findOrFail($id);
     }
 
-    public function storeSchedule($farm, array $data): TreatmentScheduleIndividu
+    public function store($farm, array $data): TreatmentScheduleIndividu
     {
         $livestock = $farm->livestocks()->find($data['livestock_id']);
-        if (!$livestock) throw new \InvalidArgumentException('Livestock not found in this farm.');
+        if (!$livestock)
+            throw new \InvalidArgumentException('Livestock not found in this farm.');
 
         return DB::transaction(function () use ($farm, $data) {
             $header = TreatmentSchedule::create([
@@ -72,7 +76,7 @@ class TreatmentScheduleIndividuCoreService
         });
     }
 
-    public function updateSchedule($farm, $id, array $data): void
+    public function update($farm, $id, array $data): void
     {
         $item = TreatmentScheduleIndividu::with('treatmentSchedule')
             ->whereHas('treatmentSchedule', fn($q) =>
@@ -97,7 +101,7 @@ class TreatmentScheduleIndividuCoreService
         });
     }
 
-    public function deleteSchedule($farm, $id): void
+    public function delete($farm, $id): void
     {
         $item = TreatmentScheduleIndividu::with('treatmentSchedule')
             ->whereHas('treatmentSchedule', fn($q) =>

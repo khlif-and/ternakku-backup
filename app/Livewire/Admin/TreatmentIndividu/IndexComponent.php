@@ -46,7 +46,7 @@ class IndexComponent extends Component
             'pen_id' => $this->pen_id,
         ];
 
-        $items = $coreService->listTreatments($this->farm, $filters);
+        $items = $coreService->list($this->farm, $filters);
 
         return view('livewire.admin.treatment-individu.index-component', [
             'items' => $items,
