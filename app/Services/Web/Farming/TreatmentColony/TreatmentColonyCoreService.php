@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 class TreatmentColonyCoreService
 {
-    public function listTreatmentColonies($farm, array $filters)
+    public function list($farm, array $filters)
     {
         $query = TreatmentColonyD::with(['treatmentH', 'pen'])
             ->withCount(['treatmentColonyMedicineItems', 'treatmentColonyTreatmentItems'])
@@ -56,20 +56,20 @@ class TreatmentColonyCoreService
 
         return DB::transaction(function () use ($farm, $data, $pen, $livestocks, $totalLivestocks) {
             $treatmentH = TreatmentH::create([
-                'farm_id'          => $farm->id,
+                'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
-                'type'             => 'colony',
-                'notes'            => $data['notes'] ?? null,
+                'type' => 'colony',
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $treatmentColonyD = TreatmentColonyD::create([
-                'treatment_h_id'  => $treatmentH->id,
-                'pen_id'          => $pen->id,
-                'disease_id'      => $data['disease_id'],
-                'notes'           => $data['notes'] ?? null,
+                'treatment_h_id' => $treatmentH->id,
+                'pen_id' => $pen->id,
+                'disease_id' => $data['disease_id'],
+                'notes' => $data['notes'] ?? null,
                 'total_livestock' => $totalLivestocks,
-                'total_cost'      => 0,
-                'average_cost'    => 0,
+                'total_cost' => 0,
+                'average_cost' => 0,
             ]);
 
             $totalCost = 0;
@@ -80,11 +80,11 @@ class TreatmentColonyCoreService
 
                 TreatmentColonyMedicineItem::create([
                     'treatment_colony_d_id' => $treatmentColonyD->id,
-                    'name'                  => $m['name'],
-                    'unit'                  => $m['unit'],
-                    'qty_per_unit'          => $m['qty_per_unit'],
-                    'price_per_unit'        => $m['price_per_unit'],
-                    'total_price'           => $total,
+                    'name' => $m['name'],
+                    'unit' => $m['unit'],
+                    'qty_per_unit' => $m['qty_per_unit'],
+                    'price_per_unit' => $m['price_per_unit'],
+                    'total_price' => $total,
                 ]);
             }
 
@@ -93,26 +93,26 @@ class TreatmentColonyCoreService
 
                 TreatmentColonyTreatmentItem::create([
                     'treatment_colony_d_id' => $treatmentColonyD->id,
-                    'name'                  => $t['name'],
-                    'cost'                  => $t['cost'],
+                    'name' => $t['name'],
+                    'cost' => $t['cost'],
                 ]);
             }
 
             $averageCost = $totalLivestocks > 0 ? $totalCost / $totalLivestocks : 0;
             $treatmentColonyD->update([
-                'total_cost'   => $totalCost,
+                'total_cost' => $totalCost,
                 'average_cost' => $averageCost,
             ]);
 
             foreach ($livestocks as $livestock) {
                 TreatmentColonyLivestock::create([
                     'treatment_colony_d_id' => $treatmentColonyD->id,
-                    'livestock_id'          => $livestock->id,
+                    'livestock_id' => $livestock->id,
                 ]);
 
                 $expense = LivestockExpense::firstOrCreate(
                     [
-                        'livestock_id'              => $livestock->id,
+                        'livestock_id' => $livestock->id,
                         'livestock_expense_type_id' => LivestockExpenseTypeEnum::TREATMENT->value,
                     ],
                     ['amount' => 0]
@@ -128,13 +128,13 @@ class TreatmentColonyCoreService
     public function find($farm, $id): TreatmentColonyD
     {
         return TreatmentColonyD::with([
-            'treatmentH', 
-            'pen', 
-            'livestocks', 
-            'treatmentColonyMedicineItems', 
+            'treatmentH',
+            'pen',
+            'livestocks',
+            'treatmentColonyMedicineItems',
             'treatmentColonyTreatmentItems'
         ])->whereHas('treatmentH', fn($q) => $q->where('farm_id', $farm->id)->where('type', 'colony'))
-          ->findOrFail($id);
+            ->findOrFail($id);
     }
 
     public function update($farm, $id, array $data): TreatmentColonyD
@@ -147,7 +147,7 @@ class TreatmentColonyCoreService
             $treatmentH = $treatmentColonyD->treatmentH;
             $treatmentH->update([
                 'transaction_date' => $data['transaction_date'],
-                'notes'            => $data['notes'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             foreach ($treatmentColonyD->livestocks as $livestock) {
@@ -171,11 +171,11 @@ class TreatmentColonyCoreService
 
                 TreatmentColonyMedicineItem::create([
                     'treatment_colony_d_id' => $treatmentColonyD->id,
-                    'name'                  => $m['name'],
-                    'unit'                  => $m['unit'],
-                    'qty_per_unit'          => $m['qty_per_unit'],
-                    'price_per_unit'        => $m['price_per_unit'],
-                    'total_price'           => $total,
+                    'name' => $m['name'],
+                    'unit' => $m['unit'],
+                    'qty_per_unit' => $m['qty_per_unit'],
+                    'price_per_unit' => $m['price_per_unit'],
+                    'total_price' => $total,
                 ]);
             }
 
@@ -184,8 +184,8 @@ class TreatmentColonyCoreService
 
                 TreatmentColonyTreatmentItem::create([
                     'treatment_colony_d_id' => $treatmentColonyD->id,
-                    'name'                  => $t['name'],
-                    'cost'                  => $t['cost'],
+                    'name' => $t['name'],
+                    'cost' => $t['cost'],
                 ]);
             }
 
@@ -193,16 +193,16 @@ class TreatmentColonyCoreService
             $averageCost = $totalLivestocks > 0 ? $totalCost / $totalLivestocks : 0;
 
             $treatmentColonyD->update([
-                'disease_id'   => $data['disease_id'],
-                'notes'        => $data['notes'] ?? null,
-                'total_cost'   => $totalCost,
+                'disease_id' => $data['disease_id'],
+                'notes' => $data['notes'] ?? null,
+                'total_cost' => $totalCost,
                 'average_cost' => $averageCost,
             ]);
 
             foreach ($treatmentColonyD->livestocks as $livestock) {
                 $expense = LivestockExpense::firstOrCreate(
                     [
-                        'livestock_id'              => $livestock->id,
+                        'livestock_id' => $livestock->id,
                         'livestock_expense_type_id' => LivestockExpenseTypeEnum::TREATMENT->value,
                     ],
                     ['amount' => 0]

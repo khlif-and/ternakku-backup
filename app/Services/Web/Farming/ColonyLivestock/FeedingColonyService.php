@@ -21,7 +21,7 @@ class FeedingColonyService
         $farm = $request->attributes->get('farm');
         $filters = $request->only(['start_date', 'end_date', 'pen_id']);
 
-        $data = $this->core->listFeedings($farm, $filters);
+        $data = $this->core->list($farm, $filters);
         return view('admin.care_livestock.colony_livestock.feeding_colony.index', compact('farm', 'data'));
     }
 
@@ -36,7 +36,7 @@ class FeedingColonyService
         $farm = $request->attributes->get('farm');
 
         return ErrorHandler::handle(function () use ($farm, $request) {
-            $this->core->storeFeeding($farm, $request->validated());
+            $this->core->store($farm, $request->validated());
             return redirect()
                 ->route('admin.care-livestock.feeding-colony.index', $farm->id)
                 ->with('success', 'Data berhasil ditambahkan.');
@@ -46,14 +46,14 @@ class FeedingColonyService
     public function show($farmId, $feedingColonyId)
     {
         $farm = request()->attributes->get('farm');
-        $feedingColony = $this->core->findFeeding($farm, $feedingColonyId);
+        $feedingColony = $this->core->find($farm, $feedingColonyId);
         return view('admin.care_livestock.colony_livestock.feeding_colony.show', compact('farm', 'feedingColony'));
     }
 
     public function edit($farmId, $feedingColonyId)
     {
         $farm = request()->attributes->get('farm');
-        $feedingColony = $this->core->findFeeding($farm, $feedingColonyId);
+        $feedingColony = $this->core->find($farm, $feedingColonyId);
         return view('admin.care_livestock.colony_livestock.feeding_colony.edit', compact('farm', 'feedingColony'));
     }
 
@@ -62,7 +62,7 @@ class FeedingColonyService
         $farm = $request->attributes->get('farm');
 
         return ErrorHandler::handle(function () use ($farm, $feedingColonyId, $request) {
-            $this->core->updateFeeding($farm, $feedingColonyId, $request->validated());
+            $this->core->update($farm, $feedingColonyId, $request->validated());
             return redirect()
                 ->route('admin.care-livestock.feeding-colony.index', $farm->id)
                 ->with('success', 'Data berhasil diupdate.');
@@ -74,7 +74,7 @@ class FeedingColonyService
         $farm = request()->attributes->get('farm');
 
         return ErrorHandler::handle(function () use ($farm, $feedingColonyId) {
-            $this->core->deleteFeeding($farm, $feedingColonyId);
+            $this->core->delete($farm, $feedingColonyId);
             return redirect()
                 ->route('admin.care-livestock.feeding-colony.index', $farm->id)
                 ->with('success', 'Data berhasil dihapus.');

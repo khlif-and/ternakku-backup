@@ -31,7 +31,7 @@ class MilkAnalysisIndividuService
     public function show($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');
-        $milkAnalysisIndividu = $this->core->findAnalysis($farm, $id);
+        $milkAnalysisIndividu = $this->core->find($farm, $id);
 
         return view('admin.care_livestock.milk_analysis_individu.show', compact('farm', 'milkAnalysisIndividu'));
     }
@@ -39,7 +39,7 @@ class MilkAnalysisIndividuService
     public function edit($farmId, $id, Request $request)
     {
         $farm = $request->attributes->get('farm');
-        $milkAnalysisIndividu = $this->core->findAnalysis($farm, $id);
+        $milkAnalysisIndividu = $this->core->find($farm, $id);
         $livestocks = $farm->livestocks()->where('livestock_sex_id', 2)->get();
 
         return view('admin.care_livestock.milk_analysis_individu.edit', compact('farm', 'milkAnalysisIndividu', 'livestocks'));

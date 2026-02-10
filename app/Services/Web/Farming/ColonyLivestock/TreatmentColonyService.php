@@ -20,7 +20,7 @@ class TreatmentColonyService
     {
         $farm = $request->attributes->get('farm');
         $filters = $request->only(['start_date', 'end_date', 'disease_id', 'pen_id']);
-        $data = $this->core->listTreatments($farm, $filters);
+        $data = $this->core->list($farm, $filters);
 
         return view('admin.care_livestock.colony_livestock.treatment_colony.index', compact('farm', 'data'));
     }
@@ -36,7 +36,7 @@ class TreatmentColonyService
         $farm = $request->attributes->get('farm');
 
         return ErrorHandler::handle(function () use ($farm, $request) {
-            $this->core->storeTreatment($farm, $request->validated());
+            $this->core->store($farm, $request->validated());
             return redirect()
                 ->route('admin.care-livestock.treatment-colony.index', $farm->id)
                 ->with('success', 'Data berhasil ditambahkan.');
@@ -46,14 +46,14 @@ class TreatmentColonyService
     public function show($farmId, $id)
     {
         $farm = request()->attributes->get('farm');
-        $item = $this->core->findTreatment($farm, $id);
+        $item = $this->core->find($farm, $id);
         return view('admin.care_livestock.colony_livestock.treatment_colony.show', compact('farm', 'item'));
     }
 
     public function edit($farmId, $id)
     {
         $farm = request()->attributes->get('farm');
-        $item = $this->core->findTreatment($farm, $id);
+        $item = $this->core->find($farm, $id);
         return view('admin.care_livestock.colony_livestock.treatment_colony.edit', compact('farm', 'item'));
     }
 
@@ -62,7 +62,7 @@ class TreatmentColonyService
         $farm = $request->attributes->get('farm');
 
         return ErrorHandler::handle(function () use ($farm, $id, $request) {
-            $this->core->updateTreatment($farm, $id, $request->validated());
+            $this->core->update($farm, $id, $request->validated());
             return redirect()
                 ->route('admin.care-livestock.treatment-colony.index', $farm->id)
                 ->with('success', 'Data berhasil diupdate.');
@@ -74,7 +74,7 @@ class TreatmentColonyService
         $farm = request()->attributes->get('farm');
 
         return ErrorHandler::handle(function () use ($farm, $id) {
-            $this->core->deleteTreatment($farm, $id);
+            $this->core->delete($farm, $id);
             return redirect()
                 ->route('admin.care-livestock.treatment-colony.index', $farm->id)
                 ->with('success', 'Data berhasil dihapus.');

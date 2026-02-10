@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class TreatmentIndividuCoreService
 {
-    public function listTreatments($farm, array $filters)
+    public function list($farm, array $filters)
     {
         $query = TreatmentIndividuD::with(['treatmentH', 'livestock', 'disease'])
             ->withCount(['treatmentIndividuMedicineItems', 'treatmentIndividuTreatmentItems'])
@@ -28,8 +28,13 @@ class TreatmentIndividuCoreService
             });
 
         foreach ([
-            'disease_id', 'livestock_type_id', 'livestock_group_id',
-            'livestock_breed_id', 'livestock_sex_id', 'pen_id', 'livestock_id'
+            'disease_id',
+            'livestock_type_id',
+            'livestock_group_id',
+            'livestock_breed_id',
+            'livestock_sex_id',
+            'pen_id',
+            'livestock_id'
         ] as $filter) {
             if (!empty($filters[$filter])) {
                 if (in_array($filter, ['disease_id', 'livestock_id'])) {
@@ -49,18 +54,18 @@ class TreatmentIndividuCoreService
 
         return DB::transaction(function () use ($farm, $data, $livestock) {
             $treatmentH = TreatmentH::create([
-                'farm_id'          => $farm->id,
+                'farm_id' => $farm->id,
                 'transaction_date' => $data['transaction_date'],
-                'type'             => 'individu',
-                'notes'            => $data['notes'] ?? null,
+                'type' => 'individu',
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $treatmentIndividuD = TreatmentIndividuD::create([
                 'treatment_h_id' => $treatmentH->id,
-                'livestock_id'   => $livestock->id,
-                'disease_id'     => $data['disease_id'],
-                'notes'          => $data['notes'] ?? null,
-                'total_cost'     => 0,
+                'livestock_id' => $livestock->id,
+                'disease_id' => $data['disease_id'],
+                'notes' => $data['notes'] ?? null,
+                'total_cost' => 0,
             ]);
 
             $totalCost = 0;
@@ -71,11 +76,11 @@ class TreatmentIndividuCoreService
 
                 TreatmentIndividuMedicineItem::create([
                     'treatment_individu_d_id' => $treatmentIndividuD->id,
-                    'name'                    => $m['name'],
-                    'unit'                    => $m['unit'],
-                    'qty_per_unit'            => $m['qty_per_unit'],
-                    'price_per_unit'          => $m['price_per_unit'],
-                    'total_price'             => $total,
+                    'name' => $m['name'],
+                    'unit' => $m['unit'],
+                    'qty_per_unit' => $m['qty_per_unit'],
+                    'price_per_unit' => $m['price_per_unit'],
+                    'total_price' => $total,
                 ]);
             }
 
@@ -84,8 +89,8 @@ class TreatmentIndividuCoreService
 
                 TreatmentIndividuTreatmentItem::create([
                     'treatment_individu_d_id' => $treatmentIndividuD->id,
-                    'name'                    => $t['name'],
-                    'cost'                    => $t['cost'],
+                    'name' => $t['name'],
+                    'cost' => $t['cost'],
                 ]);
             }
 
@@ -93,7 +98,7 @@ class TreatmentIndividuCoreService
 
             $expense = LivestockExpense::firstOrCreate(
                 [
-                    'livestock_id'              => $livestock->id,
+                    'livestock_id' => $livestock->id,
                     'livestock_expense_type_id' => LivestockExpenseTypeEnum::TREATMENT->value,
                 ],
                 ['amount' => 0]
@@ -114,7 +119,7 @@ class TreatmentIndividuCoreService
             'treatmentIndividuMedicineItems',
             'treatmentIndividuTreatmentItems'
         ])->whereHas('treatmentH', fn($q) => $q->where('farm_id', $farm->id)->where('type', 'individu'))
-          ->findOrFail($id);
+            ->findOrFail($id);
     }
 
     public function update($farm, $id, array $data): TreatmentIndividuD
@@ -127,7 +132,7 @@ class TreatmentIndividuCoreService
             $treatmentH = $treatmentIndividuD->treatmentH;
             $treatmentH->update([
                 'transaction_date' => $data['transaction_date'],
-                'notes'            => $data['notes'] ?? null,
+                'notes' => $data['notes'] ?? null,
             ]);
 
             $expense = LivestockExpense::where('livestock_id', $treatmentIndividuD->livestock_id)
@@ -149,11 +154,11 @@ class TreatmentIndividuCoreService
 
                 TreatmentIndividuMedicineItem::create([
                     'treatment_individu_d_id' => $treatmentIndividuD->id,
-                    'name'                    => $m['name'],
-                    'unit'                    => $m['unit'],
-                    'qty_per_unit'            => $m['qty_per_unit'],
-                    'price_per_unit'          => $m['price_per_unit'],
-                    'total_price'             => $total,
+                    'name' => $m['name'],
+                    'unit' => $m['unit'],
+                    'qty_per_unit' => $m['qty_per_unit'],
+                    'price_per_unit' => $m['price_per_unit'],
+                    'total_price' => $total,
                 ]);
             }
 
@@ -162,21 +167,21 @@ class TreatmentIndividuCoreService
 
                 TreatmentIndividuTreatmentItem::create([
                     'treatment_individu_d_id' => $treatmentIndividuD->id,
-                    'name'                    => $t['name'],
-                    'cost'                    => $t['cost'],
+                    'name' => $t['name'],
+                    'cost' => $t['cost'],
                 ]);
             }
 
             $treatmentIndividuD->update([
                 'livestock_id' => $data['livestock_id'],
-                'disease_id'   => $data['disease_id'],
-                'notes'        => $data['notes'] ?? null,
-                'total_cost'   => $totalCost,
+                'disease_id' => $data['disease_id'],
+                'notes' => $data['notes'] ?? null,
+                'total_cost' => $totalCost,
             ]);
 
             $newExpense = LivestockExpense::firstOrCreate(
                 [
-                    'livestock_id'              => $data['livestock_id'],
+                    'livestock_id' => $data['livestock_id'],
                     'livestock_expense_type_id' => LivestockExpenseTypeEnum::TREATMENT->value,
                 ],
                 ['amount' => 0]

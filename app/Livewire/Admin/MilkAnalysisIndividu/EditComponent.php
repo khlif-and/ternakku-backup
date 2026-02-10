@@ -25,9 +25,8 @@ class EditComponent extends Component
     public $fat;
     public $snf;
     public $ts;
+    public $rzn;
     public $notes;
-
-    public $livestocks = [];
 
     protected function rules()
     {
@@ -43,6 +42,7 @@ class EditComponent extends Component
             'fat' => 'nullable|numeric',
             'snf' => 'nullable|numeric',
             'ts' => 'nullable|numeric',
+            'rzn' => 'nullable|numeric',
             'notes' => 'nullable|string',
         ];
     }
@@ -56,11 +56,6 @@ class EditComponent extends Component
     {
         $this->farm = $farm;
         $this->milkAnalysisIndividu = $milkAnalysisIndividu;
-        
-        $this->livestocks = $this->farm->livestocks()
-            ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
-            ->get();
-
         $this->fillFormData();
     }
 
@@ -77,6 +72,7 @@ class EditComponent extends Component
         $this->fat = $this->milkAnalysisIndividu->fat;
         $this->snf = $this->milkAnalysisIndividu->snf;
         $this->ts = $this->milkAnalysisIndividu->ts;
+        $this->rzn = $this->milkAnalysisIndividu->rzn;
         $this->notes = $this->milkAnalysisIndividu->notes;
     }
 
@@ -85,7 +81,7 @@ class EditComponent extends Component
         $this->validate();
 
         try {
-            $data = [
+            $coreService->update($this->farm, $this->milkAnalysisIndividu->id, [
                 'transaction_date' => $this->transaction_date,
                 'livestock_id' => $this->livestock_id,
                 'bj' => $this->bj,
@@ -97,13 +93,12 @@ class EditComponent extends Component
                 'fat' => $this->fat,
                 'snf' => $this->snf,
                 'ts' => $this->ts,
+                'rzn' => $this->rzn,
                 'notes' => $this->notes,
-            ];
-
-            $coreService->updateAnalysis($this->farm, $this->milkAnalysisIndividu->id, $data);
+            ]);
 
             session()->flash('success', 'Data analisis susu individu berhasil diperbarui.');
-            
+
             return redirect()->route('admin.care-livestock.milk-analysis-individu.show', [
                 $this->farm->id,
                 $this->milkAnalysisIndividu->id
@@ -118,6 +113,12 @@ class EditComponent extends Component
 
     public function render()
     {
-        return view('livewire.admin.milk-analysis-individu.edit-component');
+        $livestocks = $this->farm->livestocks()
+            ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
+            ->get();
+
+        return view('livewire.admin.milk-analysis-individu.edit-component', [
+            'livestocks' => $livestocks
+        ]);
     }
 }

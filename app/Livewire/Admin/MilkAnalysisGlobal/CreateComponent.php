@@ -21,6 +21,7 @@ class CreateComponent extends Component
     public $fat;
     public $snf;
     public $ts;
+    public $rzn;
     public $notes;
 
     protected function rules()
@@ -36,6 +37,7 @@ class CreateComponent extends Component
             'fat' => 'nullable|numeric',
             'snf' => 'nullable|numeric',
             'ts' => 'nullable|numeric',
+            'rzn' => 'nullable|numeric',
             'notes' => 'nullable|string',
         ];
     }
@@ -55,7 +57,7 @@ class CreateComponent extends Component
         $this->validate();
 
         try {
-            $data = [
+            $record = $coreService->store($this->farm, [
                 'transaction_date' => $this->transaction_date,
                 'bj' => $this->bj,
                 'at' => $this->at ? 1 : 0,
@@ -66,13 +68,12 @@ class CreateComponent extends Component
                 'fat' => $this->fat,
                 'snf' => $this->snf,
                 'ts' => $this->ts,
+                'rzn' => $this->rzn,
                 'notes' => $this->notes,
-            ];
-
-            $record = $coreService->storeAnalysis($this->farm, $data);
+            ]);
 
             session()->flash('success', 'Data analisis susu global berhasil disimpan.');
-            
+
             return redirect()->route('admin.care-livestock.milk-analysis-global.show', [
                 $this->farm->id,
                 $record->id

@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class TreatmentColonyCoreService
 {
-    public function listTreatments($farm, array $filters): array
+    public function list($farm, array $filters): array
     {
         $query = TreatmentColonyD::whereHas('treatmentH', function ($q) use ($farm, $filters) {
             $q->where('farm_id', $farm->id)->where('type', 'colony');
@@ -38,7 +38,7 @@ class TreatmentColonyCoreService
         return $query->get()->all();
     }
 
-    public function findTreatment($farm, $id): TreatmentColonyD
+    public function find($farm, $id): TreatmentColonyD
     {
         return TreatmentColonyD::whereHas(
             'treatmentH',
@@ -47,7 +47,7 @@ class TreatmentColonyCoreService
         )->findOrFail($id);
     }
 
-    public function storeTreatment($farm, array $data): TreatmentColonyD
+    public function store($farm, array $data): TreatmentColonyD
     {
         $pen = $farm->pens()->find($data['pen_id']);
         if (!$pen)
@@ -123,9 +123,9 @@ class TreatmentColonyCoreService
         });
     }
 
-    public function updateTreatment($farm, $id, array $data): TreatmentColonyD
+    public function update($farm, $id, array $data): TreatmentColonyD
     {
-        $colony = $this->findTreatment($farm, $id);
+        $colony = $this->find($farm, $id);
         $livestocks = $colony->livestocks;
         if ($livestocks->isEmpty())
             throw new \InvalidArgumentException('No livestock found.');
@@ -192,9 +192,9 @@ class TreatmentColonyCoreService
         });
     }
 
-    public function deleteTreatment($farm, $id): void
+    public function delete($farm, $id): void
     {
-        $colony = $this->findTreatment($farm, $id);
+        $colony = $this->find($farm, $id);
 
         DB::transaction(function () use ($colony) {
             foreach ($colony->livestocks as $l) {

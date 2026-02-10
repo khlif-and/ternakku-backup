@@ -23,6 +23,7 @@ class EditComponent extends Component
     public $fat;
     public $snf;
     public $ts;
+    public $rzn;
     public $notes;
 
     protected function rules()
@@ -38,6 +39,7 @@ class EditComponent extends Component
             'fat' => 'nullable|numeric',
             'snf' => 'nullable|numeric',
             'ts' => 'nullable|numeric',
+            'rzn' => 'nullable|numeric',
             'notes' => 'nullable|string',
         ];
     }
@@ -65,6 +67,7 @@ class EditComponent extends Component
         $this->fat = $this->milkAnalysisGlobal->fat;
         $this->snf = $this->milkAnalysisGlobal->snf;
         $this->ts = $this->milkAnalysisGlobal->ts;
+        $this->rzn = $this->milkAnalysisGlobal->rzn;
         $this->notes = $this->milkAnalysisGlobal->notes;
     }
 
@@ -73,7 +76,7 @@ class EditComponent extends Component
         $this->validate();
 
         try {
-            $data = [
+            $coreService->update($this->farm, $this->milkAnalysisGlobal->id, [
                 'transaction_date' => $this->transaction_date,
                 'bj' => $this->bj,
                 'at' => $this->at ? 1 : 0,
@@ -84,13 +87,12 @@ class EditComponent extends Component
                 'fat' => $this->fat,
                 'snf' => $this->snf,
                 'ts' => $this->ts,
+                'rzn' => $this->rzn,
                 'notes' => $this->notes,
-            ];
-
-            $coreService->updateAnalysis($this->farm, $this->milkAnalysisGlobal->id, $data);
+            ]);
 
             session()->flash('success', 'Data analisis susu global berhasil diperbarui.');
-            
+
             return redirect()->route('admin.care-livestock.milk-analysis-global.show', [
                 $this->farm->id,
                 $this->milkAnalysisGlobal->id

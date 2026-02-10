@@ -38,7 +38,7 @@ class IndexComponent extends Component
     public function delete($id, MilkAnalysisGlobalCoreService $coreService)
     {
         try {
-            $coreService->deleteAnalysis($this->farm, $id);
+            $coreService->delete($this->farm, $id);
             session()->flash('success', 'Data analisis susu berhasil dihapus.');
         } catch (\Throwable $e) {
             session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
@@ -47,13 +47,13 @@ class IndexComponent extends Component
 
     public function render(MilkAnalysisGlobalCoreService $coreService)
     {
-        $data = $coreService->listAnalyses($this->farm, [
+        $items = $coreService->list($this->farm, [
             'start_date' => $this->start_date,
             'end_date' => $this->end_date,
         ]);
 
         return view('livewire.admin.milk-analysis-global.index-component', [
-            'items' => $data['analyses']
+            'items' => $items
         ]);
     }
 }

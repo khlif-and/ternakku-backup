@@ -42,7 +42,7 @@ class IndexComponent extends Component
             'pen_id' => $this->pen_id,
         ];
 
-        $items = $coreService->listTreatmentColonies($this->farm, $filters);
+        $items = $coreService->list($this->farm, $filters);
 
         return view('livewire.admin.treatment-colony.index-component', [
             'items' => $items,

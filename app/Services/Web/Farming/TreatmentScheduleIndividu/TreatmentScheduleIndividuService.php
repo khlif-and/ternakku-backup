@@ -20,11 +20,17 @@ class TreatmentScheduleIndividuService
     {
         $farm = $request->attributes->get('farm');
         $filters = $request->only([
-            'start_date','end_date','livestock_id','livestock_type_id',
-            'livestock_group_id','livestock_breed_id','livestock_sex_id','pen_id'
+            'start_date',
+            'end_date',
+            'livestock_id',
+            'livestock_type_id',
+            'livestock_group_id',
+            'livestock_breed_id',
+            'livestock_sex_id',
+            'pen_id'
         ]);
 
-        $items = $this->core->listSchedules($farm, $filters);
+        $items = $this->core->list($farm, $filters);
         return view('admin.care_livestock.treatment_schedule_individu.index', compact('farm', 'items', 'filters'));
     }
 
@@ -40,7 +46,7 @@ class TreatmentScheduleIndividuService
     {
         return ErrorHandler::handle(function () use ($request, $farmId) {
             $farm = $request->attributes->get('farm');
-            $item = $this->core->storeSchedule($farm, $request->validated());
+            $item = $this->core->store($farm, $request->validated());
 
             return redirect()
                 ->route('admin.care-livestock.treatment-schedule-individu.show', [
@@ -54,7 +60,7 @@ class TreatmentScheduleIndividuService
     public function show($farmId, $id)
     {
         $farm = request()->attributes->get('farm');
-        $treatmentScheduleIndividu = $this->core->findSchedule($farm, $id);
+        $treatmentScheduleIndividu = $this->core->find($farm, $id);
 
         return view('admin.care_livestock.treatment_schedule_individu.show', compact('farm', 'treatmentScheduleIndividu'));
     }
@@ -62,7 +68,7 @@ class TreatmentScheduleIndividuService
     public function edit($farmId, $id)
     {
         $farm = request()->attributes->get('farm');
-        $treatmentScheduleIndividu = $this->core->findSchedule($farm, $id);
+        $treatmentScheduleIndividu = $this->core->find($farm, $id);
         $livestocks = $farm->livestocks()->get();
 
         return view('admin.care_livestock.treatment_schedule_individu.edit', compact('farm', 'treatmentScheduleIndividu', 'livestocks'));
@@ -72,7 +78,7 @@ class TreatmentScheduleIndividuService
     {
         return ErrorHandler::handle(function () use ($request, $farmId, $id) {
             $farm = $request->attributes->get('farm');
-            $this->core->updateSchedule($farm, $id, $request->validated());
+            $this->core->update($farm, $id, $request->validated());
 
             return redirect()
                 ->route('admin.care-livestock.treatment-schedule-individu.show', [
@@ -87,7 +93,7 @@ class TreatmentScheduleIndividuService
     {
         return ErrorHandler::handle(function () use ($farmId, $id) {
             $farm = request()->attributes->get('farm');
-            $this->core->deleteSchedule($farm, $id);
+            $this->core->delete($farm, $id);
 
             return redirect()
                 ->route('admin.care-livestock.treatment-schedule-individu.index', ['farm_id' => $farmId])

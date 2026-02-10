@@ -44,7 +44,7 @@ class IndexComponent extends Component
             'pen_id' => $this->pen_id,
         ];
 
-        $items = $coreService->listFeedingColonies($this->farm, $filters);
+        $items = $coreService->list($this->farm, $filters);
 
         return view('livewire.admin.feeding-colony.index-component', [
             'items' => $items,
