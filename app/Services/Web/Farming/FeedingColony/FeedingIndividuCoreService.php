@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class FeedingIndividuCoreService
 {
-    public function listFeedingIndividu($farm, array $filters)
+    public function list($farm, array $filters)
     {
         $query = FeedingIndividuD::with(['feedingH', 'livestock'])
             ->withCount('feedingIndividuItems')

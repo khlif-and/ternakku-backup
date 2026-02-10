@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class FeedingColonyCoreService
 {
-    public function listFeedings($farm, array $filters): array
+    public function list($farm, array $filters): array
     {
         $query = FeedingColonyD::whereHas('feedingH', function ($q) use ($farm, $filters) {
             $q->where('farm_id', $farm->id)->where('type', 'colony');
@@ -33,7 +33,7 @@ class FeedingColonyCoreService
         return $query->get()->all();
     }
 
-    public function storeFeeding($farm, array $data): FeedingColonyD
+    public function store($farm, array $data): FeedingColonyD
     {
         $pen = $farm->pens()->find($data['pen_id']);
         if (!$pen) {
@@ -103,7 +103,7 @@ class FeedingColonyCoreService
         });
     }
 
-    public function findFeeding($farm, $id): FeedingColonyD
+    public function find($farm, $id): FeedingColonyD
     {
         return FeedingColonyD::whereHas(
             'feedingH',
@@ -112,9 +112,9 @@ class FeedingColonyCoreService
         )->findOrFail($id);
     }
 
-    public function updateFeeding($farm, $id, array $data): FeedingColonyD
+    public function update($farm, $id, array $data): FeedingColonyD
     {
-        $feedingColonyD = $this->findFeeding($farm, $id);
+        $feedingColonyD = $this->find($farm, $id);
         $livestocks = $feedingColonyD->livestocks;
 
         if ($livestocks->isEmpty()) {
@@ -176,9 +176,9 @@ class FeedingColonyCoreService
         });
     }
 
-    public function deleteFeeding($farm, $id): void
+    public function delete($farm, $id): void
     {
-        $feedingColonyD = $this->findFeeding($farm, $id);
+        $feedingColonyD = $this->find($farm, $id);
 
         DB::transaction(function () use ($feedingColonyD) {
             foreach ($feedingColonyD->livestocks as $livestock) {

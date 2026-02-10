@@ -44,7 +44,7 @@ class IndexComponent extends Component
             'livestock_id' => $this->livestock_id,
         ];
 
-        $items = $coreService->listFeedingIndividu($this->farm, $filters);
+        $items = $coreService->list($this->farm, $filters);
 
         return view('livewire.admin.feeding-individu.index-component', [
             'items' => $items,

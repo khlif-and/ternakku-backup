@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class FeedingColonyCoreService
 {
-    public function listFeedingColonies($farm, array $filters)
+    public function list($farm, array $filters)
     {
         $query = FeedingColonyD::with(['feedingH', 'pen'])
             ->withCount('feedingColonyItems')
