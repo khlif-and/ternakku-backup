@@ -20,7 +20,7 @@ class IndexComponent extends Component
     public $from_date;
     public $to_date;
     public $showReport = false;
-    
+
     // Report Data
     public $pen;
     public $livestocks = [];
@@ -57,7 +57,7 @@ class IndexComponent extends Component
 
         try {
             $this->pen = Pen::with(['farm'])->findOrFail($this->pen_id);
-            
+
             // Get livestocks in this pen
             $this->livestocks = Livestock::where('pen_id', $this->pen_id)
                 ->with(['livestockType', 'livestockSex', 'livestockClassification'])
@@ -65,46 +65,46 @@ class IndexComponent extends Component
 
             // Get feeding history from FeedingColonyD (which has pen_id relation)
             $this->feedingHistory = FeedingColonyD::where('pen_id', $this->pen_id)
-                ->whereHas('feedingH', function($q) {
-                    $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
-                })
+                ->whereHas('feedingH', function ($q) {
+                $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
+            })
                 ->with(['feedingH', 'feedingColonyItems.feed'])
-                ->orderByDesc(function($q) {
-                    return $q->select('transaction_date')
-                        ->from('feeding_h')
-                        ->whereColumn('feeding_h.id', 'feeding_colony_d.feeding_h_id')
-                        ->limit(1);
-                })
+                ->orderByDesc(function ($q) {
+                return $q->select('transaction_date')
+                ->from('feeding_h')
+                ->whereColumn('feeding_h.id', 'feeding_colony_d.feeding_h_id')
+                ->limit(1);
+            })
                 ->limit(50)
                 ->get();
 
             // Get treatment history from TreatmentColonyD
             $this->treatmentHistory = TreatmentColonyD::where('pen_id', $this->pen_id)
-                ->whereHas('treatmentH', function($q) {
-                    $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
-                })
+                ->whereHas('treatmentH', function ($q) {
+                $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
+            })
                 ->with(['treatmentH', 'treatmentColonyMedicineItems.medicine', 'disease'])
-                ->orderByDesc(function($q) {
-                    return $q->select('transaction_date')
-                        ->from('treatment_h')
-                        ->whereColumn('treatment_h.id', 'treatment_colony_d.treatment_h_id')
-                        ->limit(1);
-                })
+                ->orderByDesc(function ($q) {
+                return $q->select('transaction_date')
+                ->from('treatment_h')
+                ->whereColumn('treatment_h.id', 'treatment_colony_d.treatment_h_id')
+                ->limit(1);
+            })
                 ->limit(50)
                 ->get();
 
             // Get milk production from MilkProductionColonyD
             $this->milkProduction = MilkProductionColonyD::where('pen_id', $this->pen_id)
-                ->whereHas('milkProductionH', function($q) {
-                    $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
-                })
+                ->whereHas('milkProductionH', function ($q) {
+                $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
+            })
                 ->with(['milkProductionH'])
-                ->orderByDesc(function($q) {
-                    return $q->select('transaction_date')
-                        ->from('milk_production_h')
-                        ->whereColumn('milk_production_h.id', 'milk_production_colony_d.milk_production_h_id')
-                        ->limit(1);
-                })
+                ->orderByDesc(function ($q) {
+                return $q->select('transaction_date')
+                ->from('milk_production_h')
+                ->whereColumn('milk_production_h.id', 'milk_production_colony_d.milk_production_h_id')
+                ->limit(1);
+            })
                 ->limit(50)
                 ->get();
 
@@ -112,8 +112,9 @@ class IndexComponent extends Component
             $this->statistics = $this->calculateStatistics();
 
             $this->showReport = true;
-            
-        } catch (\Throwable $e) {
+
+        }
+        catch (\Throwable $e) {
             Log::error('Pen Report Error', [
                 'error' => $e->getMessage(),
                 'line' => $e->getLine(),
@@ -138,30 +139,30 @@ class IndexComponent extends Component
     {
         $totalLivestock = $this->livestocks->count();
         $aliveLivestock = $this->livestocks->where('is_alive', true)->count();
-        
-        $maleCount = $this->livestocks->filter(function($l) {
+
+        $maleCount = $this->livestocks->filter(function ($l) {
             return strtolower($l->livestockSex->name ?? '') === 'jantan';
         })->count();
-        
-        $femaleCount = $this->livestocks->filter(function($l) {
+
+        $femaleCount = $this->livestocks->filter(function ($l) {
             return strtolower($l->livestockSex->name ?? '') === 'betina';
         })->count();
 
         $totalFeedings = $this->feedingHistory->count();
         $totalTreatments = $this->treatmentHistory->count();
-        
+
         $totalMilk = $this->milkProduction->sum('volume');
-        $avgMilkPerDay = $this->milkProduction->count() > 0 
-            ? round($totalMilk / $this->milkProduction->count(), 2) 
+        $avgMilkPerDay = $this->milkProduction->count() > 0
+            ? round($totalMilk / $this->milkProduction->count(), 2)
             : 0;
 
         // Group livestock by type
-        $byType = $this->livestocks->groupBy(function($l) {
+        $byType = $this->livestocks->groupBy(function ($l) {
             return $l->livestockType->name ?? 'Lainnya';
         })->map->count();
 
         // Group by classification
-        $byClassification = $this->livestocks->groupBy(function($l) {
+        $byClassification = $this->livestocks->groupBy(function ($l) {
             return $l->livestockClassification->name ?? 'Tidak diketahui';
         })->map->count();
 
@@ -205,7 +206,8 @@ class IndexComponent extends Component
                 echo $pdf->output();
             }, $filename);
 
-        } catch (\Throwable $e) {
+        }
+        catch (\Throwable $e) {
             Log::error('Pen Report PDF Export Error', [
                 'error' => $e->getMessage(),
                 'line' => $e->getLine(),
@@ -217,7 +219,7 @@ class IndexComponent extends Component
 
     public function render()
     {
-        return view('livewire.admin.pen-report.index-component', [
+        return view('livewire.reports.care-livestock.pen-report.index-component', [
             'pens' => $this->farm->pens()->orderBy('name')->get(),
         ]);
     }

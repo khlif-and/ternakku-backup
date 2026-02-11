@@ -16,14 +16,15 @@ class Pen_Report_Service
         try {
             $farm = request()->attributes->get('farm');
 
-            return view('admin.care_livestock.report.pen_report', [
+            return view('admin.report.pen_report', [
                 'farm' => $farm,
             ]);
-        } catch (\Throwable $e) {
+        }
+        catch (\Throwable $e) {
             Log::error('Pen Report Index Error', [
                 'error' => $e->getMessage(),
-                'line'  => $e->getLine(),
-                'file'  => $e->getFile(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
             ]);
 
             return back()->with('error', 'Terjadi kesalahan saat membuka halaman laporan.');
