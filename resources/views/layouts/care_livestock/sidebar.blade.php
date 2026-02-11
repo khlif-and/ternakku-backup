@@ -3,7 +3,7 @@
         sidebarCollapsed: false,
         dataAwalOpen: ' . (request()->is('care-livestock/*/pens*', 'care-livestock/*/livestock-reception*', 'care-livestock/*/livestock-sale-weight*', 'care-livestock/*/livestock-death*', 'care-livestock/*/dashboard*') ? 'true' : 'false') . ',
         persediaanOpen: ' . (request()->is('care-livestock/*/feeding*', 'care-livestock/*/treatment*', 'care-livestock/*/milk*', 'care-livestock/*/sales-livestock*') ? 'true' : 'false') . ',
-        aktivitasOpen: ' . (request()->is('care-livestock/*/feed-medicine*', 'care-livestock/*/mutation*', 'care-livestock/*/artificial*', 'care-livestock/*/natural*', 'care-livestock/*/pregnant*', 'care-livestock/*/birth*', 'care-livestock/*/sales-order*', 'care-livestock/*/customer*') ? 'true' : 'false') . ',
+        aktivitasOpen: ' . (request()->is('care-livestock/*/feed-medicine*', 'care-livestock/*/mutation*', 'care-livestock/*/artificial*', 'care-livestock/*/natural*', 'care-livestock/*/pregnant*', 'care-livestock/*/birth*', 'care-livestock/*/sales-order*', 'care-livestock/*/customer*') && !request()->is('care-livestock/*/report*') ? 'true' : 'false') . ',
         laporanAktivitasOpen: ' . (request()->is('care-livestock/*/report*') ? 'true' : 'false') . ',
         pelengkapInnerOpen: false,
         pakanInnerOpen: ' . (request()->is('care-livestock/*/feeding*') ? 'true' : 'false') . ',
