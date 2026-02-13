@@ -4,7 +4,7 @@ namespace App\Livewire\Admin\FeedingColony;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Helpers\Web\FeedingColonyFormService;
+use App\Helpers\web\FeedingColonyFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingColonyCoreService;
 use Illuminate\Support\Facades\Log;
 

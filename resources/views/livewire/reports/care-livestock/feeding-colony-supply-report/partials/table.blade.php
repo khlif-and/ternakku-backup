@@ -32,6 +32,9 @@
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Total Biaya
                     </th>
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -41,25 +44,37 @@
                             {{ $feedings->firstItem() + $index }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 align-top font-medium">
-                            {{ \Carbon\Carbon::parse($item->feedingH->transaction_date)->format('d/m/Y') }}
+                            {{ \Carbon\Carbon::parse($item['transaction_date'])->format('d/m/Y') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 align-top">
-                            {{ $item->pen->name ?? '-' }}
+                            {{ $item['pen_name'] ?? '-' }}
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500 align-top">
-                            @foreach($item->feedingColonyItems as $feedItem)
+                            @foreach($item['items'] as $feedItem)
                                 <div class="mb-1 pb-1 border-b border-gray-100 last:border-0 last:mb-0 last:pb-0">
-                                    <span class="font-semibold text-gray-700">{{ $feedItem->name }}</span>
+                                    <span class="font-semibold text-gray-700">{{ $feedItem['name'] }}</span>
                                     <br>
                                     <span class="text-xs">
-                                        {{ $feedItem->qty_kg }} Kg x Rp
-                                        {{ number_format($feedItem->price_per_kg, 0, ',', '.') }}
+                                        {{ $feedItem['qty_kg'] }} Kg x Rp
+                                        {{ number_format($feedItem['price_per_kg'], 0, ',', '.') }}
                                     </span>
                                 </div>
                             @endforeach
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 align-top font-medium">
-                            Rp {{ number_format($item->total_cost, 0, ',', '.') }}
+                            Rp {{ number_format($item['total_cost'], 0, ',', '.') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{{ route('admin.care-livestock.feeding-colony-supply-report.export-row-pdf', ['farm_id' => $farm->id, 'id' => $item['id']]) }}"
+                                target="_blank"
+                                class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition-colors duration-150 flex items-center justify-center w-fit ml-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 011.414.586l4 4a1 1 0 01.586 1.414V19a2 2 0 01-2 2z" />
+                                </svg>
+                                PDF
+                            </a>
                         </td>
                     </tr>
                 @empty
