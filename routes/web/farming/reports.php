@@ -63,10 +63,26 @@ Route::get('care-livestock/{farm_id}/report/feeding-colony-supply', \App\Livewir
     ->middleware('check.farm.access')
     ->name('admin.care-livestock.feeding-colony-supply-report.index');
 
+Route::get('care-livestock/{farm_id}/report/feeding-colony-supply/export-pdf', [\App\Services\Web\Report\FeedingColony\Controllers\FeedingColonyReportController::class, 'exportPdf'])
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.feeding-colony-supply-report.export-pdf');
+
+Route::get('care-livestock/{farm_id}/report/feeding-colony-supply/export-pdf/{id}', [\App\Services\Web\Report\FeedingColony\Controllers\FeedingColonyReportController::class, 'exportRowPdf'])
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.feeding-colony-supply-report.export-row-pdf');
+
 // Feeding Individu Supply Report (Livewire-based)
 Route::get('care-livestock/{farm_id}/report/feeding-individu-supply', \App\Livewire\Reports\CareLivestock\FeedingIndividuSupplyReport\Index::class)
     ->middleware('check.farm.access')
     ->name('admin.care-livestock.feeding-individu-supply-report.index');
+
+Route::get('care-livestock/{farm_id}/report/feeding-individu-supply/export-pdf', [\App\Services\Web\Report\FeedingIndividu\Controllers\FeedingIndividuReportController::class, 'exportPdf'])
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.feeding-individu-supply-report.export-pdf');
+
+Route::get('care-livestock/{farm_id}/report/feeding-individu-supply/export-pdf/{id}', [\App\Services\Web\Report\FeedingIndividu\Controllers\FeedingIndividuReportController::class, 'exportRowPdf'])
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.feeding-individu-supply-report.export-row-pdf');
 
 // Treatment Colony Report (Livewire-based)
 Route::get('care-livestock/{farm_id}/report/treatment-colony', \App\Livewire\Reports\CareLivestock\TreatmentColonyReport\Index::class)
