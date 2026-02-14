@@ -5,28 +5,29 @@ namespace App\Livewire\Reports\CareLivestock\TreatmentColonyReport;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Farm;
-use App\Models\TreatmentColonyD;
-use Illuminate\Support\Facades\DB;
+use App\Services\Web\Report\TreatmentColony\Controllers\TreatmentColonyReportController;
+use App\Services\Web\Report\TreatmentColony\Services\TreatmentColonyReportService;
 
 class Index extends Component
 {
     use WithPagination;
 
     public Farm $farm;
+    public $farmId;
     public $start_date;
     public $end_date;
     public $pen_id = '';
     public $showReport = false;
 
-    public $statistics = [];
-
     protected $queryString = ['start_date', 'end_date', 'pen_id'];
 
-    public function mount(Farm $farm)
+    public function mount($farm_id)
     {
-        $this->farm = $farm;
+        $this->farm = Farm::findOrFail($farm_id);
+        $this->farmId = $farm_id;
         $this->start_date = request('start_date', now()->format('Y-m-d'));
         $this->end_date = request('end_date', now()->format('Y-m-d'));
+        $this->pen_id = request('pen_id');
 
         if (request('start_date')) {
             $this->generateReport();
@@ -36,60 +37,46 @@ class Index extends Component
     public function generateReport()
     {
         $this->showReport = true;
+
         $this->resetPage();
-    }
-
-    public function getTreatmentDataProperty()
-    {
-        if (!$this->showReport) {
-            return new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
-        }
-
-        return TreatmentColonyD::select('treatment_colony_d.*')
-            ->join('treatment_h', 'treatment_colony_d.treatment_h_id', '=', 'treatment_h.id')
-            ->where('treatment_h.farm_id', $this->farm->id)
-            ->where('treatment_h.type', 'colony')
-            ->whereBetween('treatment_h.transaction_date', [$this->start_date, $this->end_date])
-            ->when($this->pen_id, function ($q) {
-                $q->where('treatment_colony_d.pen_id', $this->pen_id);
-            })
-            ->with([
-                'treatmentH',
-                'pen',
-                'disease',
-                'treatmentColonyMedicineItems',
-                'treatmentColonyTreatmentItems'
-            ])
-            ->orderBy('treatment_h.transaction_date', 'desc')
-            ->paginate(10);
-    }
-
-    public function getStatisticsProperty()
-    {
-        if (!$this->showReport) {
-            return [];
-        }
-
-        $count = TreatmentColonyD::join('treatment_h', 'treatment_colony_d.treatment_h_id', '=', 'treatment_h.id')
-            ->where('treatment_h.farm_id', $this->farm->id)
-            ->where('treatment_h.type', 'colony')
-            ->whereBetween('treatment_h.transaction_date', [$this->start_date, $this->end_date])
-            ->when($this->pen_id, function ($q) {
-                $q->where('treatment_colony_d.pen_id', $this->pen_id);
-            })
-            ->count();
-
-        return [
-            'total_treatments' => $count,
-        ];
     }
 
     public function render()
     {
+
+        $service = new TreatmentColonyReportService();
+        $controller = new TreatmentColonyReportController($service);
+
+        $treatments = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
+        $stats = [];
+
+        if ($this->showReport) {
+            $filters = [
+                'start_date' => $this->start_date,
+                'end_date' => $this->end_date,
+                'pen_id' => $this->pen_id,
+            ];
+
+            $data = $service->getReportData($this->farmId, $filters);
+            $summary = $service->getSummary($this->farmId, $filters);
+
+
+            $treatments = $data;
+            if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+                $transformedCollection = $data->getCollection()->map(function ($item) {
+                    return (new \App\Services\Web\Report\TreatmentColony\Resources\TreatmentColonyReportResource($item))->resolve();
+                });
+                $data->setCollection($transformedCollection);
+                $treatments = $data;
+            }
+            $stats = $summary;
+        }
+
         return view('livewire.reports.care-livestock.treatment-colony-report.index', [
             'pens' => $this->farm->pens,
-            'treatments' => $this->treatmentData,
-            'stats' => $this->statistics,
+            'treatments' => $treatments,
+            'stats' => $stats,
+            'farmId' => $this->farmId,
         ])
             ->extends('layouts.care_livestock.index')
             ->section('content');

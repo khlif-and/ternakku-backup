@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Reports\CareLivestock\MilkAnalysisGlobalReport;
 
+use App\Models\Farm;
+use App\Services\Web\Report\MilkAnalysisGlobal\Services\MilkAnalysisGlobalReportService;
 use Livewire\Component;
 use Livewire\WithPagination;
-use App\Models\Farm;
-use App\Models\MilkAnalysisGlobal;
 
 class Index extends Component
 {
@@ -16,13 +16,11 @@ class Index extends Component
     public $end_date;
     public $showReport = false;
 
-    public $statistics = [];
-
     protected $queryString = ['start_date', 'end_date'];
 
-    public function mount(Farm $farm)
+    public function mount($farm_id)
     {
-        $this->farm = $farm;
+        $this->farm = Farm::findOrFail($farm_id);
         $this->start_date = request('start_date', now()->format('Y-m-d'));
         $this->end_date = request('end_date', now()->format('Y-m-d'));
 
@@ -33,44 +31,41 @@ class Index extends Component
 
     public function generateReport()
     {
+        $this->validate([
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
+        ]);
+
         $this->showReport = true;
         $this->resetPage();
     }
 
-    public function getAnalysisDataProperty()
+    public function render(MilkAnalysisGlobalReportService $service)
     {
-        if (!$this->showReport) {
-            return new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
+        $data = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 15);
+        $summary = [];
+
+        if ($this->showReport) {
+            $filters = [
+                'start_date' => $this->start_date,
+                'end_date' => $this->end_date,
+            ];
+
+            // $data = $service->generateReport($this->farm, $filters);
+            // Pagination is tricky with Resource collection if not using ::collection(paginate()).
+            // Let's adjust the Service to return Paginator for render, and Collection for Export if needed.
+            // Actually, for the view, we need pagination.
+
+            $query = $service->getQuery($this->farm, $filters);
+            $data = $query->paginate(15);
+
+            $summary = $service->getSummary($this->farm, $filters);
         }
 
-        return MilkAnalysisGlobal::where('farm_id', $this->farm->id)
-            ->whereBetween('transaction_date', [$this->start_date, $this->end_date])
-            ->orderBy('transaction_date', 'desc')
-            ->paginate(15);
-    }
-
-    public function getStatisticsProperty()
-    {
-        if (!$this->showReport) {
-            return [];
-        }
-
-        $query = MilkAnalysisGlobal::where('farm_id', $this->farm->id)
-            ->whereBetween('transaction_date', [$this->start_date, $this->end_date]);
-
-        return [
-            'avg_fat' => $query->avg('fat'),
-            'avg_snf' => $query->avg('snf'),
-            'avg_protein' => $query->avg('protein'),
-            'avg_bj' => $query->avg('bj'),
-        ];
-    }
-
-    public function render()
-    {
         return view('livewire.reports.care-livestock.milk-analysis-global-report.index', [
-            'analyses' => $this->analysisData,
-            'stats' => $this->statistics,
+            'data' => $data,
+            'summary' => $summary,
+            'farm' => $this->farm,
         ])
             ->extends('layouts.care_livestock.index')
             ->section('content');

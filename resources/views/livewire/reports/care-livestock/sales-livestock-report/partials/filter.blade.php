@@ -1,36 +1,24 @@
-<div class="flex flex-col gap-4">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- Filter Tanggal -->
-        <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium">Tanggal Mulai</label>
-            <input type="date" wire:model="start_date" class="input input-bordered w-full" />
+<div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+        <div>
+            <x-form.date label="Tanggal Mulai" wire:model="start_date" />
         </div>
-        <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium">Tanggal Selesai</label>
-            <input type="date" wire:model="end_date" class="input input-bordered w-full" />
+        <div>
+            <x-form.date label="Tanggal Akhir" wire:model="end_date" />
         </div>
-
-        <!-- Filter Customer -->
-        <div class="flex flex-col gap-2">
-            <label class="text-sm font-medium">Pelanggan</label>
-            <select wire:model="qurban_customer_id" class="select select-bordered w-full">
-                <option value="">Semua Pelanggan</option>
-                @foreach ($customers as $customer)
-                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                @endforeach
-            </select>
+        <div>
+            <x-form.select label="Pilih Pelanggan" wire:model="qurban_customer_id" :options="$customerOptions"
+                placeholder="Semua Pelanggan" />
         </div>
-    </div>
-
-    <div class="flex justify-end">
-        <button wire:click="filter" class="btn btn-primary text-white">
-            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" width="24" height="24" viewBox="0 0 24 24"
-                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path
-                    d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-5.31 5.31a2 2 0 0 0 -.586 1.414v5.026a1 1 0 0 1 -1.433 .781l-4.144 -4.135a1 1 0 0 1 -.621 -.886v-6.046a2 2 0 0 0 -.586 -1.414l-5.31 -5.31a2 2 0 0 1 -.586 -1.414z" />
-            </svg>
-            Terapkan Filter
-        </button>
+        <div>
+            <button wire:click="generateReport"
+                class="w-full inline-flex justify-center items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-colors">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                </svg>
+                Tampilkan Laporan
+            </button>
+        </div>
     </div>
 </div>

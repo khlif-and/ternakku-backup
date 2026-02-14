@@ -8,7 +8,6 @@
     ]">
 
         <div class="space-y-6">
-            {{-- Alert Section --}}
             <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
                 <div class="flex">
                     <div class="flex-shrink-0">
@@ -21,19 +20,16 @@
                     </div>
                     <div class="ml-3">
                         <p class="text-sm text-blue-700">
-                            Laporan ini menampilkan hasil analisis kualitas susu per ekor ternak.
+                            Laporan ini menampilkan hasil analisis kualitas susu individu per ekor ternak.
                         </p>
                     </div>
                 </div>
             </div>
 
-            {{-- Filter Section --}}
             @include('livewire.reports.care-livestock.milk-analysis-individu-report.partials.filter')
 
-            {{-- Statistics Cards --}}
             @include('livewire.reports.care-livestock.milk-analysis-individu-report.partials.statistics')
 
-            {{-- Data Table --}}
             @include('livewire.reports.care-livestock.milk-analysis-individu-report.partials.table')
 
         </div>
