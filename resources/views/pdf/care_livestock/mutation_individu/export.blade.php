@@ -1,68 +1,83 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>PDF Laporan Mutasi Individu</title>
+<html>
 
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Laporan Mutasi Individu</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #333; }
-        .title { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
-        .subtitle { margin-bottom: 15px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        table th, table td { padding: 5px; border: 1px solid #555; font-size: 11px; }
-        table th { background: #e9e9e9; font-weight: bold; }
-        .footer { margin-top: 30px; font-size: 10px; text-align: center; color: #777; }
+        body {
+            font-family: sans-serif;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 10px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 4px;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .meta {
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
     </style>
 </head>
 
 <body>
+    <div class="header">
+        <h2>Laporan Mutasi Kandang Individu</h2>
+        <h3>{{ $farm->name }}</h3>
+    </div>
 
-    <div class="title">Laporan Mutasi Individu</div>
-    <div class="subtitle">{{ $farm->name }}</div>
-
-    <p><strong>Kandang:</strong>
-        @php
-            $pen = $farm->pens()->find($filters['pen_id']);
-        @endphp
-        {{ $pen->name ?? '-' }}
-    </p>
-
-    <p><strong>Periode:</strong> {{ $filters['start_date'] }} s/d {{ $filters['end_date'] }}</p>
+    <div class="meta">
+        <strong>Periode:</strong> {{ \Carbon\Carbon::parse($filters['start_date'] ?? now())->format('d/m/Y') }} -
+        {{ \Carbon\Carbon::parse($filters['end_date'] ?? now())->format('d/m/Y') }}<br>
+        <strong>Dicetak pada:</strong> {{ now()->format('d/m/Y H:i') }}
+    </div>
 
     <table>
         <thead>
             <tr>
-                <th>#</th>
-                <th>Tanggal</th>
-                <th>Eartag / Nama</th>
-                <th>Dari</th>
-                <th>Ke</th>
-                <th>Catatan</th>
+                <th width="5%">No</th>
+                <th width="15%">Tanggal</th>
+                <th width="20%">No. Transaksi</th>
+                <th width="15%">Kode Ternak</th>
+                <th width="15%">Asal</th>
+                <th width="15%">Tujuan</th>
+                <th width="15%">Catatan</th>
             </tr>
         </thead>
-
         <tbody>
-            @foreach ($items as $i => $item)
-                @php
-                    $ls = $item->livestock;
-                    $mut = $item->mutationH;
-                @endphp
-
+            @foreach($data as $index => $item)
                 <tr>
-                    <td>{{ $i + 1 }}</td>
-                    <td>{{ $mut->transaction_date }}</td>
-                    <td>{{ $ls->eartag ?? $ls->name }}</td>
-                    <td>{{ optional($farm->pens()->find($item->from))->name ?? '-' }}</td>
-                    <td>{{ optional($farm->pens()->find($item->to))->name ?? '-' }}</td>
-                    <td>{{ $mut->notes ?? '-' }}</td>
+                    <td style="text-align: center;">{{ $index + 1 }}</td>
+                    <td>{{ \Carbon\Carbon::parse($item->mutationH->transaction_date)->format('d/m/Y') }}</td>
+                    <td>{{ $item->mutationH->transaction_number }}</td>
+                    <td>{{ $item->livestock->livestock_code ?? '-' }}</td>
+                    <td>{{ $item->penFrom->name ?? '-' }}</td>
+                    <td>{{ $item->penTo->name ?? '-' }}</td>
+                    <td>{{ $item->notes ?? '-' }}</td>
                 </tr>
             @endforeach
         </tbody>
     </table>
-
-    <div class="footer">
-        Dicetak otomatis oleh sistem Ternakku — {{ date('d M Y H:i') }}
-    </div>
-
 </body>
+
 </html>

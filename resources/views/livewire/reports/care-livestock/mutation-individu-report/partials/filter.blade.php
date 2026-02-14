@@ -1,36 +1,19 @@
-<div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
-    <h2 class="text-lg font-bold text-gray-800 mb-4">Filter Laporan Mutasi Individu</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-            <x-form.select 
-                wire:model="pen_id" 
-                label="Pilih Kandang (Opsional)" 
-                placeholder="-- Semua Kandang --"
-                :options="$pens->mapWithKeys(fn($pen) => [$pen->id => $pen->name])->toArray()"
-            />
+<div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-5">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+        <div class="w-full">
+            <x-form.date label="Tanggal Mulai" wire:model="start_date" />
         </div>
-
-        <div>
-            <x-form.date wire:model="start_date" label="Dari Tanggal" />
+        <div class="w-full">
+            <x-form.date label="Tanggal Akhir" wire:model="end_date" />
         </div>
-
-        <div>
-            <x-form.date wire:model="end_date" label="Sampai Tanggal" />
+        <div class="w-full">
+            <x-form.select label="Filter Ternak" wire:model="livestock_id" :options="$livestockOptions"
+                placeholder="Semua Ternak" />
         </div>
-
-        <div class="flex items-end gap-2">
-            <button wire:click="generateReport" wire:loading.attr="disabled"
-                class="px-4 py-2 bg-emerald-600 text-white font-semibold rounded-lg hover:bg-emerald-700 transition disabled:opacity-50">
-                <span wire:loading.remove wire:target="generateReport">Tampilkan Laporan</span>
-                <span wire:loading wire:target="generateReport">Loading...</span>
-            </button>
-
-            @if ($showReport)
-                <button wire:click="resetReport" class="px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-lg hover:bg-gray-300 transition">
-                    Reset
-                </button>
-            @endif
-        </div>
+    </div>
+    <div class="mt-4 flex justify-end">
+        <button wire:click="generateReport" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Terapkan Filter
+        </button>
     </div>
 </div>

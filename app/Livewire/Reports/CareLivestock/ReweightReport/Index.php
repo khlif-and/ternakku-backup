@@ -5,8 +5,13 @@ namespace App\Livewire\Reports\CareLivestock\ReweightReport;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Farm;
-use App\Models\LivestockReweightD;
-use Illuminate\Support\Facades\Log;
+use App\Models\Livestock;
+use App\Models\LivestockType;
+use App\Models\LivestockBreed;
+use App\Models\Pen;
+use App\Services\Web\Report\Reweight\Services\ReweightReportService;
+use App\Services\Web\Report\Reweight\Resources\ReweightReportResource;
+use Carbon\Carbon;
 
 class Index extends Component
 {
@@ -15,106 +20,117 @@ class Index extends Component
     public Farm $farm;
     public $start_date;
     public $end_date;
-    public $pen_id = '';
-    public $livestock_id = '';
-    public $showReport = false;
 
-    public $statistics = [];
+    // Filters
+    public $livestock_type_id;
+    public $livestock_breed_id;
+    public $pen_id;
+    public $livestock_id;
 
-    protected $queryString = ['start_date', 'end_date', 'pen_id', 'livestock_id'];
+    // Dropdown Data
+    public $livestockTypes = [];
+    public $livestockBreeds = [];
+    public $pens = [];
+    public $livestocks = [];
 
-    protected $rules = [
-        'start_date' => 'required|date',
-        'end_date' => 'required|date|after_or_equal:start_date',
+    protected $queryString = [
+        'start_date',
+        'end_date',
+        'livestock_type_id',
+        'livestock_breed_id',
+        'pen_id',
+        'livestock_id',
     ];
 
-    protected $messages = [
-        'start_date.required' => 'Tanggal mulai wajib diisi.',
-        'end_date.required' => 'Tanggal akhir wajib diisi.',
-        'end_date.after_or_equal' => 'Tanggal akhir harus setelah tanggal mulai.',
-    ];
-
-    public function mount(Farm $farm)
+    public function mount($farm_id)
     {
-        $this->farm = $farm;
-        $this->start_date = request('start_date', now()->subMonth()->format('Y-m-d'));
-        $this->end_date = request('end_date', now()->format('Y-m-d'));
+        $this->farm = Farm::findOrFail($farm_id);
+        $this->start_date = request('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
+        $this->end_date = request('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
 
-        if (request('start_date')) {
-            $this->generateReport();
+        $this->livestock_type_id = request('livestock_type_id');
+        $this->livestock_breed_id = request('livestock_breed_id');
+        $this->pen_id = request('pen_id');
+        $this->livestock_id = request('livestock_id');
+
+        $this->loadDropdowns();
+    }
+
+    public function updatedLivestockTypeId()
+    {
+        $this->livestock_breed_id = null;
+        $this->livestock_id = null;
+        $this->loadDropdowns();
+    }
+
+    public function updatedLivestockBreedId()
+    {
+        $this->livestock_id = null;
+        $this->loadDropdowns();
+    }
+
+    public function updatedPenId()
+    {
+        $this->livestock_id = null;
+        $this->loadDropdowns();
+    }
+
+    public function loadDropdowns()
+    {
+        $this->livestockTypes = LivestockType::all()->pluck('name', 'id')->toArray();
+        $this->pens = Pen::where('farm_id', $this->farm->id)->get()->pluck('name', 'id')->toArray();
+
+        if ($this->livestock_type_id) {
+            $this->livestockBreeds = LivestockBreed::where('livestock_type_id', $this->livestock_type_id)->get()->pluck('name', 'id')->toArray();
+        } else {
+            $this->livestockBreeds = [];
         }
+
+        $livestockQuery = Livestock::where('farm_id', $this->farm->id);
+
+        if ($this->livestock_type_id) {
+            $livestockQuery->where('livestock_type_id', $this->livestock_type_id);
+        }
+
+        if ($this->livestock_breed_id) {
+            $livestockQuery->where('livestock_breed_id', $this->livestock_breed_id);
+        }
+
+        if ($this->pen_id) {
+            $livestockQuery->where('pen_id', $this->pen_id);
+        }
+
+        $this->livestocks = $livestockQuery->pluck('eartag_number', 'id')->toArray();
     }
 
     public function generateReport()
     {
-        $this->validate();
-        $this->showReport = true;
         $this->resetPage();
-    }
-
-    public function getReweightsProperty()
-    {
-        if (!$this->showReport) {
-            return [];
-        }
-
-        return LivestockReweightD::with(['livestock', 'livestockReweightH'])
-            ->whereHas('livestockReweightH', function ($q) {
-            $q->where('farm_id', $this->farm->id)
-                ->whereBetween('transaction_date', [$this->start_date, $this->end_date]);
-        })
-            ->when($this->pen_id, function ($q) {
-            $q->whereHas('livestock', function ($sq) {
-                    $sq->where('pen_id', $this->pen_id);
-                }
-                );
-            })
-            ->when($this->livestock_id, function ($q) {
-            $q->where('livestock_id', $this->livestock_id);
-        })
-            ->orderByDesc('id')
-            ->paginate(10);
-    }
-
-    public function getStatisticsProperty()
-    {
-        if (!$this->showReport) {
-            return [];
-        }
-
-        $query = LivestockReweightD::whereHas('livestockReweightH', function ($q) {
-            $q->where('farm_id', $this->farm->id)
-                ->whereBetween('transaction_date', [$this->start_date, $this->end_date]);
-        })
-            ->when($this->pen_id, function ($q) {
-            $q->whereHas('livestock', function ($sq) {
-                    $sq->where('pen_id', $this->pen_id);
-                }
-                );
-            })
-            ->when($this->livestock_id, function ($q) {
-            $q->where('livestock_id', $this->livestock_id);
-        });
-
-        $count = $query->count();
-        $avgWeight = $query->avg('weight');
-
-        return [
-            'total_reweights' => $count,
-            'avg_weight' => $avgWeight,
-        ];
     }
 
     public function render()
     {
+        $service = new ReweightReportService();
+
+        $filters = [
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
+            'livestock_type_id' => $this->livestock_type_id,
+            'livestock_breed_id' => $this->livestock_breed_id,
+            'pen_id' => $this->pen_id,
+            'livestock_id' => $this->livestock_id,
+        ];
+
+        $query = $service->getQuery($this->farm->id, $filters);
+        $data = $query->latest('id')->paginate(50);
+
+        $transformedCollection = $data->getCollection()->map(function ($item) {
+            return (new ReweightReportResource($item))->resolve();
+        });
+        $data->setCollection($transformedCollection);
+
         return view('livewire.reports.care-livestock.reweight-report.index', [
-            'pens' => $this->farm->pens()->orderBy('name')->get(),
-            // Get all active livestocks for filter
-            'livestocks' => $this->farm->livestocks()
-            ->orderBy('eartag_number')
-            ->get(),
-            'reweights' => $this->reweights,
-            'stats' => $this->statistics,
+            'data' => $data,
         ])
             ->extends('layouts.care_livestock.index')
             ->section('content');
