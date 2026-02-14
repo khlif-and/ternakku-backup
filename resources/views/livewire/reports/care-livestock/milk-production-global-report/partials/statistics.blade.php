@@ -6,7 +6,7 @@
         <div class="flex justify-between items-start relative z-10">
             <div>
                 <p class="text-blue-100 text-sm font-medium mb-1">Total Produksi Susu</p>
-                <h3 class="text-3xl font-bold">{{ number_format($stats['total_milk'] ?? 0, 2, ',', '.') }} <span
+                <h3 class="text-3xl font-bold">{{ number_format($stats['total_production'] ?? 0, 2, ',', '.') }} <span
                         class="text-lg font-normal">Liter</span></h3>
                 <p class="text-blue-200 text-xs mt-1">periode terpilih</p>
             </div>

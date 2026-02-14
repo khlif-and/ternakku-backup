@@ -1,25 +1,20 @@
-<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-    {{-- Avg Fat --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-        <p class="text-sm font-medium text-gray-500">Rata-rata Lemak (Fat)</p>
-        <p class="text-2xl font-bold text-gray-800 mt-1">{{ number_format($stats['avg_fat'] ?? 0, 2) }} %</p>
+@if($showReport && !empty($summary))
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 flex flex-col items-center justify-center">
+            <span class="text-sm font-medium text-gray-500 mb-1">Rata-rata Lemak</span>
+            <span class="text-3xl font-bold text-emerald-600">{{ number_format($summary['avg_fat'], 2) }}%</span>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 flex flex-col items-center justify-center">
+            <span class="text-sm font-medium text-gray-500 mb-1">Rata-rata SNF</span>
+            <span class="text-3xl font-bold text-blue-600">{{ number_format($summary['avg_snf'], 2) }}%</span>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 flex flex-col items-center justify-center">
+            <span class="text-sm font-medium text-gray-500 mb-1">Rata-rata Protein</span>
+            <span class="text-3xl font-bold text-purple-600">{{ number_format($summary['avg_protein'], 2) }}%</span>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 flex flex-col items-center justify-center">
+            <span class="text-sm font-medium text-gray-500 mb-1">Rata-rata BJ</span>
+            <span class="text-3xl font-bold text-orange-600">{{ number_format($summary['avg_bj'], 2) }}</span>
+        </div>
     </div>
-
-    {{-- Avg SNF --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-        <p class="text-sm font-medium text-gray-500">Rata-rata SNF</p>
-        <p class="text-2xl font-bold text-gray-800 mt-1">{{ number_format($stats['avg_snf'] ?? 0, 2) }} %</p>
-    </div>
-
-    {{-- Avg Protein --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-        <p class="text-sm font-medium text-gray-500">Rata-rata Protein</p>
-        <p class="text-2xl font-bold text-gray-800 mt-1">{{ number_format($stats['avg_protein'] ?? 0, 2) }} %</p>
-    </div>
-
-    {{-- Avg BJ --}}
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
-        <p class="text-sm font-medium text-gray-500">Rata-rata BJ</p>
-        <p class="text-2xl font-bold text-gray-800 mt-1">{{ number_format($stats['avg_bj'] ?? 0, 4) }}</p>
-    </div>
-</div>
+@endif

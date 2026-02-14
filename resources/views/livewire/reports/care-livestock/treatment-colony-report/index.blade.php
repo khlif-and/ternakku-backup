@@ -27,6 +27,24 @@
                 </div>
             </div>
 
+            {{-- Export Button --}}
+            <div class="flex justify-end mb-4">
+                <a href="{{ route('admin.care-livestock.treatment-colony-report.export-pdf', [
+    'farm_id' => $farmId,
+    'start_date' => $start_date,
+    'end_date' => $end_date,
+    'pen_id' => $pen_id
+]) }}" target="_blank"
+                    class="inline-flex items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:ring ring-red-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 011.414.586l4 4a1 1 0 01.586 1.414V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Export PDF
+                </a>
+            </div>
+
             {{-- Filter Section --}}
             @include('livewire.reports.care-livestock.treatment-colony-report.partials.filter')
 

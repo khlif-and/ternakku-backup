@@ -1,33 +1,5 @@
 <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-6">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
-        {{-- Pen Selection --}}
-        <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Kandang</label>
-            <select wire:model.live="pen_id"
-                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm">
-                <option value="">Semua Kandang</option>
-                @foreach($pens as $pen)
-                    <option value="{{ $pen->id }}">{{ $pen->name }}</option>
-                @endforeach
-            </select>
-        </div>
-
-        {{-- Livestock Selection --}}
-        <div>
-            <label class="block text-sm font-semibold text-gray-700 mb-2">Ternak</label>
-            <select wire:model="livestock_id"
-                class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm"
-                @if(!$pen_id) disabled @endif>
-                <option value="">Semua Ternak</option>
-                @foreach($livestocks as $livestock)
-                    <option value="{{ $livestock->id }}">{{ $livestock->eartag }} - {{ $livestock->name }}</option>
-                @endforeach
-            </select>
-            @if(!$pen_id)
-                <p class="text-xs text-gray-500 mt-1">Pilih kandang terlebih dahulu</p>
-            @endif
-        </div>
-
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
         {{-- Start Date --}}
         <div>
             <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Mulai</label>
@@ -40,6 +12,12 @@
             <label class="block text-sm font-semibold text-gray-700 mb-2">Tanggal Akhir</label>
             <input type="date" wire:model="end_date"
                 class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 sm:text-sm transition duration-150 ease-in-out">
+        </div>
+
+        {{-- Livestock Filter --}}
+        <div>
+            <x-form.select label="Pilih Ternak" name="livestock_id" wire:model="livestock_id"
+                :options="$livestockOptions" placeholder="Semua Ternak" />
         </div>
 
         {{-- Filter Button --}}

@@ -89,32 +89,67 @@ Route::get('care-livestock/{farm_id}/report/treatment-colony', \App\Livewire\Rep
     ->middleware('check.farm.access')
     ->name('admin.care-livestock.treatment-colony-report.index');
 
-// Treatment Individu Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/treatment-individu', \App\Livewire\Reports\CareLivestock\TreatmentIndividuReport\Index::class)
+Route::get('care-livestock/{farm_id}/report/treatment-colony/export-pdf', [\App\Services\Web\Report\TreatmentColony\Controllers\TreatmentColonyReportController::class, 'exportPdf'])
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.treatment-individu-report.index');
+    ->name('admin.care-livestock.treatment-colony-report.export-pdf');
 
-// Milk Production Global Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/milk-production-global', \App\Livewire\Reports\CareLivestock\MilkProductionGlobalReport\Index::class)
+Route::get('care-livestock/{farm_id}/report/treatment-colony/export-pdf/{id}', [\App\Services\Web\Report\TreatmentColony\Controllers\TreatmentColonyReportController::class, 'exportRowPdf'])
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.milk-production-global-report.index');
+    ->name('admin.care-livestock.treatment-colony-report.export-row-pdf');
+
+// Treatment Individu Report (Livewire-based)
+Route::prefix('care-livestock/{farm_id}/report/treatment-individu')
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.treatment-individu-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\TreatmentIndividuReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\TreatmentIndividu\Controllers\TreatmentIndividuReportController::class, 'exportPdf'])->name('export-pdf');
+        Route::get('/export-row-pdf/{id}', [\App\Services\Web\Report\TreatmentIndividu\Controllers\TreatmentIndividuReportController::class, 'exportRowPdf'])->name('export-row-pdf');
+    });
+
+
+Route::prefix('care-livestock/{farm_id}/report/milk-production-global')
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.milk-production-global-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\MilkProductionGlobalReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\MilkProductionGlobal\Controllers\MilkProductionGlobalReportController::class, 'exportPdf'])->name('export-pdf');
+        Route::get('/export-row-pdf/{id}', [\App\Services\Web\Report\MilkProductionGlobal\Controllers\MilkProductionGlobalReportController::class, 'exportRowPdf'])->name('export-row-pdf');
+    });
 
 // Milk Production Individu Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/milk-production-individu', \App\Livewire\Reports\CareLivestock\MilkProductionIndividuReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/milk-production-individu')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.milk-production-individu-report.index');
+    ->name('admin.care-livestock.milk-production-individu-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\MilkProductionIndividuReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\MilkProductionIndividu\Controllers\MilkProductionIndividuReportController::class, 'exportPdf'])->name('export-pdf');
+        Route::get('/export-row-pdf/{id}', [\App\Services\Web\Report\MilkProductionIndividu\Controllers\MilkProductionIndividuReportController::class, 'exportRowPdf'])->name('export-row-pdf');
+    });
 
 // Milk Analysis Global Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/milk-analysis-global', \App\Livewire\Reports\CareLivestock\MilkAnalysisGlobalReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/milk-analysis-global')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.milk-analysis-global-report.index');
+    ->name('admin.care-livestock.milk-analysis-global-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\MilkAnalysisGlobalReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\MilkAnalysisGlobal\Controllers\MilkAnalysisGlobalReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Milk Analysis Individu Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/milk-analysis-individu', \App\Livewire\Reports\CareLivestock\MilkAnalysisIndividuReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/milk-analysis-individu')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.milk-analysis-individu-report.index');
+    ->name('admin.care-livestock.milk-analysis-individu-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\MilkAnalysisIndividuReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\MilkAnalysisIndividu\Controllers\MilkAnalysisIndividuReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Sales Livestock Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/sales-livestock', \App\Livewire\Reports\CareLivestock\SalesLivestockReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/sales-livestock')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.sales-livestock-report.index');
+    ->name('admin.care-livestock.sales-livestock-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\SalesLivestockReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\SalesLivestock\Controllers\SalesLivestockReportController::class, 'exportPdf'])->name('export-pdf');
+    });

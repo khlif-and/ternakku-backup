@@ -32,6 +32,9 @@
                         class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Obat / Tindakan
                     </th>
+                    <th scope="col" class="relative px-6 py-3">
+                        <span class="sr-only">Actions</span>
+                    </th>
                 </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -41,47 +44,59 @@
                             {{ $treatments->firstItem() + $index }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 align-top font-medium">
-                            {{ \Carbon\Carbon::parse($item->treatmentH->transaction_date)->format('d/m/Y') }}
+                            {{ \Carbon\Carbon::parse($item['transaction_date'])->format('d/m/Y') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 align-top">
-                            {{ $item->pen->name ?? '-' }}
+                            {{ $item['pen_name'] }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 align-top">
-                            {{ $item->disease->name ?? '-' }}
+                            {{ $item['disease_name'] }}
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500 align-top">
                             {{-- Obat --}}
-                            @if($item->treatmentColonyMedicineItems->isNotEmpty())
+                            @if(count($item['medicine_items']) > 0)
                                 <div class="mb-2">
                                     <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Obat:</span>
                                     <ul class="list-disc list-inside mt-1">
-                                        @foreach($item->treatmentColonyMedicineItems as $med)
-                                            <li>{{ $med->name }} ({{ $med->qty }} {{ $med->uoms['name'] ?? '' }})</li>
+                                        @foreach($item['medicine_items'] as $med)
+                                            <li>{{ $med['name'] }} ({{ $med['qty'] }} {{ $med['uom'] }})</li>
                                         @endforeach
                                     </ul>
                                 </div>
                             @endif
 
                             {{-- Tindakan --}}
-                            @if($item->treatmentColonyTreatmentItems->isNotEmpty())
+                            @if(count($item['treatment_items']) > 0)
                                 <div>
                                     <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Tindakan:</span>
                                     <ul class="list-disc list-inside mt-1">
-                                        @foreach($item->treatmentColonyTreatmentItems as $act)
-                                            <li>{{ $act->name }}</li>
+                                        @foreach($item['treatment_items'] as $act)
+                                            <li>{{ $act['name'] }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
                             @endif
 
-                            @if($item->treatmentColonyMedicineItems->isEmpty() && $item->treatmentColonyTreatmentItems->isEmpty())
+                            @if(count($item['medicine_items']) == 0 && count($item['treatment_items']) == 0)
                                 <span class="text-gray-400 italic">Tidak ada detail</span>
                             @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <a href="{{ route('admin.care-livestock.treatment-colony-report.export-row-pdf', ['farm_id' => $farmId, 'id' => $item['id']]) }}"
+                                target="_blank"
+                                class="text-red-600 hover:text-red-900 bg-red-50 hover:bg-red-100 px-3 py-1 rounded-md transition-colors duration-150 flex items-center justify-center w-fit ml-auto">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 011.414.586l4 4a1 1 0 01.586 1.414V19a2 2 0 01-2 2z" />
+                                </svg>
+                                PDF
+                            </a>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="px-6 py-10 text-center text-gray-500">
+                        <td colspan="6" class="px-6 py-10 text-center text-gray-500">
                             <div class="flex flex-col items-center justify-center">
                                 <svg class="h-12 w-12 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
