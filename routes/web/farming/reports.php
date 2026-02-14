@@ -9,34 +9,60 @@ use App\Http\Controllers\Admin\Report\CareLivestock\Natural_Inseminasi_Report_Co
 /* |-------------------------------------------------------------------------- | Care Livestock Reports Routes |-------------------------------------------------------------------------- */
 
 // Pen Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/pen', [Pen_Report_Controller::class, 'index'])
+Route::prefix('care-livestock/{farm_id}/report/pen-report')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.pen-report.index');
+    ->name('admin.care-livestock.pen-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\PenReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\Pen\Controllers\PenReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Mutation Individu Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/mutation-individu', \App\Livewire\Reports\CareLivestock\MutationIndividuReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/mutation-individu')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.mutation-individu-report.index');
+    ->name('admin.care-livestock.mutation-individu-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\MutationIndividuReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\MutationIndividu\Controllers\MutationIndividuReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Artificial Inseminasi Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/artificial-inseminasi', \App\Livewire\Reports\CareLivestock\ArtificialInseminasiReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/artificial-inseminasi')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.artificial-inseminasi-report.index');
+    ->name('admin.care-livestock.artificial-inseminasi-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\ArtificialInseminationReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\ArtificialInsemination\Controllers\ArtificialInseminationReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Natural Inseminasi Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/natural-inseminasi', \App\Livewire\Reports\CareLivestock\NaturalInseminasiReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/natural-inseminasi')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.natural-inseminasi-report.index');
+    ->name('admin.care-livestock.natural-inseminasi-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\NaturalInseminationReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\NaturalInsemination\Controllers\NaturalInseminationReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Feed & Medicine Purchase Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/feed-medicine-purchase', \App\Livewire\Reports\CareLivestock\FeedMedicinePurchaseReport\Index::class)
+// Feed & Medicine Purchase Report (Livewire-based)
+Route::prefix('care-livestock/{farm_id}/report/feed-medicine-purchase')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.feed-medicine-purchase-report.index');
+    ->name('admin.care-livestock.feed-medicine-purchase-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\FeedMedicinePurchaseReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\FeedMedicinePurchase\Controllers\FeedMedicinePurchaseReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Reweighing Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/reweight', \App\Livewire\Reports\CareLivestock\ReweightReport\Index::class)
+// Reweighing Report (Livewire-based)
+Route::prefix('care-livestock/{farm_id}/report/reweight')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.reweight-report.index');
+    ->name('admin.care-livestock.reweight-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\ReweightReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\Reweight\Controllers\ReweightReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Pregnancy Check Report (Livewire-based)
 Route::get('care-livestock/{farm_id}/report/pregnant-check', \App\Livewire\Reports\CareLivestock\PregnantCheckReport\Index::class)

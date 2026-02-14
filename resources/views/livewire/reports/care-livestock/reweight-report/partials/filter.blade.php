@@ -1,37 +1,30 @@
-<div class="bg-white rounded-xl shadow-sm border p-6 mb-6">
-    <h2 class="text-lg font-bold text-gray-800 mb-4">Filter Laporan Timbang Ulang</h2>
-    
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div>
-            <x-form.select 
-                wire:model="pen_id" 
-                label="Pilih Kandang" 
-                placeholder="-- Semua Kandang --"
-                :options="$pens->mapWithKeys(fn($pen) => [$pen->id => $pen->name])->toArray()"
-            />
+<div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 mb-5">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 items-end">
+        <div class="w-full">
+            <x-form.date label="Tanggal Mulai" wire:model="start_date" />
         </div>
-
-        <div>
-             <x-form.select 
-                wire:model="livestock_id" 
-                label="Pilih Ternak" 
-                placeholder="-- Semua Ternak --"
-                :options="$livestocks->mapWithKeys(fn($l) => [$l->id => ($l->eartag_number ?? $l->code) . ' - ' . ($l->livestockType->name ?? '')])->toArray()"
-            />
+        <div class="w-full">
+            <x-form.date label="Tanggal Akhir" wire:model="end_date" />
         </div>
-
-        <div>
-            <x-form.date wire:model="start_date" label="Dari Tanggal" />
+        <div class="w-full">
+            <x-form.select label="Kandang" wire:model.live="pen_id" :options="$pens" placeholder="Semua Kandang" />
         </div>
-
-        <div>
-            <x-form.date wire:model="end_date" label="Sampai Tanggal" />
+        <div class="w-full">
+            <x-form.select label="Tipe Ternak" wire:model.live="livestock_type_id" :options="$livestockTypes"
+                placeholder="Semua Tipe" />
+        </div>
+        <div class="w-full">
+            <x-form.select label="Bangsa Ternak" wire:model.live="livestock_breed_id" :options="$livestockBreeds"
+                placeholder="Semua Bangsa" />
+        </div>
+        <div class="w-full">
+            <x-form.select label="Eartag Ternak" wire:model.live="livestock_id" :options="$livestocks"
+                placeholder="Semua Ternak" />
         </div>
     </div>
-
-    <div class="mt-4 flex justify-end gap-2">
-        <button wire:click="generateReport" class="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition font-medium">
-            Tampilkan Laporan
+    <div class="mt-4 flex justify-end">
+        <button wire:click="generateReport" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            Terapkan Filter
         </button>
     </div>
 </div>

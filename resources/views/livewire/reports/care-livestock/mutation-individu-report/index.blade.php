@@ -1,15 +1,37 @@
-<div class="p-4 sm:p-6 bg-gray-50 min-h-screen">
-    <div class="mb-6">
-        <h3 class="font-bold text-2xl text-gray-800">Laporan Mutasi Individu</h3>
-        <p class="text-gray-500 mt-1">Laporan lengkap riwayat perpindahan ternak antar kandang.</p>
-    </div>
+@section('title', 'Laporan Mutasi Individu')
 
-    <x-alert.session />
+<div>
+    <x-admin.feature-card title="Laporan Mutasi Individu" :breadcrumbs="[
+        ['label' => 'Care Livestock', 'route' => 'admin.care-livestock.index'],
+        ['label' => 'Laporan', 'route' => ''],
+        ['label' => 'Mutasi Individu', 'route' => ''],
+    ]">
 
-    @include('livewire.reports.care-livestock.mutation-individu-report.partials.filter')
+        <div class="space-y-6">
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-r-lg">
+                <div class="flex">
+                    <div class="flex-shrink-0">
+                        <svg class="h-5 w-5 text-blue-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <div class="ml-3">
+                        <p class="text-sm text-blue-700">
+                            Laporan ini menampilkan riwayat perpindahan ternak antar kandang.
+                        </p>
+                    </div>
+                </div>
+            </div>
 
-    @if ($showReport)
-        @include('livewire.reports.care-livestock.mutation-individu-report.partials.statistics')
-        @include('livewire.reports.care-livestock.mutation-individu-report.partials.table')
-    @endif
+            @include('livewire.reports.care-livestock.mutation-individu-report.partials.filter')
+
+            <div class="card p-5 border-none shadow-none">
+                @include('livewire.reports.care-livestock.mutation-individu-report.partials.table')
+            </div>
+
+        </div>
+    </x-admin.feature-card>
 </div>
