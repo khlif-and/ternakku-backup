@@ -1,72 +1,108 @@
-<div class="bg-white rounded-xl shadow-sm border overflow-hidden">
-    @php
-        $headers = [
-            ['label' => 'Tanggal & Indukan', 'class' => 'text-left'],
-            ['label' => 'Detail Kelahiran (Anak)', 'class' => 'text-left'],
-            ['label' => 'Total Biaya', 'class' => 'text-right'],
-            ['label' => 'Catatan', 'class' => 'text-left'],
-        ];
-    @endphp
-    
-    <div class="p-6">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">Riwayat Kelahiran</h3>
-        <x-table.wrapper :headers="$headers">
-            @forelse ($births as $item)
-                <tr class="hover:bg-gray-50 align-top">
-                    <td class="px-4 py-3">
-                        <div class="font-medium text-gray-900">
-                             {{ \Carbon\Carbon::parse($item->transaction_date)->format('d M Y') }}
-                        </div>
-                        <div class="mt-1 font-medium text-emerald-700">
-                             Induk: {{ $item->reproductionCycle->livestock->eartag_number ?? $item->reproductionCycle->livestock->code ?? '-' }}
-                        </div>
-                        <div class="text-xs text-gray-500">
-                             {{ $item->reproductionCycle->livestock->pen->name ?? '-' }}
-                        </div>
-                         <div class="text-xs text-gray-500 mt-1">
-                             Petugas: {{ $item->officer_name ?? '-' }}
-                        </div>
-                    </td>
-                    <td class="px-4 py-3">
-                        <ul class="text-sm space-y-2">
-                            @forelse($item->livestockBirthD as $detail)
-                                <li class="flex items-center gap-2 border-b border-gray-100 pb-1 last:border-0 last:pb-0">
-                                    <span class="px-1.5 py-0.5 rounded text-xs font-bold {{ $detail->status == 'alive' ? 'bg-emerald-100 text-emerald-700' : 'bg-red-100 text-red-700' }}">
-                                        {{ $detail->status == 'alive' ? 'HIDUP' : 'MATI' }}
-                                    </span>
-                                    <span class="text-gray-700">
-                                         #{{ $detail->birth_order }} 
-                                         ({{ $detail->livestock_sex_id == 1 ? 'Jantan' : ($detail->livestock_sex_id == 2 ? 'Betina' : '?') }})
-                                    </span>
-                                    <span class="text-gray-500 text-xs">
-                                        {{ number_format($detail->weight, 2, ',', '.') }} kg
-                                    </span>
-                                    @if($detail->disease_id)
-                                        <span class="text-red-500 text-xs italic">Sakit</span>
-                                    @endif
-                                </li>
-                            @empty
-                                <li class="text-gray-500 italic text-xs">Tidak ada data detail anak.</li>
-                            @endforelse
-                        </ul>
-                    </td>
-                    <td class="px-4 py-3 text-right font-bold text-gray-800">
-                        Rp {{ number_format($item->cost, 0, ',', '.') }}
-                    </td>
-                     <td class="px-4 py-3 text-gray-600 italic text-sm">
-                        {{ $item->notes ?? '-' }}
-                         @if($item->status == 'ABORTUS')
-                             <span class="block text-red-600 font-bold mt-1 text-xs">ABORTUS</span>
-                         @endif
-                    </td>
-                </tr>
-            @empty
-                <x-table.empty colspan="4" empty="Tidak ada data kelahiran pada periode ini." />
-            @endforelse
-        </x-table.wrapper>
-
-        <div class="mt-4">
-            {{ $births instanceof \Illuminate\Pagination\LengthAwarePaginator ? $births->links() : '' }}
+<div class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+        <h3 class="text-lg font-semibold text-gray-800">Riwayat Kelahiran</h3>
+        <div class="flex space-x-2">
+            <a href="{{ route('admin.care-livestock.birth-report.export-pdf', ['farm_id' => $farm->id] + request()->query()) }}"
+                target="_blank"
+                class="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
+                Export PDF
+            </a>
         </div>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Tanggal
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        No. Transaksi
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Induk (Eartag)
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Anak Ke-
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Jenis Kelamin
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Berat (kg)
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Kondisi
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Pemeriksa
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                @forelse ($data as $item)
+                    <tr class="hover:bg-gray-50 transition-colors duration-200">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {{ \Carbon\Carbon::parse($item['transaction_date'])->format('d/m/Y') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {{ $item['transaction_number'] }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {{ $item['mother_livestock']['eartag'] }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {{ $item['birth_order'] }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {{ $item['livestock_sex'] }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {{ number_format($item['weight'], 2, ',', '.') }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm">
+                            @if ($item['status'] === 'alive')
+                                <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    Hidup
+                                </span>
+                            @else
+                                <span
+                                    class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                    Mati
+                                </span>
+                            @endif
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                            {{ $item['officer_name'] ?? '-' }}
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="px-6 py-10 text-center text-gray-500">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="h-12 w-12 text-gray-300 mb-3" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                </svg>
+                                <p class="text-base font-medium text-gray-900">Tidak ada data kelahiran ditemukan</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+    <div class="px-6 py-4 border-t border-gray-200">
+        {{ $data->links() }}
     </div>
 </div>

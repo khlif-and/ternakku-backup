@@ -9,7 +9,7 @@
     <x-sidebar.menu-link :href="route('admin.care-livestock.feed-medicine-purchase-report.index', ['farm_id' => $farm->id])" label="Laporan Pembelian Pakan & Obat" />
     <x-sidebar.menu-link :href="route('admin.care-livestock.reweight-report.index', ['farm_id' => $farm->id])"
         label="Laporan Timbang Ulang" />
-    <x-sidebar.menu-link :href="route('admin.care-livestock.pregnant-check-report.index', ['farm_id' => $farm->id])"
+    <x-sidebar.menu-link :href="route('admin.care-livestock.pregnancy-check-report.index', ['farm_id' => $farm->id])"
         label="Laporan Cek Kehamilan" />
     <x-sidebar.menu-link :href="route('admin.care-livestock.birth-report.index', ['farm_id' => $farm->id])"
         label="Laporan Kelahiran" />
