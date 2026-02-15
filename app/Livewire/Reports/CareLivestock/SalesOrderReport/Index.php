@@ -32,8 +32,17 @@ class Index extends Component
         'livestock_type_id',
     ];
 
-    public function mount($farm_id)
+    public function mount($farm_id = null)
     {
+        if (!$farm_id) {
+            $farm_id = session('selected_farm');
+        }
+
+        if (!$farm_id) {
+            // Fallback or error handling
+            abort(404, 'Farm Selection Required');
+        }
+
         $this->farm = Farm::findOrFail($farm_id);
         $this->start_date = request('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $this->end_date = request('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
@@ -83,7 +92,7 @@ class Index extends Component
         return view('livewire.reports.care-livestock.sales-order-report.index', [
             'data' => $data,
         ])
-            ->extends('layouts.care_livestock.index')
+            ->extends(request()->is('qurban*') ? 'layouts.qurban.index' : 'layouts.care_livestock.index')
             ->section('content');
     }
 }

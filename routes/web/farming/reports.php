@@ -126,6 +126,15 @@ Route::get('care-livestock/{farm_id}/report/feeding-individu-supply/export-pdf/{
     ->middleware('check.farm.access')
     ->name('admin.care-livestock.feeding-individu-supply-report.export-row-pdf');
 
+// Qurban Population Report (Livewire-based)
+Route::prefix('care-livestock/{farm_id}/report/qurban-population')
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.qurban-population-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\QurbanPopulationReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\QurbanPopulation\Controllers\QurbanPopulationReportController::class, 'exportPdf'])->name('export-pdf');
+    });
+
 // Treatment Colony Report (Livewire-based)
 Route::get('care-livestock/{farm_id}/report/treatment-colony', \App\Livewire\Reports\CareLivestock\TreatmentColonyReport\Index::class)
     ->middleware('check.farm.access')

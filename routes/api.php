@@ -22,7 +22,7 @@ Route::group([
     Route::group([
         'prefix' => 'qurban/price/{farm_id}',
         'controller' => App\Http\Controllers\Api\Qurban\PriceController::class,
-    ], function(){
+    ], function () {
         Route::get('/', 'index');
         Route::post('/estimation', 'getEstimationPrice');
         Route::post('/', 'store')->middleware(['auth:api', 'farmer', 'check.farm.access:OWNER,ADMIN']);
@@ -39,7 +39,7 @@ Route::group([
         Route::post('forgot-password', 'forgotPassword');
         Route::post('forgot-password/reset', 'resetPassword');
 
-        Route::middleware(['auth:api', 'email.verified',])->group(function() {
+        Route::middleware(['auth:api', 'email.verified',])->group(function () {
             Route::get('me', 'me');
             Route::post('logout', 'logout');
             Route::post('update-profile', 'updateProfile');
@@ -72,7 +72,7 @@ Route::group([
             Route::get('/', 'index');
         });
 
-        Route::middleware(['auth:api', 'email.verified'])->group(function() {
+        Route::middleware(['auth:api', 'email.verified'])->group(function () {
             Route::group(['prefix' => 'saving', 'controller' => App\Http\Controllers\Api\Qurban\SavingController::class], function () {
                 Route::get('/register', 'index');
                 Route::post('/register', 'register');
@@ -111,10 +111,10 @@ Route::group([
                 'prefix' => 'customer/{farm_id}',
                 'controller' => App\Http\Controllers\Api\Qurban\CustomerController::class,
                 'middleware' => [
-                    'check.farm.access:OWNER,ADMIN,MARKETING' , 
+                    'check.farm.access:OWNER,ADMIN,MARKETING',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::get('/', 'index');
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
@@ -123,7 +123,7 @@ Route::group([
 
                 Route::group([
                     'prefix' => '{customer_id}/address',
-                ], function(){
+                ], function () {
                     Route::get('/', 'addressIndex');
                     Route::post('/', 'addressStore');
                     Route::get('{id}', 'addressShow');
@@ -139,7 +139,7 @@ Route::group([
                     'check.farm.access:OWNER,ADMIN',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::get('/', 'index');
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
@@ -154,7 +154,7 @@ Route::group([
                     'check.farm.access:OWNER,ADMIN',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::get('/', 'index');
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
@@ -169,7 +169,7 @@ Route::group([
                     'check.farm.access:OWNER,ADMIN,MARKETING',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::get('/', 'index');
                 Route::post('/', 'store');
                 Route::get('{id}/detail', 'show');
@@ -184,7 +184,7 @@ Route::group([
                     'check.farm.access:OWNER,ADMIN,MARKETING',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::get('/available-livestock', 'availableLivestock');
                 Route::get('/', 'index');
                 Route::post('/', 'store');
@@ -200,7 +200,7 @@ Route::group([
                     'check.farm.access:OWNER,ADMIN',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::get('/', 'index');
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
@@ -215,7 +215,7 @@ Route::group([
                     'check.farm.access:OWNER,ADMIN',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::get('/', 'index');
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
@@ -230,7 +230,7 @@ Route::group([
                     'check.farm.access:OWNER,ADMIN',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::get('/', 'index');
                 Route::post('/', 'store');
                 Route::get('{id}', 'show');
@@ -245,12 +245,22 @@ Route::group([
                     'check.farm.access:OWNER,ADMIN',
                     'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
                 ],
-            ], function(){
+            ], function () {
                 Route::post('/', 'store');
                 Route::get('/', 'index');
                 Route::get('/{id}', 'show');
                 Route::post('/{id}/ready-to-deliver', 'setReadyToDeliver');
                 Route::delete('{id}', 'destroy');
+            });
+
+            Route::group([
+                'prefix' => 'report/{farm_id}',
+                'middleware' => [
+                    'check.farm.access:OWNER,ADMIN,MARKETING',
+                    'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
+                ],
+            ], function () {
+                Route::get('/sales-order', [App\Http\Controllers\Api\Qurban\Report\SalesOrderReportController::class, 'index']);
             });
         });
     });
@@ -270,9 +280,9 @@ Route::group([
 
         Route::get('bank', 'getBank');
 
-        Route::get('module' , 'getModule');
+        Route::get('module', 'getModule');
 
-        Route::get('module/{moduleId}' , 'getModuleDetail');
+        Route::get('module/{moduleId}', 'getModuleDetail');
 
     });
 
@@ -281,11 +291,11 @@ Route::group([
             Route::get('/', 'index');
         });
 
-        Route::group(['middleware' =>   ['auth:api', 'email.verified']], function(){
+        Route::group(['middleware' => ['auth:api', 'email.verified']], function () {
             Route::post('/farm', [App\Http\Controllers\Api\FarmController::class, 'store']);
 
-            Route::group(['middleware' => ['farmer']] ,  function(){
-                Route::group(['prefix' => 'farm'], function(){
+            Route::group(['middleware' => ['farmer']], function () {
+                Route::group(['prefix' => 'farm'], function () {
                     Route::get('/', [App\Http\Controllers\Api\FarmController::class, 'index']);
                     Route::get('/{farm_id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
                     Route::post('/{farm_id}/update', [App\Http\Controllers\Api\FarmController::class, 'update'])->middleware(['check.farm.access:OWNER']);
@@ -299,7 +309,7 @@ Route::group([
                 });
 
                 Route::group(['middleware' => ['check.farm.access']], function () {
-                    Route::group(['prefix' => 'dashboard','controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
+                    Route::group(['prefix' => 'dashboard', 'controller' => App\Http\Controllers\Api\Farming\DashboardController::class], function () {
                         Route::get('/{farm_id}/livestock-population-summary', 'livestockPopulationSummary');
                         Route::get('/{farm_id}/livestock', 'getLivestock');
                         Route::get('/{farm_id}/livestock/{id}', 'getDetailLivestock');
@@ -307,7 +317,7 @@ Route::group([
 
                     Route::group(['middleware' => ['subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value, SubscriptionEnum::FARMING_BASIC->value])]], function () {
 
-                        Route::group(['prefix' => 'pen','controller' => App\Http\Controllers\Api\Farming\PenController::class], function () {
+                        Route::group(['prefix' => 'pen', 'controller' => App\Http\Controllers\Api\Farming\PenController::class], function () {
                             Route::get('/{farm_id}', 'index');
                             Route::get('/{farm_id}/{pen_id}', 'show');
                             Route::post('/{farm_id}', 'store');
@@ -424,7 +434,7 @@ Route::group([
                         });
 
                         Route::group(['prefix' => 'reproduction'], function () {
-                            Route::get('get-female-livestock-data/{farm_id}/{livestock_id}' , [App\Http\Controllers\Api\Farming\ReproductionMasterController::class , 'getFemaleLivestockData']);
+                            Route::get('get-female-livestock-data/{farm_id}/{livestock_id}', [App\Http\Controllers\Api\Farming\ReproductionMasterController::class, 'getFemaleLivestockData']);
 
                             Route::group(['prefix' => 'artificial-insemination', 'controller' => App\Http\Controllers\Api\Farming\ArtificialInseminationController::class], function () {
                                 Route::get('/{farm_id}', 'index');
