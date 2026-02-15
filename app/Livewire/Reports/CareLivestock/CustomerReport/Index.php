@@ -5,89 +5,49 @@ namespace App\Livewire\Reports\CareLivestock\CustomerReport;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Farm;
-use App\Models\QurbanCustomer;
-use Illuminate\Support\Facades\Log;
+use App\Services\Web\Report\Customer\Services\CustomerReportService;
+use App\Services\Web\Report\Customer\Resources\CustomerReportResource;
 
 class Index extends Component
 {
     use WithPagination;
 
     public Farm $farm;
-    public $search = '';
-    public $showReport = false;
+    public $search;
 
-    public $statistics = [];
+    protected $queryString = [
+        'search',
+    ];
 
-    protected $queryString = ['search'];
-
-    public function mount(Farm $farm)
+    public function mount($farm_id)
     {
-        $this->farm = $farm;
-        $this->search = request('search', '');
-
-        // Auto load if parameters exist or just by default
-        $this->showReport = true;
+        $this->farm = Farm::findOrFail($farm_id);
+        $this->search = request('search');
     }
 
-    public function generateReport()
+    public function searchData()
     {
-        $this->showReport = true;
         $this->resetPage();
-    }
-
-    public function getCustomersProperty()
-    {
-        if (!$this->showReport) {
-            return [];
-        }
-
-        return QurbanCustomer::with(['user', 'salesOrders'])
-            ->where('farm_id', $this->farm->id)
-            ->when($this->search, function ($q) {
-            $q->whereHas('user', function ($u) {
-                    $u->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('phone_number', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
-                }
-                );
-            })
-            // Sort by user name
-            ->get()
-            ->sortBy(fn($c) => $c->user->name ?? '-')
-            ->toQuery()
-            ->paginate(10);
-    }
-
-    public function getStatisticsProperty()
-    {
-        if (!$this->showReport) {
-            return [];
-        }
-
-        $query = QurbanCustomer::where('farm_id', $this->farm->id)
-            ->when($this->search, function ($q) {
-            $q->whereHas('user', function ($u) {
-                    $u->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('phone_number', 'like', '%' . $this->search . '%')
-                        ->orWhere('email', 'like', '%' . $this->search . '%');
-                }
-                );
-            });
-
-        $totalCustomers = $query->count();
-        $totalOrders = $query->withCount('salesOrders')->get()->sum('sales_orders_count');
-
-        return [
-            'total_customers' => $totalCustomers,
-            'total_orders' => $totalOrders,
-        ];
     }
 
     public function render()
     {
+        $service = new CustomerReportService();
+
+        $filters = [
+            'search' => $this->search,
+        ];
+
+        $query = $service->getQuery($this->farm->id, $filters);
+        $data = $query->latest('id')->paginate(50);
+
+        $transformedCollection = $data->getCollection()->map(function ($item) {
+            return (new CustomerReportResource($item))->resolve();
+        });
+        $data->setCollection($transformedCollection);
+
         return view('livewire.reports.care-livestock.customer-report.index', [
-            'customers' => $this->customers,
-            'stats' => $this->statistics,
+            'data' => $data,
         ])
             ->extends('layouts.care_livestock.index')
             ->section('content');

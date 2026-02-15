@@ -65,24 +65,40 @@ Route::prefix('care-livestock/{farm_id}/report/reweight')
     });
 
 // Pregnancy Check Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/pregnant-check', \App\Livewire\Reports\CareLivestock\PregnantCheckReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/pregnancy-check')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.pregnant-check-report.index');
+    ->name('admin.care-livestock.pregnancy-check-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\PregnancyCheckReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\PregnancyCheck\Controllers\PregnancyCheckReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Birth Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/birth', \App\Livewire\Reports\CareLivestock\BirthReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/birth')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.birth-report.index');
+    ->name('admin.care-livestock.birth-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\BirthReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\Birth\Controllers\BirthReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Sales Order Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/sales-order', \App\Livewire\Reports\CareLivestock\SalesOrderReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/sales-order')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.sales-order-report.index');
+    ->name('admin.care-livestock.sales-order-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\SalesOrderReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\SalesOrder\Controllers\SalesOrderReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Customer Report (Livewire-based)
-Route::get('care-livestock/{farm_id}/report/customer', \App\Livewire\Reports\CareLivestock\CustomerReport\Index::class)
+Route::prefix('care-livestock/{farm_id}/report/customer')
     ->middleware('check.farm.access')
-    ->name('admin.care-livestock.customer-report.index');
+    ->name('admin.care-livestock.customer-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\CustomerReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\Customer\Controllers\CustomerReportController::class, 'exportPdf'])->name('export-pdf');
+    });
 
 // Feeding Colony Supply Report (Livewire-based)
 Route::get('care-livestock/{farm_id}/report/feeding-colony-supply', \App\Livewire\Reports\CareLivestock\FeedingColonySupplyReport\Index::class)
