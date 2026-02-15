@@ -30,8 +30,8 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
     require __DIR__ . '/web/qurban/qurban-fleet-tracking.php';
     require __DIR__ . '/web/qurban/qurban-livestock-delivery-note.php';
     require __DIR__ . '/web/qurban/qurban-delivery-order-data.php';
-    require __DIR__ . '/web/qurban/qurban-population-report.php';
     require __DIR__ . '/web/qurban/qurban-sales.php';
+    require __DIR__ . '/web/qurban/qurban-reports.php';
 
     Route::get('care-livestock', [CareLivestockController::class, 'index'])->name('care_livestock');
     Route::get('care-livestock/dashboard', function () {

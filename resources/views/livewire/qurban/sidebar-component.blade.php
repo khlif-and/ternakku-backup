@@ -179,7 +179,7 @@
 
                 @if($laporanOpen)
                     <div class="mt-2 bg-white rounded-md shadow px-3 py-2 text-gray-800 space-y-1">
-                        <a href="{{ route('qurban.population-report.index') }}"
+                        <a href="{{ route('admin.care-livestock.qurban-population-report.index', ['farm_id' => session('selected_farm') ?? 1]) }}"
                             class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
                             Laporan Populasi
                         </a>
