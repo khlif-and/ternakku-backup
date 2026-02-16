@@ -72,5 +72,16 @@
             </a>
         @endif
 
+        @if($isOwner || $isAdmin)
+            <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wide px-2 pt-2">
+                Penerimaan
+            </p>
+
+            <a href="{{ route('qurban.livestock-reception.index') }}"
+                class="block hover:bg-gray-100 px-3 py-1 rounded text-sm {{ request()->routeIs('qurban.livestock-reception.*') ? 'bg-gray-100 font-semibold' : '' }}">
+                Penerimaan Ternak Qurban
+            </a>
+        @endif
+
     </div>
 </li>

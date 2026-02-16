@@ -204,3 +204,28 @@ Route::prefix('care-livestock/{farm_id}/report/sales-livestock')
         Route::get('/', \App\Livewire\Reports\CareLivestock\SalesLivestockReport\Index::class)->name('index');
         Route::get('/export-pdf', [\App\Services\Web\Report\SalesLivestock\Controllers\SalesLivestockReportController::class, 'exportPdf'])->name('export-pdf');
     });
+
+// Qurban Sales Livestock Report (Livewire-based)
+Route::prefix('care-livestock/{farm_id}/report/qurban-sales-livestock')
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.qurban-sales-livestock-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\QurbanSalesLivestock\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\QurbanSalesLivestock\Controllers\QurbanSalesLivestockReportController::class, 'exportPdf'])->name('export-pdf');
+    });
+
+// Qurban Payment Report (Livewire-based)
+Route::prefix('care-livestock/{farm_id}/report/qurban-payment-report')
+    ->middleware('check.farm.access')
+    ->name('admin.care-livestock.qurban-payment-report.')
+    ->group(function () {
+        Route::get('/', \App\Livewire\Reports\CareLivestock\QurbanPaymentReport\Index::class)->name('index');
+        Route::get('/export-pdf', [\App\Services\Web\Report\QurbanPayment\Controllers\QurbanPaymentReportController::class, 'exportPdf'])->name('export-pdf');
+    });
+
+
+
+
+
+
+

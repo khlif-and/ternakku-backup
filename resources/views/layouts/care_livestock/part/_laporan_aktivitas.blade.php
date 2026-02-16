@@ -15,7 +15,9 @@
         label="Laporan Kelahiran" />
     <x-sidebar.menu-link :href="route('admin.care-livestock.sales-order-report.index', ['farm_id' => $farm->id])"
         label="Laporan Sales Order" />
+
     <x-sidebar.menu-link :href="route('admin.care-livestock.customer-report.index', ['farm_id' => $farm->id])"
         label="Laporan Pelanggan" />
+
 
 </x-sidebar.menu-group>

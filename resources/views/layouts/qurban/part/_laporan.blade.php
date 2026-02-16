@@ -15,35 +15,29 @@
             Laporan Populasi
         </a>
 
-        <a href="{{ url('qurban/report/sales-order') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Daftar Sales Order
-        </a>
+        <x-sidebar.menu-link :href="url('qurban/report/sales-order')"
+            :active="request()->is('qurban/report/sales-order*')" label="Laporan Penjualan Qurban" />
+        <x-sidebar.menu-link :href="url('qurban/report/sales-livestock')"
+            :active="request()->is('qurban/report/sales-livestock*')" label="Laporan Penjualan Ternak Qurban" />
+        <x-sidebar.menu-link :href="url('qurban/report/payment')" :active="request()->is('qurban/report/payment*')"
+            label="Laporan Penerimaan Pembayaran" />
 
-        <a href="{{ url('qurban/report/sales-livestock') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Daftar Penjualan Hewan Kurban
-        </a>
+        <x-sidebar.menu-link :href="route('qurban-cancelation-report.index')"
+            :active="request()->routeIs('qurban-cancelation-report.*')" label="Laporan Pembatalan Qurban" />
 
-        <a href="{{ url('qurban/report/payment') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Daftar Penerimaan Pembayaran
-        </a>
+        <x-sidebar.menu-link :href="route('qurban-delivery-order-report.index')"
+            :active="request()->routeIs('qurban-delivery-order-report.*')" label="Laporan Surat Jalan" />
 
-        <a href="{{ url('qurban/report/cancelation') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Daftar Pembatalan Penjualan
-        </a>
+        <x-sidebar.menu-link :href="route('qurban-delivery-report.index')"
+            :active="request()->routeIs('qurban-delivery-report.*')" label="Laporan Pengiriman Hewan" />
 
-        <a href="{{ url('qurban/report/surat-jalan') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Daftar Surat Jalan
-        </a>
-
-        <a href="{{ url('qurban/report/delivery') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
-            Daftar Pengiriman Hewan Kurban
-        </a>
-
-        <a href="{{ url('qurban/report/antar') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+        <a href="{{ route('qurban-detailed-delivery-report.index') }}"
+            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm {{ request()->routeIs('qurban-detailed-delivery-report.*') ? 'bg-gray-100 font-semibold' : '' }}">
             Daftar Pengantaran Hewan Kurban
         </a>
 
-        <a href="{{ url('qurban/report/penerimaan') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
+        <a href="{{ route('qurban-reception-report.index') }}"
+            class="block hover:bg-gray-100 px-3 py-1 rounded text-sm {{ request()->routeIs('qurban-reception-report.*') ? 'bg-gray-100 font-semibold' : '' }}">
             Daftar Penerimaan Hewan Kurban
         </a>
 

@@ -40,9 +40,9 @@ class SalesLivestockService
         return $query->get();
     }
 
-    public function getSalesLivestock($farmId , $salesLivestockId)
+    public function getSalesLivestock($farmId, $salesLivestockId)
     {
-        $salesLivestock = QurbanSaleLivestockH::where('farm_id', $farmId)->where('id' , $salesLivestockId)->first();
+        $salesLivestock = QurbanSaleLivestockH::where('farm_id', $farmId)->where('id', $salesLivestockId)->first();
 
         return $salesLivestock;
     }
@@ -65,9 +65,9 @@ class SalesLivestockService
 
             foreach ($request['details'] as $item) {
 
-                QurbanCustomerAddress::where('qurban_customer_id' , $request['customer_id'])->where('id' , $item['customer_address_id'])->firstOrFail();
+                QurbanCustomerAddress::where('qurban_customer_id', $request['customer_id'])->where('id', $item['customer_address_id'])->firstOrFail();
 
-                Livestock::where('farm_id' , $farm_id)->where('id' , $item['livestock_id'])->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)->firstOrFail();
+                Livestock::where('farm_id', $farm_id)->where('id', $item['livestock_id'])->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)->firstOrFail();
 
                 QurbanSaleLivestockD::create([
                     'qurban_sale_livestock_h_id' => $header->id,
@@ -105,7 +105,7 @@ class SalesLivestockService
         DB::beginTransaction();
 
         try {
-            $header = QurbanSaleLivestockH::where('farm_id' , $farmId)->where('id' , $id)->first();
+            $header = QurbanSaleLivestockH::where('farm_id', $farmId)->where('id', $id)->first();
 
             $header->update([
                 'qurban_customer_id' => $request['customer_id'],
@@ -116,9 +116,9 @@ class SalesLivestockService
             $header->qurbanSaleLivestockD()->delete();
 
             foreach ($request['details'] as $item) {
-                QurbanCustomerAddress::where('qurban_customer_id' , $request['customer_id'])->where('id' , $item['customer_address_id'])->firstOrFail();
+                QurbanCustomerAddress::where('qurban_customer_id', $request['customer_id'])->where('id', $item['customer_address_id'])->firstOrFail();
 
-                Livestock::where('farm_id' , $farmId)->where('id' , $item['livestock_id'])->where('livestock_status_id' , LivestockStatusEnum::HIDUP->value)->firstOrFail();
+                Livestock::where('farm_id', $farmId)->where('id', $item['livestock_id'])->where('livestock_status_id', LivestockStatusEnum::HIDUP->value)->firstOrFail();
 
                 QurbanSaleLivestockD::create([
                     'qurban_sale_livestock_h_id' => $header->id,
@@ -154,7 +154,7 @@ class SalesLivestockService
         $error = false;
 
         try {
-            $header = QurbanSaleLivestockH::where('farm_id' , $farmId)->where('id' , $id)->first();
+            $header = QurbanSaleLivestockH::where('farm_id', $farmId)->where('id', $id)->first();
 
             $header->qurbanSaleLivestockD()->delete();
 
