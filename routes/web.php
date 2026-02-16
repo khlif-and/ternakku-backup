@@ -46,6 +46,7 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
         ->name('admin.care-livestock.dashboard');
 
     require __DIR__ . '/web/farming/pens.php';
+    require __DIR__ . '/web/farming/farm-users.php';
     require __DIR__ . '/web/farming/reports.php';
     require __DIR__ . '/web/farming/livestock-reception.php';
     require __DIR__ . '/web/farming/sales-order.php';
