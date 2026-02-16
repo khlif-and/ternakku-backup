@@ -11,6 +11,23 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class SalesOrderReportController extends Controller
 {
+    public function index(Request $request, $farm_id)
+    {
+        $service = new SalesOrderReportService();
+        $filters = $request->all();
+
+        $query = $service->getQuery($farm_id, $filters);
+
+        // Pagination logic if needed, or just get all for report
+        $perPage = $request->input('per_page', 10);
+        $data = $query->paginate($perPage);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $data
+        ]);
+    }
+
     public function exportPdf(Request $request, $farm_id)
     {
         $farm = Farm::findOrFail($farm_id);

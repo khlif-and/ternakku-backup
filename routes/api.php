@@ -252,16 +252,6 @@ Route::group([
                 Route::post('/{id}/ready-to-deliver', 'setReadyToDeliver');
                 Route::delete('{id}', 'destroy');
             });
-
-            Route::group([
-                'prefix' => 'report/{farm_id}',
-                'middleware' => [
-                    'check.farm.access:OWNER,ADMIN,MARKETING',
-                    'subs:' . implode(',', [SubscriptionEnum::QURBAN_1446->value])
-                ],
-            ], function () {
-                Route::get('/sales-order', [App\Http\Controllers\Api\Qurban\Report\SalesOrderReportController::class, 'index']);
-            });
         });
     });
 
@@ -297,6 +287,7 @@ Route::group([
             Route::group(['middleware' => ['farmer']], function () {
                 Route::group(['prefix' => 'farm'], function () {
                     Route::get('/', [App\Http\Controllers\Api\FarmController::class, 'index']);
+
                     Route::get('/{farm_id}', [App\Http\Controllers\Api\FarmController::class, 'detail']);
                     Route::post('/{farm_id}/update', [App\Http\Controllers\Api\FarmController::class, 'update'])->middleware(['check.farm.access:OWNER']);
                     Route::delete('/{farm_id}', [App\Http\Controllers\Api\FarmController::class, 'destroy'])->middleware(['check.farm.access:OWNER']);

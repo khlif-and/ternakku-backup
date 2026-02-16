@@ -9,6 +9,5 @@
     <x-sidebar.menu-link :href="route('admin.care-livestock.milk-production-individu-report.index', ['farm_id' => $farm->id])" label="Laporan Produksi Susu Individu" />
     <x-sidebar.menu-link :href="route('admin.care-livestock.milk-analysis-global-report.index', ['farm_id' => $farm->id])" label="Laporan Analisis Susu Global" />
     <x-sidebar.menu-link :href="route('admin.care-livestock.milk-analysis-individu-report.index', ['farm_id' => $farm->id])" label="Laporan Analisis Susu Individu" />
-    <x-sidebar.menu-link :href="route('admin.care-livestock.sales-livestock-report.index', ['farm_id' => $farm->id])"
-        label="Laporan Penjualan Ternak" />
+    <x-sidebar.menu-link :href="route('admin.care-livestock.qurban-sales-livestock-report.index', ['farm_id' => $farm->id])" label="Laporan Penjualan Qurban" />
 </x-sidebar.menu-group>

@@ -26,7 +26,7 @@ class FeedingColonyController extends Controller
         $farm = request()->attributes->get('farm');
 
         $feedingColony = FeedingColonyD::whereHas('feedingH', function ($query) use ($farm, $request) {
-            $query->where('farm_id', $farm->id)->where('type' , 'colony');
+            $query->where('farm_id', $farm->id)->where('type', 'colony');
 
             // Filter berdasarkan start_date atau end_date dari transaction_number
             if ($request->filled('start_date')) {
@@ -72,14 +72,14 @@ class FeedingColonyController extends Controller
             DB::beginTransaction();  // Awal transaksional
 
             $feedingH = FeedingH::create([
-                'farm_id'          => $farm->id,
+                'farm_id' => $farm->id,
                 'transaction_date' => $validated['transaction_date'],
-                'type'             => 'colony',
-                'notes'            => $validated['notes'],
+                'type' => 'colony',
+                'notes' => $validated['notes'],
             ]);
 
             $feedingColonyD = FeedingColonyD::create([
-                'feeding_h_id' =>  $feedingH->id,
+                'feeding_h_id' => $feedingH->id,
                 'pen_id' => $validated['pen_id'],
                 'notes' => $validated['notes'] ?? null,
                 'total_livestock' => $totalLivestocks,
@@ -89,7 +89,7 @@ class FeedingColonyController extends Controller
 
             $totalCost = 0;
 
-            foreach($validated['items'] as $item){
+            foreach ($validated['items'] as $item) {
                 $totalPrice = $item['qty_kg'] * $item['price_per_kg'];
                 $totalCost += $totalPrice;
 
@@ -103,14 +103,14 @@ class FeedingColonyController extends Controller
                 ]);
             }
 
-            $averageCost =  $totalCost / $totalLivestocks;
+            $averageCost = $totalCost / $totalLivestocks;
 
             $feedingColonyD->update([
                 'total_cost' => $totalCost,
                 'average_cost' => $averageCost
             ]);
 
-            foreach($livestocks as $livestock){
+            foreach ($livestocks as $livestock) {
                 FeedingColonyLivestock::create([
                     'feeding_colony_d_id' => $feedingColonyD->id,
                     'livestock_id' => $livestock->id
@@ -120,13 +120,13 @@ class FeedingColonyController extends Controller
                     ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::FEEDING->value)
                     ->first();
 
-                if(!$livestockExpense){
+                if (!$livestockExpense) {
                     LivestockExpense::create([
-                        'livestock_id' =>  $livestock->id,
+                        'livestock_id' => $livestock->id,
                         'livestock_expense_type_id' => LivestockExpenseTypeEnum::FEEDING->value,
                         'amount' => $averageCost
                     ]);
-                }else{
+                } else {
                     $oldAmount = $livestockExpense->amount;
                     $livestockExpense->update(['amount' => $oldAmount + $averageCost]);
                 }
@@ -141,7 +141,7 @@ class FeedingColonyController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error( 'An error occurred while recording the data.', 500);
+            return ResponseHelper::error('An error occurred while recording the data.', 500);
         }
     }
 
@@ -150,20 +150,20 @@ class FeedingColonyController extends Controller
         $farm = request()->attributes->get('farm');
 
         $feedingColony = FeedingColonyD::whereHas('feedingH', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'colony');
+            $query->where('farm_id', $farm->id)->where('type', 'colony');
         })->findOrFail($feedingColonyId);
 
         return ResponseHelper::success(new FeedingColonyResource($feedingColony), 'Data retrieved successfully');
     }
 
-    public function update(FeedingColonyUpdateRequest $request, $farmId , $feedingColonyId)
+    public function update(FeedingColonyUpdateRequest $request, $farmId, $feedingColonyId)
     {
         $validated = $request->validated();
 
         $farm = request()->attributes->get('farm');
 
         $feedingColonyD = FeedingColonyD::whereHas('feedingH', function ($query) use ($farm) {
-            $query->where('farm_id', $farm->id)->where('type' , 'colony');
+            $query->where('farm_id', $farm->id)->where('type', 'colony');
         })->findOrFail($feedingColonyId);
 
         try {
@@ -173,14 +173,14 @@ class FeedingColonyController extends Controller
 
             $feedingH->update([
                 'transaction_date' => $validated['transaction_date'],
-                'notes'            => $validated['notes'] ?? null,
+                'notes' => $validated['notes'] ?? null,
             ]);
 
-            $livestocks =  $feedingColonyD->livestocks;
+            $livestocks = $feedingColonyD->livestocks;
 
             $totalLivestocks = count($livestocks);
 
-            foreach($livestocks as $livestock){
+            foreach ($livestocks as $livestock) {
                 $livestockExpenseOld = LivestockExpense::where('livestock_id', $livestock->id)
                     ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::FEEDING->value)
                     ->first();
@@ -214,26 +214,26 @@ class FeedingColonyController extends Controller
                 ]);
             }
 
-            $averageCost =  $totalCost / $totalLivestocks;
+            $averageCost = $totalCost / $totalLivestocks;
 
             $feedingColonyD->update([
                 'total_cost' => $totalCost,
                 'average_cost' => $averageCost
             ]);
 
-            foreach($livestocks as $livestock){
+            foreach ($livestocks as $livestock) {
                 // Step 6: Update the LivestockExpense with the new total cost
                 $livestockExpense = LivestockExpense::where('livestock_id', $livestock->id)
                     ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::FEEDING->value)
                     ->first();
 
-                if(!$livestockExpense){
+                if (!$livestockExpense) {
                     LivestockExpense::create([
                         'livestock_id' => $livestock->id,
                         'livestock_expense_type_id' => LivestockExpenseTypeEnum::FEEDING->value,
                         'amount' => $averageCost
                     ]);
-                }else{
+                } else {
                     $oldAmount = $livestockExpense->amount;
                     $livestockExpense->update(['amount' => $oldAmount + $averageCost]);
                 }
@@ -249,7 +249,7 @@ class FeedingColonyController extends Controller
             DB::rollBack();
 
             // Handle exceptions and return an error response
-            return ResponseHelper::error( 'An error occurred while updating the data.', 500);
+            return ResponseHelper::error('An error occurred while updating the data.', 500);
         }
     }
 
@@ -267,7 +267,7 @@ class FeedingColonyController extends Controller
 
             $livestocks = $feedingColonyD->livestocks;
 
-            foreach($livestocks as $livestock){
+            foreach ($livestocks as $livestock) {
                 $livestockExpense = LivestockExpense::where('livestock_id', $livestock->id)
                     ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::FEEDING->value)
                     ->first();
@@ -305,7 +305,7 @@ class FeedingColonyController extends Controller
             Log::error('Delete FeedingColony Error: ', ['error' => $e->getMessage()]);
 
             // Handle exceptions dan kembalikan respon error
-            return ResponseHelper::error( 'An error occurred while deleting the data.', 500);
+            return ResponseHelper::error('An error occurred while deleting the data.', 500);
         }
     }
 
