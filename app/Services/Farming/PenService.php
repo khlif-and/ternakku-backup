@@ -4,11 +4,10 @@ namespace App\Services\Farming;
 
 use App\Models\Pen;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 class PenService
 {
-    public function create(array $data, $farm, ?UploadedFile $photo = null): Pen
+    public function create(array $data, $farm, $photo = null): Pen
     {
         $pen = new Pen($data);
         $pen->farm_id = $farm->id;
@@ -22,14 +21,15 @@ class PenService
         return $pen;
     }
 
-    public function update(Pen $pen, array $data, ?UploadedFile $photo = null): Pen
+    public function update(Pen $pen, array $data, $photo = null): Pen
     {
         unset($data['photo']);
         $pen->update($data);
 
         if ($photo) {
-            if ($pen->photo && Storage::disk('public')->exists(str_replace('storage/', '', $pen->photo))) {
-                Storage::disk('public')->delete(str_replace('storage/', '', $pen->photo));
+            // Delete old photo from Neo bucket
+            if ($pen->photo) {
+                deleteNeoObject($pen->photo);
             }
 
             $pen->photo = $this->handleUpload($photo);
@@ -41,17 +41,16 @@ class PenService
 
     public function delete(Pen $pen): void
     {
-        if ($pen->photo && Storage::disk('public')->exists(str_replace('storage/', '', $pen->photo))) {
-            Storage::disk('public')->delete(str_replace('storage/', '', $pen->photo));
+        if ($pen->photo) {
+            deleteNeoObject($pen->photo);
         }
 
         $pen->delete();
     }
 
-    protected function handleUpload(UploadedFile $file): string
+    protected function handleUpload($file): string
     {
         $fileName = time() . '-' . $file->getClientOriginalName();
-        $file->storeAs('pens', $fileName, 'public');
-        return 'storage/pens/' . $fileName;
+        return uploadNeoObject($file, $fileName, 'pens/');
     }
 }

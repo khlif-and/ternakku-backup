@@ -16,9 +16,6 @@ Route::prefix('care-livestock/{farm_id}/pens')
     ->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
-        Route::post('/', 'store')->name('store');
         Route::get('/{pen_id}/edit', 'edit')->name('edit');
         Route::get('/{pen_id}', 'show')->name('show');
-        Route::put('/{pen_id}', 'update')->name('update');
-        Route::delete('/{pen_id}', 'destroy')->name('destroy');
     });

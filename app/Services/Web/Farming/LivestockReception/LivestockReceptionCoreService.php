@@ -128,9 +128,9 @@ class LivestockReceptionCoreService
         DB::transaction(function () use ($reception) {
             $header = $reception->livestockReceptionH;
 
-            // Delete photo if exists
-            if ($reception->photo && file_exists(public_path($reception->photo))) {
-                unlink(public_path($reception->photo));
+            // Delete photo from Neo bucket if exists
+            if ($reception->photo) {
+                deleteNeoObject($reception->photo);
             }
 
             $reception->delete();

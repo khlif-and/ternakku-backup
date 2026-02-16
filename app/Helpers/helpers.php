@@ -1,12 +1,10 @@
 <?php
 
-use Aws\S3\S3Client;
 use App\Models\QurbanPrice;
 use Illuminate\Support\Carbon;
 use App\Enums\LivestockTypeEnum;
-use Aws\S3\Exception\S3Exception;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 if (!function_exists('generateOtp')) {
     /**
@@ -24,121 +22,72 @@ if (!function_exists('generateOtp')) {
 }
 
 if (!function_exists('getNeoObject')) {
+    /**
+     * Get the public URL of an object stored in the Neo bucket.
+     *
+     * @param string|null $fileName
+     * @return string|null
+     */
     function getNeoObject($fileName)
     {
         if (empty($fileName))
             return null;
 
-        // Cek jika menggunakan S3/Neo
-        // if (!empty(config('filesystems.disks.neo.bucket'))) {
-        //    return config('filesystems.disks.neo.endpoint') . '/' . config('filesystems.disks.neo.bucket') . '/' . $fileName;
-        // }
-
-        // Fallback ke Local Storage (Public)
-        return asset('storage/' . $fileName);
+        // Menggunakan Neo Object Storage (S3-compatible)
+        return config('filesystems.disks.neo.endpoint') . '/' . config('filesystems.disks.neo.bucket') . '/' . $fileName;
     }
 }
 
 
 if (!function_exists('uploadNeoObject')) {
+    /**
+     * Upload a file to the Neo bucket using Laravel Storage facade.
+     *
+     * @param string|\Illuminate\Http\UploadedFile|\Illuminate\Http\File $file
+     * @param string $fileName
+     * @param string $pathName
+     * @return string|null
+     */
     function uploadNeoObject($file, $fileName, $pathName)
     {
         $fullName = $pathName . $fileName;
 
-        // Cek apakah konfigurasi Neo/S3 lengkap
-        /*
-        if (!empty(config('filesystems.disks.neo.bucket')) && !empty(config('filesystems.disks.neo.key'))) {
-            $client = new S3Client([
-                'version' => 'latest',
-                'region' => config('filesystems.disks.neo.region'),
-                'endpoint' => config('filesystems.disks.neo.endpoint'),
-                'credentials' => [
-                    'key' => config('filesystems.disks.neo.key'),
-                    'secret' => config('filesystems.disks.neo.secret'),
-                ],
-            ]);
-
-            try {
-                // Tentukan ContentType dan SourceFile
-                if (is_string($file)) {
-                    $contentType = File::mimeType($file);
-                    $sourceFile = $file;
-                } elseif ($file instanceof \Illuminate\Http\UploadedFile || $file instanceof \Illuminate\Http\File) {
-                    $contentType = $file->getClientMimeType();
-                    $sourceFile = $file->getRealPath();
-                } else {
-                    throw new \Exception('uploadNeoObject hanya mendukung string path atau instance File/UploadedFile');
-                }
-
-                $client->putObject([
-                    'Bucket' => config('filesystems.disks.neo.bucket'),
-                    'Key' => $fullName,
-                    'ContentType' => $contentType,
-                    'SourceFile' => $sourceFile,
-                    'ACL' => 'public-read',
-                ]);
-
-                return $fullName;
-
-            } catch (S3Exception $e) {
-                Log::error('S3 Upload Error: ' . $e->getMessage());
-                return null;
-            }
-        } else {
-        */
-        // Fallback: Upload ke Local Storage (Public)
         try {
+            // Ambil konten file
             if (is_string($file)) {
                 $content = file_get_contents($file);
             } elseif ($file instanceof \Illuminate\Http\UploadedFile || $file instanceof \Illuminate\Http\File) {
                 $content = file_get_contents($file->getRealPath());
             } else {
+                Log::error('uploadNeoObject: Tipe file tidak didukung');
                 return null;
             }
 
-            \Illuminate\Support\Facades\Storage::disk('public')->put($fullName, $content);
+            // Upload ke Neo bucket menggunakan Storage facade
+            Storage::disk('neo')->put($fullName, $content, 'public');
+
             return $fullName;
         } catch (\Exception $e) {
-            Log::error('Local Upload Error: ' . $e->getMessage());
+            Log::error('Neo Upload Error: ' . $e->getMessage());
             return null;
         }
-        /*
-        }
-        */
     }
 }
 
 if (!function_exists('deleteNeoObject')) {
+    /**
+     * Delete a file from the Neo bucket using Laravel Storage facade.
+     *
+     * @param string $fileName
+     * @return void
+     */
     function deleteNeoObject($fileName)
     {
-        /*
-        if (!empty(config('filesystems.disks.neo.bucket')) && !empty(config('filesystems.disks.neo.key'))) {
-            $client = new S3Client([
-                'version' => 'latest',
-                'region' => config('filesystems.disks.neo.region'),
-                'endpoint' => config('filesystems.disks.neo.endpoint'),
-                'credentials' => [
-                    'key' => config('filesystems.disks.neo.key'),
-                    'secret' => config('filesystems.disks.neo.secret'),
-                ],
-            ]);
-
-            try {
-                $client->deleteObject([
-                    'Bucket' => config('filesystems.disks.neo.bucket'),
-                    'Key' => $fileName,
-                ]);
-
-            } catch (S3Exception $e) {
-                \Log::error('S3 Deletion Error: ' . $e->getMessage());
-            }
-        } else {
-        */
-        // Fallback Delete Local
-        \Illuminate\Support\Facades\Storage::disk('public')->delete($fileName);
-        /*
+        try {
+            Storage::disk('neo')->delete($fileName);
+        } catch (\Exception $e) {
+            Log::error('Neo Delete Error: ' . $e->getMessage());
         }
-        */
     }
 }
 

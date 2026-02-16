@@ -43,9 +43,7 @@ class LivestockReceptionFormService
         }
 
         $fileName = time() . '-' . $photo->getClientOriginalName();
-        $photo->storeAs('receptions', $fileName, 'public');
-
-        return 'storage/receptions/' . $fileName;
+        return uploadNeoObject($photo, $fileName, 'receptions/');
     }
 
     /**
@@ -53,8 +51,8 @@ class LivestockReceptionFormService
      */
     public function deletePhoto(?string $photoPath): void
     {
-        if ($photoPath && file_exists(public_path($photoPath))) {
-            unlink(public_path($photoPath));
+        if ($photoPath) {
+            deleteNeoObject($photoPath);
         }
     }
 }
