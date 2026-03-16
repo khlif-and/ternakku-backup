@@ -43,7 +43,8 @@ class CreateComponent extends Component
             return redirect()->route('shared.fleet.index', $this->farm->id);
 
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+            report($e);
+            $this->dispatch('alert', ['type' => 'error', 'message' => 'Terjadi kesalahan pada sistem.']);
         }
     }
 

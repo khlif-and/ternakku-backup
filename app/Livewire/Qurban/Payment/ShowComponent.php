@@ -32,11 +32,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data pembayaran berhasil dihapus.');
             return redirect()->route('admin.qurban.payment.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('Payment Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

@@ -14,25 +14,21 @@ class CreateComponent extends Component
 {
     public Farm $farm;
 
-    // Form Fields
     public $transaction_date;
-    public $livestock_id; // Indukan (Dam)
+    public $livestock_id;
     public $officer_name;
     public $cost = 0;
-    public $status = 'NORMAL'; // NORMAL, ABNORMAL, ABORTUS
+    public $status = 'NORMAL';
     public $estimated_weaning;
     public $notes;
 
-    // Dynamic Details (Anak Ternak)
     public $details = [];
 
-    // Lists for Select Options
     public $femaleLivestocks = [];
     public $breeds = [];
     public $diseases = [];
-    public $sexes = []; // Opsional, bisa pakai Enum di view atau array statis
+    public $sexes = [];
 
-    // Options for dropdowns
     public $birthStatuses = [
         'NORMAL' => 'Normal',
         'PREMATURE' => 'Premature',
@@ -56,16 +52,14 @@ class CreateComponent extends Component
             'notes' => 'nullable|string',
         ];
 
-        // Validasi details hanya jika status bukan ABORTUS
         if ($this->status !== 'ABORTUS') {
             $rules = array_merge($rules, [
                 'details' => 'required|array|min:1',
-                'details.*.livestock_sex_id' => 'required', // Sesuaikan dengan tipe data ID sex
+                'details.*.livestock_sex_id' => 'required',
                 'details.*.livestock_breed_id' => 'required|exists:livestock_breeds,id',
                 'details.*.weight' => 'required|numeric|min:0',
                 'details.*.birth_order' => 'required|integer|min:1',
                 'details.*.status' => 'required|in:alive,dead',
-                // Conditional validation based on offspring status
                 'details.*.offspring_value' => 'required_if:details.*.status,alive|nullable|numeric|min:0',
                 'details.*.disease_id' => 'required_if:details.*.status,dead|nullable|exists:diseases,id',
                 'details.*.indication' => 'required_if:details.*.status,dead|nullable|string',
@@ -87,20 +81,17 @@ class CreateComponent extends Component
     {
         $this->farm = $farm;
         $this->transaction_date = now()->format('Y-m-d');
-        
-        // Load Data
+
         $this->femaleLivestocks = $farm->livestocks()
             ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
             ->get();
             
         $this->breeds = LivestockBreed::all();
         $this->diseases = Disease::all();
-        
-        // Default satu baris detail
+
         $this->addDetail();
     }
 
-    // Handle Dynamic Details
     public function addDetail()
     {
         $this->details[] = [
@@ -108,7 +99,7 @@ class CreateComponent extends Component
             'livestock_breed_id' => '',
             'weight' => 0,
             'birth_order' => count($this->details) + 1,
-            'status' => 'alive', // default alive
+            'status' => 'alive',
             'offspring_value' => 0,
             'disease_id' => null,
             'indication' => null,
@@ -120,15 +111,13 @@ class CreateComponent extends Component
         if (count($this->details) > 1) {
             unset($this->details[$index]);
             $this->details = array_values($this->details);
-            
-            // Re-index birth order (opsional, tergantung kebutuhan bisnis)
+
             foreach ($this->details as $k => $v) {
                 $this->details[$k]['birth_order'] = $k + 1;
             }
         }
     }
 
-    // Reset details jika status berubah jadi ABORTUS
     public function updatedStatus($value)
     {
         if ($value === 'ABORTUS') {
@@ -143,7 +132,6 @@ class CreateComponent extends Component
         $this->validate();
 
         try {
-            // Persiapkan data
             $data = [
                 'transaction_date' => $this->transaction_date,
                 'livestock_id' => $this->livestock_id,
@@ -161,11 +149,8 @@ class CreateComponent extends Component
             return redirect()->route('admin.care_livestock.livestock_birth.show', [$this->farm->id, $birth->id]);
 
         } catch (\Throwable $e) {
-            Log::error('LivestockBirth Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Gagal menyimpan data kelahiran.');
         }
     }
 

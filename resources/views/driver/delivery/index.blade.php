@@ -1,6 +1,4 @@
-@extends('layouts.driver.index')
-
-@section('page-title', 'Instruksi Pengiriman')
+@extends('layouts.qurban.index')
 
 @section('content')
     @livewire('driver.delivery.index-component')

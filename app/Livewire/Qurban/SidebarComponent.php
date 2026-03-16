@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Qurban;
 
+use App\Models\Farm;
+use App\Models\FarmUser;
 use Livewire\Component;
 
 class SidebarComponent extends Component
@@ -12,17 +14,40 @@ class SidebarComponent extends Component
     public bool $aktivitasOpen = false;
     public bool $laporanOpen = false;
 
+    public string $userRole = '';
+    public bool $isOwner = false;
+    public bool $isAdmin = false;
+    public bool $isMarketing = false;
+    public bool $isDriver = false;
+
     public function mount($farm = null)
     {
         $this->farm = $farm;
+        $this->resolveUserRole();
         $this->initMenuStates();
+    }
+
+    protected function resolveUserRole(): void
+    {
+        $farmId = session('selected_farm');
+
+        $this->userRole = FarmUser::where('user_id', auth()->id())
+            ->where('farm_id', $farmId)
+            ->value('farm_role') ?? '';
+
+        $farmData = Farm::find($farmId);
+
+        $this->isOwner = $this->userRole === 'OWNER' || ($farmData && $farmData->owner_id === auth()->id());
+        $this->isAdmin = $this->userRole === 'ADMIN';
+        $this->isMarketing = $this->userRole === 'MARKETING';
+        $this->isDriver = $this->userRole === 'DRIVER';
     }
 
     protected function initMenuStates(): void
     {
         $currentPath = request()->path();
 
-        $this->dataAwalOpen = str_contains($currentPath, 'qurban/farm') 
+        $this->dataAwalOpen = str_contains($currentPath, 'qurban/farm')
             || str_contains($currentPath, 'qurban/customer')
             || str_contains($currentPath, 'qurban/fleet')
             || str_contains($currentPath, 'qurban/driver');

@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\PregnantCheck;
 
-use Illuminate\Http\Request;
-
 class PregnantCheckService
 {
     protected PregnantCheckCoreService $core;
@@ -13,33 +11,23 @@ class PregnantCheckService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function find($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.pregnant_check.index', compact('farm'));
+        return $this->core->find($farm, $id);
     }
 
-    public function create($farmId)
+    public function store($farm, array $data)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.pregnant_check.create', compact('farm'));
+        return $this->core->store($farm, $data);
     }
 
-    public function show($farmId, $id)
+    public function update($farm, $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        $item = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.pregnant_check.show', compact('farm', 'item'));
+        return $this->core->update($farm, $id, $data);
     }
 
-    public function edit($farmId, $id)
+    public function delete($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        $item = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.pregnant_check.edit', compact('farm', 'item'));
+        return $this->core->delete($farm, $id);
     }
 }

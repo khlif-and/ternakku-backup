@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\Customer;
 
-use Illuminate\Http\Request;
-
 class CustomerService
 {
     protected CustomerCoreService $core;
@@ -13,141 +11,60 @@ class CustomerService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function listCustomers($farm)
     {
-        $farm = request()->attributes->get('farm');
-        $customers = $this->core->listCustomers($farm);
-
-        return view('admin.care_livestock.customer.index', compact('farm', 'customers'));
+        return $this->core->listCustomers($farm);
     }
 
-    public function create($farmId)
+    public function createCustomer($farm, array $data, int $creatorId)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.customer.create', compact('farm'));
+        return $this->core->storeCustomer($farm, $data, $creatorId);
     }
 
-    public function store(Request $request, $farmId)
+    public function getCustomer($farm, int $id)
     {
-        $farm = request()->attributes->get('farm');
-        $validated = $request->validate([
-            'name'   => 'required|string',
-            'phone'  => 'nullable|string',
-            'email'  => 'nullable|email',
-        ]);
-
-        $this->core->storeCustomer($farm, $validated, auth()->user()->id);
-
-        return redirect()
-            ->route('admin.care-livestock.customer.index', $farmId)
-            ->with('success', 'Customer berhasil ditambahkan.');
+        return $this->core->findCustomer($id, $farm->id);
     }
 
-    public function show($farmId, $id)
+    public function updateCustomer($farm, int $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        $customer = $this->core->findCustomer($id);
-
-        return view('admin.care_livestock.customer.show', compact('farm', 'customer'));
+        return $this->core->updateCustomer($id, $farm->id, $data);
     }
 
-    public function edit($farmId, $id)
+    public function deleteCustomer($farm, int $id): void
     {
-        $farm = request()->attributes->get('farm');
-        $customer = $this->core->findCustomer($id);
-
-        return view('admin.care_livestock.customer.edit', compact('farm', 'customer'));
+        $this->core->deleteCustomer($id, $farm->id);
     }
 
-    public function update(Request $request, $farmId, $id)
+    public function listAddresses($farm, int $customerId)
     {
-        $validated = $request->validate([
-            'name'  => 'required|string',
-            'phone' => 'nullable|string',
-            'email' => 'nullable|email',
-        ]);
+        $this->core->findCustomer($customerId, $farm->id);
 
-        $this->core->updateCustomer($id, $validated);
-
-        return redirect()
-            ->route('admin.care-livestock.customer.index', $farmId)
-            ->with('success', 'Customer berhasil diperbarui.');
+        return $this->core->listAddresses($customerId, $farm->id);
     }
 
-    public function destroy($farmId, $id)
+    public function createAddress($farm, int $customerId, array $data)
     {
-        $this->core->deleteCustomer($id);
-
-        return back()->with('success', 'Customer berhasil dihapus.');
+        return $this->core->storeAddress($farm, $customerId, $data);
     }
 
-    public function addressIndex($farmId, $customerId)
+    public function getAddress($farm, int $customerId, int $id)
     {
-        $farm = request()->attributes->get('farm');
-        $addresses = $this->core->listAddresses($customerId);
+        $this->core->findCustomer($customerId, $farm->id);
 
-        return view('admin.care_livestock.customer.address.index', compact('farm', 'addresses', 'customerId'));
+        return $this->core->findAddress($id, $farm->id);
     }
 
-    public function addressCreate($farmId, $customerId)
+    public function updateAddress($farm, int $customerId, int $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
+        $this->core->findCustomer($customerId, $farm->id);
 
-        return view('admin.care_livestock.customer.address.create', compact('farm', 'customerId'));
+        return $this->core->updateAddress($id, $farm->id, $data);
     }
 
-    public function addressStore(Request $request, $farmId, $customerId)
+    public function deleteAddress($farm, int $customerId, int $id): void
     {
-        $farm = request()->attributes->get('farm');
-        $validated = $request->validate([
-            'name'        => 'required|string',
-            'description' => 'nullable|string',
-            'region_id'   => 'required|integer',
-            'postal_code' => 'nullable|string',
-            'address_line'=> 'required|string',
-            'longitude'   => 'nullable|string',
-            'latitude'    => 'nullable|string',
-        ]);
-
-        $this->core->storeAddress($farm, $customerId, $validated);
-
-        return redirect()
-            ->route('admin.care-livestock.customer.address.index', [$farmId, $customerId])
-            ->with('success', 'Alamat berhasil ditambahkan.');
-    }
-
-    public function addressEdit($farmId, $customerId, $id)
-    {
-        $farm = request()->attributes->get('farm');
-        $address = $this->core->findAddress($id);
-
-        return view('admin.care_livestock.customer.address.edit', compact('farm', 'address', 'customerId'));
-    }
-
-    public function addressUpdate(Request $request, $farmId, $customerId, $id)
-    {
-        $validated = $request->validate([
-            'name'        => 'required|string',
-            'description' => 'nullable|string',
-            'region_id'   => 'required|integer',
-            'postal_code' => 'nullable|string',
-            'address_line'=> 'required|string',
-            'longitude'   => 'nullable|string',
-            'latitude'    => 'nullable|string',
-        ]);
-
-        $this->core->updateAddress($id, $validated);
-
-        return redirect()
-            ->route('admin.care-livestock.customer.address.index', [$farmId, $customerId])
-            ->with('success', 'Alamat berhasil diperbarui.');
-    }
-
-    public function addressDestroy($farmId, $customerId, $id)
-    {
-        $this->core->deleteAddress($id);
-
-        return back()->with('success', 'Alamat berhasil dihapus.');
+        $this->core->findCustomer($customerId, $farm->id);
+        $this->core->deleteAddress($id, $farm->id);
     }
 }

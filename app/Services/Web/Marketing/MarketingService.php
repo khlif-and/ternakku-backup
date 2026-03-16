@@ -5,9 +5,31 @@ namespace App\Services\Web\Marketing;
 use App\Models\FarmUser;
 use App\Models\QurbanCustomer;
 use App\Models\QurbanSalesOrder;
+use Illuminate\Database\Eloquent\Builder;
 
 class MarketingService
 {
+    protected function marketingFarmIds(int $userId)
+    {
+        return FarmUser::where('user_id', $userId)
+            ->where('farm_role', 'MARKETING')
+            ->pluck('farm_id');
+    }
+
+    protected function customerQuery(int $userId): Builder
+    {
+        return QurbanCustomer::with(['user', 'farm'])
+            ->whereIn('farm_id', $this->marketingFarmIds($userId))
+            ->where('created_by', $userId);
+    }
+
+    protected function salesOrderQuery(int $userId): Builder
+    {
+        return QurbanSalesOrder::with(['qurbanCustomer.user', 'farm'])
+            ->whereIn('farm_id', $this->marketingFarmIds($userId))
+            ->where('created_by', $userId);
+    }
+
     public function getMarketingFarms($userId)
     {
         return FarmUser::with('farm')
@@ -20,9 +42,7 @@ class MarketingService
 
     public function getStats($userId)
     {
-        $farmIds = FarmUser::where('user_id', $userId)
-            ->where('farm_role', 'MARKETING')
-            ->pluck('farm_id');
+        $farmIds = $this->marketingFarmIds($userId);
 
         $totalCustomers = QurbanCustomer::whereIn('farm_id', $farmIds)
             ->where('created_by', $userId)
@@ -52,13 +72,7 @@ class MarketingService
 
     public function getCustomers($userId, $params = [])
     {
-        $farmIds = FarmUser::where('user_id', $userId)
-            ->where('farm_role', 'MARKETING')
-            ->pluck('farm_id');
-
-        $query = QurbanCustomer::with(['user', 'farm'])
-            ->whereIn('farm_id', $farmIds)
-            ->where('created_by', $userId);
+        $query = $this->customerQuery($userId);
 
         if (!empty($params['search'])) {
             $query->whereHas('user', function ($q) use ($params) {
@@ -72,13 +86,7 @@ class MarketingService
 
     public function getSalesOrders($userId, $params = [])
     {
-        $farmIds = FarmUser::where('user_id', $userId)
-            ->where('farm_role', 'MARKETING')
-            ->pluck('farm_id');
-
-        $query = QurbanSalesOrder::with(['qurbanCustomer.user', 'farm'])
-            ->whereIn('farm_id', $farmIds)
-            ->where('created_by', $userId);
+        $query = $this->salesOrderQuery($userId);
 
         if (!empty($params['status'])) {
             $query->where('status', $params['status']);
@@ -98,12 +106,8 @@ class MarketingService
 
     public function getCustomerById($userId, $customerId)
     {
-        $farmIds = FarmUser::where('user_id', $userId)
-            ->where('farm_role', 'MARKETING')
-            ->pluck('farm_id');
-
-        return QurbanCustomer::with(['user', 'farm', 'qurbanCustomerAddresses'])
-            ->whereIn('farm_id', $farmIds)
+        return $this->customerQuery($userId)
+            ->with('qurbanCustomerAddresses')
             ->where('created_by', $userId)
             ->where('id', $customerId)
             ->first();
@@ -111,12 +115,8 @@ class MarketingService
 
     public function getSalesOrderById($userId, $salesOrderId)
     {
-        $farmIds = FarmUser::where('user_id', $userId)
-            ->where('farm_role', 'MARKETING')
-            ->pluck('farm_id');
-
-        return QurbanSalesOrder::with(['qurbanCustomer.user', 'farm', 'salesOrderDetails'])
-            ->whereIn('farm_id', $farmIds)
+        return $this->salesOrderQuery($userId)
+            ->with('salesOrderDetails')
             ->where('created_by', $userId)
             ->where('id', $salesOrderId)
             ->first();

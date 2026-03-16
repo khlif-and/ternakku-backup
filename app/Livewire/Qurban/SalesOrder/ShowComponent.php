@@ -37,11 +37,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Sales Order berhasil dihapus.');
             return redirect()->route('admin.care-livestock.sales-order.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('SalesOrder Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

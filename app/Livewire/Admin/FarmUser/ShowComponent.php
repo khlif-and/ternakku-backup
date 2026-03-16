@@ -26,8 +26,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Pengguna berhasil dihapus dari farm.');
             return redirect()->route('admin.care-livestock.farm-users.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('FarmUser Delete Error', ['message' => $e->getMessage()]);
-            session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

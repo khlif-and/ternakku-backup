@@ -82,11 +82,9 @@ class CreateComponent extends Component
 
             foreach ($this->addresses as $addressData) {
                 if (!empty($addressData['name']) && !empty($addressData['address_line'])) {
-                    // Ensure we don't pass the search field to the service
                     $dataToStore = $addressData;
                     unset($dataToStore['region_search']); 
 
-                    // Fix: Convert empty strings to null for decimal columns
                     $dataToStore['latitude'] = empty($dataToStore['latitude']) ? null : $dataToStore['latitude'];
                     $dataToStore['longitude'] = empty($dataToStore['longitude']) ? null : $dataToStore['longitude'];
 
@@ -98,11 +96,8 @@ class CreateComponent extends Component
             return redirect()->route('admin.care-livestock.customer.index', $this->farm->id);
 
         } catch (\Throwable $e) {
-            Log::error('Customer Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 
@@ -111,8 +106,6 @@ class CreateComponent extends Component
         $availableRegions = [];
 
         foreach ($this->addresses as $index => $address) {
-            // Find regions based on search term for this specific row
-            // If search is empty, show nothing or limited set? Better show filtered only to avoid lag
             $search = $address['region_search'] ?? '';
 
             if (strlen($search) > 1) {
@@ -121,10 +114,9 @@ class CreateComponent extends Component
                     ->limit(30)
                     ->get();
             } elseif ($address['region_id']) {
-                 // If ID selected but no search, show the selected one so it doesn't look empty
                  $availableRegions[$index] = Region::where('id', $address['region_id'])->get();
             } else {
-                 $availableRegions[$index] = collect([]); // Empty if no search
+                 $availableRegions[$index] = collect([]); 
             }
         }
 

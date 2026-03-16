@@ -32,11 +32,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data pemeriksaan kehamilan berhasil dihapus.');
             return redirect()->route('admin.care_livestock.pregnant_check.index', ['farm_id' => $this->farm->id]);
         } catch (\Throwable $e) {
-            Log::error('PregnantCheck Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Gagal menghapus data pemeriksaan kehamilan.');
         }
     }
 

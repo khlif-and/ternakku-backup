@@ -79,10 +79,8 @@ class CreateComponent extends Component
                 $record->id
             ]);
         } catch (\Throwable $e) {
-            Log::error('MilkAnalysisGlobal Save Error', [
-                'message' => $e->getMessage(),
-            ]);
-            session()->flash('error', 'Gagal menyimpan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

@@ -15,23 +15,34 @@ class FeedingColonyController extends Controller
         $this->service = $service;
     }
 
-    public function index($farmId, Request $request)
+    public function index($farmId)
     {
-        return $this->service->index($farmId, $request);
+        $farm = request()->attributes->get('farm');
+
+        return view('admin.care_livestock.feeding_colony.index', compact('farm'));
     }
 
     public function create($farmId, Request $request)
     {
-        return $this->service->create($farmId, $request);
+        $farm = request()->attributes->get('farm');
+        $fromPen = $request->filled('pen_id') ? $farm->pens()->find($request->integer('pen_id')) : null;
+
+        return view('admin.care_livestock.feeding_colony.create', compact('farm', 'fromPen'));
     }
 
     public function show($farmId, $feedingColonyId)
     {
-        return $this->service->show($farmId, $feedingColonyId);
+        $farm = request()->attributes->get('farm');
+        $feedingColony = $this->service->findFeedingColony($farm, $feedingColonyId);
+
+        return view('admin.care_livestock.feeding_colony.show', compact('farm', 'feedingColony'));
     }
 
     public function edit($farmId, $feedingColonyId)
     {
-        return $this->service->edit($farmId, $feedingColonyId);
+        $farm = request()->attributes->get('farm');
+        $feedingColony = $this->service->findFeedingColony($farm, $feedingColonyId);
+
+        return view('admin.care_livestock.feeding_colony.edit', compact('farm', 'feedingColony'));
     }
 }

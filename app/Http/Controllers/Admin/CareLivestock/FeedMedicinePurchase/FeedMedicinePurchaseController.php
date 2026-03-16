@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Admin\CareLivestock\FeedMedicinePurchase;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Services\Web\Farming\FeedMedicinePurchase\FeedMedicinePurchaseService;
 use App\Http\Requests\Farming\FeedMedicinePurchaseStoreRequest;
 use App\Http\Requests\Farming\FeedMedicinePurchaseUpdateRequest;
-use App\Services\Web\Farming\FeedMedicinePurchase\FeedMedicinePurchaseService;
 
 class FeedMedicinePurchaseController extends Controller
 {
-    private $service;
+    protected FeedMedicinePurchaseService $service;
 
     public function __construct(FeedMedicinePurchaseService $service)
     {
@@ -19,36 +19,79 @@ class FeedMedicinePurchaseController extends Controller
 
     public function index($farmId, Request $request)
     {
-        return $this->service->index($farmId, $request);
+        $farm = request()->attributes->get('farm');
+
+        return view('admin.care_livestock.feed_medicine_purchase.index', compact('farm'));
     }
 
-    public function create($farmId, Request $request)
+    public function create($farmId)
     {
-        return $this->service->create($farmId, $request);
+        $farm = request()->attributes->get('farm');
+
+        return view('admin.care_livestock.feed_medicine_purchase.create', compact('farm'));
+    }
+
+    public function show($farmId, $id)
+    {
+        $farm = request()->attributes->get('farm');
+        $data = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.feed_medicine_purchase.show', compact('farm', 'data'));
+    }
+
+    public function edit($farmId, $id)
+    {
+        $farm = request()->attributes->get('farm');
+        $data = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.feed_medicine_purchase.edit', compact('farm', 'data'));
     }
 
     public function store(FeedMedicinePurchaseStoreRequest $request, $farmId)
     {
-        return $this->service->store($request, $farmId);
-    }
+        $farm = request()->attributes->get('farm');
 
-    public function show($farmId, $id, Request $request)
-    {
-        return $this->service->show($farmId, $id, $request);
-    }
+        try {
+            $this->service->store($farm, $request->validated());
 
-    public function edit($farmId, $id, Request $request)
-    {
-        return $this->service->edit($farmId, $id, $request);
+            return redirect()
+                ->route('admin.care-livestock.feed-medicine-purchase.index', $farmId)
+                ->with('success', 'Data berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+        }
     }
 
     public function update(FeedMedicinePurchaseUpdateRequest $request, $farmId, $id)
     {
-        return $this->service->update($request, $farmId, $id);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $this->service->update($farm, $id, $request->validated());
+
+            return redirect()
+                ->route('admin.care-livestock.feed-medicine-purchase.show', [$farmId, $id])
+                ->with('success', 'Data berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat memperbarui data.');
+        }
     }
 
-    public function destroy($farmId, $id, Request $request)
+    public function destroy($farmId, $id)
     {
-        return $this->service->destroy($farmId, $id, $request);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $this->service->delete($farm, $id);
+
+            return redirect()
+                ->route('admin.care-livestock.feed-medicine-purchase.index', $farmId)
+                ->with('success', 'Data berhasil dihapus.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Terjadi kesalahan saat menghapus data.');
+        }
     }
 }

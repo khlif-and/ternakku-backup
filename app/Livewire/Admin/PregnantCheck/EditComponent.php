@@ -12,9 +12,8 @@ use Illuminate\Support\Facades\Log;
 class EditComponent extends Component
 {
     public Farm $farm;
-    public PregnantCheckD $item; // Menggunakan model Detail sesuai CoreService
+    public PregnantCheckD $item;
 
-    // Form Properties
     public $transaction_date;
     public $action_time;
     public $livestock_id;
@@ -24,10 +23,7 @@ class EditComponent extends Component
     public $cost = 0;
     public $notes;
 
-    // Data Sources
     public $livestocks = [];
-
-    // Options for dropdowns
     public $checkStatuses = [
         'PREGNANT' => 'Pregnant (Bunting)',
         'NOT_PREGNANT' => 'Not Pregnant (Tidak Bunting)',
@@ -59,8 +55,7 @@ class EditComponent extends Component
     {
         $this->farm = $farm;
         $this->item = $item;
-        
-        // Load data ternak betina untuk dropdown (jika diperbolehkan ganti ternak)
+
         $this->livestocks = $farm->livestocks()
             ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
             ->with(['livestockType', 'livestockBreed', 'pen'])
@@ -71,18 +66,15 @@ class EditComponent extends Component
 
     public function fillFormData()
     {
-        // Data dari Header (PregnantCheck)
         $this->transaction_date = $this->item->pregnantCheck->transaction_date;
         $this->notes = $this->item->pregnantCheck->notes;
 
-        // Data dari Detail (PregnantCheckD)
         $this->action_time = $this->item->action_time;
         $this->officer_name = $this->item->officer_name;
         $this->status = $this->item->status;
         $this->pregnant_age = $this->item->pregnant_age;
         $this->cost = $this->item->cost;
 
-        // Data Relasi Ternak (via ReproductionCycle)
         $this->livestock_id = $this->item->reproductionCycle->livestock_id;
     }
 
@@ -101,7 +93,7 @@ class EditComponent extends Component
             $coreService->update($this->farm, $this->item->id, [
                 'transaction_date' => $this->transaction_date,
                 'action_time' => $this->action_time,
-                'livestock_id' => $this->livestock_id, // Biasanya disabled di edit, tapi tetap dikirim untuk validasi/konsistensi
+                'livestock_id' => $this->livestock_id,
                 'officer_name' => $this->officer_name,
                 'status' => $this->status,
                 'pregnant_age' => $this->pregnant_age,
@@ -114,11 +106,8 @@ class EditComponent extends Component
             return redirect()->route('admin.care_livestock.pregnant_check.index', ['farm_id' => $this->farm->id]);
 
         } catch (\Throwable $e) {
-            Log::error('PregnantCheck Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Gagal memperbarui data pemeriksaan kehamilan.');
         }
     }
 

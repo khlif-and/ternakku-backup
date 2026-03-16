@@ -74,7 +74,6 @@ class FeedingIndividuCoreService
 
             $feedingIndividuD->update(['total_cost' => $totalCost]);
 
-            // Update/Create expense
             $expense = LivestockExpense::firstOrCreate(
                 [
                     'livestock_id' => $data['livestock_id'],
@@ -95,7 +94,6 @@ class FeedingIndividuCoreService
             ->findOrFail($id);
 
         DB::transaction(function () use ($feedingIndividuD) {
-            // Revert expense
             $expense = LivestockExpense::where('livestock_id', $feedingIndividuD->livestock_id)
                 ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::FEEDING->value)
                 ->first();
@@ -128,7 +126,6 @@ class FeedingIndividuCoreService
                 'notes' => $data['notes'] ?? null,
             ]);
 
-            // Revert old expense
             $expense = LivestockExpense::where('livestock_id', $feedingIndividuD->livestock_id)
                 ->where('livestock_expense_type_id', LivestockExpenseTypeEnum::FEEDING->value)
                 ->first();
@@ -137,10 +134,8 @@ class FeedingIndividuCoreService
                 $expense->update(['amount' => $expense->amount - $feedingIndividuD->total_cost]);
             }
 
-            // Delete old items
             FeedingIndividuItem::where('feeding_individu_d_id', $feedingIndividuD->id)->delete();
 
-            // Create new items and calculate cost
             $totalCost = 0;
             foreach ($data['items'] as $item) {
                 $totalPrice = $item['qty_kg'] * $item['price_per_kg'];
@@ -161,7 +156,6 @@ class FeedingIndividuCoreService
                 'total_cost' => $totalCost,
             ]);
 
-            // Update/Create expense with new cost
             $expense = LivestockExpense::firstOrCreate(
                 [
                     'livestock_id' => $feedingIndividuD->livestock_id,

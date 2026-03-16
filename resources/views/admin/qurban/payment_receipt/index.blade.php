@@ -64,16 +64,8 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <!-- Dummy Data -->
                                     <tr>
-                                        <td>John Doe</td>
-                                        <td>Transfer Bank</td>
-                                        <td>Rp 2.500.000</td>
-                                        <td>2025-04-28</td>
-                                        <td>
-                                            <button class="btn btn-sm btn-warning">Edit</button>
-                                            <button class="btn btn-sm btn-danger">Hapus</button>
-                                        </td>
+                                        <td colspan="5" class="text-center py-4 text-gray-500">Belum ada data bukti pembayaran.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

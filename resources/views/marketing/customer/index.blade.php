@@ -1,6 +1,4 @@
-@extends('layouts.marketing.index')
-
-@section('page-title', 'Pelanggan')
+@extends('layouts.qurban.index')
 
 @section('content')
     @livewire('marketing.customer.index-component')

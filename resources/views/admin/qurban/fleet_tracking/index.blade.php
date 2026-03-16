@@ -69,7 +69,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {{-- Dummy Data --}}
                         <tr>
                             <td class="py-6 pl-6 border border-black text-left">Pelanggan 1</td>
                             <td class="py-6 pl-6 border border-black text-left">Sapi 1</td>
@@ -78,8 +77,7 @@
                             <td class="py-6 pl-6 border border-black text-left">
                                 <div class="flex space-x-2">
                                     <a href="{{ url('fleet-tracking/1/edit') }}"
-                                        class="inline-flex items-center px-3 py-1.5 bg-[#22C55E]/10 hover:bg-[#22C55E]/20 text-[#22C55E] rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:scale-105 group"
-                                        style="border:1.5px solid #22C55E;">
+                                        class="inline-flex items-center px-3 py-1.5 bg-[#22C55E]/10 hover:bg-[#22C55E]/20 text-[#22C55E] rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:scale-105 group border-[1.5px] border-[#22C55E]">
                                         <svg class="h-4 w-4 mr-1 group-hover:rotate-6 transition-all" fill="none"
                                             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path
@@ -89,8 +87,7 @@
                                     </a>
                                     <button type="button"
                                         onclick="openDeleteReweightModal('{{ url('fleet-tracking/1') }}')"
-                                        class="inline-flex items-center px-3 py-1.5 bg-[#F87171]/10 hover:bg-[#F87171]/20 text-[#F87171] rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:scale-105 group"
-                                        style="border:1.5px solid #F87171;">
+                                        class="inline-flex items-center px-3 py-1.5 bg-[#F87171]/10 hover:bg-[#F87171]/20 text-[#F87171] rounded-lg text-sm font-semibold shadow-sm transition-all duration-150 hover:scale-105 group border-[1.5px] border-[#F87171]">
                                         <svg class="h-4 w-4 mr-1 group-hover:rotate-[12deg] transition-all" fill="none"
                                             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                             <path d="M3 6h18M9 6V4a2 2 0 012-2h2a2 2 0 012 2v2m-7 0v12a2 2 0 002 2h4a2 2 0 002-2V6" />
@@ -125,7 +122,7 @@
     </div>
 
     {{-- Modal Delete Super Minimalis Modern --}}
-    <div id="deleteReweightModal" class="fixed inset-0 bg-black/40 z-50 hidden transition-all" style="backdrop-filter: blur(2px);">
+    <div id="deleteReweightModal" class="fixed inset-0 bg-black/40 z-50 hidden transition-all backdrop-blur-sm">
         <div class="flex items-center justify-center min-h-screen px-4">
             <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border-b-4 border-red-500 animate-fadeInUp">
                 <div class="flex flex-col items-center text-center space-y-5">

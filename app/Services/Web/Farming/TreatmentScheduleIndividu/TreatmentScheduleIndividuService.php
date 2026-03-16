@@ -2,11 +2,6 @@
 
 namespace App\Services\Web\Farming\TreatmentScheduleIndividu;
 
-use Illuminate\Http\Request;
-use App\Exceptions\ErrorHandler;
-use App\Http\Requests\Farming\TreatmentScheduleIndividuStoreRequest;
-use App\Http\Requests\Farming\TreatmentScheduleIndividuUpdateRequest;
-
 class TreatmentScheduleIndividuService
 {
     protected TreatmentScheduleIndividuCoreService $core;
@@ -16,88 +11,29 @@ class TreatmentScheduleIndividuService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function list($farm, array $filters)
     {
-        $farm = $request->attributes->get('farm');
-        $filters = $request->only([
-            'start_date',
-            'end_date',
-            'livestock_id',
-            'livestock_type_id',
-            'livestock_group_id',
-            'livestock_breed_id',
-            'livestock_sex_id',
-            'pen_id'
-        ]);
-
-        $items = $this->core->list($farm, $filters);
-        return view('admin.care_livestock.treatment_schedule_individu.index', compact('farm', 'items', 'filters'));
+        return $this->core->list($farm, $filters);
     }
 
-    public function create($farmId)
+    public function find($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        $livestocks = $farm->livestocks()->get();
-
-        return view('admin.care_livestock.treatment_schedule_individu.create', compact('farm', 'livestocks'));
+        return $this->core->find($farm, $id);
     }
 
-    public function store(TreatmentScheduleIndividuStoreRequest $request, $farmId)
+    public function store($farm, array $data)
     {
-        return ErrorHandler::handle(function () use ($request, $farmId) {
-            $farm = $request->attributes->get('farm');
-            $item = $this->core->store($farm, $request->validated());
-
-            return redirect()
-                ->route('admin.care-livestock.treatment-schedule-individu.show', [
-                    'farm_id' => $farmId,
-                    'id' => $item->id,
-                ])
-                ->with('success', 'Data created successfully');
-        }, 'Create TreatmentScheduleIndividu Error');
+        return $this->core->store($farm, $data);
     }
 
-    public function show($farmId, $id)
+    public function update($farm, $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        $treatmentScheduleIndividu = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.treatment_schedule_individu.show', compact('farm', 'treatmentScheduleIndividu'));
+        return $this->core->update($farm, $id, $data);
     }
 
-    public function edit($farmId, $id)
+    public function delete($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        $treatmentScheduleIndividu = $this->core->find($farm, $id);
-        $livestocks = $farm->livestocks()->get();
-
-        return view('admin.care_livestock.treatment_schedule_individu.edit', compact('farm', 'treatmentScheduleIndividu', 'livestocks'));
-    }
-
-    public function update(TreatmentScheduleIndividuUpdateRequest $request, $farmId, $id)
-    {
-        return ErrorHandler::handle(function () use ($request, $farmId, $id) {
-            $farm = $request->attributes->get('farm');
-            $this->core->update($farm, $id, $request->validated());
-
-            return redirect()
-                ->route('admin.care-livestock.treatment-schedule-individu.show', [
-                    'farm_id' => $farmId,
-                    'id' => $id,
-                ])
-                ->with('success', 'Data updated successfully');
-        }, 'Update TreatmentScheduleIndividu Error');
-    }
-
-    public function destroy($farmId, $id)
-    {
-        return ErrorHandler::handle(function () use ($farmId, $id) {
-            $farm = request()->attributes->get('farm');
-            $this->core->delete($farm, $id);
-
-            return redirect()
-                ->route('admin.care-livestock.treatment-schedule-individu.index', ['farm_id' => $farmId])
-                ->with('success', 'Data deleted successfully');
-        }, 'Delete TreatmentScheduleIndividu Error');
+        return $this->core->delete($farm, $id);
     }
 }
+

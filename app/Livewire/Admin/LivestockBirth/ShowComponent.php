@@ -31,11 +31,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data kelahiran berhasil dihapus.');
             return redirect()->route('admin.care_livestock.livestock_birth.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('LivestockBirth Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Gagal menghapus data kelahiran.');
         }
     }
 

@@ -6,7 +6,6 @@ use Livewire\Component;
 use App\Models\Farm;
 use App\Models\FeedingIndividuD;
 use App\Services\Web\Farming\FeedingColony\FeedingIndividuCoreService;
-use Illuminate\Support\Facades\Log;
 
 class ShowComponent extends Component
 {
@@ -26,11 +25,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data pemberian pakan individu berhasil dihapus.');
             return redirect()->route('admin.care-livestock.feeding-individu.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('FeedingIndividu Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Gagal menghapus data pemberian pakan individu.');
         }
     }
 

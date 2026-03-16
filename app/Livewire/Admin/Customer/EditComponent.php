@@ -47,7 +47,6 @@ class EditComponent extends Component
     {
         $this->farm = $farm;
         $this->customer = $customer;
-        // Removed Region::orderBy('name')->get(); to prevent lag
         
         $this->fillFormData();
     }
@@ -104,7 +103,7 @@ class EditComponent extends Component
         $this->validate();
 
         try {
-            $coreService->updateCustomer($this->customer->id, [
+            $coreService->updateCustomer($this->customer->id, $this->farm->id, [
                 'name' => $this->name,
                 'phone' => $this->phone,
                 'email' => $this->email,
@@ -114,16 +113,14 @@ class EditComponent extends Component
             $submittedIds = [];
 
             foreach ($this->addresses as $addressData) {
-                // Remove temp search field
                 $dataToStore = $addressData;
                 unset($dataToStore['region_search']);
 
-                // Fix: Convert empty strings to null for decimal columns
                 $dataToStore['latitude'] = empty($dataToStore['latitude']) ? null : $dataToStore['latitude'];
                 $dataToStore['longitude'] = empty($dataToStore['longitude']) ? null : $dataToStore['longitude'];
 
                 if (isset($addressData['id']) && $addressData['id']) {
-                    $coreService->updateAddress($addressData['id'], $dataToStore);
+                    $coreService->updateAddress($addressData['id'], $this->farm->id, $dataToStore);
                     $submittedIds[] = $addressData['id'];
                 } else {
                     $coreService->storeAddress($this->farm, $this->customer->id, $dataToStore);
@@ -132,18 +129,15 @@ class EditComponent extends Component
 
             $idsToDelete = array_diff($existingIds, $submittedIds);
             foreach ($idsToDelete as $id) {
-                $coreService->deleteAddress($id);
+                $coreService->deleteAddress($id, $this->farm->id);
             }
 
             session()->flash('success', 'Data customer berhasil diperbarui.');
             return redirect()->route('admin.care-livestock.customer.index', $this->farm->id);
 
         } catch (\Throwable $e) {
-            Log::error('Customer Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan saat memperbarui customer.');
         }
     }
 

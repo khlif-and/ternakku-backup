@@ -51,10 +51,6 @@ class Index extends Component
                 'end_date' => $this->end_date,
             ];
 
-            // $data = $service->generateReport($this->farm, $filters);
-            // Pagination is tricky with Resource collection if not using ::collection(paginate()).
-            // Let's adjust the Service to return Paginator for render, and Collection for Export if needed.
-            // Actually, for the view, we need pagination.
 
             $query = $service->getQuery($this->farm, $filters);
             $data = $query->paginate(15);

@@ -5,7 +5,7 @@ namespace App\Livewire\Shared\Reweight;
 use App\Models\Farm;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Helpers\Web\ReweightFormService;
+use App\Helpers\web\ReweightFormService;
 use App\Services\Web\Farming\Reweight\ReweightCoreService;
 
 class CreateComponent extends Component
@@ -56,7 +56,8 @@ class CreateComponent extends Component
             return redirect()->route('shared.reweight.index', $this->farm->id);
 
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal menyimpan data: ' . $e->getMessage()]);
+            report($e);
+            $this->dispatch('alert', ['type' => 'error', 'message' => 'Terjadi kesalahan pada sistem.']);
         }
     }
 

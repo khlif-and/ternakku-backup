@@ -6,7 +6,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Farm;
 use App\Models\LivestockReceptionD;
-use App\Helpers\Web\LivestockReceptionFormService;
+use App\Helpers\web\LivestockReceptionFormService;
 use App\Services\Web\Farming\LivestockReception\LivestockReceptionCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -95,7 +95,6 @@ class EditComponent extends Component
         $this->existing_photo = $this->reception->photo;
         $this->notes = $this->reception->livestockReceptionH->notes;
 
-        // Load breeds for the selected type via form service
         if ($this->livestock_type_id) {
             $this->breeds = $formService->getBreedsByType((int) $this->livestock_type_id);
         }
@@ -120,9 +119,7 @@ class EditComponent extends Component
             $photoPath = null;
 
             if ($this->photo) {
-                // Delete old photo via form service
                 $formService->deletePhoto($this->existing_photo);
-                // Upload new photo via form service
                 $photoPath = $formService->uploadPhoto($this->photo);
             }
 
@@ -148,11 +145,8 @@ class EditComponent extends Component
             return redirect()->route('admin.care-livestock.livestock-reception.index', $this->farm->id);
 
         } catch (\Throwable $e) {
-            Log::error('Livestock Reception Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

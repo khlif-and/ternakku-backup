@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\LivestockBirth;
 
-use Illuminate\Http\Request;
-
 class LivestockBirthService
 {
     protected LivestockBirthCoreService $core;
@@ -13,33 +11,23 @@ class LivestockBirthService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function find($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.livestock_birth.index', compact('farm'));
+        return $this->core->findBirth($farm, $id);
     }
 
-    public function create($farmId)
+    public function store($farm, array $data)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.livestock_birth.create', compact('farm'));
+        return $this->core->storeBirth($farm, $data);
     }
 
-    public function show($farmId, $id)
+    public function update($farm, $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        $birth = $this->core->findBirth($farm, $id);
-
-        return view('admin.care_livestock.livestock_birth.show', compact('farm', 'birth'));
+        return $this->core->updateBirth($farm, $id, $data);
     }
 
-    public function edit($farmId, $id)
+    public function delete($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        $birth = $this->core->findBirth($farm, $id);
-
-        return view('admin.care_livestock.livestock_birth.edit', compact('farm', 'birth'));
+        return $this->core->deleteBirth($farm, $id);
     }
 }

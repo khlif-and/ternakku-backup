@@ -5,7 +5,7 @@ namespace App\Livewire\Farming\Reweight;
 use App\Models\Farm;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Helpers\Web\ReweightFormService;
+use App\Helpers\web\ReweightFormService;
 use App\Services\Web\Farming\Reweight\ReweightCoreService;
 
 class EditComponent extends Component
@@ -72,7 +72,8 @@ class EditComponent extends Component
             return redirect()->route('admin.care-livestock.reweight.index', $this->farm->id);
 
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal memperbarui data: ' . $e->getMessage()]);
+            report($e);
+            $this->dispatch('alert', ['type' => 'error', 'message' => 'Terjadi kesalahan pada sistem.']);
         }
     }
 

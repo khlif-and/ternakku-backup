@@ -15,14 +15,29 @@ class QurbanDeliveryController extends Controller
         $this->service = $service;
     }
 
+    private function getFarm()
+    {
+        $farm = request()->attributes->get('farm');
+
+        if (!$farm && session()->has('selected_farm')) {
+            $farm = \App\Models\Farm::find(session('selected_farm'));
+        }
+
+        return $farm;
+    }
+
     public function index(Request $request)
     {
-        return $this->service->index($request);
+        $farm = $this->getFarm();
+
+        return view('admin.qurban.qurban_delivery.index', compact('farm'));
     }
 
     public function create()
     {
-        return $this->service->create();
+        $farm = $this->getFarm();
+
+        return view('admin.qurban.qurban_delivery.create', compact('farm'));
     }
 
     public function store(Request $request)
@@ -35,26 +50,72 @@ class QurbanDeliveryController extends Controller
             'delivery_order_ids.*' => 'exists:qurban_delivery_order_h,id',
         ]);
 
-        return $this->service->store($validated);
+        try {
+            $farm = $this->getFarm();
+            $response = $this->service->store($farm->id, $validated);
+
+            if ($response['error']) {
+                return redirect()->route('admin.qurban.qurban_delivery.create')
+                    ->with('error', 'Gagal membuat instruksi pengiriman.');
+            }
+
+            return redirect()->route('admin.qurban.qurban_delivery.show', $response['data']->id)
+                ->with('success', 'Instruksi pengiriman berhasil dibuat.');
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect()->route('admin.qurban.qurban_delivery.create')
+                ->with('error', 'Gagal membuat instruksi pengiriman.');
+        }
     }
 
     public function show($id)
     {
-        return $this->service->show($id);
+        $farm = $this->getFarm();
+        $delivery = $this->service->find($id);
+
+        return view('admin.qurban.qurban_delivery.show', compact('farm', 'delivery'));
     }
 
     public function edit($id)
     {
-        return $this->service->edit($id);
+        $farm = $this->getFarm();
+        $delivery = $this->service->find($id);
+
+        return view('admin.qurban.qurban_delivery.edit', compact('farm', 'delivery'));
     }
 
     public function update(Request $request, $id)
     {
-        return $this->service->setReadyToDeliver($id);
+        try {
+            $farm = $this->getFarm();
+            $this->service->setReadyToDeliver($farm->id, $id);
+
+            return redirect()->route('admin.qurban.qurban_delivery.show', $id)
+                ->with('success', 'Status berhasil diubah ke Ready to Deliver.');
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect()->route('admin.qurban.qurban_delivery.show', $id)
+                ->with('error', 'Gagal mengubah status pengiriman.');
+        }
     }
 
     public function destroy($id)
     {
-        return $this->service->destroy($id);
+        try {
+            $farm = $this->getFarm();
+            $response = $this->service->delete($farm->id, $id);
+
+            if ($response['error']) {
+                return redirect()->route('admin.qurban.qurban_delivery.index')
+                    ->with('error', 'Gagal menghapus instruksi pengiriman.');
+            }
+
+            return redirect()->route('admin.qurban.qurban_delivery.index')
+                ->with('success', 'Instruksi pengiriman berhasil dihapus.');
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect()->route('admin.qurban.qurban_delivery.index')
+                ->with('error', 'Gagal menghapus instruksi pengiriman.');
+        }
     }
 }

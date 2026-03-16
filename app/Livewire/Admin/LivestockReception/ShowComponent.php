@@ -33,11 +33,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data penerimaan ternak berhasil dihapus.');
             return redirect()->route('admin.care-livestock.livestock-reception.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('LivestockReception Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

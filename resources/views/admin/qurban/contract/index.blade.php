@@ -83,26 +83,8 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <!-- Dummy Data -->
                                     <tr>
-                                        <td>Sapi</td>
-                                        <td>Bali</td>
-                                        <td>CV. Silih Wangi Sawargi</td>
-                                        <td>300 kg</td>
-                                        <td>Rp 25.500.000</td>
-                                        <td>JAWA BARAT</td>
-                                        <td>KOTA BANDUNG</td>
-                                        <td>COBLONG</td>
-                                        <td>LEBAK SILIWANGI</td>
-                                        <td>Masjid Albayyinah, Pelesiran, RT 02, RW 05</td>
-                                        <td>2024-08-11</td>
-                                        <td>Rp 1.000.000</td>
-                                        <td>2024-09-01</td>
-                                        <td>
-                                            <a href="{{ route('contract.saving_registration.index') }}" class="btn btn-sm btn-success">Pendaftaran Tabungan</a>
-                                            <button class="btn btn-sm btn-warning">Ubah</button>
-                                            <button class="btn btn-sm btn-danger">Hapus</button>
-                                        </td>
+                                        <td colspan="14" class="text-center py-4 text-gray-500">Belum ada data kontrak.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

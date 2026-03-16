@@ -18,10 +18,10 @@ class IndexComponent extends Component
     public function delete($id, CustomerCoreService $coreService)
     {
         try {
-            $coreService->deleteCustomer($id);
+            $coreService->deleteCustomer($id, $this->farm->id);
             session()->flash('success', 'Data customer berhasil dihapus.');
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+            session()->flash('error', 'Gagal menghapus data customer.');
         }
     }
 

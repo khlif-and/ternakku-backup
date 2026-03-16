@@ -39,7 +39,6 @@ class Index extends Component
         }
 
         if (!$farm_id) {
-            // Fallback or error handling
             abort(404, 'Farm Selection Required');
         }
 

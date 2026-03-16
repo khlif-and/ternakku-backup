@@ -5,9 +5,8 @@ namespace App\Livewire\Admin\ArtificialInsemination;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\InseminationArtificial;
-use App\Helpers\Web\ArtificialInseminationFormService;
+use App\Helpers\web\ArtificialInseminationFormService;
 use App\Services\Web\Farming\ArtificialInsemination\ArtificialInseminationCoreService;
-use Illuminate\Support\Facades\Log;
 
 class EditComponent extends Component
 {
@@ -92,11 +91,8 @@ class EditComponent extends Component
             session()->flash('success', 'Data Inseminasi Buatan berhasil diperbarui.');
             return redirect()->route('admin.care-livestock.artificial-inseminasi.show', [$this->farm->id, $this->aiRecord->id]);
         } catch (\Throwable $e) {
-            Log::error('ArtificialInsemination Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

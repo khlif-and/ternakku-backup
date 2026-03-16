@@ -1,16 +1,10 @@
 @php
-    $currentFarm = \App\Models\Farm::find(session('selected_farm'));
-
-    $userRole = \App\Models\FarmUser::where('user_id', auth()->id())
-        ->where('farm_id', session('selected_farm'))
-        ->value('farm_role');
-    $isOwner = $userRole === 'OWNER' || ($currentFarm && $currentFarm->owner_id === auth()->id());
-    $isAdmin = $userRole === 'ADMIN';
+    extract(App\Helpers\web\FarmRoleResolver::resolve());
 @endphp
 
 <x-header.profile-dropdown :user="auth()->user()" :currentFarm="$currentFarm">
     <x-header.dropdown-item href="{{ url('dashboard') }}" label="Home / Dashboard" />
-    <x-header.dropdown-item href="#" label="Profil Saya" />
+    <x-header.dropdown-item :href="route('profile.edit')" label="Profil Saya" />
 
     @if($isOwner || $isAdmin)
         <button @click="window.location.href='{{ url('select-farm') }}'"

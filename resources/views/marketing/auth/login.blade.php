@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="id">
+@extends('layouts.auth.index')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Marketing - Ternakku</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-</head>
+@section('title', 'Login Marketing - Ternakku')
 
-<body class="min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700">
+@section('content')
+<div class="min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700">
     <div class="min-h-screen flex items-center justify-center px-4 py-12">
         <div class="w-full max-w-md">
             <div class="text-center mb-8">
@@ -72,6 +61,5 @@
             </p>
         </div>
     </div>
-</body>
-
-</html>
+</div>
+@endsection

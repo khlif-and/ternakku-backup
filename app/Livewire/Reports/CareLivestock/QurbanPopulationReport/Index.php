@@ -68,29 +68,16 @@ class Index extends Component
 
     public function render()
     {
-        $service = new QurbanPopulationReportService();
-
         $filters = [
             'livestock_type_id' => $this->livestock_type_id,
             'livestock_breed_id' => $this->livestock_breed_id,
             'livestock_status_id' => $this->livestock_status_id,
         ];
 
-        $query = $service->getQuery($this->farm->id, $filters);
-
-        \Illuminate\Support\Facades\Log::info('Qurban Population Report Query:', [
-            'sql' => $query->toSql(),
-            'bindings' => $query->getBindings(),
-            'filters' => $filters,
-            'farm_id' => $this->farm->id,
-        ]);
-
-        $data = $query->latest('id')->paginate(50);
-
-        \Illuminate\Support\Facades\Log::info('Qurban Population Report Query Result Count:', [
-            'count' => $data->count(),
-            'total' => $data->total(),
-        ]);
+        $data = app(QurbanPopulationReportService::class)
+            ->getQuery($this->farm->id, $filters)
+            ->latest('id')
+            ->paginate(50);
 
         $transformedCollection = $data->getCollection()->map(function ($item) {
             return (new QurbanPopulationReportResource($item))->resolve();

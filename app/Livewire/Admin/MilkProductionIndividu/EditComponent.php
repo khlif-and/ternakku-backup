@@ -84,10 +84,8 @@ class EditComponent extends Component
             session()->flash('success', 'Data produksi susu individu berhasil diperbarui.');
             return redirect()->route('admin.care-livestock.milk-production-individu.show', [$this->farm->id, $this->milkProductionIndividu->id]);
         } catch (\Throwable $e) {
-            Log::error('MilkProductionIndividu Edit Error', [
-                'message' => $e->getMessage(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

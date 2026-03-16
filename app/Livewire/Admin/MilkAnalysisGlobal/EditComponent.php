@@ -98,10 +98,8 @@ class EditComponent extends Component
                 $this->milkAnalysisGlobal->id
             ]);
         } catch (\Throwable $e) {
-            Log::error('MilkAnalysisGlobal Edit Error', [
-                'message' => $e->getMessage(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

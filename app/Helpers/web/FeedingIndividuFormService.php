@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers\Web;
+namespace App\Helpers\web;
 
 use App\Models\Farm;
 

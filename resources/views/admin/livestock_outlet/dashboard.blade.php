@@ -4,22 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Outlet Ternak</title>
-    {{-- Tailwind CSS CDN --}}
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        /* Menambahkan font default yang lebih menarik */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-    </style>
-     <link rel="preconnect" href="https://fonts.googleapis.com">
-     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="bg-gray-50">
 
 <div class="p-6 sm:p-8">
-    {{-- HEADER HALAMAN --}}
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-gray-800">
             Dashboard Outlet Ternak
@@ -28,10 +17,7 @@
             Ringkasan data peternakan dan ternak yang tersedia untuk dijual.
         </p>
     </div>
-
-    {{-- KARTU STATISTIK --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {{-- Total Peternakan --}}
         <div class="bg-white rounded-xl shadow-lg p-6 flex items-center gap-6">
             <div class="bg-red-100 p-4 rounded-full">
                 <svg class="w-8 h-8 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -40,11 +26,9 @@
             </div>
             <div>
                 <p class="text-sm font-medium text-gray-500">Total Peternakan Aktif</p>
-                {{-- Data akan diisi oleh JavaScript --}}
                 <p id="totalFarms" class="text-3xl font-bold text-gray-800">0</p>
             </div>
         </div>
-        {{-- Total Ternak --}}
         <div class="bg-white rounded-xl shadow-lg p-6 flex items-center gap-6">
             <div class="bg-green-100 p-4 rounded-full">
                  <svg class="w-8 h-8 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -53,17 +37,13 @@
             </div>
             <div>
                 <p class="text-sm font-medium text-gray-500">Total Ternak Tersedia</p>
-                 {{-- Data akan diisi oleh JavaScript --}}
                 <p id="totalLivestocks" class="text-3xl font-bold text-gray-800">0</p>
             </div>
         </div>
     </div>
-
-    {{-- KARTU TERNAK BERDASARKAN TIPE --}}
     <div class="mt-8">
         <h2 class="text-2xl font-bold text-gray-800 mb-4">Ternak Tersedia Berdasarkan Tipe</h2>
         <div id="livestockCardsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {{-- Kartu akan di-generate oleh JavaScript --}}
         </div>
     </div>
 
@@ -73,7 +53,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
 
-        // --- DATA CONTOH (MENGGANTIKAN DATA DARI LARAVEL) ---
         const totalFarmsData = 8;
         const totalLivestocksData = 154;
         const livestockData = [
@@ -82,15 +61,10 @@
             { name: 'Domba Garut', total: 35, imageUrl: 'https://placehold.co/600x400/E0FFFF/00008B?text=Domba+Garut' },
             { name: 'Sapi Brahman', total: 12, imageUrl: 'https://placehold.co/600x400/FFFACD/8B4513?text=Sapi+Brahman' },
         ];
-        // --- AKHIR DATA CONTOH ---
 
-
-        // Memperbarui kartu statistik
         document.getElementById('totalFarms').innerText = totalFarmsData.toLocaleString('id-ID');
         document.getElementById('totalLivestocks').innerText = totalLivestocksData.toLocaleString('id-ID');
 
-
-        // Logika untuk membuat dan menampilkan kartu ternak
         const container = document.getElementById('livestockCardsContainer');
         if(container){
             let cardsHTML = '';

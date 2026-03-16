@@ -21,14 +21,12 @@ class Index extends Component
     public $start_date;
     public $end_date;
 
-    // Filters
     public $status;
     public $livestock_type_id;
     public $livestock_breed_id;
     public $pen_id;
     public $livestock_id;
 
-    // Dropdown Data
     public $livestockTypes = [];
     public $livestockBreeds = [];
     public $pens = [];
@@ -80,7 +78,6 @@ class Index extends Component
 
     public function loadDropdowns()
     {
-        // Using pluck()->toArray() to prevent "pluck on array" errors in views
         $this->livestockTypes = LivestockType::all()->pluck('name', 'id')->toArray();
         $this->pens = Pen::where('farm_id', $this->farm->id)->get()->pluck('name', 'id')->toArray();
 

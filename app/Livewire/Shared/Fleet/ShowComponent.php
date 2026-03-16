@@ -29,7 +29,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data berhasil dihapus.');
             return redirect()->route('shared.fleet.index', $this->farm->id);
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal menghapus data: ' . $e->getMessage()]);
+            report($e);
+            $this->dispatch('alert', ['type' => 'error', 'message' => 'Terjadi kesalahan pada sistem.']);
         }
     }
 

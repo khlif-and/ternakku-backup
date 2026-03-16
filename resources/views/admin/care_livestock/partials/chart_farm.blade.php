@@ -44,12 +44,12 @@
                                 @click="showModal = true"
                                 class="bg-gray-50 text-gray-400 cursor-not-allowed"
                             @endif
-                            style="transition: background 0.1s"
+                            class="transition-colors duration-100"
                         >
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        <img class="h-10 w-10 rounded-lg object-cover" src="{{ $pen->photo ?? 'https://via.placeholder.com/150' }}" alt="">
+                                        <img class="h-10 w-10 rounded-lg object-cover" src="{{ $pen->photo ?? 'https://via.placeholder.com/150' }}" alt="Foto {{ $pen->name }}">
                                     </div>
                                     <div class="ml-4">
                                         <div class="font-medium text-gray-900">{{ $pen->name }}</div>

@@ -4,9 +4,8 @@ namespace App\Livewire\Admin\FeedingIndividu;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Helpers\Web\FeedingIndividuFormService;
+use App\Helpers\web\FeedingIndividuFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingIndividuCoreService;
-use Illuminate\Support\Facades\Log;
 
 class CreateComponent extends Component
 {
@@ -84,11 +83,8 @@ class CreateComponent extends Component
             session()->flash('success', 'Data pemberian pakan individu berhasil ditambahkan.');
             return redirect()->route('admin.care-livestock.feeding-individu.show', [$this->farm->id, $feedingIndividuD->id]);
         } catch (\Throwable $e) {
-            Log::error('FeedingIndividu Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan saat menyimpan data pemberian pakan individu.');
         }
     }
 

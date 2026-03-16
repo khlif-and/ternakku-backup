@@ -36,7 +36,7 @@
                 </button>
                 <div x-show="openIndex === {{ $loop->index }}"
                      x-collapse
-                     style="display: none;"
+                     x-cloak
                      class="accordion-content px-6 text-base text-gray-700 leading-relaxed overflow-hidden">
                     <div class="pb-6">
                         {{ $item['a'] }}

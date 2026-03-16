@@ -6,7 +6,6 @@ use Livewire\Component;
 use App\Models\Farm;
 use App\Helpers\web\FeedingColonyFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingColonyCoreService;
-use Illuminate\Support\Facades\Log;
 
 class CreateComponent extends Component
 {
@@ -87,11 +86,8 @@ class CreateComponent extends Component
             session()->flash('success', 'Data pemberian pakan koloni berhasil ditambahkan.');
             return redirect()->route('admin.care-livestock.feeding-colony.show', [$this->farm->id, $feedingColonyD->id]);
         } catch (\Throwable $e) {
-            Log::error('FeedingColony Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan saat menyimpan data pemberian pakan koloni.');
         }
     }
 

@@ -58,7 +58,6 @@ class CreateComponent extends Component
 
     public function updatedLivestockId($value)
     {
-        // Re-fetch livestocks if they are lost between requests
         if (empty($this->livestocks) && $this->qurban_customer_id) {
             $this->livestocks = \App\Models\QurbanSaleLivestockD::whereHas('qurbanSaleLivestockH', function ($q) {
                 $q->where('qurban_customer_id', $this->qurban_customer_id);
@@ -85,11 +84,8 @@ class CreateComponent extends Component
             session()->flash('success', 'Data pembayaran berhasil ditambahkan.');
             return redirect()->route('admin.qurban.payment.show', $payment->id);
         } catch (\Throwable $e) {
-            Log::error('Payment Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

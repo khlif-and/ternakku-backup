@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\FeedMedicinePurchase;
 
-use Illuminate\Http\Request;
-
 class FeedMedicinePurchaseService
 {
     protected FeedMedicinePurchaseCoreService $core;
@@ -13,32 +11,23 @@ class FeedMedicinePurchaseService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function find($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.feed_medicine_purchase.index', compact('farm'));
+        return $this->core->findPurchase($farm, $id);
     }
 
-    public function create($farmId)
+    public function store($farm, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        return view('admin.care_livestock.feed_medicine_purchase.create', compact('farm'));
+        return $this->core->storePurchase($farm, $data);
     }
 
-    public function show($farmId, $id)
+    public function update($farm, $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        $data = $this->core->findPurchase($farm, $id);
-
-        return view('admin.care_livestock.feed_medicine_purchase.show', compact('farm', 'data'));
+        return $this->core->updatePurchase($farm, $id, $data);
     }
 
-    public function edit($farmId, $id)
+    public function delete($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        $data = $this->core->findPurchase($farm, $id);
-
-        return view('admin.care_livestock.feed_medicine_purchase.edit', compact('farm', 'data'));
+        return $this->core->deletePurchase($farm, $id);
     }
 }

@@ -53,8 +53,8 @@ class EditComponent extends Component
             return redirect()->route('qurban.livestock-delivery-note.show', $this->deliveryNote->id);
 
         } catch (\Throwable $e) {
-            Log::error('Delivery Note Edit Error: ' . $e->getMessage());
-            session()->flash('error', 'Gagal memperbarui data: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

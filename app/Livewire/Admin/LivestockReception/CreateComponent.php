@@ -5,7 +5,7 @@ namespace App\Livewire\Admin\LivestockReception;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Farm;
-use App\Helpers\Web\LivestockReceptionFormService;
+use App\Helpers\web\LivestockReceptionFormService;
 use App\Services\Web\Farming\LivestockReception\LivestockReceptionCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -116,11 +116,8 @@ class CreateComponent extends Component
         } catch (\Illuminate\Validation\ValidationException $e) {
             throw $e;
         } catch (\Throwable $e) {
-            Log::error('Livestock Reception Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

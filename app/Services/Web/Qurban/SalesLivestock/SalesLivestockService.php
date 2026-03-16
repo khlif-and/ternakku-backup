@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Services\Qurban;
-
-use Illuminate\Http\Request;
+namespace App\Services\Web\Qurban\SalesLivestock;
 
 class SalesLivestockService
 {
@@ -13,48 +11,23 @@ class SalesLivestockService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function find($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.sales_livestock.index', compact('farm'));
+        return $this->core->find($farm, $id);
     }
 
-    public function create($farmId)
+    public function store($farm, array $data)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.sales_livestock.create', compact('farm'));
+        return $this->core->store($farm, $data);
     }
 
-    public function store($request, $farmId)
+    public function update($farm, $id, array $data)
     {
-        return $this->core->store(request()->attributes->get('farm'), $request->validated());
+        return $this->core->update($farm, $id, $data);
     }
 
-    public function show($farmId, $id)
+    public function delete($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        $salesLivestock = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.sales_livestock.show', compact('farm', 'salesLivestock'));
-    }
-
-    public function edit($farmId, $id)
-    {
-        $farm = request()->attributes->get('farm');
-        $salesLivestock = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.sales_livestock.edit', compact('farm', 'salesLivestock'));
-    }
-
-    public function update($request, $farmId, $id)
-    {
-        return $this->core->update(request()->attributes->get('farm'), $id, $request->validated());
-    }
-
-    public function destroy($farmId, $id)
-    {
-        return $this->core->delete(request()->attributes->get('farm'), $id);
+        return $this->core->delete($farm, $id);
     }
 }

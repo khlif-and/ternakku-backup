@@ -11,13 +11,7 @@
     <div x-show="aktivitasOpen" x-transition class="mt-2 bg-white rounded-md shadow px-3 py-2 text-gray-800 space-y-2">
 
         @php
-            $userRole = \App\Models\FarmUser::where('user_id', auth()->id())
-                ->where('farm_id', $farm->id)
-                ->value('farm_role');
-            $isOwner = $userRole === 'OWNER' || $farm->owner_id === auth()->id();
-            $isAdmin = $userRole === 'ADMIN';
-            $isMarketing = $userRole === 'MARKETING';
-            $isDriver = $userRole === 'DRIVER';
+            extract(App\Helpers\web\FarmRoleResolver::resolve($farm->id));
         @endphp
 
         @if($isOwner || $isAdmin || $isMarketing)
@@ -69,6 +63,10 @@
 
             <a href="{{ route('qurban.fleet-tracking.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
                 Pelacakan Armada
+            </a>
+
+            <a href="{{ route('driver.delivery.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm {{ request()->is('driver/delivery*') ? 'bg-gray-100 font-semibold' : '' }}">
+                Instruksi Pengiriman
             </a>
         @endif
 

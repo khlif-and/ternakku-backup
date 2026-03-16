@@ -11,13 +11,7 @@
     <div x-show="dataAwalOpen" x-transition class="mt-2 bg-white rounded-md shadow px-3 py-2 text-gray-800 space-y-1">
 
         @php
-            $userRole = \App\Models\FarmUser::where('user_id', auth()->id())
-                ->where('farm_id', $farm->id)
-                ->value('farm_role');
-            $isOwner = $userRole === 'OWNER' || $farm->owner_id === auth()->id();
-            $isAdmin = $userRole === 'ADMIN';
-            $isMarketing = $userRole === 'MARKETING';
-            $isDriver = $userRole === 'DRIVER';
+            extract(App\Helpers\web\FarmRoleResolver::resolve($farm->id));
         @endphp
 
         @if($isOwner)
@@ -29,6 +23,14 @@
         @if($isOwner || $isAdmin || $isMarketing)
             <a href="{{ route('qurban.customer.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm">
                 Data Pelanggan & Alamat Kirim
+            </a>
+
+            <a href="{{ route('marketing.customer.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm {{ request()->is('marketing/customer*') ? 'bg-gray-100 font-semibold' : '' }}">
+                Pelanggan
+            </a>
+
+            <a href="{{ route('marketing.sales-order.index') }}" class="block hover:bg-gray-100 px-3 py-1 rounded text-sm {{ request()->is('marketing/sales-order*') ? 'bg-gray-100 font-semibold' : '' }}">
+                Sales Order
             </a>
         @endif
 

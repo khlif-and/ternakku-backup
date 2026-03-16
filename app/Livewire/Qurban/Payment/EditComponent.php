@@ -56,12 +56,10 @@ class EditComponent extends Component
         $this->transaction_date = $this->payment->transaction_date;
         $this->amount = $this->payment->amount;
 
-        // Populate livestocks for this customer
         $this->updatedQurbanCustomerId($this->qurban_customer_id);
 
         $this->livestock_id = $this->payment->livestock_id;
 
-        // Populate breed name
         $this->updatedLivestockId($this->livestock_id);
     }
 
@@ -102,11 +100,8 @@ class EditComponent extends Component
             session()->flash('success', 'Data pembayaran berhasil diperbarui.');
             return redirect()->route('admin.qurban.payment.show', $this->payment->id);
         } catch (\Throwable $e) {
-            Log::error('Payment Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

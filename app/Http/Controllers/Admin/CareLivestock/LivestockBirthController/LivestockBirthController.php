@@ -4,9 +4,9 @@ namespace App\Http\Controllers\Admin\CareLivestock\LivestockBirthController;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Services\Web\Farming\LivestockBirth\LivestockBirthService;
 use App\Http\Requests\Farming\LivestockBirthStoreRequest;
 use App\Http\Requests\Farming\LivestockBirthUpdateRequest;
-use App\Services\Web\Farming\LivestockBirth\LivestockBirthService;
 
 class LivestockBirthController extends Controller
 {
@@ -17,38 +17,81 @@ class LivestockBirthController extends Controller
         $this->service = $service;
     }
 
-    public function index($farm_id, Request $request)
+    public function index($farmId, Request $request)
     {
-        return $this->service->index($farm_id, $request);
+        $farm = request()->attributes->get('farm');
+
+        return view('admin.care_livestock.livestock_birth.index', compact('farm'));
     }
 
-    public function create($farm_id)
+    public function create($farmId)
     {
-        return $this->service->create($farm_id);
+        $farm = request()->attributes->get('farm');
+
+        return view('admin.care_livestock.livestock_birth.create', compact('farm'));
     }
 
-    public function store(LivestockBirthStoreRequest $request, $farm_id)
+    public function show($farmId, $id)
     {
-        return $this->service->store($request, $farm_id);
+        $farm = request()->attributes->get('farm');
+        $birth = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.livestock_birth.show', compact('farm', 'birth'));
     }
 
-    public function show($farm_id, $id)
+    public function edit($farmId, $id)
     {
-        return $this->service->show($farm_id, $id);
+        $farm = request()->attributes->get('farm');
+        $birth = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.livestock_birth.edit', compact('farm', 'birth'));
     }
 
-    public function edit($farm_id, $id)
+    public function store(LivestockBirthStoreRequest $request, $farmId)
     {
-        return $this->service->edit($farm_id, $id);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $this->service->store($farm, $request->validated());
+
+            return redirect()
+                ->route('admin.care_livestock.livestock_birth.index', $farmId)
+                ->with('success', 'Data berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+        }
     }
 
-    public function update(LivestockBirthUpdateRequest $request, $farm_id, $id)
+    public function update(LivestockBirthUpdateRequest $request, $farmId, $id)
     {
-        return $this->service->update($farm_id, $id, $request);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $this->service->update($farm, $id, $request->validated());
+
+            return redirect()
+                ->route('admin.care_livestock.livestock_birth.show', [$farmId, $id])
+                ->with('success', 'Data berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat memperbarui data.');
+        }
     }
 
-    public function destroy($farm_id, $id)
+    public function destroy($farmId, $id)
     {
-        return $this->service->destroy($farm_id, $id);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $this->service->delete($farm, $id);
+
+            return redirect()
+                ->route('admin.care_livestock.livestock_birth.index', $farmId)
+                ->with('success', 'Data berhasil dihapus.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Terjadi kesalahan saat menghapus data.');
+        }
     }
 }

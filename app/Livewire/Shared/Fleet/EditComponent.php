@@ -58,7 +58,8 @@ class EditComponent extends Component
             return redirect()->route('shared.fleet.index', $this->farm->id);
 
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal memperbarui data: ' . $e->getMessage()]);
+            report($e);
+            $this->dispatch('alert', ['type' => 'error', 'message' => 'Terjadi kesalahan pada sistem.']);
         }
     }
 

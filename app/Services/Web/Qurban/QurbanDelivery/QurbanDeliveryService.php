@@ -2,9 +2,6 @@
 
 namespace App\Services\Web\Qurban\QurbanDelivery;
 
-use Illuminate\Http\Request;
-use App\Models\Farm;
-
 class QurbanDeliveryService
 {
     protected QurbanDeliveryCoreService $core;
@@ -14,88 +11,23 @@ class QurbanDeliveryService
         $this->core = $core;
     }
 
-    private function getFarm()
+    public function find($id)
     {
-        $farm = request()->attributes->get('farm');
-
-        if (!$farm && session()->has('selected_farm')) {
-            $farm = Farm::find(session('selected_farm'));
-        }
-
-        return $farm;
+        return $this->core->find($id);
     }
 
-    public function index(Request $request)
+    public function store(int $farmId, array $data)
     {
-        $farm = $this->getFarm();
-
-        return view('admin.qurban.qurban_delivery.index', compact('farm'));
+        return $this->core->store($farmId, $data);
     }
 
-    public function create()
+    public function setReadyToDeliver(int $farmId, $id)
     {
-        $farm = $this->getFarm();
-
-        return view('admin.qurban.qurban_delivery.create', compact('farm'));
+        return $this->core->setReadyToDeliver($farmId, $id);
     }
 
-    public function store(array $data)
+    public function delete(int $farmId, $id)
     {
-        $farm = $this->getFarm();
-
-        $response = $this->core->store($farm->id, $data);
-
-        if ($response['error']) {
-            return redirect()->route('admin.qurban.qurban_delivery.create')
-                ->with('error', 'Gagal membuat instruksi pengiriman.');
-        }
-
-        return redirect()->route('admin.qurban.qurban_delivery.show', $response['data']->id)
-            ->with('success', 'Instruksi pengiriman berhasil dibuat.');
-    }
-
-    public function show($id)
-    {
-        $farm = $this->getFarm();
-        $delivery = $this->core->find($id);
-
-        return view('admin.qurban.qurban_delivery.show', compact('farm', 'delivery'));
-    }
-
-    public function edit($id)
-    {
-        $farm = $this->getFarm();
-        $delivery = $this->core->find($id);
-
-        return view('admin.qurban.qurban_delivery.edit', compact('farm', 'delivery'));
-    }
-
-    public function setReadyToDeliver($id)
-    {
-        $farm = $this->getFarm();
-
-        try {
-            $this->core->setReadyToDeliver($farm->id, $id);
-            return redirect()->route('admin.qurban.qurban_delivery.show', $id)
-                ->with('success', 'Status berhasil diubah ke Ready to Deliver.');
-        } catch (\Exception $e) {
-            return redirect()->route('admin.qurban.qurban_delivery.show', $id)
-                ->with('error', 'Gagal mengubah status: ' . $e->getMessage());
-        }
-    }
-
-    public function destroy($id)
-    {
-        $farm = $this->getFarm();
-
-        $response = $this->core->delete($farm->id, $id);
-
-        if ($response['error']) {
-            return redirect()->route('admin.qurban.qurban_delivery.index')
-                ->with('error', 'Gagal menghapus instruksi pengiriman.');
-        }
-
-        return redirect()->route('admin.qurban.qurban_delivery.index')
-            ->with('success', 'Instruksi pengiriman berhasil dihapus.');
+        return $this->core->delete($farmId, $id);
     }
 }

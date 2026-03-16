@@ -44,7 +44,6 @@ class Index extends Component
             return [$customer->id => $customer->user->name ?? 'Unknown'];
         })->toArray();
 
-        // If parameters are present in URL, auto-generate report
         if (request('start_date') || request('end_date')) {
             $this->showReport = true;
         }

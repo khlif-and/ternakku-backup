@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\ArtificialInsemination;
 
-use Illuminate\Http\Request;
-
 class ArtificialInseminationService
 {
     protected ArtificialInseminationCoreService $core;
@@ -13,31 +11,24 @@ class ArtificialInseminationService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function find($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        return view('admin.care_livestock.artificial_inseminasi.index', compact('farm'));
+        return $this->core->find($farm, $id);
     }
 
-    public function create($farmId)
+    public function store($farm, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        return view('admin.care_livestock.artificial_inseminasi.create', compact('farm'));
+        return $this->core->store($farm, $data);
     }
 
-    public function show($farmId, $id)
+    public function update($farm, $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
+        return $this->core->update($farm, $id, $data);
+    }
+
+    public function delete($farm, $id)
+    {
         $item = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.artificial_inseminasi.show', compact('farm', 'item'));
-    }
-
-    public function edit($farmId, $id)
-    {
-        $farm = request()->attributes->get('farm');
-        $item = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.artificial_inseminasi.edit', compact('farm', 'item'));
+        return $this->core->delete($item);
     }
 }

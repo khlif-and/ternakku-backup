@@ -17,21 +17,34 @@ class LivestockReceptionController extends Controller
 
     public function index($farmId, Request $request)
     {
-        return $this->service->index($farmId, $request);
+        $farm = $request->attributes->get('farm');
+
+        return view('admin.care_livestock.livestock_reception.index', compact('farm'));
     }
 
     public function create($farmId, Request $request)
     {
-        return $this->service->create($farmId, $request);
+        $farm = $request->attributes->get('farm');
+        $farm->load('pens');
+
+        return view('admin.care_livestock.livestock_reception.create', compact('farm'));
     }
 
     public function show($farmId, $id, Request $request)
     {
-        return $this->service->show($farmId, $id, $request);
+        $farm = $request->attributes->get('farm');
+        $reception = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.livestock_reception.show', compact('farm', 'reception'));
     }
 
     public function edit($farmId, $id, Request $request)
     {
-        return $this->service->edit($farmId, $id, $request);
+        $farm = $request->attributes->get('farm');
+        $farm->load('pens');
+        $reception = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.livestock_reception.edit', compact('farm', 'reception'));
     }
 }
+

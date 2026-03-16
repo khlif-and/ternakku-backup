@@ -33,16 +33,7 @@ class FeedingColonyReportService
 
     public function getReportData($farm, array $filters)
     {
-        $query = $this->getQuery($farm, $filters);
-
-        \Illuminate\Support\Facades\Log::info('Feeding Colony Report Query:', [
-            'sql' => $query->toSql(),
-            'bindings' => $query->getBindings(),
-            'filters' => $filters,
-            'farm_id' => $farm->id
-        ]);
-
-        return $query->paginate(10);
+        return $this->getQuery($farm, $filters)->paginate(10);
     }
 
     public function getSummary($farm, array $filters)

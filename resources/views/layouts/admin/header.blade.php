@@ -1,9 +1,9 @@
 @php
-    $currentFarm = \App\Models\Farm::find(session('selected_farm'));
+    extract(App\Helpers\web\FarmRoleResolver::resolve());
 @endphp
 
 <x-header.profile-dropdown :user="auth()->user()" :currentFarm="$currentFarm" :transparent="true">
-    <x-header.dropdown-item href="#" label="Pengaturan Akun" />
+    <x-header.dropdown-item :href="route('profile.edit')" label="Pengaturan Akun" />
     <x-header.dropdown-item href="{{ route('care_livestock') }}" label="Pelihara Ternak" />
 
     <button @click="logoutModal = true; open = false" type="button"

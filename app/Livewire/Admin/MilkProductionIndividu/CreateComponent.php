@@ -74,10 +74,8 @@ class CreateComponent extends Component
                 $milkProductionIndividu->id
             ]);
         } catch (\Throwable $e) {
-            Log::error('MilkProductionIndividu Save Error', [
-                'message' => $e->getMessage(),
-            ]);
-            session()->flash('error', 'Gagal menyimpan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

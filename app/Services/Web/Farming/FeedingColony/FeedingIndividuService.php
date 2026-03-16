@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\FeedingColony;
 
-use Illuminate\Http\Request;
-
 class FeedingIndividuService
 {
     protected FeedingIndividuCoreService $core;
@@ -13,33 +11,23 @@ class FeedingIndividuService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function findFeedingIndividu($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.feeding_individu.index', compact('farm'));
+        return $this->core->find($farm, $id);
     }
 
-    public function create($farmId, Request $request)
+    public function storeFeedingIndividu($farm, array $data)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.feeding_individu.create', compact('farm'));
+        return $this->core->store($farm, $data);
     }
 
-    public function show($farmId, $feedingIndividuId)
+    public function updateFeedingIndividu($farm, $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        $feedingIndividu = $this->core->find($farm, $feedingIndividuId);
-
-        return view('admin.care_livestock.feeding_individu.show', compact('farm', 'feedingIndividu'));
+        return $this->core->update($farm, $id, $data);
     }
 
-    public function edit($farmId, $feedingIndividuId)
+    public function deleteFeedingIndividu($farm, $id): void
     {
-        $farm = request()->attributes->get('farm');
-        $feedingIndividu = $this->core->find($farm, $feedingIndividuId);
-
-        return view('admin.care_livestock.feeding_individu.edit', compact('farm', 'feedingIndividu'));
+        $this->core->delete($farm, $id);
     }
 }

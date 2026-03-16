@@ -5,9 +5,8 @@ namespace App\Livewire\Admin\FeedingIndividu;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\FeedingIndividuD;
-use App\Helpers\Web\FeedingIndividuFormService;
+use App\Helpers\web\FeedingIndividuFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingIndividuCoreService;
-use Illuminate\Support\Facades\Log;
 
 class EditComponent extends Component
 {
@@ -105,11 +104,8 @@ class EditComponent extends Component
             session()->flash('success', 'Data pemberian pakan individu berhasil diperbarui.');
             return redirect()->route('admin.care-livestock.feeding-individu.show', [$this->farm->id, $this->feedingIndividu->id]);
         } catch (\Throwable $e) {
-            Log::error('FeedingIndividu Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan saat memperbarui data pemberian pakan individu.');
         }
     }
 

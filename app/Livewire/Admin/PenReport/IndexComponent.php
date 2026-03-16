@@ -21,7 +21,6 @@ class IndexComponent extends Component
     public $to_date;
     public $showReport = false;
 
-    // Report Data
     public $pen;
     public $livestocks = [];
     public $feedingHistory = [];
@@ -58,12 +57,10 @@ class IndexComponent extends Component
         try {
             $this->pen = Pen::with(['farm'])->findOrFail($this->pen_id);
 
-            // Get livestocks in this pen
             $this->livestocks = Livestock::where('pen_id', $this->pen_id)
                 ->with(['livestockType', 'livestockSex', 'livestockClassification'])
                 ->get();
 
-            // Get feeding history from FeedingColonyD (which has pen_id relation)
             $this->feedingHistory = FeedingColonyD::where('pen_id', $this->pen_id)
                 ->whereHas('feedingH', function ($q) {
                 $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
@@ -78,7 +75,6 @@ class IndexComponent extends Component
                 ->limit(50)
                 ->get();
 
-            // Get treatment history from TreatmentColonyD
             $this->treatmentHistory = TreatmentColonyD::where('pen_id', $this->pen_id)
                 ->whereHas('treatmentH', function ($q) {
                 $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
@@ -93,7 +89,6 @@ class IndexComponent extends Component
                 ->limit(50)
                 ->get();
 
-            // Get milk production from MilkProductionColonyD
             $this->milkProduction = MilkProductionColonyD::where('pen_id', $this->pen_id)
                 ->whereHas('milkProductionH', function ($q) {
                 $q->whereBetween('transaction_date', [$this->from_date, $this->to_date]);
@@ -108,19 +103,14 @@ class IndexComponent extends Component
                 ->limit(50)
                 ->get();
 
-            // Calculate statistics
             $this->statistics = $this->calculateStatistics();
 
             $this->showReport = true;
 
         }
         catch (\Throwable $e) {
-            Log::error('Pen Report Error', [
-                'error' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-            ]);
-            session()->flash('error', 'Gagal memuat laporan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 
@@ -156,12 +146,10 @@ class IndexComponent extends Component
             ? round($totalMilk / $this->milkProduction->count(), 2)
             : 0;
 
-        // Group livestock by type
         $byType = $this->livestocks->groupBy(function ($l) {
             return $l->livestockType->name ?? 'Lainnya';
         })->map->count();
 
-        // Group by classification
         $byClassification = $this->livestocks->groupBy(function ($l) {
             return $l->livestockClassification->name ?? 'Tidak diketahui';
         })->map->count();
@@ -185,7 +173,6 @@ class IndexComponent extends Component
         $this->validate();
 
         try {
-            // Regenerate data for PDF
             $this->generateReport();
 
             $pdf = Pdf::loadView('pdf.care_livestock.pen_report_full', [
@@ -208,12 +195,8 @@ class IndexComponent extends Component
 
         }
         catch (\Throwable $e) {
-            Log::error('Pen Report PDF Export Error', [
-                'error' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile(),
-            ]);
-            session()->flash('error', 'Gagal mengekspor PDF: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

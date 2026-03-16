@@ -1,20 +1,16 @@
 <footer class="bg-black text-gray-400">
-    {{-- Diubah: bg-white -> bg-black, text-gray-600 -> text-gray-400 --}}
-
     <div class="max-w-7xl mx-auto py-20 px-6 lg:px-8">
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-12">
 
             <div class="lg:col-span-2">
                 <div class="flex items-center gap-2 mb-4">
-                    {{-- Diubah: text-black -> text-white --}}
                     <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2L2 7L12 12L22 7L12 2Z" />
                         <path d="M2 17L12 22L22 17L12 12L2 17Z" />
                         <path d="M2 12L12 17L22 12L12 7L2 12Z" />
                     </svg>
-                    {{-- Diubah: text-black -> text-white --}}
                     <span class="text-2xl font-bold text-white">Beyond UI</span>
                 </div>
 
@@ -56,10 +52,8 @@
             </div>
 
             <div>
-                {{-- Diubah: text-gray-900 -> text-white --}}
                 <h4 class="text-base font-semibold text-white mb-5">Getting Started</h4>
                 <ul class="space-y-3 text-sm">
-                    {{-- Diubah: hover:text-black -> hover:text-white --}}
                     <li><a href="#" class="hover:text-white transition-colors">Introduction</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Documentation</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Usage</a></li>
@@ -70,10 +64,8 @@
             </div>
 
             <div>
-                {{-- Diubah: text-gray-900 -> text-white --}}
                 <h4 class="text-base font-semibold text-white mb-5">Company</h4>
                 <ul class="space-y-3 text-sm">
-                    {{-- Diubah: hover:text-black -> hover:text-white --}}
                     <li><a href="#" class="hover:text-white transition-colors">About us</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Community</a></li>
@@ -83,10 +75,8 @@
             </div>
 
             <div>
-                {{-- Diubah: text-gray-900 -> text-white --}}
                 <h4 class="text-base font-semibold text-white mb-5">Partner</h4>
                 <ul class="space-y-3 text-sm">
-                    {{-- Diubah: hover:text-black -> hover:text-white --}}
                     <li><a href="#" class="hover:text-white transition-colors">For individuals</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">For freelancers</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">For teams</a></li>
@@ -95,10 +85,8 @@
             </div>
 
             <div>
-                {{-- Diubah: text-gray-900 -> text-white --}}
                 <h4 class="text-base font-semibold text-white mb-5">Resources</h4>
                 <ul class="space-y-3 text-sm">
-                    {{-- Diubah: hover:text-black -> hover:text-white --}}
                     <li><a href="#" class="hover:text-white transition-colors">Support</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Security</a></li>
                     <li><a href="#" class="hover:text-white transition-colors">Help center</a></li>
@@ -109,8 +97,6 @@
             </div>
 
         </div>
-
-        {{-- Diubah: border-gray-200 -> border-gray-700 --}}
         <div class="mt-16 pt-8 border-t border-gray-700 flex flex-col-reverse md:flex-row justify-between items-center gap-6">
 
             <p class="text-sm text-gray-500">
@@ -119,14 +105,12 @@
 
             <div class="flex flex-col sm:flex-row items-center gap-6">
                 <div class="flex items-center gap-6 text-sm">
-                    {{-- Diubah: hover:text-black -> hover:text-white --}}
                     <a href="#" class="hover:text-white transition-colors">Terms & Conditions</a>
                     <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
                     <a href="#" class="hover:text-white transition-colors">Cookie Policy</a>
                 </div>
 
                 <div class="flex items-center gap-5 text-gray-500">
-                    {{-- Diubah: hover:text-black -> hover:text-white --}}
                     <a href="#" class="hover:text-white transition-colors">
                         <span class="sr-only">Facebook</span>
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"

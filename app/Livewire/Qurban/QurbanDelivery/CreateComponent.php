@@ -81,11 +81,8 @@ class CreateComponent extends Component
             return redirect()->route('admin.qurban.qurban_delivery.show', $response['data']->id);
 
         } catch (\Throwable $e) {
-            Log::error('Qurban Delivery Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 
