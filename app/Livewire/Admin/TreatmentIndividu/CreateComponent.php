@@ -108,11 +108,8 @@ class CreateComponent extends Component
             session()->flash('success', 'Data treatment individu berhasil ditambahkan.');
             return redirect()->route('admin.care-livestock.treatment-individu.show', [$this->farm->id, $treatmentIndividuD->id]);
         } catch (\Throwable $e) {
-            Log::error('TreatmentIndividu Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

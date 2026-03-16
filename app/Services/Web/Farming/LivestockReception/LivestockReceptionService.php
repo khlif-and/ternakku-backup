@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\LivestockReception;
 
-use Illuminate\Http\Request;
-
 class LivestockReceptionService
 {
     protected LivestockReceptionCoreService $core;
@@ -13,57 +11,9 @@ class LivestockReceptionService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function find($farm, $id)
     {
-        $farm = $request->attributes->get('farm');
-
-        return view('admin.care_livestock.livestock_reception.index', [
-            'farm' => $farm,
-        ]);
-    }
-
-    public function create($farmId, Request $request)
-    {
-        $farm = $request->attributes->get('farm');
-        if (!$farm) {
-            abort(404, 'Farm tidak ditemukan');
-        }
-
-        $farm->load('pens');
-
-        return view('admin.care_livestock.livestock_reception.create', [
-            'farm' => $farm,
-        ]);
-    }
-
-    public function show($farmId, $id, Request $request)
-    {
-        $farm = $request->attributes->get('farm');
-        if (!$farm) {
-            abort(404, 'Farm tidak ditemukan');
-        }
-
-        $reception = $this->core->findReception($farm, $id);
-
-        return view('admin.care_livestock.livestock_reception.show', [
-            'farm' => $farm,
-            'reception' => $reception,
-        ]);
-    }
-
-    public function edit($farmId, $id, Request $request)
-    {
-        $farm = $request->attributes->get('farm');
-        if (!$farm) {
-            abort(404, 'Farm tidak ditemukan');
-        }
-
-        $farm->load('pens');
-        $reception = $this->core->findReception($farm, $id);
-
-        return view('admin.care_livestock.livestock_reception.edit', [
-            'farm' => $farm,
-            'reception' => $reception,
-        ]);
+        return $this->core->findReception($farm, $id);
     }
 }
+

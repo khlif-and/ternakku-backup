@@ -23,8 +23,6 @@
                 SERVICES
             </p>
 
-            {{-- Tombol "Start Now" dan panah telah dihapus dari sini --}}
-
             <div class="text-white text-xs uppercase tracking-widest flex-shrink-0">
                 08:00 AM, NEW YORK
             </div>

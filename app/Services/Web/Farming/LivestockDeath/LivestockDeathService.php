@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\LivestockDeath;
 
-use Illuminate\Http\Request;
-
 class LivestockDeathService
 {
     protected LivestockDeathCoreService $core;
@@ -13,33 +11,23 @@ class LivestockDeathService
         $this->core = $core;
     }
 
-    public function index(Request $request)
+    public function find($farm, $id)
     {
-        $farm = $request->attributes->get('farm');
-
-        return view('admin.care_livestock.livestock_death.index', compact('farm'));
+        return $this->core->findDeath($farm, $id);
     }
 
-    public function create(Request $request)
+    public function store($farm, array $data)
     {
-        $farm = $request->attributes->get('farm');
-
-        return view('admin.care_livestock.livestock_death.create', compact('farm'));
+        return $this->core->storeDeath($farm, $data);
     }
 
-    public function show($farmId, $id, Request $request)
+    public function update($farm, $id, array $data)
     {
-        $farm = $request->attributes->get('farm');
-        $death = $this->core->findDeath($farm, $id);
-
-        return view('admin.care_livestock.livestock_death.show', compact('farm', 'death'));
+        return $this->core->updateDeath($farm, $id, $data);
     }
 
-    public function edit($farmId, $id, Request $request)
+    public function delete($farm, $id)
     {
-        $farm = $request->attributes->get('farm');
-        $death = $this->core->findDeath($farm, $id);
-
-        return view('admin.care_livestock.livestock_death.edit', compact('farm', 'death'));
+        return $this->core->deleteDeath($farm, $id);
     }
 }

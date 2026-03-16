@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin\Qurban;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Http\Requests\Qurban\PaymentStoreRequest;
-use App\Http\Requests\Qurban\PaymentUpdateRequest;
 use App\Services\Web\Qurban\Payment\PaymentService;
 
 class PaymentController extends Controller
@@ -17,38 +15,44 @@ class PaymentController extends Controller
         $this->service = $service;
     }
 
+    private function getFarm()
+    {
+        $farm = request()->attributes->get('farm');
+
+        if (!$farm && session()->has('selected_farm')) {
+            $farm = \App\Models\Farm::find(session('selected_farm'));
+        }
+
+        return $farm;
+    }
+
     public function index(Request $request)
     {
-        return $this->service->index($request);
+        $farm = $this->getFarm();
+
+        return view('admin.qurban.payment.index', compact('farm'));
     }
 
     public function create()
     {
-        return $this->service->create();
-    }
+        $farm = $this->getFarm();
 
-    public function store(PaymentStoreRequest $request)
-    {
-        return $this->service->store($request);
+        return view('admin.qurban.payment.create', compact('farm'));
     }
 
     public function show($id)
     {
-        return $this->service->show($id);
+        $farm = $this->getFarm();
+        $payment = $this->service->find($id);
+
+        return view('admin.qurban.payment.show', compact('farm', 'payment'));
     }
 
     public function edit($id)
     {
-        return $this->service->edit($id);
-    }
+        $farm = $this->getFarm();
+        $payment = $this->service->find($id);
 
-    public function update(PaymentUpdateRequest $request, $id)
-    {
-        return $this->service->update($request, $id);
-    }
-
-    public function destroy($id)
-    {
-        return $this->service->destroy($id);
+        return view('admin.qurban.payment.edit', compact('farm', 'payment'));
     }
 }

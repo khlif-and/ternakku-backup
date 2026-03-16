@@ -16,24 +16,20 @@ class EditComponent extends Component
     public Farm $farm;
     public LivestockBirth $birth;
 
-    // Form Fields
     public $transaction_date;
-    public $livestock_id; // Readonly (biasanya indukan tidak diubah saat edit)
+    public $livestock_id;
     public $officer_name;
     public $cost = 0;
     public $status;
     public $estimated_weaning;
     public $notes;
 
-    // Dynamic Details
     public $details = [];
 
-    // Lists
     public $femaleLivestocks = [];
     public $breeds = [];
     public $diseases = [];
 
-    // Options for dropdowns
     public $birthStatuses = [
         'NORMAL' => 'Normal',
         'PREMATURE' => 'Premature',
@@ -84,8 +80,7 @@ class EditComponent extends Component
     {
         $this->farm = $farm;
         $this->birth = $birth;
-        
-        // Load Lists
+
         $this->femaleLivestocks = $farm->livestocks()
             ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
             ->get();
@@ -98,7 +93,7 @@ class EditComponent extends Component
     public function fillFormData()
     {
         $this->transaction_date = $this->birth->transaction_date;
-        $this->livestock_id = $this->birth->reproductionCycle->livestock_id; // Ambil dari relasi
+        $this->livestock_id = $this->birth->reproductionCycle->livestock_id;
         $this->officer_name = $this->birth->officer_name;
         $this->cost = $this->birth->cost;
         $this->status = $this->birth->status;
@@ -118,7 +113,6 @@ class EditComponent extends Component
             ];
         })->toArray();
 
-        // Jika status bukan abortus tapi details kosong (misal data lama error), tambahkan row default
         if ($this->status !== 'ABORTUS' && empty($this->details)) {
             $this->addDetail();
         }
@@ -143,8 +137,7 @@ class EditComponent extends Component
         if (count($this->details) > 1) {
             unset($this->details[$index]);
             $this->details = array_values($this->details);
-            
-            // Re-index birth order
+
             foreach ($this->details as $k => $v) {
                 $this->details[$k]['birth_order'] = $k + 1;
             }
@@ -167,7 +160,6 @@ class EditComponent extends Component
         try {
             $coreService->updateBirth($this->farm, $this->birth->id, [
                 'transaction_date' => $this->transaction_date,
-                // livestock_id biasanya tidak diupdate di core service karena terikat cycle
                 'officer_name' => $this->officer_name,
                 'cost' => $this->cost,
                 'status' => $this->status,
@@ -179,11 +171,8 @@ class EditComponent extends Component
             session()->flash('success', 'Data kelahiran berhasil diperbarui.');
             return redirect()->route('admin.care_livestock.livestock_birth.show', [$this->farm->id, $this->birth->id]);
         } catch (\Throwable $e) {
-            Log::error('LivestockBirth Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Gagal memperbarui data kelahiran.');
         }
     }
 

@@ -156,7 +156,7 @@ Errors:
             @error('status') <div class="mt-1 text-xs text-red-600">{{ $message }}</div> @enderror
         </div>
 
-        <div class="mb-6" id="pregnant_age_wrapper" style="display:none;">
+        <div class="mb-6 hidden" id="pregnant_age_wrapper">
             <label class="block mb-1 text-xs font-medium text-gray-700">Umur Kebuntingan (hari/minggu)</label>
             <input type="number" min="0" name="pregnant_age" id="pregnant_age"
                    value="{{ old('pregnant_age') }}"
@@ -227,7 +227,7 @@ Errors:
         function toggleAge() {
             const val = statusSel.value;
             const show = (val === 'PREGNANT');
-            wrap.style.display = show ? '' : 'none';
+            wrap.classList.toggle('hidden', !show);
             age.toggleAttribute('required', show);
         }
 

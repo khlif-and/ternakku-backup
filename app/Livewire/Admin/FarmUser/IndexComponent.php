@@ -35,12 +35,8 @@ class IndexComponent extends Component
             $service->destroy($this->farm->id, $id);
             session()->flash('success', 'Pengguna berhasil dihapus dari farm.');
         } catch (\Throwable $e) {
-            Log::error('FarmUser Delete Error', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
-            session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

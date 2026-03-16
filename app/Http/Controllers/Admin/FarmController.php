@@ -12,6 +12,7 @@ use App\Models\FarmUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
+use App\Helpers\web\FarmAccessGuard;
 
 class FarmController extends Controller
 {
@@ -30,7 +31,7 @@ class FarmController extends Controller
     public function selectFarm(Request $request)
     {
         if (session()->has('selected_farm') && $request->has('redirect_url')) {
-            return redirect($request->get('redirect_url'));
+            return redirect(FarmAccessGuard::sanitizeRedirectUrl($request->get('redirect_url')));
         }
 
         $farms = $this->farmService->getFarmList();
@@ -48,13 +49,22 @@ public function selectFarmStore(Request $request)
         return back()->withErrors(['farm_id' => 'Silakan pilih peternakan terlebih dahulu.']);
     }
 
-    session(['selected_farm' => $request->farm_id]);
+    $farmId = (int) $request->farm_id;
+    $isMember = \App\Models\FarmUser::where('user_id', auth()->id())
+        ->where('farm_id', $farmId)
+        ->exists();
+    $isOwner = \App\Models\Farm::where('id', $farmId)
+        ->where('owner_id', auth()->id())
+        ->exists();
 
-    if ($request->filled('redirect_url')) {
-        return redirect($request->redirect_url);
+    if (!$isMember && !$isOwner) {
+        return back()->withErrors(['farm_id' => 'Anda tidak memiliki akses ke farm ini.']);
     }
 
-    return redirect('/dashboard');
+    session(['selected_farm' => $farmId]);
+
+    $redirectUrl = FarmAccessGuard::sanitizeRedirectUrl($request->redirect_url);
+    return redirect($redirectUrl);
 }
 
 
@@ -131,52 +141,48 @@ public function selectFarmStore(Request $request)
             ]);
         }
 
-        $data = [
-            'name' => $request->name,
-            'owner_id' => auth()->id(),
-            'registration_date' => now(),
-            'qurban_partner' => $request->has('qurban_partner'),
-        ];
-
-        $farm = $this->farmService->createFarm($data);
-
-        \App\Models\FarmUser::create([
-            'user_id' => auth()->id(),
-            'farm_id' => $farm->id,
-            'farm_role' => 'OWNER',
-        ]);
-
         try {
-            $logoPath = $request->hasFile('logo') ? $request->file('logo')->store('farms/logo', 'public') : null;
-            $coverPath = $request->hasFile('cover_photo') ? $request->file('cover_photo')->store('farms/cover', 'public') : null;
+            $farm = DB::transaction(function () use ($request) {
+                $data = [
+                    'name' => $request->name,
+                    'owner_id' => auth()->id(),
+                    'registration_date' => now(),
+                    'qurban_partner' => $request->has('qurban_partner'),
+                ];
 
-            Log::info('🚜 FarmDetail Incoming Data', [
-                'farm_id' => $farm->id,
-                'region_id' => $request->region_id,
-                'logoPath' => $logoPath,
-                'coverPath' => $coverPath,
-            ]);
+                $farm = $this->farmService->createFarm($data);
 
-            \App\Models\FarmDetail::create([
-                'farm_id' => $farm->id,
-                'description' => $request->description,
-                'region_id' => $request->region_id,
-                'postal_code' => $request->postal_code,
-                'address_line' => $request->address_line,
-                'longitude' => $request->longitude,
-                'latitude' => $request->latitude,
-                'capacity' => $request->capacity,
-                'logo' => $logoPath,
-                'cover_photo' => $coverPath,
-            ]);
+                \App\Models\FarmUser::create([
+                    'user_id' => auth()->id(),
+                    'farm_id' => $farm->id,
+                    'farm_role' => 'OWNER',
+                ]);
+
+                $logoPath = $request->hasFile('logo') ? $request->file('logo')->store('farms/logo', 'public') : null;
+                $coverPath = $request->hasFile('cover_photo') ? $request->file('cover_photo')->store('farms/cover', 'public') : null;
+
+                \App\Models\FarmDetail::create([
+                    'farm_id' => $farm->id,
+                    'description' => $request->description,
+                    'region_id' => $request->region_id,
+                    'postal_code' => $request->postal_code,
+                    'address_line' => $request->address_line,
+                    'longitude' => $request->longitude,
+                    'latitude' => $request->latitude,
+                    'capacity' => $request->capacity,
+                    'logo' => $logoPath,
+                    'cover_photo' => $coverPath,
+                ]);
+
+                return $farm;
+            });
         } catch (\Throwable $e) {
-            Log::error('❌ Gagal simpan FarmDetail', [
+            Log::error('Gagal simpan Farm', [
                 'error' => $e->getMessage(),
                 'line' => $e->getLine(),
-                'file' => $e->getFile(),
             ]);
 
-            return back()->with('error', 'Gagal menyimpan detail farm: ' . $e->getMessage());
+            return back()->with('error', 'Gagal menyimpan farm. Silakan coba lagi.');
         }
 
         session(['selected_farm' => $farm->id]);
@@ -195,10 +201,9 @@ public function selectFarmStore(Request $request)
 
     public function userList()
     {
-        $farmId = session('selected_farm');
-        $farm = \App\Models\Farm::find($farmId);
+        $farm = FarmAccessGuard::validate();
 
-        $response = $this->farmService->getUsers($farmId);
+        $response = $this->farmService->getUsers($farm->id);
 
         if ($response['error']) {
             return redirect()->back()->withErrors([

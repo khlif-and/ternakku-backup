@@ -17,6 +17,12 @@ class EditComponent extends Component
 {
     public Farm $farm;
     public LivestockReceptionD $reception;
+    public $livestockTypes = [];
+    public $livestockBreeds = [];
+    public $livestockSexes = [];
+    public $livestockGroups = [];
+    public $livestockClassifications = [];
+    public $pens = [];
 
     public $transaction_date;
     public $supplier;
@@ -84,8 +90,13 @@ class EditComponent extends Component
             'pen',
             'livestock.qurbanLivestock',
         ]);
+        $this->livestockTypes = LivestockType::all();
+        $this->livestockBreeds = LivestockBreed::all();
+        $this->livestockSexes = LivestockSex::all();
+        $this->livestockGroups = LivestockGroup::all();
+        $this->livestockClassifications = LivestockClassification::all();
+        $this->pens = $farm->pens ?? collect();
 
-        // Fill form with existing data
         $this->transaction_date = $reception->livestockReceptionH->transaction_date;
         $this->supplier = $reception->livestockReceptionH->supplier;
         $this->eartag_number = $reception->eartag_number;
@@ -136,23 +147,20 @@ class EditComponent extends Component
             return redirect()->route('qurban.livestock-reception.show', $this->reception->id);
 
         } catch (\Throwable $e) {
-            Log::error('Qurban Reception Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan saat memperbarui penerimaan ternak qurban.');
         }
     }
 
     public function render()
     {
         return view('livewire.qurban.livestock-reception.edit-component', [
-            'livestockTypes' => LivestockType::all(),
-            'livestockBreeds' => LivestockBreed::all(),
-            'livestockSexes' => LivestockSex::all(),
-            'livestockGroups' => LivestockGroup::all(),
-            'livestockClassifications' => LivestockClassification::all(),
-            'pens' => $this->farm->pens ?? collect(),
+            'livestockTypes' => $this->livestockTypes,
+            'livestockBreeds' => $this->livestockBreeds,
+            'livestockSexes' => $this->livestockSexes,
+            'livestockGroups' => $this->livestockGroups,
+            'livestockClassifications' => $this->livestockClassifications,
+            'pens' => $this->pens,
         ]);
     }
 }

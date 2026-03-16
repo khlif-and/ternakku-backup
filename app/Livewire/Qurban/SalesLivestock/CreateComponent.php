@@ -26,7 +26,6 @@ class CreateComponent extends Component
         $this->farm = $farm;
         $this->transaction_date = date('Y-m-d');
         
-        // Generate prediction for transaction number
         $this->transaction_number = $this->generateTransactionNumberPreview('QSL', $this->transaction_date, $this->farm->id);
 
         $this->items = [
@@ -50,7 +49,6 @@ class CreateComponent extends Component
         $month = $date->format('m');
         $prefix = "$year$month-$code-";
 
-        // Get the last transaction number for the current month and year
         $lastTransaction = \App\Models\QurbanSaleLivestockH::whereYear('transaction_date', $date->year)
             ->whereMonth('transaction_date', $date->month)
             ->where('farm_id' , $farmId)
@@ -112,7 +110,6 @@ class CreateComponent extends Component
         $index = $parts[0];
         $field = $parts[1];
 
-        // Auto-fill weight when livestock is selected
         if ($field === 'livestock_id') {
             $livestockId = $value;
             if ($livestockId) {
@@ -120,14 +117,12 @@ class CreateComponent extends Component
                 if ($livestock) {
                     $this->items[$index]['weight'] = $livestock->current_weight ?? 0;
                     
-                    // Recalculate total if price per kg exists
                     $pricePerKg = (float) ($this->items[$index]['price_per_kg'] ?? 0);
                     $this->items[$index]['price_per_head'] = $this->items[$index]['weight'] * $pricePerKg;
                 }
             }
         }
 
-        // Calculate Total Price when Weight or Price/Kg changes
         if ($field === 'weight' || $field === 'price_per_kg') {
             $weight = (float) ($this->items[$index]['weight'] ?? 0);
             $pricePerKg = (float) ($this->items[$index]['price_per_kg'] ?? 0);
@@ -165,7 +160,8 @@ class CreateComponent extends Component
             return redirect()->route('admin.care-livestock.sales-livestock.index', $this->farm->id);
 
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menyimpan data: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

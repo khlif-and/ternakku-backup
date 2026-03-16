@@ -26,8 +26,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data kandang berhasil dihapus.');
             return redirect()->route('admin.care-livestock.pens.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('Pen Delete Error', ['message' => $e->getMessage()]);
-            session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

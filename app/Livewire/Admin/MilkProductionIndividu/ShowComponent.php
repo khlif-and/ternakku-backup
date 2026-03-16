@@ -27,7 +27,8 @@ class ShowComponent extends Component
             
             return redirect()->route('admin.care-livestock.milk-production-individu.index', $this->farm->id);
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

@@ -7,7 +7,6 @@ use App\Models\Farm;
 use App\Models\Livestock;
 use App\Models\LivestockBreed;
 use App\Services\Web\Farming\NaturalInsemination\NaturalInseminationCoreService;
-use Illuminate\Support\Facades\Log;
 
 class CreateComponent extends Component
 {
@@ -78,8 +77,8 @@ class CreateComponent extends Component
             return redirect()->route('admin.care-livestock.natural-insemination.show', [$this->farm->id, $niRecord->id]);
             
         } catch (\Throwable $e) {
-            Log::error('NI Create Component Error: ' . $e->getMessage());
-            session()->flash('error', 'Failed to save data: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Failed to save natural insemination data.');
         }
     }
 

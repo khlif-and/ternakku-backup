@@ -9,7 +9,6 @@ class SalesQurbanController extends Controller
 {
     public function index()
     {
-        // Dummy data sementara
         $salesQurbans = [];
 
         return view('admin.qurban.sales_qurban.index', compact('salesQurbans'));

@@ -66,11 +66,8 @@ class CreateComponent extends Component
             session()->flash('success', 'Mutasi individu berhasil dicatat.');
             return redirect()->route('admin.care-livestock.mutation-individu.show', [$this->farm->id, $mutationIndividuD->id]);
         } catch (\Throwable $e) {
-            Log::error('MutationIndividu Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

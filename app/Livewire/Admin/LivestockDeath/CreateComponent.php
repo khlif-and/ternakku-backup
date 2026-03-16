@@ -4,7 +4,7 @@ namespace App\Livewire\Admin\LivestockDeath;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Helpers\Web\LivestockDeathFormService;
+use App\Helpers\web\LivestockDeathFormService;
 use App\Services\Web\Farming\LivestockDeath\LivestockDeathCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -63,11 +63,8 @@ class CreateComponent extends Component
             session()->flash('success', 'Data kematian ternak berhasil ditambahkan.');
             return redirect()->route('admin.care-livestock.livestock-death.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('Livestock Death Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

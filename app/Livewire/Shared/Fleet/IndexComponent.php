@@ -33,7 +33,8 @@ class IndexComponent extends Component
             $service->destroy($this->farm, $id);
             $this->dispatch('alert', ['type' => 'success', 'message' => 'Data armada berhasil dihapus.']);
         } catch (\Exception $e) {
-            $this->dispatch('alert', ['type' => 'error', 'message' => 'Gagal menghapus data: ' . $e->getMessage()]);
+            report($e);
+            $this->dispatch('alert', ['type' => 'error', 'message' => 'Terjadi kesalahan pada sistem.']);
         }
     }
 

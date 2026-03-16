@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\MilkAnalysisIndividu;
 
-use Illuminate\Http\Request;
-
 class MilkAnalysisIndividuService
 {
     protected MilkAnalysisIndividuCoreService $core;
@@ -13,35 +11,23 @@ class MilkAnalysisIndividuService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function find($farm, $id)
     {
-        $farm = $request->attributes->get('farm');
-
-        return view('admin.care_livestock.milk_analysis_individu.index', compact('farm'));
+        return $this->core->find($farm, $id);
     }
 
-    public function create($farmId, Request $request)
+    public function store($farm, array $data)
     {
-        $farm = $request->attributes->get('farm');
-        $livestocks = $farm->livestocks()->where('livestock_sex_id', 2)->get();
-
-        return view('admin.care_livestock.milk_analysis_individu.create', compact('farm', 'livestocks'));
+        return $this->core->store($farm, $data);
     }
 
-    public function show($farmId, $id, Request $request)
+    public function update($farm, $id, array $data)
     {
-        $farm = $request->attributes->get('farm');
-        $milkAnalysisIndividu = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.milk_analysis_individu.show', compact('farm', 'milkAnalysisIndividu'));
+        return $this->core->update($farm, $id, $data);
     }
 
-    public function edit($farmId, $id, Request $request)
+    public function delete($farm, $id)
     {
-        $farm = $request->attributes->get('farm');
-        $milkAnalysisIndividu = $this->core->find($farm, $id);
-        $livestocks = $farm->livestocks()->where('livestock_sex_id', 2)->get();
-
-        return view('admin.care_livestock.milk_analysis_individu.edit', compact('farm', 'milkAnalysisIndividu', 'livestocks'));
+        return $this->core->delete($farm, $id);
     }
 }

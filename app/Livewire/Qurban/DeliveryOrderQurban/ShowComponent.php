@@ -32,11 +32,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data pengiriman berhasil dihapus.');
             return redirect()->route('admin.qurban.delivery_order_qurban.index');
         } catch (\Throwable $e) {
-            Log::error('Qurban Delivery Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

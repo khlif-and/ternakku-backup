@@ -21,13 +21,11 @@ class Index extends Component
     public $start_date;
     public $end_date;
 
-    // Filters
     public $livestock_type_id;
     public $livestock_breed_id;
     public $pen_id;
     public $livestock_id;
 
-    // Dropdown Data
     public $livestockTypes = [];
     public $livestockBreeds = [];
     public $pens = [];

@@ -19,30 +19,99 @@ class TreatmentScheduleIndividuController extends Controller
 
     public function index($farmId, Request $request)
     {
-        return $this->service->index($farmId, $request);
+        $farm = request()->attributes->get('farm');
+        $filters = $request->only([
+            'start_date',
+            'end_date',
+            'livestock_id',
+            'livestock_type_id',
+            'livestock_group_id',
+            'livestock_breed_id',
+            'livestock_sex_id',
+            'pen_id'
+        ]);
+        $items = $this->service->list($farm, $filters);
+
+        return view('admin.care_livestock.treatment_schedule_individu.index', compact('farm', 'items', 'filters'));
     }
+
     public function create($farmId)
     {
-        return $this->service->create($farmId);
+        $farm = request()->attributes->get('farm');
+        $livestocks = $farm->livestocks()->get();
+
+        return view('admin.care_livestock.treatment_schedule_individu.create', compact('farm', 'livestocks'));
     }
+
     public function store(TreatmentScheduleIndividuStoreRequest $request, $farmId)
     {
-        return $this->service->store($request, $farmId);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $item = $this->service->store($farm, $request->validated());
+
+            return redirect()
+                ->route('admin.care-livestock.treatment-schedule-individu.show', [
+                    'farm_id' => $farmId,
+                    'id' => $item->id,
+                ])
+                ->with('success', 'Data berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+        }
     }
+
     public function show($farmId, $id)
     {
-        return $this->service->show($farmId, $id);
+        $farm = request()->attributes->get('farm');
+        $treatmentScheduleIndividu = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.treatment_schedule_individu.show', compact('farm', 'treatmentScheduleIndividu'));
     }
+
     public function edit($farmId, $id)
     {
-        return $this->service->edit($farmId, $id);
+        $farm = request()->attributes->get('farm');
+        $treatmentScheduleIndividu = $this->service->find($farm, $id);
+        $livestocks = $farm->livestocks()->get();
+
+        return view('admin.care_livestock.treatment_schedule_individu.edit', compact('farm', 'treatmentScheduleIndividu', 'livestocks'));
     }
+
     public function update(TreatmentScheduleIndividuUpdateRequest $request, $farmId, $id)
     {
-        return $this->service->update($request, $farmId, $id);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $this->service->update($farm, $id, $request->validated());
+
+            return redirect()
+                ->route('admin.care-livestock.treatment-schedule-individu.show', [
+                    'farm_id' => $farmId,
+                    'id' => $id,
+                ])
+                ->with('success', 'Data berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat memperbarui data.');
+        }
     }
+
     public function destroy($farmId, $id)
     {
-        return $this->service->destroy($farmId, $id);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $this->service->delete($farm, $id);
+
+            return redirect()
+                ->route('admin.care-livestock.treatment-schedule-individu.index', ['farm_id' => $farmId])
+                ->with('success', 'Data berhasil dihapus.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Terjadi kesalahan saat menghapus data.');
+        }
     }
 }
+

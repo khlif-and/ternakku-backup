@@ -4,7 +4,7 @@ namespace App\Livewire\Admin\FeedingIndividu;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Helpers\Web\FeedingIndividuFormService;
+use App\Helpers\web\FeedingIndividuFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingIndividuCoreService;
 
 class IndexComponent extends Component
@@ -32,7 +32,8 @@ class IndexComponent extends Component
             $coreService->delete($this->farm, $id);
             session()->flash('success', 'Data pemberian pakan individu berhasil dihapus.');
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Gagal menghapus data pemberian pakan individu.');
         }
     }
 

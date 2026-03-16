@@ -4,9 +4,8 @@ namespace App\Livewire\Admin\ArtificialInsemination;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Helpers\Web\ArtificialInseminationFormService;
+use App\Helpers\web\ArtificialInseminationFormService;
 use App\Services\Web\Farming\ArtificialInsemination\ArtificialInseminationCoreService;
-use Illuminate\Support\Facades\Log;
 
 class CreateComponent extends Component
 {
@@ -83,8 +82,8 @@ class CreateComponent extends Component
             return redirect()->route('admin.care-livestock.artificial-inseminasi.show', [$this->farm->id, $aiRecord->id]);
 
         } catch (\Throwable $e) {
-            Log::error('AI Create Component Error: ' . $e->getMessage());
-            session()->flash('error', 'Gagal menyimpan data: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

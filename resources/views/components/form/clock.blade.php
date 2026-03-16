@@ -16,7 +16,7 @@
     @endif
     <input 
         type="time" 
-        onclick="this.showPicker()"
+        x-on:click="$el.showPicker()"
         {{ $attributes->merge(['class' => 'w-full px-4 py-3 border rounded-lg text-base transition-all ' . ($disabled ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-2 focus:ring-blue-500 focus:border-blue-500')]) }}
         placeholder="{{ $placeholder }}"
         @if($required) required @endif

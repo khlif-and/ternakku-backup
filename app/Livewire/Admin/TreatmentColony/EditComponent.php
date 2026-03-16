@@ -137,11 +137,8 @@ class EditComponent extends Component
             session()->flash('success', 'Data treatment koloni berhasil diperbarui.');
             return redirect()->route('admin.care-livestock.treatment-colony.show', [$this->farm->id, $this->treatmentColony->id]);
         } catch (\Throwable $e) {
-            Log::error('TreatmentColony Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

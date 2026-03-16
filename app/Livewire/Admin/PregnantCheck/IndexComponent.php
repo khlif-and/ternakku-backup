@@ -13,11 +13,12 @@ class IndexComponent extends Component
     public Farm $farm;
     public $start_date;
     public $end_date;
-    
-    // Filter sesuai dukungan CoreService
     public $pen_id;
     public $livestock_type_id;
     public $livestock_breed_id;
+    public $pens;
+    public $livestockTypes;
+    public $livestockBreeds;
 
     protected $queryString = [
         'start_date' => ['except' => ''],
@@ -30,6 +31,9 @@ class IndexComponent extends Component
     public function mount(Farm $farm)
     {
         $this->farm = $farm;
+        $this->pens = $farm->pens;
+        $this->livestockTypes = LivestockType::all();
+        $this->livestockBreeds = LivestockBreed::all();
     }
 
     public function delete($id, PregnantCheckCoreService $coreService)
@@ -38,7 +42,7 @@ class IndexComponent extends Component
             $coreService->delete($this->farm, $id);
             session()->flash('success', 'Data pemeriksaan kehamilan berhasil dihapus.');
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+            session()->flash('error', 'Gagal menghapus data pemeriksaan kehamilan.');
         }
     }
 
@@ -52,14 +56,13 @@ class IndexComponent extends Component
             'livestock_breed_id' => $this->livestock_breed_id,
         ];
 
-        // Memanggil method listPregnantChecks dari CoreService
         $items = $coreService->listPregnantChecks($this->farm, $filters);
 
         return view('livewire.admin.pregnant-check.index-component', [
             'items' => $items,
-            'pens' => $this->farm->pens,
-            'livestockTypes' => LivestockType::all(),
-            'livestockBreeds' => LivestockBreed::all(),
+            'pens' => $this->pens,
+            'livestockTypes' => $this->livestockTypes,
+            'livestockBreeds' => $this->livestockBreeds,
         ]);
     }
 }

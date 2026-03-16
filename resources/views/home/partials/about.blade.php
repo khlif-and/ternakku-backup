@@ -1,4 +1,4 @@
-<section class="w-full py-16 md:py-24 bg-white text-gray-900 relative overflow-hidden">
+<section id="about" class="w-full py-16 md:py-24 bg-white text-gray-900 relative overflow-hidden">
 
     <!-- 🔆 Gradient glow di tengah dan proporsional -->
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2

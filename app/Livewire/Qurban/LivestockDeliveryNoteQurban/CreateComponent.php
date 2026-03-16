@@ -66,8 +66,8 @@ class CreateComponent extends Component
             return redirect()->route('qurban.livestock-delivery-note.index');
 
         } catch (\Throwable $e) {
-            Log::error('Delivery Note Create Error: ' . $e->getMessage());
-            session()->flash('error', 'Gagal membuat surat jalan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

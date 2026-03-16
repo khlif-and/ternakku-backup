@@ -2,8 +2,6 @@
 
 namespace App\Services\Web\Farming\MilkProductionGlobal;
 
-use Illuminate\Http\Request;
-
 class MilkProductionGlobalService
 {
     protected MilkProductionGlobalCoreService $core;
@@ -13,33 +11,23 @@ class MilkProductionGlobalService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function find($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.milk_production_global.index', compact('farm'));
+        return $this->core->find($farm, $id);
     }
 
-    public function create($farmId)
+    public function store($farm, array $data)
     {
-        $farm = request()->attributes->get('farm');
-
-        return view('admin.care_livestock.milk_production_global.create', compact('farm'));
+        return $this->core->store($farm, $data);
     }
 
-    public function show($farmId, $id)
+    public function update($farm, $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        $milkProductionGlobal = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.milk_production_global.show', compact('farm', 'milkProductionGlobal'));
+        return $this->core->update($farm, $id, $data);
     }
 
-    public function edit($farmId, $id)
+    public function delete($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        $milkProductionGlobal = $this->core->find($farm, $id);
-
-        return view('admin.care_livestock.milk_production_global.edit', compact('farm', 'milkProductionGlobal'));
+        return $this->core->delete($farm, $id);
     }
 }

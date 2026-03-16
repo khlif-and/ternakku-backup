@@ -35,7 +35,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Pengiriman dimulai.');
             return redirect()->route('driver.delivery.show', $this->instructionId);
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal memulai pengiriman: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 
@@ -47,7 +48,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Pengiriman selesai.');
             return redirect()->route('driver.delivery.index');
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menyelesaikan pengiriman: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 
@@ -67,7 +69,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Foto berhasil diupload.');
             $this->receiptPhoto = null;
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal upload foto: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

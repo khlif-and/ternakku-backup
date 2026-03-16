@@ -45,11 +45,8 @@ class EditComponent extends Component
             return redirect()->route('admin.qurban.delivery_order_qurban.show', $this->delivery->id);
 
         } catch (\Throwable $e) {
-            Log::error('Qurban Delivery Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

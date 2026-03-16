@@ -4,8 +4,7 @@
 
 @section('content')
     <section id="hero-banner"
-        class="relative w-full bg-gradient-to-b from-[#B0DB9C]/20 to-white text-gray-900 pt-32 pb-20 overflow-hidden"
-        style="perspective: 1000px;">
+        class="relative w-full bg-gradient-to-b from-[#B0DB9C]/20 to-white text-gray-900 pt-32 pb-20 overflow-hidden [perspective:1000px]">
 
         <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
             <h1 class="text-5xl sm:text-6xl md:text-7xl font-bold leading-tight mt-6 text-gray-900">

@@ -31,11 +31,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data inseminasi buatan berhasil dihapus.');
             return redirect()->route('admin.care-livestock.artificial-inseminasi.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('ArtificialInsemination Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

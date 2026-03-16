@@ -30,11 +30,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data mutasi individu berhasil dihapus.');
             return redirect()->route('admin.care-livestock.mutation-individu.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('MutationIndividu Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

@@ -36,12 +36,8 @@ class IndexComponent extends Component
             $penService->delete($pen);
             session()->flash('success', 'Data kandang berhasil dihapus.');
         } catch (\Throwable $e) {
-            Log::error('Pen Delete Error', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
-            session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

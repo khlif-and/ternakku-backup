@@ -34,11 +34,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Penerimaan ternak berhasil dihapus.');
             return redirect()->route('qurban.livestock-reception.index');
         } catch (\Throwable $e) {
-            Log::error('Qurban Reception Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

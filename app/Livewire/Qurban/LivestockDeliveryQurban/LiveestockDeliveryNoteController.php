@@ -9,10 +9,9 @@ class LiveestockDeliveryNoteController extends Controller
 {
     public function index()
     {
-        // Untuk sementara, dummy data dulu
         $livestocks = [];
 
-        return view('admin.qurban.liveestockDeliveryNote.index', compact('payments'));
+        return view('admin.qurban.liveestockDeliveryNote.index', compact('livestocks'));
     }
 
     public function create()

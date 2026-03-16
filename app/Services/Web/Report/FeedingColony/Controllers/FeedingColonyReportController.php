@@ -80,7 +80,7 @@ class FeedingColonyReportController
                 'file' => $e->getFile(),
             ]);
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF laporan pakan koloni.');
         }
     }
 
@@ -123,7 +123,7 @@ class FeedingColonyReportController
                 'error' => $e->getMessage(),
             ]);
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF laporan pakan koloni.');
         }
     }
 }

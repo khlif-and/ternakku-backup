@@ -55,7 +55,6 @@ class Index extends Component
         $this->livestockGroupOptions = \App\Models\LivestockGroup::pluck('name', 'id')->toArray();
         $this->penOptions = \App\Models\Pen::where('farm_id', $this->farm->id)->pluck('name', 'id')->toArray();
 
-        // Initialize dependent dropdowns
         $this->updatedLivestockTypeId($this->livestock_type_id);
     }
 
@@ -75,7 +74,6 @@ class Index extends Component
             $this->livestockOptions = [];
         }
 
-        // Reset selections if they don't belong to the new options
         if ($this->livestock_breed_id && !array_key_exists($this->livestock_breed_id, $this->livestockBreedOptions)) {
             $this->livestock_breed_id = null;
         }

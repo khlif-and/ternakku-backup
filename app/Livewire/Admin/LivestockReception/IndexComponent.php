@@ -35,12 +35,8 @@ class IndexComponent extends Component
             $coreService->deleteReception($this->farm, $id);
             session()->flash('success', 'Registrasi ternak berhasil dihapus.');
         } catch (\Throwable $e) {
-            Log::error('Livestock Reception Delete Error', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-            ]);
-            session()->flash('error', 'Gagal menghapus: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

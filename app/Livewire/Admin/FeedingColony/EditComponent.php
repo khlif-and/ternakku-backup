@@ -7,7 +7,6 @@ use App\Models\Farm;
 use App\Models\FeedingColonyD;
 use App\Helpers\web\FeedingColonyFormService;
 use App\Services\Web\Farming\FeedingColony\FeedingColonyCoreService;
-use Illuminate\Support\Facades\Log;
 
 class EditComponent extends Component
 {
@@ -102,11 +101,8 @@ class EditComponent extends Component
             session()->flash('success', 'Data pemberian pakan koloni berhasil diperbarui.');
             return redirect()->route('admin.care-livestock.feeding-colony.show', [$this->farm->id, $this->feedingColony->id]);
         } catch (\Throwable $e) {
-            Log::error('FeedingColony Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan saat memperbarui data pemberian pakan koloni.');
         }
     }
 

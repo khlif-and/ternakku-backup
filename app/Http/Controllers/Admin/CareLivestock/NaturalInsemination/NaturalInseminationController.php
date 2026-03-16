@@ -19,36 +19,77 @@ class NaturalInseminationController extends Controller
 
     public function index($farmId, Request $request)
     {
-        return $this->service->index($farmId, $request);
+        $farm = $request->attributes->get('farm');
+
+        return view('admin.care_livestock.natural_insemination.index', compact('farm'));
     }
 
     public function create($farmId)
     {
-        return $this->service->create($farmId);
+        $farm = request()->attributes->get('farm');
+
+        return view('admin.care_livestock.natural_insemination.create', compact('farm'));
     }
 
     public function store(NaturalInseminationStoreRequest $request, $farmId)
     {
-        return $this->service->store($request, $farmId);
+        $farm = $request->attributes->get('farm');
+
+        try {
+            $this->service->store($farm, $request->validated());
+
+            return redirect()->route('admin.care-livestock.natural-insemination.index', $farmId)
+                ->with('success', 'Data inseminasi alami berhasil disimpan.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Gagal menyimpan data inseminasi alami.');
+        }
     }
 
     public function show($farmId, $naturalInseminationId)
     {
-        return $this->service->show($farmId, $naturalInseminationId);
+        $farm = request()->attributes->get('farm');
+        $item = $this->service->find($farm, $naturalInseminationId);
+
+        return view('admin.care_livestock.natural_insemination.show', compact('farm', 'item'));
     }
 
     public function edit($farmId, $naturalInseminationId)
     {
-        return $this->service->edit($farmId, $naturalInseminationId);
+        $farm = request()->attributes->get('farm');
+        $item = $this->service->find($farm, $naturalInseminationId);
+
+        return view('admin.care_livestock.natural_insemination.edit', compact('farm', 'item'));
     }
 
     public function update(NaturalInseminationUpdateRequest $request, $farmId, $naturalInseminationId)
     {
-        return $this->service->update($request, $farmId, $naturalInseminationId);
+        $farm = $request->attributes->get('farm');
+
+        try {
+            $this->service->update($farm, $naturalInseminationId, $request->validated());
+
+            return redirect()->route('admin.care-livestock.natural-insemination.show', [$farmId, $naturalInseminationId])
+                ->with('success', 'Data inseminasi alami berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->withInput()->with('error', 'Gagal memperbarui data inseminasi alami.');
+        }
     }
 
     public function destroy($farmId, $naturalInseminationId)
     {
-        return $this->service->destroy($farmId, $naturalInseminationId);
+        $farm = request()->attributes->get('farm');
+
+        try {
+            $item = $this->service->find($farm, $naturalInseminationId);
+            $this->service->delete($item);
+
+            return redirect()->route('admin.care-livestock.natural-insemination.index', $farmId)
+                ->with('success', 'Data inseminasi alami berhasil dihapus.');
+        } catch (\Throwable $e) {
+            report($e);
+            return back()->with('error', 'Gagal menghapus data inseminasi alami.');
+        }
     }
 }

@@ -22,8 +22,6 @@ class CreateComponent extends Component
     public $notes;
 
     public $livestocks = [];
-
-    // Options for dropdowns
     public $checkStatuses = [
         'PREGNANT' => 'Pregnant (Bunting)',
         'NOT_PREGNANT' => 'Not Pregnant (Tidak Bunting)',
@@ -56,8 +54,7 @@ class CreateComponent extends Component
         $this->farm = $farm;
         $this->transaction_date = now()->format('Y-m-d');
         $this->action_time = now()->format('H:i');
-        
-        // Load only Female livestocks
+
         $this->livestocks = $farm->livestocks()
             ->where('livestock_sex_id', LivestockSexEnum::BETINA->value)
             ->with(['livestockType', 'livestockBreed', 'pen'])
@@ -88,16 +85,12 @@ class CreateComponent extends Component
             ]);
 
             session()->flash('success', 'Data pemeriksaan kehamilan berhasil ditambahkan.');
-            
-            // Redirect ke index sesuai flow Controller sebelumnya
+
             return redirect()->route('admin.care_livestock.pregnant_check.index', ['farm_id' => $this->farm->id]);
 
         } catch (\Throwable $e) {
-            Log::error('PregnantCheck Create Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Gagal menyimpan data pemeriksaan kehamilan.');
         }
     }
 

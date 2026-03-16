@@ -4,19 +4,18 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Admin\CareLivestock\CareLivestockController;
 use App\Http\Controllers\Admin\LivestockOutlet\LivestockOutletController;
+use App\Http\Controllers\Admin\ProfileController;
 
 Route::get('/', [HomeController::class, 'index']);
 
 require __DIR__ . '/web/auth.php';
 
-// Driver portal routes (outside auth middleware - has its own auth handling)
-require __DIR__ . '/web/driver.php';
-
-// Marketing portal routes (outside auth middleware - has its own auth handling)
-require __DIR__ . '/web/marketing.php';
-
 Route::middleware(['auth', 'email.verified'])->group(function () {
     Route::get('dashboard', [\App\Http\Controllers\Admin\MenuController::class, 'index'])->name('dashboard');
+
+    Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::post('profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
 
     require __DIR__ . '/web/farm.php';
 
@@ -80,7 +79,8 @@ Route::middleware(['auth', 'email.verified'])->group(function () {
     require __DIR__ . '/web/shared/fleet.php';
     require __DIR__ . '/web/shared/driver.php';
 
-
+    require __DIR__ . '/web/driver.php';
+    require __DIR__ . '/web/marketing.php';
 
     Route::get('admin/livestock-outlet/dashboard', [LivestockOutletController::class, 'dashboard'])
         ->name('livestock_outlet.dashboard');

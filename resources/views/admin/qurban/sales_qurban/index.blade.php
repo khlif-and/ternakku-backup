@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    <div id="deleteDeliveryModal" class="fixed inset-0 bg-black/40 z-50 hidden transition-all" style="backdrop-filter: blur(2px);">
+    <div id="deleteDeliveryModal" class="fixed inset-0 bg-black/40 z-50 hidden transition-all backdrop-blur-sm">
         <div class="flex items-center justify-center min-h-screen px-4">
             <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 border-b-4 border-red-500 animate-fadeInUp">
                 <div class="flex flex-col items-center text-center space-y-5">

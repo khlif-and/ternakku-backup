@@ -26,7 +26,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Data analisis susu individu berhasil dihapus.');
             return redirect()->route('admin.care-livestock.milk-analysis-individu.index', $this->farm->id);
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

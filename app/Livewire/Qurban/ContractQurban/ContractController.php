@@ -7,10 +7,9 @@ use Illuminate\Http\Request;
 
 class ContractController extends Controller
 {
-    // ===== Kontrak Qurban =====
     public function index()
     {
-        $contracts = []; // data dummy
+        $contracts = []; 
         return view('admin.qurban.contract.index', compact('contracts'));
     }
 
@@ -19,10 +18,9 @@ class ContractController extends Controller
         return view('admin.qurban.contract.create');
     }
 
-    // ===== Pendaftaran Tabungan =====
     public function savingRegistrationIndex()
     {
-        $savingRegistrations = []; // data dummy
+        $savingRegistrations = []; 
         return view('admin.qurban.contract.saving_registration.index', compact('savingRegistrations'));
     }
 

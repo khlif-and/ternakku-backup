@@ -13,6 +13,7 @@ class IndexComponent extends Component
     public $start_date;
     public $end_date;
     public $livestock_id;
+    public $livestocks;
 
     protected $queryString = [
         'start_date' => ['except' => ''],
@@ -23,6 +24,11 @@ class IndexComponent extends Component
     public function mount(Farm $farm)
     {
         $this->farm = $farm;
+        $this->livestocks = $this->farm->livestocks()
+            ->whereHas('livestockSex', function ($query) {
+                $query->where('name', 'Female')->orWhere('name', 'Betina');
+            })
+            ->get();
     }
 
     public function delete($id, NaturalInseminationCoreService $coreService)
@@ -32,7 +38,7 @@ class IndexComponent extends Component
             $coreService->delete($item);
             session()->flash('success', 'Natural insemination record deleted successfully.');
         } catch (\Throwable $e) {
-            session()->flash('error', 'Failed to delete record: ' . $e->getMessage());
+            session()->flash('error', 'Failed to delete natural insemination record.');
         }
     }
 
@@ -63,10 +69,7 @@ class IndexComponent extends Component
 
         return view('livewire.admin.natural-insemination.index-component', [
             'items' => $items,
-            'livestocks' => $this->farm->livestocks()
-                ->whereHas('livestockSex', function($q) {
-                    $q->where('name', 'Female')->orWhere('name', 'Betina');
-                })->get(),
+            'livestocks' => $this->livestocks,
         ]);
     }
 }

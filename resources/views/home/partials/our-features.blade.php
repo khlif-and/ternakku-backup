@@ -1,4 +1,4 @@
-<section class="w-full bg-white py-16 md:py-24">
+<section id="features" class="w-full bg-white py-16 md:py-24">
     <div class="w-full max-w-7xl mx-auto px-4 md:px-8">
 
         <div class="flex flex-col lg:flex-row justify-between lg:items-start gap-8 mb-12 md:mb-16">

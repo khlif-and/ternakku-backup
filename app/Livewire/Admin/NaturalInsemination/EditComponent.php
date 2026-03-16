@@ -7,7 +7,6 @@ use App\Models\Farm;
 use App\Models\InseminationNatural;
 use App\Models\LivestockBreed;
 use App\Services\Web\Farming\NaturalInsemination\NaturalInseminationCoreService;
-use Illuminate\Support\Facades\Log;
 
 class EditComponent extends Component
 {
@@ -77,11 +76,8 @@ class EditComponent extends Component
             session()->flash('success', 'Natural Insemination data has been updated.');
             return redirect()->route('admin.care-livestock.natural-insemination.show', [$this->farm->id, $this->niRecord->id]);
         } catch (\Throwable $e) {
-            Log::error('Natural Insemination Edit Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'An error occurred: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Failed to update natural insemination data.');
         }
     }
 

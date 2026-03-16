@@ -17,7 +17,6 @@ class Index extends Component
     public $end_date;
     public $pen_id = '';
     public $showReport = false;
-    // Removed $reportData to avoid serialization issues
 
     protected $queryString = ['start_date', 'end_date', 'pen_id'];
 
@@ -42,7 +41,7 @@ class Index extends Component
     public function generateReport()
     {
         $this->showReport = true;
-        $this->resetPage(); // Reset pagination when generating new report
+        $this->resetPage(); 
     }
 
     public function render()

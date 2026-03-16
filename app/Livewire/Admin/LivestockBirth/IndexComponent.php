@@ -21,6 +21,10 @@ class IndexComponent extends Component
     public $livestock_group_id;
     public $livestock_breed_id;
     public $pen_id;
+    public $pens;
+    public $types;
+    public $groups;
+    public $breeds;
 
     protected $queryString = [
         'start_date' => ['except' => ''],
@@ -34,6 +38,10 @@ class IndexComponent extends Component
     public function mount(Farm $farm)
     {
         $this->farm = $farm;
+        $this->pens = $farm->pens;
+        $this->types = LivestockType::all();
+        $this->groups = LivestockGroup::all();
+        $this->breeds = LivestockBreed::all();
     }
 
     public function updated($propertyName)
@@ -47,7 +55,7 @@ class IndexComponent extends Component
             $coreService->deleteBirth($this->farm, $id);
             session()->flash('success', 'Data kelahiran berhasil dihapus.');
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+            session()->flash('error', 'Gagal menghapus data kelahiran.');
         }
     }
 
@@ -66,10 +74,10 @@ class IndexComponent extends Component
 
         return view('livewire.admin.livestock-birth.index-component', [
             'births' => $data['births'],
-            'pens' => $this->farm->pens,
-            'types' => LivestockType::all(),
-            'groups' => LivestockGroup::all(),
-            'breeds' => LivestockBreed::all(),
+            'pens' => $this->pens,
+            'types' => $this->types,
+            'groups' => $this->groups,
+            'breeds' => $this->breeds,
         ]);
     }
 }

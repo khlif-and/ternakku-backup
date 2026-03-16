@@ -4,7 +4,7 @@ namespace App\Livewire\Admin\FeedMedicinePurchase;
 
 use Livewire\Component;
 use App\Models\Farm;
-use App\Helpers\Web\FeedMedicinePurchaseFormService;
+use App\Helpers\web\FeedMedicinePurchaseFormService;
 use App\Services\Web\Farming\FeedMedicinePurchase\FeedMedicinePurchaseCoreService;
 
 class CreateComponent extends Component

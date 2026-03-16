@@ -42,13 +42,10 @@ class Index extends Component
     public function generateReport()
     {
         $this->showReport = true;
-        // Optimization: Don't store report data in public property to avoid serialization issues
     }
 
     public function render()
     {
-        // Use the controller to fetch data
-        // We use dependency injection equivalent or just instantiate for this refactor
         $reportController = new \App\Services\Web\Report\FeedingIndividu\Controllers\FeedingIndividuReportController(
             new \App\Services\Web\Report\FeedingIndividu\Services\FeedingIndividuReportService()
         );

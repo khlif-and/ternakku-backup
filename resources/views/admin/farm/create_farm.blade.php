@@ -44,7 +44,7 @@
                    class="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
                    onchange="previewImage(this, 'cover_preview')">
             <div class="flex h-64 w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-100/80 text-center transition-all duration-300 group-hover:border-emerald-400 group-hover:bg-emerald-50">
-              <img id="cover_preview" class="absolute inset-0 h-full w-full rounded-xl object-cover" src="" alt="Preview Cover" style="display:none;">
+              <img id="cover_preview" class="absolute inset-0 h-full w-full rounded-xl object-cover hidden" src="" alt="Preview Cover">
               <div id="cover_placeholder" class="text-slate-500">
                 <svg class="mx-auto h-12 w-12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
@@ -64,7 +64,7 @@
                    class="absolute inset-0 z-10 h-full w-full cursor-pointer opacity-0"
                    onchange="previewImage(this, 'logo_preview')">
             <div class="flex h-64 w-full items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-100/80 text-center transition-all duration-300 group-hover:border-emerald-400 group-hover:bg-emerald-50">
-              <img id="logo_preview" class="absolute inset-0 h-full w-full rounded-xl object-cover" src="" alt="Preview Logo" style="display:none;">
+              <img id="logo_preview" class="absolute inset-0 h-full w-full rounded-xl object-cover hidden" src="" alt="Preview Logo">
               <div id="logo_placeholder" class="text-slate-500">
                 <svg class="mx-auto h-12 w-12" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.5V6.108c0-1.135.845-2.098 1.976-2.192.373-.03.748-.03 1.125 0 1.131.094 1.976 1.057 1.976 2.192V7.5M8.25 7.5h7.5m-7.5 0-1 9.75L8.25 21h7.5l.25-2.25-1-9.75m-7.5 0h7.5"/>
@@ -179,8 +179,8 @@
       const reader = new FileReader();
       reader.onload = e => {
         preview.src = e.target.result;
-        preview.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
+        preview.classList.remove('hidden');
+        if (placeholder) placeholder.classList.add('hidden');
       };
       reader.readAsDataURL(file);
     }

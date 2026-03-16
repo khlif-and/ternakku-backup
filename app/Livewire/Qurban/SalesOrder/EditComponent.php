@@ -12,8 +12,9 @@ class EditComponent extends Component
 {
     public Farm $farm;
     public QurbanSalesOrder $salesOrder;
+    public $customers = [];
+    public $livestockTypes = [];
     
-    // Form properties
     public $customer_id;
     public $order_date;
     public $items = [];
@@ -21,7 +22,6 @@ class EditComponent extends Component
     public function mount(Farm $farm, $salesOrder)
     {
         $this->farm = $farm;
-        // Handle if salesOrder is passed as ID or model
         if (is_numeric($salesOrder)) {
              $this->salesOrder = QurbanSalesOrder::with('qurbanSalesOrderD')->where('farm_id', $farm->id)->findOrFail($salesOrder);
         } else {
@@ -29,10 +29,21 @@ class EditComponent extends Component
              $this->salesOrder->load('qurbanSalesOrderD');
         }
 
+        $this->customers = QurbanCustomer::with('user')
+            ->where('farm_id', $farm->id)
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->user->name ?? $customer->phone_number ?? 'Customer #' . $customer->id,
+                ];
+            })
+            ->pluck('name', 'id');
+        $this->livestockTypes = \App\Models\LivestockType::all();
+
         $this->customer_id = $this->salesOrder->qurban_customer_id;
         $this->order_date = $this->salesOrder->order_date;
 
-        // Load existing items
         if ($this->salesOrder->qurbanSalesOrderD->isNotEmpty()) {
             foreach ($this->salesOrder->qurbanSalesOrderD as $detail) {
                 $this->items[] = [
@@ -42,7 +53,6 @@ class EditComponent extends Component
                 ];
             }
         } else {
-            // Fallback if no details
             $this->addItem();
         }
     }
@@ -85,24 +95,15 @@ class EditComponent extends Component
             session()->flash('success', 'Sales Order berhasil diperbarui.');
             return redirect()->route('admin.care-livestock.sales-order.index', $this->farm->id);
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal memperbarui Sales Order: ' . $e->getMessage());
+            session()->flash('error', 'Gagal memperbarui Sales Order.');
         }
     }
 
     public function render()
     {
-        $customers = QurbanCustomer::with('user')->get()->map(function($customer) {
-            return [
-                'id' => $customer->id,
-                'name' => $customer->user->name ?? $customer->phone_number ?? 'Customer #' . $customer->id
-            ];
-        })->pluck('name', 'id');
-
-        $livestockTypes = \App\Models\LivestockType::all();
-        
         return view('livewire.qurban.sales-order.edit-component', [
-            'customers' => $customers,
-            'livestockTypes' => $livestockTypes,
+            'customers' => $this->customers,
+            'livestockTypes' => $this->livestockTypes,
         ]);
     }
 }

@@ -10,8 +10,9 @@ use App\Services\Web\Qurban\SalesOrder\SalesOrderCoreService;
 class CreateComponent extends Component
 {
     public Farm $farm;
+    public $customers = [];
+    public $livestockTypes = [];
     
-    // Form properties
     public $customer_id;
     public $order_date;
     public $items = [];
@@ -20,7 +21,17 @@ class CreateComponent extends Component
     {
         $this->farm = $farm;
         $this->order_date = date('Y-m-d');
-        // Initialize with one empty row
+        $this->customers = QurbanCustomer::with('user')
+            ->where('farm_id', $farm->id)
+            ->get()
+            ->map(function ($customer) {
+                return [
+                    'id' => $customer->id,
+                    'name' => $customer->user->name ?? $customer->phone_number ?? 'Customer #' . $customer->id,
+                ];
+            })
+            ->pluck('name', 'id');
+        $this->livestockTypes = \App\Models\LivestockType::all();
         $this->addItem();
     }
 
@@ -62,24 +73,15 @@ class CreateComponent extends Component
             session()->flash('success', 'Sales Order berhasil ditambahkan.');
             return redirect()->route('admin.care-livestock.sales-order.index', $this->farm->id);
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menambahkan Sales Order: ' . $e->getMessage());
+            session()->flash('error', 'Gagal menambahkan Sales Order.');
         }
     }
 
     public function render()
     {
-        $customers = QurbanCustomer::with('user')->get()->map(function($customer) {
-            return [
-                'id' => $customer->id,
-                'name' => $customer->user->name ?? $customer->phone_number ?? 'Customer #' . $customer->id
-            ];
-        })->pluck('name', 'id');
-
-        $livestockTypes = \App\Models\LivestockType::all();
-        
         return view('livewire.qurban.sales-order.create-component', [
-            'customers' => $customers,
-            'livestockTypes' => $livestockTypes,
+            'customers' => $this->customers,
+            'livestockTypes' => $this->livestockTypes,
         ]);
     }
 }

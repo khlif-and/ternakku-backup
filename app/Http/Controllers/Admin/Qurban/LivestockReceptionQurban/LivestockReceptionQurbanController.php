@@ -15,14 +15,30 @@ class LivestockReceptionQurbanController extends Controller
         $this->service = $service;
     }
 
+    private function getFarm()
+    {
+        $farm = request()->attributes->get('farm');
+
+        if (!$farm && session()->has('selected_farm')) {
+            $farm = \App\Models\Farm::find(session('selected_farm'));
+        }
+
+        return $farm;
+    }
+
     public function index(Request $request)
     {
-        return $this->service->index($request);
+        $farm = $this->getFarm();
+
+        return view('admin.qurban.livestock_reception.index', compact('farm'));
     }
 
     public function create()
     {
-        return $this->service->create();
+        $farm = $this->getFarm();
+        $farm->load('pens');
+
+        return view('admin.qurban.livestock_reception.create', compact('farm'));
     }
 
     public function store(Request $request)
@@ -48,17 +64,34 @@ class LivestockReceptionQurbanController extends Controller
             'qurban_price' => 'nullable|numeric|min:0',
         ]);
 
-        return $this->service->store($validated);
+        try {
+            $farm = $this->getFarm();
+            $reception = $this->service->store($farm, $validated);
+
+            return redirect()->route('qurban.livestock-reception.show', $reception->id)
+                ->with('success', 'Penerimaan ternak qurban berhasil ditambahkan.');
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect()->route('qurban.livestock-reception.create')
+                ->with('error', 'Gagal menambahkan penerimaan ternak qurban.');
+        }
     }
 
     public function show($id)
     {
-        return $this->service->show($id);
+        $farm = $this->getFarm();
+        $reception = $this->service->find($farm, $id);
+
+        return view('admin.qurban.livestock_reception.show', compact('farm', 'reception'));
     }
 
     public function edit($id)
     {
-        return $this->service->edit($id);
+        $farm = $this->getFarm();
+        $farm->load('pens');
+        $reception = $this->service->find($farm, $id);
+
+        return view('admin.qurban.livestock_reception.edit', compact('farm', 'reception'));
     }
 
     public function update(Request $request, $id)
@@ -84,11 +117,31 @@ class LivestockReceptionQurbanController extends Controller
             'qurban_price' => 'nullable|numeric|min:0',
         ]);
 
-        return $this->service->update($id, $validated);
+        try {
+            $farm = $this->getFarm();
+            $this->service->update($farm, $id, $validated);
+
+            return redirect()->route('qurban.livestock-reception.show', $id)
+                ->with('success', 'Penerimaan ternak qurban berhasil diperbarui.');
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect()->route('qurban.livestock-reception.edit', $id)
+                ->with('error', 'Gagal memperbarui penerimaan ternak qurban.');
+        }
     }
 
     public function destroy($id)
     {
-        return $this->service->destroy($id);
+        try {
+            $farm = $this->getFarm();
+            $this->service->delete($farm, $id);
+
+            return redirect()->route('qurban.livestock-reception.index')
+                ->with('success', 'Penerimaan ternak qurban berhasil dihapus.');
+        } catch (\Throwable $e) {
+            report($e);
+            return redirect()->route('qurban.livestock-reception.index')
+                ->with('error', 'Gagal menghapus penerimaan ternak qurban.');
+        }
     }
 }

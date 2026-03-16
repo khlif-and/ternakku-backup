@@ -34,7 +34,8 @@ class IndexComponent extends Component
             $coreService->deleteDeath($this->farm, $id);
             session()->flash('success', 'Data kematian ternak berhasil dihapus.');
         } catch (\Throwable $e) {
-            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

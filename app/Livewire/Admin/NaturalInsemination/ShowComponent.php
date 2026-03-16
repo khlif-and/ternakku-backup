@@ -31,11 +31,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Natural insemination record deleted successfully.');
             return redirect()->route('admin.care-livestock.natural-insemination.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('NaturalInsemination Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'An error occurred: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Failed to delete natural insemination record.');
         }
     }
 

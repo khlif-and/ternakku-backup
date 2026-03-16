@@ -5,6 +5,7 @@ namespace App\Services\Web\Farming\Customer;
 use App\Models\QurbanCustomer;
 use App\Models\QurbanCustomerAddress;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CustomerCoreService
 {
@@ -18,22 +19,19 @@ class CustomerCoreService
     public function storeCustomer($farm, array $data, $creatorId): QurbanCustomer
     {
         return DB::transaction(function () use ($farm, $data, $creatorId) {
-            // Create User first as per backend logic
             $user = \App\Models\User::create([
                 'name'              => $data['name'],
                 'email'             => $data['email'] ?? null,
-                'phone_number'      => $data['phone'] ?? null, // Backend uses phone_number
-                'password'          => \Illuminate\Support\Facades\Hash::make('password'), // Default password
+                'phone_number'      => $data['phone'] ?? null,
+                'password'          => \Illuminate\Support\Facades\Hash::make(Str::random(16)),
                 'email_verified_at' => now(),
             ]);
 
-            // Assign role
             $user->roles()->attach(\App\Enums\RoleEnum::REGISTERED_USER->value, [
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
 
-            // Create QurbanCustomer linked to User
             return QurbanCustomer::create([
                 'farm_id'    => $farm->id,
                 'user_id'    => $user->id,
@@ -42,17 +40,16 @@ class CustomerCoreService
         });
     }
 
-    public function findCustomer($id): QurbanCustomer
+    public function findCustomer(int $id, int $farmId): QurbanCustomer
     {
-        return QurbanCustomer::findOrFail($id);
+        return QurbanCustomer::where('farm_id', $farmId)->findOrFail($id);
     }
 
-    public function updateCustomer($id, array $data): QurbanCustomer
+    public function updateCustomer(int $id, int $farmId, array $data): QurbanCustomer
     {
-        $customer = $this->findCustomer($id);
+        $customer = $this->findCustomer($id, $farmId);
 
         return DB::transaction(function () use ($customer, $data) {
-            // Update the related User model
             if ($customer->user) {
                 $customer->user->update([
                     'name'         => $data['name'],
@@ -65,67 +62,61 @@ class CustomerCoreService
         });
     }
 
-    public function deleteCustomer($id): void
+    public function deleteCustomer(int $id, int $farmId): void
     {
-        $customer = $this->findCustomer($id);
-
-        DB::transaction(function () use ($customer) {
-            $customer->delete();
-        });
+        $customer = $this->findCustomer($id, $farmId);
+        $customer->delete();
     }
 
-    public function listAddresses($customerId)
+    public function listAddresses($customerId, int $farmId)
     {
-        return QurbanCustomerAddress::where('qurban_customer_id', $customerId)->get();
+        return QurbanCustomerAddress::where('qurban_customer_id', $customerId)
+            ->where('farm_id', $farmId)
+            ->get();
     }
 
     public function storeAddress($farm, $customerId, array $data): QurbanCustomerAddress
     {
-        return DB::transaction(function () use ($farm, $customerId, $data) {
-            return QurbanCustomerAddress::create([
-                'farm_id'            => $farm->id,
-                'qurban_customer_id' => $customerId,
-                'name'               => $data['name'],
-                'description'        => $data['description'] ?? '',
-                'region_id'          => $data['region_id'],
-                'postal_code'        => $data['postal_code'] ?? '',
-                'address_line'       => $data['address_line'],
-                'longitude'          => $data['longitude'] ?? null,
-                'latitude'           => $data['latitude'] ?? null,
-            ]);
-        });
+        $this->findCustomer($customerId, $farm->id);
+
+        return QurbanCustomerAddress::create([
+            'farm_id'            => $farm->id,
+            'qurban_customer_id' => $customerId,
+            'name'               => $data['name'],
+            'description'        => $data['description'] ?? '',
+            'region_id'          => $data['region_id'],
+            'postal_code'        => $data['postal_code'] ?? '',
+            'address_line'       => $data['address_line'],
+            'longitude'          => $data['longitude'] ?? null,
+            'latitude'           => $data['latitude'] ?? null,
+        ]);
     }
 
-    public function findAddress($id): QurbanCustomerAddress
+    public function findAddress(int $id, int $farmId): QurbanCustomerAddress
     {
-        return QurbanCustomerAddress::findOrFail($id);
+        return QurbanCustomerAddress::where('farm_id', $farmId)->findOrFail($id);
     }
 
-    public function updateAddress($id, array $data): QurbanCustomerAddress
+    public function updateAddress(int $id, int $farmId, array $data): QurbanCustomerAddress
     {
-        $address = $this->findAddress($id);
+        $address = $this->findAddress($id, $farmId);
 
-        return DB::transaction(function () use ($address, $data) {
-            $address->update([
-                'name'         => $data['name'],
-                'description'  => $data['description'] ?? '',
-                'region_id'    => $data['region_id'],
-                'postal_code'  => $data['postal_code'] ?? '',
-                'address_line' => $data['address_line'],
-                'longitude'    => $data['longitude'] ?? null,
-                'latitude'     => $data['latitude'] ?? null,
-            ]);
+        $address->update([
+            'name'         => $data['name'],
+            'description'  => $data['description'] ?? '',
+            'region_id'    => $data['region_id'],
+            'postal_code'  => $data['postal_code'] ?? '',
+            'address_line' => $data['address_line'],
+            'longitude'    => $data['longitude'] ?? null,
+            'latitude'     => $data['latitude'] ?? null,
+        ]);
 
-            return $address;
-        });
+        return $address;
     }
 
-    public function deleteAddress($id): void
+    public function deleteAddress(int $id, int $farmId): void
     {
-        $address = $this->findAddress($id);
-
-        DB::transaction(function () use ($address) {
-            $address->delete();
-        });
+        $address = $this->findAddress($id, $farmId);
+        $address->delete();
     }
 }

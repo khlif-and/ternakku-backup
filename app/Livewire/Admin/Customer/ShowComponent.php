@@ -25,16 +25,13 @@ class ShowComponent extends Component
     public function delete(CustomerCoreService $coreService)
     {
         try {
-            $coreService->deleteCustomer($this->customer->id);
+            $coreService->deleteCustomer($this->customer->id, $this->farm->id);
             
             session()->flash('success', 'Data customer berhasil dihapus.');
             return redirect()->route('admin.care-livestock.customer.index', $this->farm->id);
         } catch (\Throwable $e) {
-            Log::error('Customer Delete Error', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan saat menghapus customer.');
         }
     }
 

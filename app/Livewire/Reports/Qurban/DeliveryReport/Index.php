@@ -28,7 +28,6 @@ class Index extends Component
 
     public $showReport = false;
 
-    // Listeners and queryString...
     protected $queryString = ['start_date', 'end_date', 'driver_id', 'fleet_id', 'status', 'showReport'];
 
     public function mount($farm_id = null)
@@ -85,15 +84,11 @@ class Index extends Component
                 'status' => $this->status,
             ];
 
-            // Custom Service returns collection (latest()->get())
             $collection = $service->generateReport($this->farm->id, $filters);
 
-            // Pagination Logic
             $page = LengthAwarePaginator::resolveCurrentPage();
             $perPage = 10;
 
-            // Transform directly using our Custom Report Resource
-            // We resolve it to array here to ensure View gets arrays, consistent with API structure
             $transformedItems = $collection->map(function ($item) {
                 return (new QurbanDeliveryReportResource($item))->resolve();
             });
@@ -114,6 +109,6 @@ class Index extends Component
         ])
             ->extends(request()->is('qurban*') ? 'layouts.qurban.index' : 'layouts.care_livestock.index')
             ->section('content')
-            ->layoutData(['farm' => $this->farm]); // Explicitly pass farm to layout
+            ->layoutData(['farm' => $this->farm]); 
     }
 }

@@ -3,35 +3,45 @@
 namespace App\Http\Controllers\Admin\CareLivestock\LivestockDeathController;
 
 use App\Http\Controllers\Controller;
-use App\Services\Web\Farming\LivestockDeath\LivestockDeathService;
 use Illuminate\Http\Request;
+use App\Services\Web\Farming\LivestockDeath\LivestockDeathService;
 
 class LivestockDeathController extends Controller
 {
-    private $service;
+    protected LivestockDeathService $service;
 
     public function __construct(LivestockDeathService $service)
     {
         $this->service = $service;
     }
 
-    public function index(Request $request)
+    public function index($farmId, Request $request)
     {
-        return $this->service->index($request);
+        $farm = request()->attributes->get('farm');
+
+        return view('admin.care_livestock.livestock_death.index', compact('farm'));
     }
 
-    public function create(Request $request)
+    public function create($farmId)
     {
-        return $this->service->create($request);
+        $farm = request()->attributes->get('farm');
+
+        return view('admin.care_livestock.livestock_death.create', compact('farm'));
     }
 
-    public function show($farmId, $id, Request $request)
+    public function show($farmId, $id)
     {
-        return $this->service->show($farmId, $id, $request);
+        $farm = request()->attributes->get('farm');
+        $death = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.livestock_death.show', compact('farm', 'death'));
     }
 
-    public function edit($farmId, $id, Request $request)
+    public function edit($farmId, $id)
     {
-        return $this->service->edit($farmId, $id, $request);
+        $farm = request()->attributes->get('farm');
+        $death = $this->service->find($farm, $id);
+
+        return view('admin.care_livestock.livestock_death.edit', compact('farm', 'death'));
     }
 }

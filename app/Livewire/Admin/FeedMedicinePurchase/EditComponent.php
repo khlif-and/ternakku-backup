@@ -5,7 +5,7 @@ namespace App\Livewire\Admin\FeedMedicinePurchase;
 use Livewire\Component;
 use App\Models\Farm;
 use App\Models\FeedMedicinePurchase;
-use App\Helpers\Web\FeedMedicinePurchaseFormService;
+use App\Helpers\web\FeedMedicinePurchaseFormService;
 use App\Services\Web\Farming\FeedMedicinePurchase\FeedMedicinePurchaseCoreService;
 use Illuminate\Support\Facades\Log;
 
@@ -100,8 +100,8 @@ class EditComponent extends Component
             session()->flash('success', 'Data pembelian berhasil diperbarui.');
             return redirect()->route('admin.care-livestock.feed-medicine-purchase.show', [$this->farm->id, $this->purchase->id]);
         } catch (\Throwable $e) {
-            Log::error('FeedMedicinePurchase Edit Error', ['message' => $e->getMessage()]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

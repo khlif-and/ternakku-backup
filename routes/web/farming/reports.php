@@ -1,10 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\Report\CareLivestock\Pen_Report_Controller;
-use App\Http\Controllers\Admin\Report\CareLivestock\Mutation_Individu_Report_Controller;
-use App\Http\Controllers\Admin\Report\CareLivestock\Artificial_Inseminasi_Report_Controller;
-use App\Http\Controllers\Admin\Report\CareLivestock\Natural_Inseminasi_Report_Controller;
 
 /* |-------------------------------------------------------------------------- | Care Livestock Reports Routes |-------------------------------------------------------------------------- */
 

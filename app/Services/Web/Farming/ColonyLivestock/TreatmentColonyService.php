@@ -2,11 +2,6 @@
 
 namespace App\Services\Web\Farming\ColonyLivestock;
 
-use Illuminate\Http\Request;
-use App\Exceptions\ErrorHandler;
-use App\Http\Requests\Farming\TreatmentColonyStoreRequest;
-use App\Http\Requests\Farming\TreatmentColonyUpdateRequest;
-
 class TreatmentColonyService
 {
     protected TreatmentColonyCoreService $core;
@@ -16,68 +11,28 @@ class TreatmentColonyService
         $this->core = $core;
     }
 
-    public function index($farmId, Request $request)
+    public function list($farm, array $filters)
     {
-        $farm = $request->attributes->get('farm');
-        $filters = $request->only(['start_date', 'end_date', 'disease_id', 'pen_id']);
-        $data = $this->core->list($farm, $filters);
-
-        return view('admin.care_livestock.colony_livestock.treatment_colony.index', compact('farm', 'data'));
+        return $this->core->list($farm, $filters);
     }
 
-    public function create($farmId)
+    public function find($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        return view('admin.care_livestock.colony_livestock.treatment_colony.create', compact('farm'));
+        return $this->core->find($farm, $id);
     }
 
-    public function store(TreatmentColonyStoreRequest $request, $farmId)
+    public function store($farm, array $data)
     {
-        $farm = $request->attributes->get('farm');
-
-        return ErrorHandler::handle(function () use ($farm, $request) {
-            $this->core->store($farm, $request->validated());
-            return redirect()
-                ->route('admin.care-livestock.treatment-colony.index', $farm->id)
-                ->with('success', 'Data berhasil ditambahkan.');
-        }, 'TreatmentColony Store Error');
+        return $this->core->store($farm, $data);
     }
 
-    public function show($farmId, $id)
+    public function update($farm, $id, array $data)
     {
-        $farm = request()->attributes->get('farm');
-        $item = $this->core->find($farm, $id);
-        return view('admin.care_livestock.colony_livestock.treatment_colony.show', compact('farm', 'item'));
+        return $this->core->update($farm, $id, $data);
     }
 
-    public function edit($farmId, $id)
+    public function delete($farm, $id)
     {
-        $farm = request()->attributes->get('farm');
-        $item = $this->core->find($farm, $id);
-        return view('admin.care_livestock.colony_livestock.treatment_colony.edit', compact('farm', 'item'));
-    }
-
-    public function update(TreatmentColonyUpdateRequest $request, $farmId, $id)
-    {
-        $farm = $request->attributes->get('farm');
-
-        return ErrorHandler::handle(function () use ($farm, $id, $request) {
-            $this->core->update($farm, $id, $request->validated());
-            return redirect()
-                ->route('admin.care-livestock.treatment-colony.index', $farm->id)
-                ->with('success', 'Data berhasil diupdate.');
-        }, 'TreatmentColony Update Error');
-    }
-
-    public function destroy($farmId, $id)
-    {
-        $farm = request()->attributes->get('farm');
-
-        return ErrorHandler::handle(function () use ($farm, $id) {
-            $this->core->delete($farm, $id);
-            return redirect()
-                ->route('admin.care-livestock.treatment-colony.index', $farm->id)
-                ->with('success', 'Data berhasil dihapus.');
-        }, 'TreatmentColony Delete Error');
+        return $this->core->delete($farm, $id);
     }
 }

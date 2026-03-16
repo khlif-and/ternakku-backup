@@ -1,5 +1,5 @@
 {{-- resources/views/core/error/error_case.blade.php --}}
-@extends('layouts.app')
+@extends('layouts.auth.index')
 
 @section('title', 'Error Log')
 

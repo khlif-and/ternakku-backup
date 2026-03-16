@@ -33,8 +33,8 @@ class ShowComponent extends Component
             session()->flash('success', 'Surat jalan berhasil dihapus.');
             return redirect()->route('qurban.livestock-delivery-note.index');
         } catch (\Throwable $e) {
-            Log::error('Delivery Note Delete Error: ' . $e->getMessage());
-            session()->flash('error', 'Gagal menghapus data: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 

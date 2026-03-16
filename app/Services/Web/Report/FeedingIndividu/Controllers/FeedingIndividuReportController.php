@@ -6,6 +6,7 @@ use App\Models\Farm;
 use App\Models\FeedingIndividuD;
 use App\Services\Web\Report\FeedingIndividu\Services\FeedingIndividuReportService;
 use App\Services\Web\Report\FeedingIndividu\Resources\FeedingIndividuReportResource;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use PDF;
 use Illuminate\Support\Facades\Log;
@@ -82,7 +83,7 @@ class FeedingIndividuReportController
                 'file' => $e->getFile(),
             ]);
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF laporan pakan individu.');
         }
     }
 
@@ -122,7 +123,7 @@ class FeedingIndividuReportController
                 'error' => $e->getMessage(),
             ]);
 
-            return back()->with('error', 'Gagal mengunduh PDF: ' . $e->getMessage());
+            return back()->with('error', 'Gagal mengunduh PDF laporan pakan individu.');
         }
     }
 }

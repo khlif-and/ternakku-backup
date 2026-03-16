@@ -8,7 +8,6 @@
 @endphp
 
 <x-sidebar.wrapper :menuStates="$menuStates">
-    {{-- HEADER --}}
     <x-sidebar.header :farmName="$farm->name ?? 'Qurban Farm'" :farmDashboardUrl="route('qurban.dashboard')" />
 
     <div class="border-t border-white/20 mx-4 my-3"></div>
@@ -20,7 +19,5 @@
             @include('layouts.qurban.part._laporan')
         </ul>
     </nav>
-
-    {{-- TOGGLE BUTTON --}}
     <x-sidebar.toggle-button />
 </x-sidebar.wrapper>

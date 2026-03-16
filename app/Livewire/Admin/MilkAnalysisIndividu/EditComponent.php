@@ -104,10 +104,8 @@ class EditComponent extends Component
                 $this->milkAnalysisIndividu->id
             ]);
         } catch (\Throwable $e) {
-            Log::error('MilkAnalysisIndividu Edit Error', [
-                'message' => $e->getMessage(),
-            ]);
-            session()->flash('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            report($e);
+            session()->flash('error', 'Terjadi kesalahan pada sistem.');
         }
     }
 
